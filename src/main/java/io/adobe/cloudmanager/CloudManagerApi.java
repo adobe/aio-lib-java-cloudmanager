@@ -17,9 +17,11 @@ public interface CloudManagerApi {
 
     List<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException;
 
-    /*
+    String startExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
-    Future<String> startExecution(String programId, String pipelineId);
+    String startExecution(Pipeline pipeline) throws CloudManagerApiException;
+
+    /*
 
     Future<PipelineExecution> getCurrentExecution(String programId, String pipelineId);
 
