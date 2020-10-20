@@ -1,0 +1,62 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: JWT Authentication
+  description: Adobe I/O JWT Token authentication API
+host: ims-na1.adobelogin.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - JWT
+
+paths:
+  /ims/exchange/jwt:
+    summary: Authentication API
+    description: API to create a Bearer token from a signed JWT Object
+    post:
+      tags:
+        - JWT
+      operationId: authenticate
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: client_id
+          in: formData
+          type: string
+          description: The Client ID from the integration.
+          required: true
+        - name: client_secret
+          in: formData
+          type: string
+          description: The Client Secret Token from the integration.
+          required: true
+        - name: jwt_token
+          in: formData
+          type: string
+          description: The generated & signed JWT Token.
+          required: true
+      responses:
+        200:
+          description: A token object
+          schema:
+            $ref: '#/definitions/Token'
+
+definitions:
+  Token:
+    type: object
+    properties:
+      token_type:
+        type: string
+        description: The type of token being returned.
+      access_token:
+        type: string
+        description: The token.
+      expires_in:
+        type: integer
+        format: int64

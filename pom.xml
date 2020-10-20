@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.adobe.cloudmanager</groupId>
+    <artifactId>adobe-cloudmanager-client-lib</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>Adobe Cloud Manager Client Library</name>
+    <description>Library for accessing Adobe Cloud Manager endpoints.</description>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/adobe/cloudmanager-client-lib.git</connection>
+        <developerConnection>scm:git:https://github.com/adobe/cloudmanager-client-lib.git</developerConnection>
+        <url>https://github.com/adobe/cloudmanager-client-lib/tree/main</url>
+    </scm>
+
+    <properties>
+        <junit.jupiter.version>5.6.2</junit.jupiter.version>
+        <jmockit.version>1.49</jmockit.version>
+
+        <swagger.annotations.version>2.0.10</swagger.annotations.version>
+        <swagger.codegen.version>3.0.22</swagger.codegen.version>
+        <jersey.version>2.29.1</jersey.version>
+
+        <jackson.version>2.10.0</jackson.version>
+        <jodatime.version>2.10.5</jodatime.version>
+
+        <jwt.api>${project.basedir}/src/main/resources/swagger/jwt.yaml</jwt.api>
+        <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
+        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml
+        </cm.events>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>${swagger.codegen.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-swagger-jwt</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${jwt.api}</inputSpec>
+                            <modelPackage>${project.groupId}.jwt.swagger.model</modelPackage>
+                            <apiPackage>${project.groupId}.jwt.swagger.api</apiPackage>
+                            <invokerPackage>${project.groupId}.jwt.swagger.invoker</invokerPackage>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <language>java</language>
+                            <configOptions>
+                                <serializableModel>true</serializableModel>
+                                <dateLibrary>joda</dateLibrary>
+                            </configOptions>
+                            <library>jersey2</library>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-swagger-cm-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${cm.api}</inputSpec>
+                            <modelPackage>${project.groupId}.swagger.model</modelPackage>
+                            <apiPackage>${project.groupId}.swagger.api</apiPackage>
+                            <invokerPackage>${project.groupId}.swagger.invoker</invokerPackage>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <language>java</language>
+                            <configOptions>
+                                <serializableModel>true</serializableModel>
+                                <dateLibrary>joda</dateLibrary>
+                            </configOptions>
+                            <library>jersey2</library>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-swagger-cm-events</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${cm.events}</inputSpec>
+                            <modelPackage>${project.groupId}.swagger.events</modelPackage>
+                            <generateApis>false</generateApis>
+                            <generateModelTests>false</generateModelTests>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <!-- override the default library to retrofit2 -->
+                            <language>java</language>
+                            <configOptions>
+                                <serializableModel>true</serializableModel>
+                                <dateLibrary>joda</dateLibrary>
+                            </configOptions>
+                            <library>jersey2</library>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                    <configuration>
+                        <argLine>
+                            -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                        </argLine>
+                        <useSystemClassLoader>false</useSystemClassLoader>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+
+        <!-- Pulled from generated client -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.annotations.version}</version>
+        </dependency>
+
+        <!-- HTTP client: jersey-client -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <!-- JSON processing: jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-base</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Joda time: if you use it -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
+        </dependency>
+
+        <!-- Base64 encoding that works in both JVM and Android -->
+        <dependency>
+            <groupId>com.brsanthu</groupId>
+            <artifactId>migbase64</artifactId>
+            <version>2.2</version>
+        </dependency>
+
+    </dependencies>
+</project>
