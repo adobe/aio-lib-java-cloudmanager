@@ -4,6 +4,7 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.swagger.invoker.ApiClient;
 import io.adobe.cloudmanager.swagger.invoker.ApiException;
 import io.adobe.cloudmanager.swagger.invoker.Pair;
@@ -31,7 +32,10 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     this.apiKey = apiKey;
     this.accessToken = accessToken;
     if (baseUrl != null) {
+      this.baseUrl = baseUrl;
       apiClient.setBasePath(baseUrl);
+    } else {
+      this.baseUrl = apiClient.getBasePath();
     }
   }
 
@@ -39,6 +43,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   private final String orgId;
   private final String apiKey;
   private final String accessToken;
+  private final String baseUrl;
 
   @Override
   public List<EmbeddedProgram> listPrograms() throws CloudManagerApiException {
@@ -46,48 +51,61 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       programList = get("/api/programs", new GenericType<ProgramList>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(e);
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.LIST_PROGRAMS, baseUrl, "/api/programs", e);
     }
-    return programList.getEmbedded().getPrograms().stream().map(p -> new EmbeddedProgram(p, this)).collect(Collectors.toList());
+    return programList.getEmbedded() == null ?
+      Collections.emptyList() :
+      programList.getEmbedded().getPrograms().stream().map(p -> new EmbeddedProgram(p, this)).collect(Collectors.toList());
   }
 
   @Override
   public List<Pipeline> listPipelines(String programId) throws CloudManagerApiException {
-    return listPipelines(programId, (o) -> true);
+    return listPipelines(programId, p -> true);
   }
 
   @Override
   public List<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
-    EmbeddedProgram embeddedProgram = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst().orElseThrow(() -> new CloudManagerApiException());
+    EmbeddedProgram embeddedProgram = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst()
+        .orElseThrow(() -> new CloudManagerApiException(CloudManagerApiException.ErrorType.FIND_PROGRAM, "8"));
     try {
       Program program = getProgram(embeddedProgram.getSelfLink());
       PipelineList pipelineList = get(program.getLinks().getHttpnsAdobeComadobecloudrelpipelines().getHref(), new GenericType<PipelineList>() {});
       return pipelineList.getEmbedded().getPipelines().stream().map(p -> new Pipeline(p, this)).filter(predicate).collect(Collectors.toList());
     } catch (ApiException e) {
-      throw new CloudManagerApiException();
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.LIST_PROGRAMS, baseUrl, "/api/programs", e);
     }
   }
 
   @Override
   public String startExecution(String programId, String pipelineId) throws CloudManagerApiException {
-    Pipeline pipeline = listPipelines(programId).stream().filter(p -> pipelineId.equals(p.getId())).findFirst().orElseThrow(() -> new CloudManagerApiException());
+    Pipeline pipeline = getPipeline(programId, pipelineId);
     return startExecution(pipeline);
+  }
+
+  private Pipeline getPipeline(String programId, String pipelineId) throws CloudManagerApiException {
+    return listPipelines(programId).stream().filter(p -> pipelineId.equals(p.getId())).findFirst()
+        .orElseThrow(() -> new CloudManagerApiException(CloudManagerApiException.ErrorType.LIST_PROGRAMS, baseUrl, "/api/programs", null));
   }
 
   @Override
   public String startExecution(Pipeline pipeline) throws CloudManagerApiException {
-    String executionsHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
+    String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
     Location location = null;
     try {
-      location = put(executionsHref, new GenericType<Location>() {});
+      location = put(executionHref, new GenericType<Location>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(e);
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.LIST_PROGRAMS, baseUrl, "/api/programs", e);
     }
-    return location.getLocation().replaceFirst("http(s)?://.*\\.adobe\\.io/", apiClient.getBasePath());
+    return location.getRewrittenUrl(apiClient.getBasePath());
   }
 
-  private Program getProgram(String path) throws ApiException {
-    return get(path, new GenericType<Program>() {});
+  private Program getProgram(String path) throws CloudManagerApiException {
+    try {
+      return get(path, new GenericType<Program>() {
+      });
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.GET_PROGRAM, baseUrl, path, e);
+    }
   }
 
   private <T> T get(String path, GenericType<T> returnType) throws ApiException {

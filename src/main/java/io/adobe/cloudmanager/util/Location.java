@@ -5,5 +5,9 @@ import lombok.Value;
 @Value
 public class Location {
 
-  private String location;
+  String url;
+
+  public String getRewrittenUrl(String baseUrl) {
+    return url.replaceFirst("http(s)?://.*\\.adobe\\.io/", baseUrl);
+  }
 }
