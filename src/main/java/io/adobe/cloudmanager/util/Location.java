@@ -8,6 +8,6 @@ public class Location {
   String url;
 
   public String getRewrittenUrl(String baseUrl) {
-    return url.replaceFirst("http(s)?://.*\\.adobe\\.io/", baseUrl);
+    return url.replaceFirst("http(s)?://.*\\.adobe\\.io/", baseUrl + "/");
   }
 }

@@ -52,6 +52,30 @@ class PipelinesTest extends AbstractApiTest {
     assertEquals("Could not find program 8", exception.getMessage(), "Message was correct");
   }
 
+  @Test
+  void startExecution_badPipeline() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("5", "10"), "Exception thrown");
+    assertEquals("Cannot start execution. Pipeline 10 does not exist in program 5.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void startExecution_failed412() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("5", "6"), "Exception thrown");
+    assertEquals("Cannot create execution. Pipeline already running.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void startExecution_failed404() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("5", "7"), "Exception thrown");
+    assertEquals(String.format("Cannot create execution: %s/api/program/5/pipeline/7/execution (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void startExecution_success() throws CloudManagerApiException{
+    String executionUrl = underTest.startExecution("5", "5");
+    assertEquals(String.format("%s/api/program/4/pipeline/8555/execution/12742", baseUrl), executionUrl, "URL was correct");
+  }
+
   private String buildPipelines() throws IOException {
     StringWriter writer = new StringWriter();
     JsonFactory jsonFactory = new JsonFactory();
@@ -97,10 +121,10 @@ class PipelinesTest extends AbstractApiTest {
     gen.writeEndArray();
     gen.writeFieldName("_links");
     gen.writeStartObject();
-    writeLink(gen, "self", "/api/programs/5/pipeline/5", false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", "/api/programs/5/pipeline/5/execution", false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", "/api/programs/5/pipeline/5/execution/{executionId}", true);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", "/api/programs/5/pipeline/5/variables", false);
+    writeLink(gen, "self", "/api/program/5/pipeline/5", false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", "/api/program/5/pipeline/5/execution", false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", "/api/program/5/pipeline/5/execution/{executionId}", true);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", "/api/program/5/pipeline/5/variables", false);
     gen.writeEndObject();
     gen.writeEndObject();
   }
@@ -112,10 +136,10 @@ class PipelinesTest extends AbstractApiTest {
     gen.writeStringField("status", status);
     gen.writeFieldName("_links");
     gen.writeStartObject();
-    writeLink(gen, "self", String.format("/api/programs/5/pipeline/%s", id), false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", String.format("/api/programs/5/pipeline/%s/execution", id), false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", String.format("/api/programs/5/pipeline/%s/execution/{executionId}", id), true);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", String.format("/api/programs/5/pipeline/%s/variables", id), false);
+    writeLink(gen, "self", String.format("/api/program/5/pipeline/%s", id), false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", String.format("/api/program/5/pipeline/%s/execution", id), false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", String.format("/api/program/5/pipeline/%s/execution/{executionId}", id), true);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", String.format("/api/program/5/pipeline/%s/variables", id), false);
     gen.writeEndObject();
     gen.writeEndObject();
   }
