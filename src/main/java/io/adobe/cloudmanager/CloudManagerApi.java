@@ -44,9 +44,10 @@ public interface CloudManagerApi {
     Future<List<DownloadedLog>> downloadLogs(String programId, String environmentId, Service service, LogName name, File dir);
 
     Future<Void> deletePipeline(String programId, String pipelineId);
-
-    Future<Pipeline> updatePipeline(String programId, String pipelineId, PipelineUpdate updates);
-
+*/
+    Pipeline updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException;
+    Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException;
+/*
     Future<String> getDeveloperConsoleUrl(String programId, String environmentId);
 
     Future<List<Variable>> getEnvironmentVariables(String programId, String environmentId);

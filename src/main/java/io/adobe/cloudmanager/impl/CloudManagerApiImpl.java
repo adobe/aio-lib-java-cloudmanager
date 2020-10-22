@@ -2,12 +2,14 @@ package io.adobe.cloudmanager.impl;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.CloudManagerApi;
+import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.swagger.invoker.ApiClient;
 import io.adobe.cloudmanager.swagger.invoker.ApiException;
 import io.adobe.cloudmanager.swagger.invoker.Pair;
 import io.adobe.cloudmanager.swagger.model.PipelineList;
+import io.adobe.cloudmanager.swagger.model.PipelinePhase;
 import io.adobe.cloudmanager.swagger.model.Program;
 import io.adobe.cloudmanager.swagger.model.ProgramList;
 import io.adobe.cloudmanager.util.Location;
@@ -87,6 +89,10 @@ public class CloudManagerApiImpl implements CloudManagerApi {
         .orElseThrow(() -> new CloudManagerApiException(errorType, pipelineId, programId));
   }
 
+  private Pipeline getPipeline(String programId, String pipelineId) throws CloudManagerApiException {
+   return getPipeline(programId, pipelineId, CloudManagerApiException.ErrorType.FIND_PIPELINE);
+  }
+
   @Override
   public String startExecution(Pipeline pipeline) throws CloudManagerApiException {
     String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
@@ -111,12 +117,45 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
+  @Override
+  public Pipeline updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException {
+    Pipeline original = getPipeline(programId, pipelineId);
+    return updatePipeline(original, updates);
+  }
+
+  @Override
+  public Pipeline updatePipeline(Pipeline original, PipelineUpdate updates) throws CloudManagerApiException {
+    io.adobe.cloudmanager.swagger.model.Pipeline toUpdate = new io.adobe.cloudmanager.swagger.model.Pipeline();
+    PipelinePhase buildPhase = original.getPhases().stream().filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType())
+        .findFirst().orElseThrow(() -> new CloudManagerApiException(CloudManagerApiException.ErrorType.NO_BUILD_PHASE, original.getId()));
+    if (updates.getBranch() != null) {
+      buildPhase.setBranch(updates.getBranch());
+    }
+
+    if (updates.getRepositoryId() != null) {
+      buildPhase.setRepositoryId(updates.getRepositoryId());
+    }
+    toUpdate.getPhases().add(buildPhase);
+
+    String pipelinePath = original.getLinks().getSelf().getHref();
+    try {
+      io.adobe.cloudmanager.swagger.model.Pipeline result = patch(pipelinePath, toUpdate, new GenericType<io.adobe.cloudmanager.swagger.model.Pipeline>() {});
+      return new Pipeline(result, this);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.UPDATE_PIPELINE, baseUrl, pipelinePath, e);
+    }
+  }
+
   private <T> T get(String path, GenericType<T> returnType) throws ApiException {
     return doRequest(path, "GET", Collections.emptyList(), null, returnType);
   }
 
   private <T> T put(String path, GenericType<T> returnType) throws ApiException {
     return doRequest(path, "PUT", Collections.emptyList(), "", returnType);
+  }
+
+  private <T> T patch(String path, Object body, GenericType<T> returnType) throws ApiException {
+    return doRequest(path, "PATCH", Collections.emptyList(), body, returnType);
   }
 
   private <T> T doRequest(String path, String method, List<Pair> queryParams, Object body, GenericType<T> returnType) throws ApiException {
