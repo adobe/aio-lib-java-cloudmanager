@@ -39,12 +39,6 @@ class PipelinesTest extends AbstractApiTest {
     client.when(
         request().withMethod("PATCH").withPath("/api/program/5/pipeline/5").withContentType(MediaType.APPLICATION_JSON)
     ).respond(this::handleGoodPatch);
-
-    client.when(
-        request().withMethod("PATCH").withPath("/api/program/5/pipeline/8")
-    ).respond(
-        response().withStatusCode(405) // this is an arbitrary error code just used for testing
-    );
   }
 
   private HttpResponse handleGoodPatch(HttpRequest request) throws IOException {
@@ -181,6 +175,36 @@ class PipelinesTest extends AbstractApiTest {
     client.verify(request().withMethod("PATCH").withPath("/api/program/5/pipeline/5").withContentType(MediaType.APPLICATION_JSON));
 
     assertThat("update was successful", result.getPhases(), hasItem(expected));
+  }
+
+  @Test
+  void deletePipeline_returns400() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deletePipeline("5", "7"), "Exception was thrown");
+    assertEquals(String.format("Cannot delete pipeline: %s/api/program/5/pipeline/7 (400 Bad Request)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void deletePipeline_badPipeline() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
+        () -> underTest.deletePipeline("5", "10"));
+    assertEquals("Pipeline 10 does not exist in program 5.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void deletePipeline_success() throws CloudManagerApiException {
+    underTest.deletePipeline("5", "5");
+
+    client.verify(request().withMethod("DELETE").withPath("/api/program/5/pipeline/5"));
+  }
+
+  @Test
+  void deletePipeline_viaPipeline() throws Exception {
+    List<Pipeline> pipelines = underTest.listPipelines("5");
+    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("5")).findFirst().orElseThrow(Exception::new);
+
+    pipeline.delete();
+
+    client.verify(request().withMethod("DELETE").withPath("/api/program/5/pipeline/5"));
   }
 
   private String buildPipelines() throws IOException {
