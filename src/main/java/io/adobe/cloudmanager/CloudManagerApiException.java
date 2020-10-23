@@ -1,5 +1,25 @@
 package io.adobe.cloudmanager;
 
+/*-
+ * #%L
+ * Adobe Cloud Manager Client Library
+ * %%
+ * Copyright (C) 2020 Adobe Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,12 +30,23 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+/**
+ * Represents exception states that may occur during interactions with the AdobeIO API.
+ */
 public class CloudManagerApiException extends Exception {
 
   private static final String DEFAULT_REASON = "Unknown";
 
   private final String message;
 
+  /**
+   * Creates a new exception.
+   *
+   * @param type the Error type that occurred.
+   * @param baseUrl the base url for the AdobeIO endpoint that generated the error
+   * @param apiPath the API path of the AdobeIO endpoint that generated the error
+   * @param cause the root cause of the error
+   */
   public CloudManagerApiException(ErrorType type, String baseUrl, String apiPath, ApiException cause) {
     super(cause);
     ErrorPayload errorBody = getErrorBody(cause);
@@ -37,6 +68,12 @@ public class CloudManagerApiException extends Exception {
     this.message = String.format(type.message, errorBuilder.toString());
   }
 
+  /**
+   * Generates a new exception with the specified message for the Error Type context.
+   *
+   * @param type the {@link ErrorType} that occurred
+   * @param vars the custom message for the type context
+   */
   public CloudManagerApiException(ErrorType type, String... vars) {
     this.message = String.format(type.message, (Object[]) vars);
   }

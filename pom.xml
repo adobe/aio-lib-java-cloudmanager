@@ -5,11 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.adobe.cloudmanager</groupId>
-    <artifactId>adobe-cloudmanager-client-lib</artifactId>
+    <artifactId>aio-lib-cloud-manager</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
-    <description>Library for accessing Adobe Cloud Manager endpoints.</description>
+    <description>Library for accessing AdobeIO Cloud Manager endpoints.</description>
+
+    <organization>
+        <name>Adobe Inc.</name>
+    </organization>
+    <inceptionYear>2020</inceptionYear>
 
     <licenses>
         <license>
@@ -38,8 +43,10 @@
 
         <jwt.api>${project.basedir}/src/main/resources/swagger/jwt.yaml</jwt.api>
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
-        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml
-        </cm.events>
+        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <build>
@@ -125,6 +132,28 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <verbose>false</verbose>
+                    <canUpdateCopyright>true</canUpdateCopyright>
+                    <canUpdateDescription>true</canUpdateDescription>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>add-license-headers</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <licenseName>apache_v2</licenseName>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>

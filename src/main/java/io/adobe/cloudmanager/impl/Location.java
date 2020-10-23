@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager;
+package io.adobe.cloudmanager.impl;
 
 /*-
  * #%L
@@ -20,16 +20,23 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import lombok.Builder;
 import lombok.Value;
 
-/**
- * Used to make updates to a Pipeline definition.
+/*
+ * A location URL that may be returned via response headers from the AdobeIO API calls.
  */
-@Value @Builder
-public class PipelineUpdate {
+@Value
+public class Location {
 
-    String branch;
-    String repositoryId;
+  String url;
 
+  /**
+   * Retwrite this URL using the specified base.
+   *
+   * @param baseUrl the new base URL
+   * @return this URL with the replaced base
+   */
+  public String getRewrittenUrl(String baseUrl) {
+    return url.replaceFirst("http(s)?://.*\\.adobe\\.io/", baseUrl + "/");
+  }
 }
