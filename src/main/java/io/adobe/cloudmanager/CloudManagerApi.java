@@ -42,9 +42,10 @@ public interface CloudManagerApi {
     Future<List<LogOptionRepresentation>> listAvailableLogOptions(String programId, String environmentId);
 
     Future<List<DownloadedLog>> downloadLogs(String programId, String environmentId, Service service, LogName name, File dir);
-
-    Future<Void> deletePipeline(String programId, String pipelineId);
 */
+    void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException;
+    void deletePipeline(Pipeline pipeline) throws CloudManagerApiException;
+
     Pipeline updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException;
     Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException;
 /*
