@@ -62,4 +62,8 @@ public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
   public Pipeline update(PipelineUpdate update) throws CloudManagerApiException {
     return client.updatePipeline(this, update);
   }
+
+  public void delete() throws CloudManagerApiException {
+    client.deletePipeline(this);
+  }
 }

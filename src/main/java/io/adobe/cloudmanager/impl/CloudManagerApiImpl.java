@@ -165,6 +165,22 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
+  @Override
+  public void deletePipeline(Pipeline pipeline) throws CloudManagerApiException {
+    String pipelinePath = pipeline.getLinks().getSelf().getHref();
+    try {
+      delete(pipelinePath);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.DELETE_PIPELINE, baseUrl, pipelinePath, e);
+    }
+  }
+
+  @Override
+  public void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException {
+    Pipeline original = getPipeline(programId, pipelineId);
+    deletePipeline(original);
+  }
+
   private <T> T get(String path, GenericType<T> returnType) throws ApiException {
     return doRequest(path, "GET", Collections.emptyList(), null, returnType);
   }
@@ -175,6 +191,10 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   private <T> T patch(String path, Object body, GenericType<T> returnType) throws ApiException {
     return doRequest(path, "PATCH", Collections.emptyList(), body, returnType);
+  }
+
+  private <T> T delete(String path) throws ApiException {
+    return doRequest(path, "DELETE", Collections.emptyList(), null, null);
   }
 
   private <T> T doRequest(String path, String method, List<Pair> queryParams, Object body, GenericType<T> returnType) throws ApiException {

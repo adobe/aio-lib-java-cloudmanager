@@ -99,11 +99,38 @@
   },
   {
     "httpRequest" : {
+      "method" : "PATCH",
+      "path" : "/api/program/5/pipeline/8"
+    },
+    "httpResponse" : {
+      "statusCode": 405
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "DELETE",
+      "path" : "/api/program/5/pipeline/5"
+    },
+    "httpResponse" : {
+      "statusCode": 204
+    }
+  },
+  {
+    "httpRequest" : {
       "method" : "PUT",
       "path" : "/api/program/5/pipeline/6/execution"
     },
     "httpResponse" : {
       "statusCode": 412
+    }
+  },
+  {
+    "httpRequest" : {
+      "method" : "DELETE",
+      "path" : "/api/program/5/pipeline/7"
+    },
+    "httpResponse" : {
+      "statusCode": 400
     }
   },
   {
