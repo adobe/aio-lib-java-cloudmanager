@@ -2,6 +2,7 @@ package io.adobe.cloudmanager.model;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.PipelineUpdate;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
@@ -21,5 +22,9 @@ public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
 
   public String startExecution() throws CloudManagerApiException {
     return client.startExecution(this);
+  }
+
+  public Pipeline update(PipelineUpdate update) throws CloudManagerApiException {
+    return client.updatePipeline(this, update);
   }
 }
