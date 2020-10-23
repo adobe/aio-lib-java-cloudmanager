@@ -40,11 +40,16 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
 
     final List<Expectation> expectations = new ArrayList<>();
     ExpectationSerializer serializer = new ExpectationSerializer(new MockServerLogger((CloudManagerExpectationInitializer.class)));
-    String[] folders = { "pipelines", "programs" };
+    String[] files = {
+        "executions/currentExecution.json",
+        "executions/execution1000.json",
+        "pipelines/mockserver.json",
+        "programs/mockserver.json"
+    };
 
-      Arrays.stream(folders).forEach(s -> {
+      Arrays.stream(files).forEach(s -> {
         try {
-          InputStream is = CloudManagerExpectationInitializer.class.getClassLoader().getResourceAsStream(String.format("%s/mockserver.json", s));
+          InputStream is = CloudManagerExpectationInitializer.class.getClassLoader().getResourceAsStream(s);
           String json = IOUtils.toString(is, "UTF-8");
           Arrays.stream(serializer.deserializeArray(json, false)).forEach(expectations::add);
         } catch (IOException e) {

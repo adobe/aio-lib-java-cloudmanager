@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,65 +25,74 @@ import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.swagger.model.PipelineExecution;
 
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.
- *
+ * <p>
  * Implementations of this interface must be context aware of the Adobe IMS Org when making API calls.
  *
  * @since 1.0
  */
 public interface CloudManagerApi {
 
-    /**
-     * List all programs in the organization
-     *
-     * @return a list of {@link EmbeddedProgram}s
-     * @throws CloudManagerApiException when any error occurs
-     */
-    List<EmbeddedProgram> listPrograms() throws CloudManagerApiException;
+  /**
+   * List all programs in the organization
+   *
+   * @return a list of {@link EmbeddedProgram}s
+   * @throws CloudManagerApiException when any error occurs
+   */
+  List<EmbeddedProgram> listPrograms() throws CloudManagerApiException;
 
-    /**
-     * Lists all pipelines within the specified program.
-     *
-     * @param programId the program id
-     * @return the list of {@link Pipeline}s
-     * @throws CloudManagerApiException when any error occurs
-     */
-    List<Pipeline> listPipelines(String programId) throws CloudManagerApiException;
+  /**
+   * Lists all pipelines within the specified program.
+   *
+   * @param programId the program id
+   * @return the list of {@link Pipeline}s
+   * @throws CloudManagerApiException when any error occurs
+   */
+  List<Pipeline> listPipelines(String programId) throws CloudManagerApiException;
 
-    /**
-     * Lists all pipelines in the program, that meed the predicate clause.
-     *
-     * @param programId the program id
-     * @param predicate a predicate used to filter the pipelines
-     * @return a list of {@link Pipeline}s
-     * @throws CloudManagerApiException when any error occurs
-     */
-    List<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException;
+  /**
+   * Lists all pipelines in the program, that meed the predicate clause.
+   *
+   * @param programId the program id
+   * @param predicate a predicate used to filter the pipelines
+   * @return a list of {@link Pipeline}s
+   * @throws CloudManagerApiException when any error occurs
+   */
+  List<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException;
 
-    /**
-     * Starts the specified pipeline.
-     *
-     * @param programId the program id context of the pipeline
-     * @param pipelineId the id of the pipeline
-     * @return URL to the started pipeline.
-     * @throws CloudManagerApiException when any error occurs
-     */
-    String startExecution(String programId, String pipelineId) throws CloudManagerApiException;
+  /**
+   * Starts the specified pipeline.
+   *
+   * @param programId  the program id context of the pipeline
+   * @param pipelineId the id of the pipeline
+   * @return URL to the started pipeline.
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String startExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
-    /**
-     * Starts the specified pipeline
-     * @param pipeline the {@link Pipeline} to start
-     * @return URL to the started pipeline.
-     * @throws CloudManagerApiException when any error occurs
-     */
-    String startExecution(Pipeline pipeline) throws CloudManagerApiException;
+  /**
+   * Starts the specified pipeline
+   *
+   * @param pipeline the {@link Pipeline} to start
+   * @return URL to the started pipeline.
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String startExecution(Pipeline pipeline) throws CloudManagerApiException;
+
+  /**
+   * Returns the current execution of the specified pipeline.
+   *
+   * @param programId  the program id context of the pipeline
+   * @param pipelineId the pipeline id of to find the execution
+   * @return the execution details of the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  PipelineExecution getCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
     /*
-
-    Future<PipelineExecution> getCurrentExecution(String programId, String pipelineId);
-
     Future<PipelineExecution> getExecution(String programId, String pipelineId, String executionId);
 
     Future<PipelineStepMetrics> getQualityGateResults(String programId, String pipelineId, String executionId,
@@ -103,29 +112,32 @@ public interface CloudManagerApi {
     Future<List<DownloadedLog>> downloadLogs(String programId, String environmentId, Service service, LogName name, File dir);
 */
 
-    void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException;
-    void deletePipeline(Pipeline pipeline) throws CloudManagerApiException;
+  void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException;
 
-    /**
-     * Changes details about a pipeline.
-     *
-     * @param programId the program id for pipeline context
-     * @param pipelineId the id of the pipeline to change
-     * @param updates the updates to make to the pipeline
-     * @return the updated pipeline
-     * @throws CloudManagerApiException when any error occurs
-     */
-    Pipeline updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException;
+  void deletePipeline(Pipeline pipeline) throws CloudManagerApiException;
 
-    /**
-     * Changes details about a pipeline.
-     *
-     * @param pipeline the pipeline to update
-     * @param updates the updates to make to the pipeline
-     * @return the updated pipeline
-     * @throws CloudManagerApiException when any error occurs
-     */
-    Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException;
+  /**
+   * Changes details about a pipeline.
+   *
+   * @param programId  the program id for pipeline context
+   * @param pipelineId the id of the pipeline to change
+   * @param updates    the updates to make to the pipeline
+   * @return the updated pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Pipeline updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException;
+
+  /**
+   * Changes details about a pipeline.
+   *
+   * @param pipeline the pipeline to update
+   * @param updates  the updates to make to the pipeline
+   * @return the updated pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException;
+
+
 /*
     Future<String> getDeveloperConsoleUrl(String programId, String environmentId);
 
