@@ -20,9 +20,9 @@ package io.adobe.cloudmanager.util;
  * #L%
  */
 
-import io.adobe.cloudmanager.model.Pipeline;
-
 import java.util.function.Predicate;
+
+import io.adobe.cloudmanager.model.Pipeline;
 
 /**
  * Predicates used to filter response lists from the API calls.

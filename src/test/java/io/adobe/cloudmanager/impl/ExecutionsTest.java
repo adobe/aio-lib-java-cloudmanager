@@ -21,7 +21,8 @@ package io.adobe.cloudmanager.impl;
  */
 
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.swagger.model.PipelineExecution;
+import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.model.PipelineExecution;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.junit.jupiter.MockServerExtension;
@@ -39,9 +40,38 @@ public class ExecutionsTest extends AbstractApiTest {
   @Test
   void getCurrentExecution_success() throws CloudManagerApiException {
     PipelineExecution execution = underTest.getCurrentExecution("5", "6");
-    assertEquals("1000",execution.getId(), "Id matches");
-    assertEquals("5", execution.getProgramId(), "Program Id matches");
+    assertEquals("1000",execution.getId(), "Execution Id matches");
     assertEquals("6", execution.getPipelineId(), "Pipeline Id matches");
+    assertEquals("5", execution.getProgramId(), "Program Id matches");
+  }
+
+  @Test
+  void getExecution_missingPipeline() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution("5", "100", "1001"), "Exception thrown for 404");
+    assertEquals("Pipeline 100 does not exist in program 5.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getExecution_missingExecution() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution("5", "5", "1002"), "Exception thrown for 404");
+    assertEquals(String.format("Cannot get execution: %s/api/program/5/pipeline/5/execution/1002 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getExecution_success() throws CloudManagerApiException {
+    PipelineExecution execution = underTest.getExecution("5", "7", "1001");
+    assertEquals("1001", execution.getId(), "Execution Id matches");
+    assertEquals("7", execution.getPipelineId(), "Pipeline Id matches");
+    assertEquals("5", execution.getProgramId(), "Program Id matches");
+  }
+
+  @Test
+  void getExecution_via_pipeline() throws CloudManagerApiException {
+    Pipeline pipeline = underTest.listPipelines("5", p -> p.getId().equals("7")).get(0);
+    PipelineExecution execution = pipeline.getExecution("1001");
+    assertEquals("1001",execution.getId(), "Execution Id matches");
+    assertEquals("7", execution.getPipelineId(), "Pipeline Id matches");
+    assertEquals("5", execution.getProgramId(), "Program Id matches");
   }
 }
 

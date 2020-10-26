@@ -20,8 +20,18 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-import io.adobe.cloudmanager.CloudManagerApiException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.GenericType;
+
+import org.apache.commons.text.StringSubstitutor;
+
 import io.adobe.cloudmanager.CloudManagerApi;
+import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
@@ -33,18 +43,15 @@ import io.adobe.cloudmanager.swagger.model.PipelineList;
 import io.adobe.cloudmanager.swagger.model.PipelinePhase;
 import io.adobe.cloudmanager.swagger.model.Program;
 import io.adobe.cloudmanager.swagger.model.ProgramList;
-
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
-import javax.ws.rs.core.GenericType;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 public class CloudManagerApiImpl implements CloudManagerApi {
+
+  private final ApiClient apiClient = new ConfiguredApiClient();
+  private final String orgId;
+  private final String apiKey;
+  private final String accessToken;
+  private final String baseUrl;
 
   public CloudManagerApiImpl(String orgId, String apiKey, String accessToken) {
     this(orgId, apiKey, accessToken, null);
@@ -62,11 +69,9 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
-  private final ApiClient apiClient = new ConfiguredApiClient();
-  private final String orgId;
-  private final String apiKey;
-  private final String accessToken;
-  private final String baseUrl;
+  private static String processTemplate(String path, Map<String, String> values) {
+    return new StringSubstitutor(values, "{", StringSubstitutor.DEFAULT_VAR_END).replace(path);
+  }
 
   @Override
   public List<EmbeddedProgram> listPrograms() throws CloudManagerApiException {
@@ -77,8 +82,8 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       throw new CloudManagerApiException(ErrorType.LIST_PROGRAMS, baseUrl, "/api/programs", e);
     }
     return programList.getEmbedded() == null ?
-      Collections.emptyList() :
-      programList.getEmbedded().getPrograms().stream().map(p -> new EmbeddedProgram(p, this)).collect(Collectors.toList());
+        Collections.emptyList() :
+        programList.getEmbedded().getPrograms().stream().map(p -> new EmbeddedProgram(p, this)).collect(Collectors.toList());
   }
 
   @Override
@@ -162,10 +167,28 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
+  @Override
+  public PipelineExecution getExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+    Pipeline pipeline = getPipeline(programId, pipelineId);
+    return getExecution(pipeline, executionId);
+  }
+
+  @Override
+  public PipelineExecution getExecution(Pipeline pipeline, String executionId) throws CloudManagerApiException {
+    Map<String, String> values = new HashMap<>();
+    values.put("executionId", executionId);
+    String executionHref = processTemplate(pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecutionid().getHref(), values);
+    try {
+      io.adobe.cloudmanager.swagger.model.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.swagger.model.PipelineExecution>(){});
+      return new PipelineExecution(execution, this);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
+    }
+  }
+
   private Program getProgram(String path) throws CloudManagerApiException {
     try {
-      return get(path, new GenericType<Program>() {
-      });
+      return get(path, new GenericType<Program>() {});
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_PROGRAM, baseUrl, path, e);
     }

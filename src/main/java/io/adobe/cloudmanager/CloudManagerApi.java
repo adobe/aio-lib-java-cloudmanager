@@ -21,7 +21,10 @@ package io.adobe.cloudmanager;
  */
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
+
+import org.apache.commons.text.StringSubstitutor;
 
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
@@ -92,9 +95,28 @@ public interface CloudManagerApi {
    */
   PipelineExecution getCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
-    /*
-    Future<PipelineExecution> getExecution(String programId, String pipelineId, String executionId);
+  /**
+   * Returns the specified execution of the pipeline.
+   *
+   * @param pipeline the pipeline context for the exectuion
+   * @param executionId the id of the execution to retrieve
+   * @return the execution details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  PipelineExecution getExecution(Pipeline pipeline, String executionId) throws CloudManagerApiException;
 
+  /**
+   * Returns the specified execution of the pipeline.
+   *
+   * @param programId the program id context of the pipeline
+   * @param pipelineId the pipeline id
+   * @param executionId the id of the execution to retrieve
+   * @return the execution details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  PipelineExecution getExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException;
+
+    /*
     Future<PipelineStepMetrics> getQualityGateResults(String programId, String pipelineId, String executionId,
                                                       StepStateAction action);
 

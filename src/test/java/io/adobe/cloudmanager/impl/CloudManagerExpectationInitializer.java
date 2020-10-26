@@ -41,8 +41,9 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
     final List<Expectation> expectations = new ArrayList<>();
     ExpectationSerializer serializer = new ExpectationSerializer(new MockServerLogger((CloudManagerExpectationInitializer.class)));
     String[] files = {
-        "executions/currentExecution.json",
+        "executions/mockserver.json",
         "executions/execution1000.json",
+        "executions/execution1001.json",
         "pipelines/mockserver.json",
         "programs/mockserver.json"
     };

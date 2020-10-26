@@ -116,5 +116,14 @@
         }
       }
     }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/5/pipeline/5/execution/1002"
+    },
+    "httpResponse" : {
+      "statusCode": 404
+    }
   }
 ]

@@ -54,6 +54,17 @@ public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
   }
 
   /**
+   * Returns the specified execution.
+   *
+   * @param executionId the id of the execution to retrieve
+   * @return the execution details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  public PipelineExecution getExecution(String executionId) throws CloudManagerApiException {
+    return client.getExecution(this, executionId);
+  }
+
+  /**
    * Updates this pipeline with the specified changes.
    * @param update the updates to make to this pipeline
    * @return the updated Pipeline.
