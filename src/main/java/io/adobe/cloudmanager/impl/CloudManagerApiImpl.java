@@ -28,6 +28,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.GenericType;
 
+import io.adobe.cloudmanager.model.Environment;
+import io.adobe.cloudmanager.swagger.model.EnvironmentList;
 import org.apache.commons.text.StringSubstitutor;
 
 import io.adobe.cloudmanager.CloudManagerApi;
@@ -97,12 +99,19 @@ public class CloudManagerApiImpl implements CloudManagerApi {
         .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
     Program program = getProgram(embeddedProgram.getSelfLink());
     String pipelinesHref = program.getLinks().getHttpnsAdobeComadobecloudrelpipelines().getHref();
+    PipelineList pipelineList;
     try {
-      PipelineList pipelineList = get(pipelinesHref, new GenericType<PipelineList>() {});
-      return pipelineList.getEmbedded().getPipelines().stream().map(p -> new Pipeline(p, this)).filter(predicate).collect(Collectors.toList());
+      pipelineList = get(pipelinesHref, new GenericType<PipelineList>() {});
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.LIST_PIPELINES, baseUrl, pipelinesHref, e);
     }
+
+    if (pipelineList == null ||
+        pipelineList.getEmbedded() == null ||
+        pipelineList.getEmbedded().getPipelines() == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_PIPELINES, programId);
+    }
+    return pipelineList.getEmbedded().getPipelines().stream().map(p -> new Pipeline(p, this)).filter(predicate).collect(Collectors.toList());
   }
 
   @Override
@@ -208,6 +217,62 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   public void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException {
     Pipeline original = getPipeline(programId, pipelineId);
     deletePipeline(original);
+  }
+
+  @Override
+  public void deleteProgram(String programId) throws CloudManagerApiException {
+    List<EmbeddedProgram> programs = listPrograms();
+    EmbeddedProgram program = programs.stream().filter(p -> programId.equals(p.getId())).findFirst().
+        orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
+    deleteProgram(program);
+  }
+
+  @Override
+  public void deleteProgram(EmbeddedProgram program) throws CloudManagerApiException {
+    String href = program.getLinks().getSelf().getHref();
+    try {
+      delete(href);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.DELETE_PROGRAM, baseUrl, href, e);
+    }
+  }
+
+  @Override
+  public List<Environment> listEnvironments(String programId) throws CloudManagerApiException {
+    EmbeddedProgram embeddedProgram = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst()
+        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
+    Program program = getProgram(embeddedProgram.getSelfLink());
+    String environmentsHref = program.getLinks().getHttpnsAdobeComadobecloudrelenvironments().getHref();
+    EnvironmentList environmentList;
+    try {
+      environmentList = get(environmentsHref, new GenericType<EnvironmentList>() {});
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.RETRIEVE_ENVIRONMENTS, baseUrl, environmentsHref, e);
+    }
+    if (environmentList == null ||
+        environmentList.getEmbedded() == null ||
+        environmentList.getEmbedded().getEnvironments() == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_ENVIRONMENTS, programId);
+    }
+    return environmentList.getEmbedded().getEnvironments().stream().map(e -> new Environment(e, this)).collect(Collectors.toList());
+  }
+
+  @Override
+  public void deleteEnvironment(Environment environment) throws CloudManagerApiException {
+    String environmentPath = environment.getLinks().getSelf().getHref();
+    try {
+      delete(environmentPath);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.DELETE_ENVIRONMENT, baseUrl, environmentPath, e);
+    }
+  }
+
+  @Override
+  public void deleteEnvironment(String programId, String environmentId) throws CloudManagerApiException {
+    List<Environment> environments = listEnvironments(programId);
+    Environment environment = environments.stream().filter(e -> environmentId.equals(e.getId())).findFirst().
+        orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_ENVIRONMENT, environmentId, programId));
+    deleteEnvironment(environment);
   }
 
   private Pipeline getPipeline(String programId, String pipelineId, CloudManagerApiException.ErrorType errorType) throws CloudManagerApiException {

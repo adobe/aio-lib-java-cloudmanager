@@ -30,6 +30,7 @@ import org.mockserver.junit.jupiter.MockServerExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockserver.model.HttpRequest.request;
 
 @ExtendWith(MockServerExtension.class)
 class ProgramsTest extends AbstractApiTest {
@@ -78,5 +79,34 @@ class ProgramsTest extends AbstractApiTest {
   void listPrograms_success() throws CloudManagerApiException {
     List<EmbeddedProgram> programs = underTest.listPrograms();
     assertEquals(4, programs.size(), "Correct length of program list");
+  }
+
+  @Test
+  void deleteProgram_failure() throws CloudManagerApiException {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
+        () -> underTest.deleteProgram("5"), "Exception was thrown");
+    assertEquals(String.format("Cannot delete program: %s/api/program/5 (400 Bad Request)", baseUrl), exception.getMessage(), "Correct exception message");
+    client.verify(request().withMethod("DELETE").withPath("/api/program/5"));
+  }
+
+  @Test
+  void deleteProgram_notFound() throws CloudManagerApiException {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
+        () -> underTest.deleteProgram("11"), "Exception was thrown");
+    assertEquals("Could not find program 11", exception.getMessage(), "Correct exception message");
+  }
+
+  @Test
+  void deleteProgram_success() throws CloudManagerApiException {
+    underTest.deleteProgram("6");
+    client.verify(request().withMethod("DELETE").withPath("/api/program/6"));
+  }
+
+  @Test
+  void deleteProgram_viaProgram() throws Exception {
+    List<EmbeddedProgram> programs = underTest.listPrograms();
+    EmbeddedProgram program = programs.stream().filter(p -> p.getId().equals("6")).findFirst().orElseThrow(Exception::new);
+    program.delete();
+    client.verify(request().withMethod("DELETE").withPath("/api/program/6"));
   }
 }
