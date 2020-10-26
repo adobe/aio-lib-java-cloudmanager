@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.swagger.model.PipelinePhase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,8 +107,8 @@ class PipelinesTest extends AbstractApiTest {
   void startExecution_via_pipeline() throws Exception  {
     List<Pipeline> pipelines = underTest.listPipelines("5");
     Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("5")).findFirst().orElseThrow(Exception::new);
-    String executionUrl = pipeline.startExecution();
-    assertEquals(String.format("%s/api/program/4/pipeline/8555/execution/12742", baseUrl), executionUrl, "URL was correct");
+    PipelineExecution execution = pipeline.startExecution();
+    assertEquals("/api/program/5/pipeline/5/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
   }
 
   @Test
@@ -130,8 +131,8 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void startExecution_success() throws CloudManagerApiException{
-    String executionUrl = underTest.startExecution("5", "5");
-    assertEquals(String.format("%s/api/program/4/pipeline/8555/execution/12742", baseUrl), executionUrl, "URL was correct");
+    PipelineExecution execution = underTest.startExecution("5", "5");
+    assertEquals("/api/program/5/pipeline/5/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
   }
 
   @Test

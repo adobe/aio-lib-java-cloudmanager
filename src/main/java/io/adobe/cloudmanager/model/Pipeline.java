@@ -46,10 +46,10 @@ public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
   /**
    * Starts this pipeline.
    *
-   * @return a link to the started pipeline.
+   * @return the new execution.
    * @throws CloudManagerApiException when any errors occur.
    */
-  public String startExecution() throws CloudManagerApiException {
+  public PipelineExecution startExecution() throws CloudManagerApiException {
     return client.startExecution(this);
   }
 

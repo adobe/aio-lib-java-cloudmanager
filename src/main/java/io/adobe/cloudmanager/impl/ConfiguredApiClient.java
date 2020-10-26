@@ -21,8 +21,6 @@ package io.adobe.cloudmanager.impl;
  */
 
 import io.adobe.cloudmanager.swagger.invoker.ApiClient;
-import io.adobe.cloudmanager.util.LocationMessageBodyReader;
-import org.glassfish.jersey.client.ClientConfig;
 
 import javax.ws.rs.core.Response;
 import java.util.Collections;
@@ -36,11 +34,6 @@ import java.util.stream.Collectors;
 public class ConfiguredApiClient extends ApiClient {
 
   public static final String HEADER_REASON = "x-cmapi-reason";
-
-  @Override
-  protected void performAdditionalClientConfiguration(ClientConfig clientConfig) {
-    clientConfig.register(LocationMessageBodyReader.class);
-  }
 
   @Override
   protected Map<String, List<String>> buildResponseHeaders(Response response) {

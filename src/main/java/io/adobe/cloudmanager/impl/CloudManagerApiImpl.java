@@ -25,10 +25,10 @@ import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.swagger.invoker.ApiClient;
 import io.adobe.cloudmanager.swagger.invoker.ApiException;
 import io.adobe.cloudmanager.swagger.invoker.Pair;
-import io.adobe.cloudmanager.swagger.model.PipelineExecution;
 import io.adobe.cloudmanager.swagger.model.PipelineList;
 import io.adobe.cloudmanager.swagger.model.PipelinePhase;
 import io.adobe.cloudmanager.swagger.model.Program;
@@ -101,24 +101,24 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public String startExecution(String programId, String pipelineId) throws CloudManagerApiException {
+  public PipelineExecution startExecution(String programId, String pipelineId) throws CloudManagerApiException {
     Pipeline pipeline = getPipeline(programId, pipelineId, ErrorType.FIND_PIPELINE_START);
     return startExecution(pipeline);
   }
 
   @Override
-  public String startExecution(Pipeline pipeline) throws CloudManagerApiException {
+  public PipelineExecution startExecution(Pipeline pipeline) throws CloudManagerApiException {
     String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
-    Location location = null;
+    io.adobe.cloudmanager.swagger.model.PipelineExecution execution = null;
     try {
-      location = put(executionHref, new GenericType<Location>() {});
+      execution = put(executionHref, new GenericType<io.adobe.cloudmanager.swagger.model.PipelineExecution>() {});
     } catch (ApiException e) {
       if (412 == e.getCode()) {
         throw new CloudManagerApiException(ErrorType.PIPELINE_START_RUNNING);
       }
       throw new CloudManagerApiException(ErrorType.PIPELINE_START, baseUrl, executionHref, e);
     }
-    return location.getRewrittenUrl(apiClient.getBasePath());
+    return new PipelineExecution(execution, this);
   }
 
   @Override
@@ -155,7 +155,8 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     Pipeline pipeline = getPipeline(programId, pipelineId);
     String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
     try {
-      return get(executionHref, new GenericType<PipelineExecution>() {});
+      io.adobe.cloudmanager.swagger.model.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.swagger.model.PipelineExecution>() {});
+      return new PipelineExecution(execution, this);
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
     }

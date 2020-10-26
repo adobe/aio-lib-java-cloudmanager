@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
-import io.adobe.cloudmanager.swagger.model.PipelineExecution;
+import io.adobe.cloudmanager.model.PipelineExecution;
 
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.
@@ -68,19 +68,19 @@ public interface CloudManagerApi {
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the id of the pipeline
-   * @return URL to the started pipeline.
+   * @return the new execution
    * @throws CloudManagerApiException when any error occurs
    */
-  String startExecution(String programId, String pipelineId) throws CloudManagerApiException;
+  PipelineExecution startExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
   /**
    * Starts the specified pipeline
    *
    * @param pipeline the {@link Pipeline} to start
-   * @return URL to the started pipeline.
+   * @return the new execution
    * @throws CloudManagerApiException when any error occurs
    */
-  String startExecution(Pipeline pipeline) throws CloudManagerApiException;
+  PipelineExecution startExecution(Pipeline pipeline) throws CloudManagerApiException;
 
   /**
    * Returns the current execution of the specified pipeline.
