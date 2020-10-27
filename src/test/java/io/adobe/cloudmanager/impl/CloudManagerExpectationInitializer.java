@@ -45,7 +45,8 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
         "executions/execution1000.json",
         "executions/execution1001.json",
         "pipelines/mockserver.json",
-        "programs/mockserver.json"
+        "programs/mockserver.json",
+        "environments/mockserver.json"
     };
 
       Arrays.stream(files).forEach(s -> {

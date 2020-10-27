@@ -21,10 +21,9 @@ package io.adobe.cloudmanager;
  */
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
-import org.apache.commons.text.StringSubstitutor;
+import io.adobe.cloudmanager.model.Environment;
 
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Pipeline;
@@ -123,13 +122,11 @@ public interface CloudManagerApi {
     Future<Void> cancelCurrentExecution(String programId, String pipelineId);
 
     Future<Void> advanceCurrentExecution(String programId, String pipelineId);
-
-    Future<List<Environment>> listEnvironments(String programId);
-
+*/
+    List<Environment> listEnvironments(String programId) throws CloudManagerApiException;
+/*
     Future<Void> getExecutionStepLog(String programId, String pipelineId, String executionId, StepStateAction action,
                                      String logFile, OutputStream outputStream);
-
-    Future<List<LogOptionRepresentation>> listAvailableLogOptions(String programId, String environmentId);
 
     Future<List<DownloadedLog>> downloadLogs(String programId, String environmentId, Service service, LogName name, File dir);
 */
@@ -161,8 +158,6 @@ public interface CloudManagerApi {
 
 
 /*
-    Future<String> getDeveloperConsoleUrl(String programId, String environmentId);
-
     Future<List<Variable>> getEnvironmentVariables(String programId, String environmentId);
 
     Future<Void> setEnvironmentVariables(String programId, String environmentId, Variable ...variables);
@@ -170,10 +165,13 @@ public interface CloudManagerApi {
     Future<List<Variable>> getPipelineVariables(String programId, String pipelineId);
 
     Future<Void> setPipelineVariables(String programId, String pipelineId, Variable ...variables);
-
-    Future<Void> deleteProgram(String programId);
-
-    Future<Void> deleteEnvironment(String programId, String environmentId);
 */
+
+    void deleteProgram(String programId) throws CloudManagerApiException;
+    void deleteProgram(EmbeddedProgram program) throws CloudManagerApiException;
+
+    void deleteEnvironment(String programId, String environmentId) throws CloudManagerApiException;
+    void deleteEnvironment(Environment environment) throws CloudManagerApiException;
+
 
 }

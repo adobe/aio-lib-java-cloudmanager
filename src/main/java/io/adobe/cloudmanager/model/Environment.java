@@ -22,36 +22,33 @@ package io.adobe.cloudmanager.model;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.swagger.model.HalLink;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
-/**
- * Extension to the Swagger generated Embedded Program. Provides convenience methods for frequently used APIs
- */
-@ToString
-public class EmbeddedProgram extends io.adobe.cloudmanager.swagger.model.EmbeddedProgram {
+public class Environment extends io.adobe.cloudmanager.swagger.model.Environment {
 
-  public EmbeddedProgram(io.adobe.cloudmanager.swagger.model.EmbeddedProgram delegate, CloudManagerApi client) {
+  public Environment(io.adobe.cloudmanager.swagger.model.Environment delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }
 
-  /**
-   * Link to this program.
-   *
-   * @return the link to this program.
-   */
-  public String getSelfLink() {
-    return delegate.getLinks().getSelf().getHref();
-  }
-
   @Delegate
-  private final io.adobe.cloudmanager.swagger.model.EmbeddedProgram delegate;
+  private final io.adobe.cloudmanager.swagger.model.Environment delegate;
 
   @ToString.Exclude
   private final CloudManagerApi client;
 
   public void delete() throws CloudManagerApiException {
-    client.deleteProgram(this);
+    client.deleteEnvironment(this);
+  }
+
+  public String getDeveloperConsoleUrl() throws CloudManagerApiException {
+    HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
+    if (link == null) {
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.NO_DEVELOPER_CONSOLE, getId(), getProgramId());
+    } else {
+      return link.getHref();
+    }
   }
 }

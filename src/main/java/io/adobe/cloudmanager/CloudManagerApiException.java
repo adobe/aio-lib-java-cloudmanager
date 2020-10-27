@@ -136,7 +136,7 @@ public class CloudManagerApiException extends Exception {
     FIND_WAITING_STEP("Cannot find a waiting step for pipeline %s."),
     FIND_ENVIRONMENTS("Could not find environments for program %s."),
     FIND_ENVIRONMENT("Could not find environment %s for program %s."),
-    RETRIEVE_ENVIRONMENTS("Could not find environments for program %s."),
+    RETRIEVE_ENVIRONMENTS("Could not find environments: %s."),
     DELETE_PIPELINE("Cannot delete pipeline: %s"),
     GET_LOG("Cannot get log: %s"),
     NO_LOG_REDIRECT("Log %s did not contain a redirect. Was %s."),
