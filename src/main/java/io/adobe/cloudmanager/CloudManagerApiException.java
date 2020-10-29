@@ -155,7 +155,8 @@ public class CloudManagerApiException extends Exception {
     SET_VARIABLES("Cannot set variables: %s"),
     DELETE_PROGRAM("Cannot delete program: %s"),
     DELETE_ENVIRONMENT("Cannot delete environment: %s"),
-    UPDATE_PIPELINE("Cannot update pipeline: %s");
+    UPDATE_PIPELINE("Cannot update pipeline: %s"),
+    GENERATE_BODY("Unable to generate request body: %s");
 
     private final String message;
 

@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import org.mockserver.logging.MockServerLogger;
 import org.mockserver.mock.Expectation;
@@ -40,25 +41,21 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
 
     final List<Expectation> expectations = new ArrayList<>();
     ExpectationSerializer serializer = new ExpectationSerializer(new MockServerLogger((CloudManagerExpectationInitializer.class)));
+
     String[] files = {
-        "executions/mockserver.json",
-        "executions/execution1000.json",
-        "executions/execution1001.json",
-        "pipelines/mockserver.json",
-        "programs/mockserver.json",
-        "environments/mockserver.json"
+        "general-program-setup.json"
     };
+    files = ArrayUtils.addAll(files, ExecutionsTest.getTestExpectationFiles());
+    Arrays.stream(files).forEach(s -> {
+      try {
+        InputStream is = CloudManagerExpectationInitializer.class.getClassLoader().getResourceAsStream(s);
+        String json = IOUtils.toString(is, "UTF-8");
+        Arrays.stream(serializer.deserializeArray(json, false)).forEach(expectations::add);
+      } catch (IOException e) {
+        e.printStackTrace(); // Do anything more?
+      }
 
-      Arrays.stream(files).forEach(s -> {
-        try {
-          InputStream is = CloudManagerExpectationInitializer.class.getClassLoader().getResourceAsStream(s);
-          String json = IOUtils.toString(is, "UTF-8");
-          Arrays.stream(serializer.deserializeArray(json, false)).forEach(expectations::add);
-        } catch (IOException e) {
-          e.printStackTrace(); // Do anything more?
-        }
-
-      });
-    return expectations.toArray(new Expectation[] {});
+    });
+    return expectations.toArray(new Expectation[]{});
   }
 }

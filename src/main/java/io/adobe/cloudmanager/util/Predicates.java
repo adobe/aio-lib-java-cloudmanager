@@ -23,6 +23,10 @@ package io.adobe.cloudmanager.util;
 import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.swagger.model.Metric;
+import io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState;
+import static io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState.*;
+
 
 /**
  * Predicates used to filter response lists from the API calls.
@@ -35,4 +39,20 @@ public class Predicates {
   public static final Predicate<Pipeline> IS_BUSY = (pipeline ->
       io.adobe.cloudmanager.swagger.model.Pipeline.StatusEnum.BUSY == pipeline.getStatus()
   );
+
+  public static final Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
+    stepState.getStatus() != StatusEnum.FINISHED
+  );
+
+  public static final Predicate<PipelineExecutionStepState> IS_WAITING = (stepState ->
+    stepState.getStatus() == StatusEnum.WAITING
+  );
+
+  public static final Predicate<Metric> PASSED = Metric::isPassed;
+
+  public static final Predicate<Metric> FAILED = (m -> !m.isPassed());
+
+  public static final Predicate<Metric> CRITICAL = (m -> Metric.SeverityEnum.CRITICAL.equals(m.getSeverity()));
+
+  public static final Predicate<Metric> IMPORTANT = (m -> Metric.SeverityEnum.IMPORTANT.equals(m.getSeverity()));
 }

@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,11 +23,12 @@ package io.adobe.cloudmanager;
 import java.util.List;
 import java.util.function.Predicate;
 
-import io.adobe.cloudmanager.model.Environment;
-
 import io.adobe.cloudmanager.model.EmbeddedProgram;
+import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
+import io.adobe.cloudmanager.model.PipelineExecutionStepState;
+import io.adobe.cloudmanager.swagger.model.PipelineStepMetrics;
 
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.
@@ -95,9 +96,27 @@ public interface CloudManagerApi {
   PipelineExecution getCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
   /**
+   * Cancels the current execution of the specified pipeline, if any execution exists.
+   *
+   * @param programId  the program id context of the pipeline
+   * @param pipelineId the id of the pipeline to cancel
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void cancelCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
+
+  /**
+   * Advances the current execution of the specified pipeline, if in an appropriate state.
+   *
+   * @param programId  the program id context of the pipeline
+   * @param pipelineId the id of the pipeline to cancel
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void advanceCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
+
+  /**
    * Returns the specified execution of the pipeline.
    *
-   * @param pipeline the pipeline context for the exectuion
+   * @param pipeline    the pipeline context for the exectuion
    * @param executionId the id of the execution to retrieve
    * @return the execution details
    * @throws CloudManagerApiException when any error occurs
@@ -107,23 +126,79 @@ public interface CloudManagerApi {
   /**
    * Returns the specified execution of the pipeline.
    *
-   * @param programId the program id context of the pipeline
-   * @param pipelineId the pipeline id
+   * @param programId   the program id context of the pipeline
+   * @param pipelineId  the pipeline id
    * @param executionId the id of the execution to retrieve
    * @return the execution details
    * @throws CloudManagerApiException when any error occurs
    */
   PipelineExecution getExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException;
 
-    /*
-    Future<PipelineStepMetrics> getQualityGateResults(String programId, String pipelineId, String executionId,
-                                                      StepStateAction action);
+  /**
+   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param programId   the program id context of the pipeline
+   * @param pipelineId  the id of the pipeline to cancel
+   * @param executionId the execution id to be canceled
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void cancelExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException;
 
-    Future<Void> cancelCurrentExecution(String programId, String pipelineId);
+  /**
+   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param execution the execution to be canceled
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void cancelExecution(PipelineExecution execution) throws CloudManagerApiException;
 
-    Future<Void> advanceCurrentExecution(String programId, String pipelineId);
-*/
-    List<Environment> listEnvironments(String programId) throws CloudManagerApiException;
+  /**
+   * Advances the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param programId   the program id context of the pipeline
+   * @param pipelineId  the id of the pipeline to cancel
+   * @param executionId the execution id to be advanced
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void advanceExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException;
+
+  /**
+   * Advances the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param execution the execution to be advanced
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void advanceExecution(PipelineExecution execution) throws CloudManagerApiException;
+
+  /**
+   * Gets the current step for the execution.
+   *
+   * @param execution the pipeline execution
+   * @return the current step
+   * @throws CloudManagerApiException when any error occurs
+   */
+  PipelineExecutionStepState getCurrentStep(PipelineExecution execution) throws CloudManagerApiException;
+
+  /**
+   * Gets the waiting step for the execution.
+   *
+   * @param execution the pipeline execution
+   * @return the waiing step
+   * @throws CloudManagerApiException when any error occurs or waiting step is not found
+   */
+  PipelineExecutionStepState getWaitingStep(PipelineExecution execution) throws CloudManagerApiException;
+
+  /**
+   * Retrieves the metrics for the specified execution step, if any.
+   *
+   * @param step the execution step
+   * @return the metrics for the step
+   * @throws CloudManagerApiException when any error occurs
+   */
+  PipelineStepMetrics getQualityGateResults(PipelineExecutionStepState step) throws CloudManagerApiException;
+
+
+  List<Environment> listEnvironments(String programId) throws CloudManagerApiException;
 /*
     Future<Void> getExecutionStepLog(String programId, String pipelineId, String executionId, StepStateAction action,
                                      String logFile, OutputStream outputStream);
@@ -167,11 +242,12 @@ public interface CloudManagerApi {
     Future<Void> setPipelineVariables(String programId, String pipelineId, Variable ...variables);
 */
 
-    void deleteProgram(String programId) throws CloudManagerApiException;
-    void deleteProgram(EmbeddedProgram program) throws CloudManagerApiException;
+  void deleteProgram(String programId) throws CloudManagerApiException;
 
-    void deleteEnvironment(String programId, String environmentId) throws CloudManagerApiException;
-    void deleteEnvironment(Environment environment) throws CloudManagerApiException;
+  void deleteProgram(EmbeddedProgram program) throws CloudManagerApiException;
 
+  void deleteEnvironment(String programId, String environmentId) throws CloudManagerApiException;
+
+  void deleteEnvironment(Environment environment) throws CloudManagerApiException;
 
 }
