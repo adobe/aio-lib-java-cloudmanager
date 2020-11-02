@@ -20,20 +20,32 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.util.Arrays;
+import java.util.List;
+
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.junit.jupiter.MockServerExtension;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpRequest.*;
 
 @ExtendWith(MockServerExtension.class)
 class ProgramsTest extends AbstractApiTest {
+
+  public static List<String> getTestExpectationFiles() {
+    return Arrays.asList(
+        "programs/not-found.json",
+        "programs/forbidden.json",
+        "programs/forbidden-code-only.json",
+        "programs/forbidden-message-only.json",
+        "programs/empty-response.json",
+        "programs/delete-fails.json",
+        "programs/delete-success.json"
+    );
+  }
 
   @Test
   void listPrograms_failure404() {
@@ -78,19 +90,19 @@ class ProgramsTest extends AbstractApiTest {
   @Test
   void listPrograms_success() throws CloudManagerApiException {
     List<EmbeddedProgram> programs = underTest.listPrograms();
-    assertEquals(4, programs.size(), "Correct length of program list");
+    assertEquals(5, programs.size(), "Correct length of program list");
   }
 
   @Test
-  void deleteProgram_failure() throws CloudManagerApiException {
+  void deleteProgram_failure() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
-        () -> underTest.deleteProgram("5"), "Exception was thrown");
-    assertEquals(String.format("Cannot delete program: %s/api/program/5 (400 Bad Request)", baseUrl), exception.getMessage(), "Correct exception message");
-    client.verify(request().withMethod("DELETE").withPath("/api/program/5"));
+        () -> underTest.deleteProgram("2"), "Exception was thrown");
+    assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request)", baseUrl), exception.getMessage(), "Correct exception message");
+    client.verify(request().withMethod("DELETE").withPath("/api/program/2"));
   }
 
   @Test
-  void deleteProgram_notFound() throws CloudManagerApiException {
+  void deleteProgram_notFound() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
         () -> underTest.deleteProgram("11"), "Exception was thrown");
     assertEquals("Could not find program 11", exception.getMessage(), "Correct exception message");
@@ -98,15 +110,15 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void deleteProgram_success() throws CloudManagerApiException {
-    underTest.deleteProgram("6");
-    client.verify(request().withMethod("DELETE").withPath("/api/program/6"));
+    underTest.deleteProgram("3");
+    client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
   }
 
   @Test
   void deleteProgram_viaProgram() throws Exception {
     List<EmbeddedProgram> programs = underTest.listPrograms();
-    EmbeddedProgram program = programs.stream().filter(p -> p.getId().equals("6")).findFirst().orElseThrow(Exception::new);
+    EmbeddedProgram program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
     program.delete();
-    client.verify(request().withMethod("DELETE").withPath("/api/program/6"));
+    client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
   }
 }

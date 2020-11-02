@@ -32,16 +32,15 @@ import lombok.experimental.Delegate;
 @ToString
 public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
 
+  @Delegate
+  private final io.adobe.cloudmanager.swagger.model.Pipeline delegate;
+  @ToString.Exclude
+  private final CloudManagerApi client;
+
   public Pipeline(io.adobe.cloudmanager.swagger.model.Pipeline delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }
-
-  @Delegate
-  private final io.adobe.cloudmanager.swagger.model.Pipeline delegate;
-
-  @ToString.Exclude
-  private final CloudManagerApi client;
 
   /**
    * Starts this pipeline.
@@ -66,6 +65,7 @@ public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
 
   /**
    * Updates this pipeline with the specified changes.
+   *
    * @param update the updates to make to this pipeline
    * @return the updated Pipeline.
    * @throws CloudManagerApiException when any errors occur
@@ -74,6 +74,11 @@ public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
     return client.updatePipeline(this, update);
   }
 
+  /**
+   * Delete this pipeline.
+   *
+   * @throws CloudManagerApiException when any error occurs.
+   */
   public void delete() throws CloudManagerApiException {
     client.deletePipeline(this);
   }

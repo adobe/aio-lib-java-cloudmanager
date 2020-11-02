@@ -1,0 +1,11 @@
+[
+  {
+    "httpRequest": {
+      "method": "PATCH",
+      "path": "/api/program/3/pipeline/4"
+    },
+    "httpResponse": {
+      "statusCode": 405
+    }
+  }
+]

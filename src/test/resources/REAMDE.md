@@ -1,14 +1,46 @@
 For the developer's sanity's sake, each API uses a different program.
 
+#### Program to Tests Breakdown
+
+Most of the tests will use a specific program to help delinate context. These help track those contexts.
+
 | API |Program ID|
 | :--- | -----------: |
-|Programs|1|
 |Environments|2|
 |Pipelines|3|
 |Executions|4|
 
+#### Program Details:
 
-Execution Details:
+|Program | Test State|
+| :--- | ---: |
+| 2 | Delete - Bad Request|
+| 3 | Delete - Success |
+
+#### Environments
+
+|Program | Environment | Test State|
+| :--- | --- | ---: |
+| 1 | | Not Found |
+| 3 | | Empty List |
+| 2 | | List Success |
+| 2 | 3 | Delete Fails - Bad Request |
+| 2 | 12 | Delete Fails - Not Found |
+| 2 | 1 | Delete Success |
+| 2 | 3 | No Developer Console |
+
+#### Pipeline Details
+|Program | Pipeline | Test State|
+| :--- | --- | ---: |
+| 2 | | List Empty|
+| 3 | | List Success |
+| 3 | 1 | Start Success <br/> Patch Success <br/> Delete Success |
+| 3 | 2 | Start Fails - Running |
+| 3 | 3 | Start Fails - Not Found |
+| 3 | 4 | Update Fails - Not Allowed <br/> Delete Fails - Bad Request |
+| 3 | 10 | Pipeline Missing |
+
+#### Execution Details:
 
 | Pipeline | Execution| Test State | 
 | :--- | :---: | ---: |

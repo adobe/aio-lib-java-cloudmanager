@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.model;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,19 +57,36 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
     this.client = client;
   }
 
+  /**
+   * Cancel this execution, if in a valid state.
+   *
+   * @throws CloudManagerApiException when any error occurs.
+   */
   public void cancel() throws CloudManagerApiException {
     client.cancelExecution(this);
   }
 
-  public HalLink getAdvanceLink() throws CloudManagerApiException {
+  /**
+   * Get the url to advance this pipeline.
+   *
+   * @return the URL to the Advance API endpoint
+   * @throws CloudManagerApiException when any error occurs
+   */
+  public String getAdvanceLink() throws CloudManagerApiException {
     PipelineExecutionStepState step = client.getWaitingStep(this);
     HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
     if (link == null) {
       throw new CloudManagerApiException(ErrorType.FIND_ADVANCE_LINK, step.getAction());
     }
-    return link;
+    return link.getHref();
   }
 
+  /**
+   * Build the necessary request body to advance this execution.
+   *
+   * @return the body to submit to the API
+   * @throws CloudManagerApiException when any error occurs
+   */
   public String getAdvanceBody() throws CloudManagerApiException {
     PipelineExecutionStepState step = client.getWaitingStep(this);
     StringWriter writer = new StringWriter();
@@ -95,7 +112,13 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
     }
   }
 
-  public HalLink getCancelLink() throws CloudManagerApiException {
+  /**
+   * Get the url to cacnel this pipeline.
+   *
+   * @return the URL to the Cancel API endpoint
+   * @throws CloudManagerApiException when any error occurs
+   */
+  public String getCancelLink() throws CloudManagerApiException {
     PipelineExecutionStepState step = client.getCurrentStep(this);
     HalLink link;
 
@@ -108,9 +131,15 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
     if (link == null) {
       throw new CloudManagerApiException(ErrorType.FIND_CANCEL_LINK, step.getAction());
     }
-    return link;
+    return link.getHref();
   }
 
+  /**
+   * Build the necessary request body to cancel this execution.
+   *
+   * @return the body to submit to the API
+   * @throws CloudManagerApiException when any error occurs
+   */
   public String getCancelBody() throws CloudManagerApiException {
     PipelineExecutionStepState step = client.getCurrentStep(this);
     StringWriter writer = new StringWriter();
@@ -138,6 +167,9 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
     }
   }
 
+  /*
+   * Builds the body needed to override any blocking metrics for advancing the pipeline.
+   */
   private void buildMetricsOverride(ObjectMapper mapper, JsonGenerator gen,
                                     PipelineExecutionStepState step) throws CloudManagerApiException, IOException {
     PipelineStepMetrics metrics = client.getQualityGateResults(step);

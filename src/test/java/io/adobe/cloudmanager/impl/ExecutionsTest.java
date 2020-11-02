@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,9 @@ package io.adobe.cloudmanager.impl;
  * limitations under the License.
  * #L%
  */
+
+import java.util.Arrays;
+import java.util.List;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.model.Pipeline;
@@ -33,9 +36,8 @@ import static org.mockserver.model.HttpRequest.*;
 @ExtendWith(MockServerExtension.class)
 public class ExecutionsTest extends AbstractApiTest {
 
-  public static String[] getTestExpectationFiles() {
-    return new String[] {
-        "executions/program.json",
+  public static List<String> getTestExpectationFiles() {
+    return Arrays.asList(
         "executions/pipelines.json",
         "executions/current-success.json",
         "executions/specific-success.json",
@@ -46,8 +48,7 @@ public class ExecutionsTest extends AbstractApiTest {
         "executions/specific-approval-waiting.json",
         "executions/specific-cancel-deploy-waiting.json",
         "executions/specific-cancel-deploy-invalid.json",
-        "executions/specific-advance-build-running.json"
-    };
+        "executions/specific-advance-build-running.json");
   }
 
   @Test

@@ -36,6 +36,7 @@ import org.mockserver.model.MediaType;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,18 +48,25 @@ import static org.mockserver.model.HttpResponse.response;
 
 class PipelinesTest extends AbstractApiTest {
 
-  private String pipeline5Branch = "yellow";
-  private String pipeline5RepositoryId = "1";
+  public static List<String> getTestExpectationFiles() {
+    return Arrays.asList(
+        "pipelines/list-empty.json",
+        "pipelines/list-success.json",
+        "pipelines/start-execution-success.json",
+        "pipelines/start-execution-fails-running.json",
+        "pipelines/update-not-allowed.json",
+        "pipelines/delete-bad-request.json",
+        "pipelines/delete-success.json"
+    );
+  }
+
+  private String pipeline1Branch = "yellow";
+  private String pipeline1RepositoryId = "1";
 
   @BeforeEach
-  public void setupPipelinesForProgram5() {
+  public void setupPipelinesForProgram3() {
     client.when(
-        request().withMethod("GET").withPath("/api/program/5/pipelines")
-    ).respond(
-        request -> response().withBody(buildPipelines(), MediaType.APPLICATION_JSON)
-    );
-    client.when(
-        request().withMethod("PATCH").withPath("/api/program/5/pipeline/5").withContentType(MediaType.APPLICATION_JSON)
+        request().withMethod("PATCH").withPath("/api/program/3/pipeline/1").withContentType(MediaType.APPLICATION_JSON)
     ).respond(this::handleGoodPatch);
   }
 
@@ -69,32 +77,32 @@ class PipelinesTest extends AbstractApiTest {
     Optional<PipelinePhase> buildPhase = pipeline.getPhases().stream().filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType()).findFirst();
     if (buildPhase.isPresent()) {
       if (buildPhase.get().getBranch() != null) {
-        pipeline5Branch = buildPhase.get().getBranch();
+        pipeline1Branch = buildPhase.get().getBranch();
       }
       if (buildPhase.get().getRepositoryId() != null) {
-        pipeline5RepositoryId = buildPhase.get().getRepositoryId();
+        pipeline1RepositoryId = buildPhase.get().getRepositoryId();
       }
     }
 
-    return response().withBody(buildPipeline5(), MediaType.APPLICATION_JSON);
+    return response().withBody(buildPipeline1(), MediaType.APPLICATION_JSON);
   }
 
   @Test
   void listPipelines_successEmpty() throws CloudManagerApiException  {
-    List<Pipeline> pipelines = underTest.listPipelines("4");
+    List<Pipeline> pipelines = underTest.listPipelines("2");
     assertTrue(pipelines.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void listPipelines_success() throws CloudManagerApiException  {
-    List<Pipeline> pipelines = underTest.listPipelines("5");
+    List<Pipeline> pipelines = underTest.listPipelines("3");
     assertEquals(4, pipelines.size(), "Correct pipelines list length");
   }
 
   @Test
   void listPipelines_programReturns404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("7"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve program: %s/api/program/7 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("5"), "Exception thrown for 404");
+    assertEquals(String.format("Cannot retrieve program: %s/api/program/5 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -105,55 +113,55 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void startExecution_via_pipeline() throws Exception  {
-    List<Pipeline> pipelines = underTest.listPipelines("5");
-    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("5")).findFirst().orElseThrow(Exception::new);
+    List<Pipeline> pipelines = underTest.listPipelines("3");
+    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     PipelineExecution execution = pipeline.startExecution();
-    assertEquals("/api/program/5/pipeline/5/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
+    assertEquals("/api/program/3/pipeline/1/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
   }
 
   @Test
   void startExecution_badPipeline() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("5", "10"), "Exception thrown");
-    assertEquals("Cannot start execution. Pipeline 10 does not exist in program 5.", exception.getMessage(), "Message was correct");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("3", "10"), "Exception thrown");
+    assertEquals("Cannot start execution. Pipeline 10 does not exist in program 3.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void startExecution_failed412() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("5", "6"), "Exception thrown");
+  void startExecution_failsRunning() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("3", "2"), "Exception thrown");
     assertEquals("Cannot create execution. Pipeline already running.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void startExecution_failed404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("5", "7"), "Exception thrown");
-    assertEquals(String.format("Cannot create execution: %s/api/program/5/pipeline/7/execution (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  void startExecution_failsNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("3", "3"), "Exception thrown");
+    assertEquals(String.format("Cannot create execution: %s/api/program/3/pipeline/3/execution (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void startExecution_success() throws CloudManagerApiException{
-    PipelineExecution execution = underTest.startExecution("5", "5");
-    assertEquals("/api/program/5/pipeline/5/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
+    PipelineExecution execution = underTest.startExecution("3", "1");
+    assertEquals("/api/program/3/pipeline/1/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
   }
 
   @Test
   void updatePipeline_badPipeline() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
-        () -> underTest.updatePipeline("5", "10", PipelineUpdate.builder().build()), "Exception thrown");
-    assertEquals("Pipeline 10 does not exist in program 5.", exception.getMessage(), "Message was correct");
+        () -> underTest.updatePipeline("3", "10", PipelineUpdate.builder().build()), "Exception thrown");
+    assertEquals("Pipeline 10 does not exist in program 3.", exception.getMessage(), "Message was correct");
   }
 
   @Test
   void updatePipeline_failure() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
-        () -> underTest.updatePipeline("5", "8", PipelineUpdate.builder().build()), "Exception thrown");
-    assertEquals(String.format("Cannot update pipeline: %s/api/program/5/pipeline/8 (405 Method Not Allowed)", baseUrl), exception.getMessage(), "Message was correct");
+        () -> underTest.updatePipeline("3", "4", PipelineUpdate.builder().build()), "Exception thrown");
+    assertEquals(String.format("Cannot update pipeline: %s/api/program/3/pipeline/4 (405 Method Not Allowed)", baseUrl), exception.getMessage(), "Message was correct");
 
-    client.verify(request().withMethod("PATCH").withPath("/api/program/5/pipeline/8").withContentType(MediaType.APPLICATION_JSON));
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/4").withContentType(MediaType.APPLICATION_JSON));
   }
 
   @Test
   void updatePipeline_branchSuccess() throws CloudManagerApiException {
-    Pipeline result = underTest.updatePipeline("5", "5", PipelineUpdate.builder().branch("develop").build());
+    Pipeline result = underTest.updatePipeline("3", "1", PipelineUpdate.builder().branch("develop").build());
 
     PipelinePhase expected = new PipelinePhase();
     expected.setName("BUILD_1");
@@ -161,14 +169,14 @@ class PipelinesTest extends AbstractApiTest {
     expected.setType(PipelinePhase.TypeEnum.BUILD);
     expected.setRepositoryId("1");
 
-    client.verify(request().withMethod("PATCH").withPath("/api/program/5/pipeline/5").withContentType(MediaType.APPLICATION_JSON));
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1").withContentType(MediaType.APPLICATION_JSON));
 
     assertThat("update was successful", result.getPhases(), hasItem(expected));
   }
 
   @Test
   void updatePipeline_repositoryAndBranchSuccess() throws CloudManagerApiException {
-    Pipeline result = underTest.updatePipeline("5", "5", PipelineUpdate.builder().branch("develop").repositoryId("4").build());
+    Pipeline result = underTest.updatePipeline("3", "1", PipelineUpdate.builder().branch("develop").repositoryId("4").build());
 
     PipelinePhase expected = new PipelinePhase();
     expected.setName("BUILD_1");
@@ -176,15 +184,15 @@ class PipelinesTest extends AbstractApiTest {
     expected.setType(PipelinePhase.TypeEnum.BUILD);
     expected.setRepositoryId("4");
 
-    client.verify(request().withMethod("PATCH").withPath("/api/program/5/pipeline/5").withContentType(MediaType.APPLICATION_JSON));
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1").withContentType(MediaType.APPLICATION_JSON));
 
     assertThat("update was successful", result.getPhases(), hasItem(expected));
   }
 
   @Test
   void updatePipeline_via_pipeline() throws Exception  {
-    List<Pipeline> pipelines = underTest.listPipelines("5");
-    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("5")).findFirst().orElseThrow(Exception::new);
+    List<Pipeline> pipelines = underTest.listPipelines("3");
+    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     Pipeline result = pipeline.update(PipelineUpdate.builder().branch("develop").repositoryId("4").build());
 
     PipelinePhase expected = new PipelinePhase();
@@ -193,64 +201,43 @@ class PipelinesTest extends AbstractApiTest {
     expected.setType(PipelinePhase.TypeEnum.BUILD);
     expected.setRepositoryId("4");
 
-    client.verify(request().withMethod("PATCH").withPath("/api/program/5/pipeline/5").withContentType(MediaType.APPLICATION_JSON));
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1").withContentType(MediaType.APPLICATION_JSON));
 
     assertThat("update was successful", result.getPhases(), hasItem(expected));
   }
 
   @Test
   void deletePipeline_returns400() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deletePipeline("5", "7"), "Exception was thrown");
-    assertEquals(String.format("Cannot delete pipeline: %s/api/program/5/pipeline/7 (400 Bad Request)", baseUrl), exception.getMessage(), "Message was correct");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deletePipeline("3", "4"), "Exception was thrown");
+    assertEquals(String.format("Cannot delete pipeline: %s/api/program/3/pipeline/4 (400 Bad Request)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void deletePipeline_badPipeline() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
-        () -> underTest.deletePipeline("5", "10"));
-    assertEquals("Pipeline 10 does not exist in program 5.", exception.getMessage(), "Message was correct");
+        () -> underTest.deletePipeline("3", "10"));
+    assertEquals("Pipeline 10 does not exist in program 3.", exception.getMessage(), "Message was correct");
   }
 
   @Test
   void deletePipeline_success() throws CloudManagerApiException {
-    underTest.deletePipeline("5", "5");
+    underTest.deletePipeline("3", "1");
 
-    client.verify(request().withMethod("DELETE").withPath("/api/program/5/pipeline/5"));
+    client.verify(request().withMethod("DELETE").withPath("/api/program/3/pipeline/1"));
   }
 
   @Test
   void deletePipeline_viaPipeline() throws Exception {
-    List<Pipeline> pipelines = underTest.listPipelines("5");
-    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("5")).findFirst().orElseThrow(Exception::new);
+    List<Pipeline> pipelines = underTest.listPipelines("3");
+    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     pipeline.delete();
 
-    client.verify(request().withMethod("DELETE").withPath("/api/program/5/pipeline/5"));
+    client.verify(request().withMethod("DELETE").withPath("/api/program/3/pipeline/1"));
   }
 
-  private String buildPipelines() throws IOException {
-    StringWriter writer = new StringWriter();
-    JsonFactory jsonFactory = new JsonFactory();
-    JsonGenerator gen = jsonFactory.createGenerator(writer);
 
-    gen.writeStartObject();
-    gen.writeFieldName("_embedded");
-    gen.writeStartObject();
-    gen.writeFieldName("pipelines");
-    gen.writeStartArray();
-    writeEditablePipeline(gen);
-    writeStaticPipeline(gen, "6", "test2", "BUSY");
-    writeStaticPipeline(gen, "7", "test3", "BUSY");
-    writeStaticPipeline(gen, "8", "test4", "IDLE");
-    gen.writeEndArray();
-    gen.writeEndObject();
-    gen.writeEndObject();
-
-    gen.close();
-    return writer.toString();
-  }
-
-  private String buildPipeline5() throws IOException {
+  private String buildPipeline1() throws IOException {
     StringWriter writer = new StringWriter();
     JsonFactory jsonFactory = new JsonFactory();
     JsonGenerator gen = jsonFactory.createGenerator(writer);
@@ -263,7 +250,7 @@ class PipelinesTest extends AbstractApiTest {
 
   private void writeEditablePipeline(JsonGenerator gen) throws IOException {
     gen.writeStartObject();
-    gen.writeStringField("id", "5");
+    gen.writeStringField("id", "1");
     gen.writeStringField("name", "test1");
     gen.writeStringField("status", "IDLE");
     gen.writeFieldName("phases");
@@ -275,18 +262,18 @@ class PipelinesTest extends AbstractApiTest {
     gen.writeStartObject();
     gen.writeStringField("name", "BUILD_1");
     gen.writeStringField("type", "BUILD");
-    gen.writeStringField("repositoryId", pipeline5RepositoryId);
-    gen.writeStringField("branch", pipeline5Branch);
+    gen.writeStringField("repositoryId", pipeline1RepositoryId);
+    gen.writeStringField("branch", pipeline1Branch);
     gen.writeEndObject();
     gen.writeStartObject();
     gen.writeEndObject();
     gen.writeEndArray();
     gen.writeFieldName("_links");
     gen.writeStartObject();
-    writeLink(gen, "self", "/api/program/5/pipeline/5", false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", "/api/program/5/pipeline/5/execution", false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", "/api/program/5/pipeline/5/execution/{executionId}", true);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", "/api/program/5/pipeline/5/variables", false);
+    writeLink(gen, "self", "/api/program/3/pipeline/1", false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", "/api/program/3/pipeline/1/execution", false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", "/api/program/3/pipeline/1/execution/{executionId}", true);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", "/api/program/3/pipeline/1/variables", false);
     gen.writeEndObject();
     gen.writeEndObject();
   }
@@ -313,10 +300,10 @@ class PipelinesTest extends AbstractApiTest {
     gen.writeEndArray();
     gen.writeFieldName("_links");
     gen.writeStartObject();
-    writeLink(gen, "self", String.format("/api/program/5/pipeline/%s", id), false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", String.format("/api/program/5/pipeline/%s/execution", id), false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", String.format("/api/program/5/pipeline/%s/execution/{executionId}", id), true);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", String.format("/api/program/5/pipeline/%s/variables", id), false);
+    writeLink(gen, "self", String.format("/api/program/3/pipeline/%s", id), false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", String.format("/api/program/3/pipeline/%s/execution", id), false);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", String.format("/api/program/3/pipeline/%s/execution/{executionId}", id), true);
+    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", String.format("/api/program/3/pipeline/%s/variables", id), false);
     gen.writeEndObject();
     gen.writeEndObject();
   }

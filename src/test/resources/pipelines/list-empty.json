@@ -1,0 +1,15 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/2/pipelines"
+    },
+    "httpResponse": {
+      "body": {
+        "_embedded": {
+          "pipelines": []
+        }
+      }
+    }
+  }
+]

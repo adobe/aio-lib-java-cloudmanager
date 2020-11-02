@@ -1,0 +1,21 @@
+[
+  {
+    "httpRequest":{
+      "method":"GET",
+      "path":"/api/programs",
+      "headers":{
+        "x-gw-ims-org-id":[
+          "empty"
+        ]
+      }
+    },
+    "httpResponse":{
+      "body":{
+        "type":"JSON",
+        "json":{
+
+        }
+      }
+    }
+  }
+]

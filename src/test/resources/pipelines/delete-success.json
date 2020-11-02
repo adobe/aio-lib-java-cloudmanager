@@ -1,0 +1,11 @@
+[
+  {
+    "httpRequest" : {
+      "method" : "DELETE",
+      "path" : "/api/program/3/pipeline/1"
+    },
+    "httpResponse" : {
+      "statusCode": 204
+    }
+  }
+]

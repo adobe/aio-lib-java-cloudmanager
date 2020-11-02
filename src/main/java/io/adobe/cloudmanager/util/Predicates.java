@@ -34,25 +34,43 @@ import static io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState.*;
 public class Predicates {
 
   /**
-   * Filters pipelines based on BUSY status.
+   * Predicate for pipelines based on BUSY status.
    */
   public static final Predicate<Pipeline> IS_BUSY = (pipeline ->
       io.adobe.cloudmanager.swagger.model.Pipeline.StatusEnum.BUSY == pipeline.getStatus()
   );
 
+  /**
+   * Predicate for pipelines based on they are the current execution.
+   */
   public static final Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
     stepState.getStatus() != StatusEnum.FINISHED
   );
 
+  /**
+   * Predicate for pipelines that are in a waiting state.
+   */
   public static final Predicate<PipelineExecutionStepState> IS_WAITING = (stepState ->
     stepState.getStatus() == StatusEnum.WAITING
   );
 
+  /**
+   * Filters metrics that have passed.
+   */
   public static final Predicate<Metric> PASSED = Metric::isPassed;
 
+  /**
+   * Filters metrics that have failed.
+   */
   public static final Predicate<Metric> FAILED = (m -> !m.isPassed());
 
+  /**
+   * Filters metrics that are of critical importance.
+    */
   public static final Predicate<Metric> CRITICAL = (m -> Metric.SeverityEnum.CRITICAL.equals(m.getSeverity()));
 
+  /**
+   * Filters metrics that are important.
+   */
   public static final Predicate<Metric> IMPORTANT = (m -> Metric.SeverityEnum.IMPORTANT.equals(m.getSeverity()));
 }

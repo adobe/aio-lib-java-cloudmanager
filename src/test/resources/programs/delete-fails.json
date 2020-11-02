@@ -1,0 +1,11 @@
+[
+  {
+    "httpRequest": {
+      "method": "DELETE",
+      "path": "/api/program/2"
+    },
+    "httpResponse": {
+      "statusCode": 400
+    }
+  }
+]

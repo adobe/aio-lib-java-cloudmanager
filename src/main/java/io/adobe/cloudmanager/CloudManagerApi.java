@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -197,7 +197,13 @@ public interface CloudManagerApi {
    */
   PipelineStepMetrics getQualityGateResults(PipelineExecutionStepState step) throws CloudManagerApiException;
 
-
+  /**
+   * Lists all environments in the specified program.
+   *
+   * @param programId the program id
+   * @return list of environments in the program
+   * @throws CloudManagerApiException when any error occurs
+   */
   List<Environment> listEnvironments(String programId) throws CloudManagerApiException;
 /*
     Future<Void> getExecutionStepLog(String programId, String pipelineId, String executionId, StepStateAction action,
@@ -206,8 +212,21 @@ public interface CloudManagerApi {
     Future<List<DownloadedLog>> downloadLogs(String programId, String environmentId, Service service, LogName name, File dir);
 */
 
+  /**
+   * Delete the specified pipeline.
+   *
+   * @param programId  the program context for the pipeline
+   * @param pipelineId the id of the pipeline to delete
+   * @throws CloudManagerApiException when any error occurs
+   */
   void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException;
 
+  /**
+   * Delete the specified pipeline.
+   *
+   * @param pipeline the pipeline to delete.
+   * @throws CloudManagerApiException when any error occurs.
+   */
   void deletePipeline(Pipeline pipeline) throws CloudManagerApiException;
 
   /**
@@ -242,12 +261,37 @@ public interface CloudManagerApi {
     Future<Void> setPipelineVariables(String programId, String pipelineId, Variable ...variables);
 */
 
+  /**
+   * Delete the specified program.
+   *
+   * @param programId the id of the program to delete.
+   * @throws CloudManagerApiException when any error occurs
+   */
   void deleteProgram(String programId) throws CloudManagerApiException;
 
+  /**
+   * Delete the specified program.
+   *
+   * @param program the program to delete
+   * @throws CloudManagerApiException when any error occurs
+   */
   void deleteProgram(EmbeddedProgram program) throws CloudManagerApiException;
 
+  /**
+   * Delete the environment in the specified program.
+   *
+   * @param programId     the program id of the environment context
+   * @param environmentId the environment to delete
+   * @throws CloudManagerApiException when any error occurs
+   */
   void deleteEnvironment(String programId, String environmentId) throws CloudManagerApiException;
 
+  /**
+   * Delete the specified environment.
+   *
+   * @param environment the environment to delete
+   * @throws CloudManagerApiException when any error occurs
+   */
   void deleteEnvironment(Environment environment) throws CloudManagerApiException;
 
 }

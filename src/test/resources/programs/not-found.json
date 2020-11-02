@@ -1,0 +1,16 @@
+[
+  {
+    "httpRequest":{
+      "method":"GET",
+      "path":"/api/programs",
+      "headers":{
+        "x-gw-ims-org-id":[
+          "not-found"
+        ]
+      }
+    },
+    "httpResponse":{
+      "statusCode":404
+    }
+  }
+]

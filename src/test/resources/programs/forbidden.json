@@ -1,0 +1,20 @@
+[
+  {
+    "httpRequest":{
+      "method":"GET",
+      "path":"/api/programs",
+      "headers":{
+        "x-gw-ims-org-id":[
+          "forbidden"
+        ]
+      }
+    },
+    "httpResponse":{
+      "statusCode":403,
+      "body":{
+        "error_code":"1234",
+        "message":"some message"
+      }
+    }
+  }
+]

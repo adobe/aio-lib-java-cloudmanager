@@ -28,21 +28,31 @@ import lombok.experimental.Delegate;
 
 public class Environment extends io.adobe.cloudmanager.swagger.model.Environment {
 
+  @Delegate
+  private final io.adobe.cloudmanager.swagger.model.Environment delegate;
+  @ToString.Exclude
+  private final CloudManagerApi client;
+
   public Environment(io.adobe.cloudmanager.swagger.model.Environment delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }
 
-  @Delegate
-  private final io.adobe.cloudmanager.swagger.model.Environment delegate;
-
-  @ToString.Exclude
-  private final CloudManagerApi client;
-
+  /**
+   * Delete this program.
+   *
+   * @throws CloudManagerApiException when any error occurs.
+   */
   public void delete() throws CloudManagerApiException {
     client.deleteEnvironment(this);
   }
 
+  /**
+   * Retrieve the Developer Console URL for this Environment.
+   *
+   * @return the url to the developer console.
+   * @throws CloudManagerApiException when any error occurs
+   */
   public String getDeveloperConsoleUrl() throws CloudManagerApiException {
     HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
     if (link == null) {
