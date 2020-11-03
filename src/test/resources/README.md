@@ -18,16 +18,17 @@ Most of the tests will use a specific program to help delinate context. These he
 | 3 | Delete - Success |
 
 #### Environments
-
 |Program | Environment | Test State|
 | :--- | --- | ---: |
 | 1 | | Not Found |
 | 3 | | Empty List |
 | 2 | | List Success |
 | 2 | 3 | Delete Fails - Bad Request |
-| 2 | 12 | Delete Fails - Not Found |
-| 2 | 1 | Delete Success |
-| 2 | 3 | No Developer Console |
+| 2 | 12 | Delete Fails - Not Found <br/> Get Variable Fails |
+| 2 | 1 | Delete Success <br/> Set Variables Success|
+| 2 | 2 | Missing Variables Link |
+| 2 | 3 | No Developer Console <br/> Get Variables Not Found <br/> Set Variables Bad Request |
+| 2 | 4 | Variable List Empty <br/> Set Variable Empty List | 
 
 #### Pipeline Details
 |Program | Pipeline | Test State|

@@ -28,6 +28,7 @@ import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.PipelineExecutionStepState;
+import io.adobe.cloudmanager.model.Variable;
 import io.adobe.cloudmanager.swagger.model.PipelineStepMetrics;
 
 /**
@@ -250,12 +251,14 @@ public interface CloudManagerApi {
    */
   Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException;
 
+  List<Variable> getEnvironmentVariables(String programId, String environmentId) throws CloudManagerApiException;
 
+  List<Variable> getEnvironmentVariables(Environment environment) throws CloudManagerApiException;
+
+  List<Variable> setEnvironmentVariables(String programId, String environmentId, Variable... variables) throws CloudManagerApiException;
+
+  List<Variable> setEnvironmentVariables(Environment environment, Variable... variables) throws CloudManagerApiException;
 /*
-    Future<List<Variable>> getEnvironmentVariables(String programId, String environmentId);
-
-    Future<Void> setEnvironmentVariables(String programId, String environmentId, Variable ...variables);
-
     Future<List<Variable>> getPipelineVariables(String programId, String pipelineId);
 
     Future<Void> setPipelineVariables(String programId, String pipelineId, Variable ...variables);

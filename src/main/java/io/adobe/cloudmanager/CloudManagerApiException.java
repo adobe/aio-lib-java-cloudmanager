@@ -20,15 +20,18 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.util.Arrays;
+import java.util.List;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.impl.ConfiguredApiClient;
 import io.adobe.cloudmanager.swagger.invoker.ApiException;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 /**
  * Represents exception states that may occur during interactions with the AdobeIO API.
@@ -42,19 +45,26 @@ public class CloudManagerApiException extends Exception {
   /**
    * Creates a new exception.
    *
-   * @param type the Error type that occurred.
+   * @param type    the Error type that occurred.
    * @param baseUrl the base url for the AdobeIO endpoint that generated the error
    * @param apiPath the API path of the AdobeIO endpoint that generated the error
-   * @param cause the root cause of the error
+   * @param cause   the root cause of the error
    */
   public CloudManagerApiException(ErrorType type, String baseUrl, String apiPath, ApiException cause) {
     super(cause);
+
+    ProblemPayload problemBody = getProblemBody(cause);
     ErrorPayload errorBody = getErrorBody(cause);
 
     StringBuilder errorBuilder = new StringBuilder();
     errorBuilder.append(baseUrl).append(apiPath).append(' ').append(String.format("(%s %s)", cause.getCode(), getReason(cause)));
 
-    if (errorBody != null) {
+    if (problemBody != null) {
+      String errorMessage = String.join(", ", problemBody.errors);
+      if ("http://ns.adobe.com/adobecloud/validation-exception".equals(problemBody.type)) {
+        errorBuilder.append(" - Validation Error(s): ").append(errorMessage);
+      }
+    } else if (errorBody != null) {
       String errorMessage = errorBody.errorMessage;
       if (errorMessage != null) {
         errorBuilder.append(" - Detail: ").append(errorMessage);
@@ -78,9 +88,17 @@ public class CloudManagerApiException extends Exception {
     this.message = String.format(type.message, (Object[]) vars);
   }
 
-  @Override
-  public String getMessage() {
-    return message;
+  private static ProblemPayload getProblemBody(ApiException cause) {
+    String contentType = getHeader(cause, HttpHeaders.CONTENT_TYPE, null);
+    if (StringUtils.equals(contentType, "application/problem+json")) {
+      ObjectMapper objectMapper = new ObjectMapper();
+      try {
+        return objectMapper.readValue(cause.getResponseBody(), ProblemPayload.class);
+      } catch (JsonProcessingException e) {
+        return null;
+      }
+    }
+    return null;
   }
 
   private static ErrorPayload getErrorBody(ApiException cause) {
@@ -113,6 +131,11 @@ public class CloudManagerApiException extends Exception {
       return defaultValue;
     }
     return header.get(0);
+  }
+
+  @Override
+  public String getMessage() {
+    return message;
   }
 
   public enum ErrorType {
@@ -164,6 +187,19 @@ public class CloudManagerApiException extends Exception {
       this.message = message;
     }
 
+  }
+
+  private static class ProblemPayload {
+
+    private String type;
+    private String[] errors;
+
+    @JsonProperty("type")
+    public void setErrorCode(String type) {
+      this.type = type;
+    }
+
+    @JsonProperty("errors") public void setErrorMessage(String[] errors) { this.errors = errors; }
   }
 
   private static class ErrorPayload {

@@ -105,35 +105,20 @@
             {
               "_links": {
                 "self": {
-                  "href": "/api/program/2/environment/10",
+                  "href": "/api/program/2/environment/4",
                   "templated": false
                 },
                 "http://ns.adobe.com/adobecloud/rel/variables": {
-                  "href": "/api/program/2/environment/10/variables"
+                  "href": "/api/program/2/environment/4/variables"
                 }
               },
-              "id": "10",
+              "id": "4",
               "programId": "2",
               "name": "TestProgram_dev2",
               "description": "description for TestProgram_dev2",
               "type": "dev"
             },
-            {
-              "_links": {
-                "self": {
-                  "href": "/api/program/2/environment/11",
-                  "templated": false
-                },
-                "http://ns.adobe.com/adobecloud/rel/variables": {
-                  "href": "/api/program/2/environment/11/variables"
-                }
-              },
-              "id": "11",
-              "programId": "2",
-              "name": "TestProgram_dev3",
-              "description": "description for TestProgram_dev3",
-              "type": "dev"
-            }
+
           ]
         },
         "_totalNumberOfItems": 3

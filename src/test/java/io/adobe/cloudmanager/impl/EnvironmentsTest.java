@@ -25,7 +25,9 @@ import java.util.List;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.model.Environment;
+import io.adobe.cloudmanager.model.Variable;
 import org.junit.jupiter.api.Test;
+import org.mockserver.model.MediaType;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 
@@ -37,7 +39,15 @@ class EnvironmentsTest extends AbstractApiTest {
         "environments/list-empty.json",
         "environments/list-success.json",
         "environments/delete-fails.json",
-        "environments/delete-success.json"
+        "environments/delete-success.json",
+        "environments/variables-not-found.json",
+        "environments/variables-list-empty.json",
+        "environments/variables-list-success.json",
+        "environments/set-variables-bad-request.json",
+        "environments/set-variables-list-empty.json",
+        "environments/set-variables-variables-only.json",
+        "environments/set-variables-secrets-only.json",
+        "environments/set-variables-mixed.json"
     );
   }
 
@@ -56,7 +66,7 @@ class EnvironmentsTest extends AbstractApiTest {
   @Test
   void listEnvironments_success() throws CloudManagerApiException {
     List<Environment> environments = underTest.listEnvironments("2");
-    assertEquals(5, environments.size(), "Correct environment length list");
+    assertEquals(4, environments.size(), "Correct environment length list");
   }
 
   @Test
@@ -100,4 +110,196 @@ class EnvironmentsTest extends AbstractApiTest {
     assertEquals("https://github.com/adobe/aio-cli-plugin-cloudmanager", url, "URL correctly read");
   }
 
+  @Test
+  void getEnvironmentVariables_environmentNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("1", "1"), "Exception thrown for 404");
+    assertEquals(String.format("Could not find environments: %s/api/program/1/environments (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getEnvironmentVariables_noEnvironment() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("2", "12"), "Exception thrown for 404");
+    assertEquals("Could not find environment 12 for program 2.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getEnvironmentVariables_noLink() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("2", "2"), "Exception thrown for missing link");
+    assertEquals("Could not find variables link for environment 2 for program 2.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getEnvironmentVariables_linkReturnsNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("2", "3"), "Exception thrown for 404");
+    assertEquals(String.format("Cannot get variables: %s/api/program/2/environment/3/variables (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getEnvironmentVariables_emptyList() throws CloudManagerApiException {
+    List<Variable> variables = underTest.getEnvironmentVariables("2", "4");
+    assertTrue(variables.isEmpty(), "Empty body returns zero length list");
+  }
+
+  @Test
+  void getEnvironmentVariables_success() throws CloudManagerApiException {
+    List<Variable> variables = underTest.getEnvironmentVariables("2", "1");
+    assertEquals(2, variables.size(), "Empty body returns zero length list");
+    Variable v = new Variable();
+    v.setName("KEY");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setValue("value");
+    assertTrue(variables.contains(v));
+    v = new Variable();
+    v.setName("I_AM_A_SECRET");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    assertTrue(variables.contains(v));
+  }
+
+  @Test
+  void getEnvironmentVariables_successEnvironment() throws Exception {
+    Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
+    List<Variable> variables = underTest.getEnvironmentVariables(environment);
+    assertEquals(2, variables.size(), "Empty body returns zero length list");
+    Variable v = new Variable();
+    v.setName("KEY");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setValue("value");
+    assertTrue(variables.contains(v));
+    v = new Variable();
+    v.setName("I_AM_A_SECRET");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    assertTrue(variables.contains(v));
+  }
+
+  @Test
+  void getEnvironmentVariables_via_environment() throws Exception {
+    Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
+    List<Variable> variables = environment.getVariables();
+    assertEquals(2, variables.size(), "Empty body returns zero length list");
+    Variable v = new Variable();
+    v.setName("KEY");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setValue("value");
+    assertTrue(variables.contains(v));
+    v = new Variable();
+    v.setName("I_AM_A_SECRET");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    assertTrue(variables.contains(v));
+  }
+
+  @Test
+  void setEnvironmentVariable_environmentNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setEnvironmentVariables("1", "1"), "Exception thrown for 404");
+    assertEquals(String.format("Could not find environments: %s/api/program/1/environments (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void setEnvironmentVariables_noEnvironment() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setEnvironmentVariables("2", "12"), "Exception thrown for 404");
+    assertEquals("Could not find environment 12 for program 2.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void setEnvironmentVariables_noLink() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setEnvironmentVariables("2", "2"), "Exception thrown for missing link");
+    assertEquals("Could not find variables link for environment 2 for program 2.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void setEnvironmentVariables_patchFails() {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setEnvironmentVariables("2", "3", v), "Exception thrown for failure");
+    assertEquals(String.format("Cannot set variables: %s/api/program/2/environment/3/variables (400 Bad Request) - Validation Error(s): some error", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void setEnvironmentVariables_successEmpty() throws CloudManagerApiException {
+    List<Variable> results = underTest.setEnvironmentVariables("2", "4");
+    assertTrue(results.isEmpty());
+    client.verify(request().withMethod("PATCH").withPath("/api/program/2/environment/4/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setEnvironmentVariables_variablesOnly() throws CloudManagerApiException {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+
+    Variable v2 = new Variable();
+    v2.setName("foo2");
+    v2.setValue("bar2");
+
+    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains foo");
+    assertTrue(results.contains(v2), "Results contains foo2");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/2/environment/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setEnvironmentVariables_secretsOnly() throws CloudManagerApiException {
+    Variable v = new Variable();
+    v.setName("secretFoo");
+    v.setValue("secretBar");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    Variable v2 = new Variable();
+    v2.setName("secretFoo2");
+    v2.setValue("secretBar2");
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    v.setValue(null);
+    v2.setValue(null);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains secretFoo");
+    assertTrue(results.contains(v2), "Results contains secretFoo2");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/2/environment/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setEnvironmentVariables_mixed() throws CloudManagerApiException {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+
+    Variable v2 = new Variable();
+    v2.setName("secretFoo");
+    v2.setValue("secretBar");
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v2.setValue(null);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains foo");
+    assertTrue(results.contains(v2), "Results contains secretFoo");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/2/environment/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setEnvironmentVariables_via_environment() throws Exception {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+
+    Variable v2 = new Variable();
+    v2.setName("secretFoo");
+    v2.setValue("secretBar");
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
+
+    List<Variable> results = env.setVariables(v, v2);
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v2.setValue(null);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains foo");
+    assertTrue(results.contains(v2), "Results contains secretFoo");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/2/environment/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
 }

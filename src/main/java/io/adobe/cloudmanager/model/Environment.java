@@ -20,17 +20,23 @@ package io.adobe.cloudmanager.model;
  * #L%
  */
 
+import java.util.List;
+
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.swagger.model.HalLink;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
+@ToString
+@EqualsAndHashCode
 public class Environment extends io.adobe.cloudmanager.swagger.model.Environment {
 
   @Delegate
   private final io.adobe.cloudmanager.swagger.model.Environment delegate;
   @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
   public Environment(io.adobe.cloudmanager.swagger.model.Environment delegate, CloudManagerApi client) {
@@ -60,5 +66,26 @@ public class Environment extends io.adobe.cloudmanager.swagger.model.Environment
     } else {
       return link.getHref();
     }
+  }
+
+  /**
+   * Lists the variables configured in this environment.
+   *
+   * @return the list of variables
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  public List<Variable> getVariables() throws CloudManagerApiException {
+    return client.getEnvironmentVariables(this);
+  }
+
+  /**
+   * Sets the specified variables on this environment.
+   *
+   * @param variables the variables to set
+   * @return the complete list of variables in this environment
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  public List<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
+    return client.setEnvironmentVariables(this, variables);
   }
 }
