@@ -23,6 +23,7 @@ package io.adobe.cloudmanager.model;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineUpdate;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
@@ -30,11 +31,13 @@ import lombok.experimental.Delegate;
  * Extension to the Swagger generated Pipeline. Provides convenience methods for frequently used APIs
  */
 @ToString
+@EqualsAndHashCode
 public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
 
   @Delegate
   private final io.adobe.cloudmanager.swagger.model.Pipeline delegate;
   @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
   public Pipeline(io.adobe.cloudmanager.swagger.model.Pipeline delegate, CloudManagerApi client) {

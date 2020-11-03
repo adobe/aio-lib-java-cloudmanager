@@ -22,6 +22,7 @@ package io.adobe.cloudmanager.model;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
@@ -29,6 +30,7 @@ import lombok.experimental.Delegate;
  * Extension to the Swagger generated Embedded Program. Provides convenience methods for frequently used APIs
  */
 @ToString
+@EqualsAndHashCode
 public class EmbeddedProgram extends io.adobe.cloudmanager.swagger.model.EmbeddedProgram {
 
   public EmbeddedProgram(io.adobe.cloudmanager.swagger.model.EmbeddedProgram delegate, CloudManagerApi client) {
@@ -49,6 +51,7 @@ public class EmbeddedProgram extends io.adobe.cloudmanager.swagger.model.Embedde
   private final io.adobe.cloudmanager.swagger.model.EmbeddedProgram delegate;
 
   @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
   public void delete() throws CloudManagerApiException {

@@ -21,6 +21,7 @@ package io.adobe.cloudmanager.model;
  */
 
 import io.adobe.cloudmanager.CloudManagerApi;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
@@ -28,6 +29,7 @@ import lombok.experimental.Delegate;
  * Extension to the Swagger generated Pipeline. Provides convenience methods for frequently used APIs
  */
 @ToString
+@EqualsAndHashCode
 public class PipelineExecutionStepState extends io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState {
 
   public PipelineExecutionStepState(io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate, CloudManagerApi client) {
@@ -39,6 +41,7 @@ public class PipelineExecutionStepState extends io.adobe.cloudmanager.swagger.mo
   private final io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate;
 
   @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
 }

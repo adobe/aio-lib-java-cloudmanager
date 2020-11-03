@@ -34,6 +34,7 @@ import io.adobe.cloudmanager.swagger.model.HalLink;
 import io.adobe.cloudmanager.swagger.model.Metric;
 import io.adobe.cloudmanager.swagger.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.util.Predicates;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
@@ -42,6 +43,7 @@ import static io.adobe.cloudmanager.CloudManagerApiException.*;
  * Extension to the Swagger generated Pipeline. Provides convenience methods for frequently used APIs
  */
 @ToString
+@EqualsAndHashCode
 public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.PipelineExecution {
 
   public static final String ACTION_APPROVAL = "approval";
@@ -50,6 +52,7 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
   @Delegate
   private final io.adobe.cloudmanager.swagger.model.PipelineExecution delegate;
   @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
   public PipelineExecution(io.adobe.cloudmanager.swagger.model.PipelineExecution delegate, CloudManagerApi client) {

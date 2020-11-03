@@ -83,7 +83,6 @@ class PipelinesTest extends AbstractApiTest {
         pipeline1RepositoryId = buildPhase.get().getRepositoryId();
       }
     }
-
     return response().withBody(buildPipeline1(), MediaType.APPLICATION_JSON);
   }
 
