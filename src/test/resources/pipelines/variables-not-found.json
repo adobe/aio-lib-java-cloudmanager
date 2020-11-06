@@ -1,0 +1,11 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/3/pipeline/3/variables"
+    },
+    "httpResponse": {
+      "statusCode": 404
+    }
+  }
+]

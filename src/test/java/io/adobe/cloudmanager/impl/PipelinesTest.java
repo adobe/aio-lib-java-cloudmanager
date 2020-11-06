@@ -20,6 +20,12 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,26 +33,23 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
+import io.adobe.cloudmanager.model.Variable;
 import io.adobe.cloudmanager.swagger.model.PipelinePhase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.MediaType;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
+import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockserver.model.HttpRequest.*;
+import static org.mockserver.model.HttpResponse.*;
 
 class PipelinesTest extends AbstractApiTest {
+
+  private String pipeline1Branch = "yellow";
+  private String pipeline1RepositoryId = "1";
 
   public static List<String> getTestExpectationFiles() {
     return Arrays.asList(
@@ -56,12 +59,17 @@ class PipelinesTest extends AbstractApiTest {
         "pipelines/start-execution-fails-running.json",
         "pipelines/update-not-allowed.json",
         "pipelines/delete-bad-request.json",
-        "pipelines/delete-success.json"
+        "pipelines/delete-success.json",
+        "pipelines/variables-not-found.json",
+        "pipelines/variables-list-empty.json",
+        "pipelines/variables-list-success.json",
+        "pipelines/set-variables-bad-request.json",
+        "pipelines/set-variables-list-empty.json",
+        "pipelines/set-variables-variables-only.json",
+        "pipelines/set-variables-secrets-only.json",
+        "pipelines/set-variables-mixed.json"
     );
   }
-
-  private String pipeline1Branch = "yellow";
-  private String pipeline1RepositoryId = "1";
 
   @BeforeEach
   public void setupPipelinesForProgram3() {
@@ -87,13 +95,13 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void listPipelines_successEmpty() throws CloudManagerApiException  {
+  void listPipelines_successEmpty() throws CloudManagerApiException {
     List<Pipeline> pipelines = underTest.listPipelines("2");
     assertTrue(pipelines.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
-  void listPipelines_success() throws CloudManagerApiException  {
+  void listPipelines_success() throws CloudManagerApiException {
     List<Pipeline> pipelines = underTest.listPipelines("3");
     assertEquals(4, pipelines.size(), "Correct pipelines list length");
   }
@@ -111,7 +119,7 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void startExecution_via_pipeline() throws Exception  {
+  void startExecution_via_pipeline() throws Exception {
     List<Pipeline> pipelines = underTest.listPipelines("3");
     Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     PipelineExecution execution = pipeline.startExecution();
@@ -137,7 +145,7 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void startExecution_success() throws CloudManagerApiException{
+  void startExecution_success() throws CloudManagerApiException {
     PipelineExecution execution = underTest.startExecution("3", "1");
     assertEquals("/api/program/3/pipeline/1/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
   }
@@ -189,7 +197,7 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void updatePipeline_via_pipeline() throws Exception  {
+  void updatePipeline_via_pipeline() throws Exception {
     List<Pipeline> pipelines = underTest.listPipelines("3");
     Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     Pipeline result = pipeline.update(PipelineUpdate.builder().branch("develop").repositoryId("4").build());
@@ -235,6 +243,195 @@ class PipelinesTest extends AbstractApiTest {
     client.verify(request().withMethod("DELETE").withPath("/api/program/3/pipeline/1"));
   }
 
+  @Test
+  void getPipelineVariables_pipeline404() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("1", "1"), "Exception was thrown");
+    assertEquals(String.format("Cannot retrieve pipelines: %s/api/program/1/pipelines (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getPipelineVariables_pipelineMissing() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("3", "10"), "Exception was thrown");
+    assertEquals("Pipeline 10 does not exist in program 3.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getPipelineVariables_noLink() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("3", "2"), "Exception was thrown");
+    assertEquals("Could not find variables link for pipeline 2 for program 3.", exception.getMessage(), "Message was correct.");
+  }
+
+  @Test
+  void getPipelineVariables_link404() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("3", "3"), "Exception was thrown");
+    assertEquals(String.format("Cannot get variables: %s/api/program/3/pipeline/3/variables (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct.");
+  }
+
+  @Test
+  void getPipelineVariables_emptyList() throws CloudManagerApiException {
+    List<Variable> variables = underTest.getPipelineVariables("3", "4");
+    assertTrue(variables.isEmpty(), "empty body return zero length list.");
+  }
+
+  @Test
+  void getPipelineVariables_success() throws CloudManagerApiException {
+    List<Variable> variables = underTest.getPipelineVariables("3", "1");
+    Variable v = new Variable();
+    v.setName("KEY");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setValue("value");
+    assertTrue(variables.contains(v));
+    v = new Variable();
+    v.setName("I_AM_A_SECRET");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    assertTrue(variables.contains(v));
+  }
+
+  @Test
+  void getPipelineVariables_successPipeline() throws CloudManagerApiException {
+    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
+    List<Variable> variables = underTest.getPipelineVariables(pipeline);
+    Variable v = new Variable();
+    v.setName("KEY");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setValue("value");
+    assertTrue(variables.contains(v));
+    v = new Variable();
+    v.setName("I_AM_A_SECRET");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    assertTrue(variables.contains(v));
+  }
+
+  @Test
+  void getPipelineVariables_via_pipeline() throws CloudManagerApiException {
+    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
+    List<Variable> variables = pipeline.getVariables();
+    Variable v = new Variable();
+    v.setName("KEY");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setValue("value");
+    assertTrue(variables.contains(v));
+    v = new Variable();
+    v.setName("I_AM_A_SECRET");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    assertTrue(variables.contains(v));
+  }
+
+  @Test
+  void setPipelineVariables_pipeline404() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setPipelineVariables("1", "1"), "Exception was thrown");
+    assertEquals(String.format("Cannot retrieve pipelines: %s/api/program/1/pipelines (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void setPipelineVariables_pipelineMissing() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setPipelineVariables("3", "10"), "Exception was thrown");
+    assertEquals("Pipeline 10 does not exist in program 3.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void setPipelineVariables_noLink() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setPipelineVariables("3", "2"), "Exception was thrown");
+    assertEquals("Could not find variables link for pipeline 2 for program 3.", exception.getMessage(), "Message was correct.");
+  }
+
+  @Test
+  void setPipelineVariables_patchFails() {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setPipelineVariables("3", "3", v), "Exception thrown for failure");
+    assertEquals(String.format("Cannot set variables: %s/api/program/3/pipeline/3/variables (400 Bad Request) - Validation Error(s): some error", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void setPipelineVariables_successEmpty() throws CloudManagerApiException {
+    List<Variable> results = underTest.setPipelineVariables("3", "4");
+    assertTrue(results.isEmpty());
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/4/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setPipelineVariables_variablesOnly() throws CloudManagerApiException {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+
+    Variable v2 = new Variable();
+    v2.setName("foo2");
+    v2.setValue("bar2");
+
+    List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains foo");
+    assertTrue(results.contains(v2), "Results contains foo2");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setPipelineVariables_secretsOnly() throws CloudManagerApiException {
+    Variable v = new Variable();
+    v.setName("secretFoo");
+    v.setValue("secretBar");
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    Variable v2 = new Variable();
+    v2.setName("secretFoo2");
+    v2.setValue("secretBar2");
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
+    v.setValue(null);
+    v2.setValue(null);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains secretFoo");
+    assertTrue(results.contains(v2), "Results contains secretFoo2");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setPipelineVariables_mixed() throws CloudManagerApiException {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+
+    Variable v2 = new Variable();
+    v2.setName("secretFoo");
+    v2.setValue("secretBar");
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v2.setValue(null);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains foo");
+    assertTrue(results.contains(v2), "Results contains secretFoo");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void setPipelineVariables_via_environment() throws Exception {
+    Variable v = new Variable();
+    v.setName("foo");
+    v.setValue("bar");
+
+    Variable v2 = new Variable();
+    v2.setName("secretFoo");
+    v2.setValue("secretBar");
+    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+
+    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
+
+    List<Variable> results = pipeline.setVariables(v, v2);
+    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v2.setValue(null);
+    assertEquals(2, results.size(), "Response list correct size.");
+    assertTrue(results.contains(v), "Results contains foo");
+    assertTrue(results.contains(v2), "Results contains secretFoo");
+    client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
 
   private String buildPipeline1() throws IOException {
     StringWriter writer = new StringWriter();
@@ -273,36 +470,6 @@ class PipelinesTest extends AbstractApiTest {
     writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", "/api/program/3/pipeline/1/execution", false);
     writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", "/api/program/3/pipeline/1/execution/{executionId}", true);
     writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", "/api/program/3/pipeline/1/variables", false);
-    gen.writeEndObject();
-    gen.writeEndObject();
-  }
-
-  private void writeStaticPipeline(JsonGenerator gen, String id, String name, String status) throws IOException {
-    gen.writeStartObject();
-    gen.writeStringField("id", id);
-    gen.writeStringField("name", name);
-    gen.writeStringField("status", status);
-    gen.writeFieldName("phases");
-    gen.writeStartArray();
-    gen.writeStartObject();
-    gen.writeStringField("name", "VALIDATE");
-    gen.writeStringField("type", "VALIDATE");
-    gen.writeEndObject();
-    gen.writeStartObject();
-    gen.writeStringField("name", "BUILD_1");
-    gen.writeStringField("type", "BUILD");
-    gen.writeStringField("repositoryId", "1");
-    gen.writeStringField("branch", "test");
-    gen.writeEndObject();
-    gen.writeStartObject();
-    gen.writeEndObject();
-    gen.writeEndArray();
-    gen.writeFieldName("_links");
-    gen.writeStartObject();
-    writeLink(gen, "self", String.format("/api/program/3/pipeline/%s", id), false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution", String.format("/api/program/3/pipeline/%s/execution", id), false);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/execution/id", String.format("/api/program/3/pipeline/%s/execution/{executionId}", id), true);
-    writeLink(gen, "http://ns.adobe.com/adobecloud/rel/variable", String.format("/api/program/3/pipeline/%s/variables", id), false);
     gen.writeEndObject();
     gen.writeEndObject();
   }

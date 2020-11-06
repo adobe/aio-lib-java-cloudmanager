@@ -1,0 +1,33 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/3/pipeline/4/variables"
+    },
+    "httpResponse": {
+      "body": {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/pipeline": {
+            "href": "/api/program/3/pipeline/4",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/program": {
+            "href": "/api/program/3",
+            "templated": false
+          },
+          "self": {
+            "href": "/api/program/2/pipeline/4/variables",
+            "templated": false
+          }
+        },
+        "_embedded": {
+          "variables": [
+          ]
+        },
+        "_totalNumberOfItems": 0
+      }
+    }
+  }
+]
+
+

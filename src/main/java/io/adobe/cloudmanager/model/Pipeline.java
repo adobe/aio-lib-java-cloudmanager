@@ -20,6 +20,8 @@ package io.adobe.cloudmanager.model;
  * #L%
  */
 
+import java.util.List;
+
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineUpdate;
@@ -84,5 +86,26 @@ public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
    */
   public void delete() throws CloudManagerApiException {
     client.deletePipeline(this);
+  }
+
+  /**
+   * Retrieve the variables associated with this pipeline.
+   *
+   * @return the variables in this pipeline
+   * @throws CloudManagerApiException when any errors occur
+   */
+  public List<Variable> getVariables() throws CloudManagerApiException {
+    return client.getPipelineVariables(this);
+  }
+
+  /**
+   * Sets the specified variables on this pipeline.
+   *
+   * @param variables the variables to set
+   * @return the complete list of variables in this pipeline
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  public List<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
+    return client.setPipelineVariables(this, variables);
   }
 }

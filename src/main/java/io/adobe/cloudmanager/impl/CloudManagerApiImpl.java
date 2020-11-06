@@ -178,20 +178,11 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public List<Variable> getEnvironmentVariables(Environment environment) throws CloudManagerApiException {
-    HalLink variableLInk = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
-    if (variableLInk == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getProgramId(), environment.getId());
+    HalLink variableLink = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
+    if (variableLink == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
     }
-    VariableList list;
-    try {
-      list = get(variableLInk.getHref(), new GenericType<VariableList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_VARIABLES, baseUrl, variableLInk.getHref(), e);
-    }
-    if (list.getTotalNumberOfItems().equals(0)) {
-      return Collections.emptyList();
-    }
-    return list.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toList());
+    return getVariables(variableLink);
   }
 
   @Override
@@ -203,18 +194,37 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   public List<Variable> setEnvironmentVariables(Environment environment, Variable... variables) throws CloudManagerApiException {
     HalLink variableLInk = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
     if (variableLInk == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getProgramId(), environment.getId());
+      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
     }
-    VariableList list;
-    try {
-      list = patch(variableLInk.getHref(), variables, new GenericType<VariableList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.SET_VARIABLES, baseUrl, variableLInk.getHref(), e);
+    return setVariables(variableLInk, variables);
+  }
+
+  @Override
+  public List<Variable> getPipelineVariables(String programId, String pipelineId) throws CloudManagerApiException {
+    return getPipelineVariables(getPipeline(programId, pipelineId));
+  }
+
+  @Override
+  public List<Variable> getPipelineVariables(Pipeline pipeline) throws CloudManagerApiException {
+    HalLink variableLink = pipeline.getLinks().getHttpnsAdobeComadobecloudrelvariables();
+    if (variableLink == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_PIPELINE, pipeline.getId(), pipeline.getProgramId());
     }
-    if (list.getTotalNumberOfItems().equals(0)) {
-      return Collections.emptyList();
+    return getVariables(variableLink);
+  }
+
+  @Override
+  public List<Variable> setPipelineVariables(String programId, String pipelineId, Variable... variables) throws CloudManagerApiException {
+    return setPipelineVariables(getPipeline(programId, pipelineId), variables);
+  }
+
+  @Override
+  public List<Variable> setPipelineVariables(Pipeline pipeline, Variable... variables) throws CloudManagerApiException {
+    HalLink variableLink = pipeline.getLinks().getHttpnsAdobeComadobecloudrelvariables();
+    if (variableLink == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_PIPELINE, pipeline.getId(), pipeline.getProgramId());
     }
-    return list.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toList());
+    return setVariables(variableLink, variables);
   }
 
   @Override
@@ -410,6 +420,32 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   private Pipeline getPipeline(String programId, String pipelineId) throws CloudManagerApiException {
     return getPipeline(programId, pipelineId, ErrorType.FIND_PIPELINE);
+  }
+
+  private List<Variable> getVariables(HalLink variableLink) throws CloudManagerApiException {
+    VariableList list;
+    try {
+      list = get(variableLink.getHref(), new GenericType<VariableList>() {});
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.GET_VARIABLES, baseUrl, variableLink.getHref(), e);
+    }
+    if (list.getTotalNumberOfItems().equals(0)) {
+      return Collections.emptyList();
+    }
+    return list.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toList());
+  }
+
+  private List<Variable> setVariables(HalLink variableLInk, Variable[] variables) throws CloudManagerApiException {
+    VariableList list;
+    try {
+      list = patch(variableLInk.getHref(), variables, new GenericType<VariableList>() {});
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.SET_VARIABLES, baseUrl, variableLInk.getHref(), e);
+    }
+    if (list.getTotalNumberOfItems().equals(0)) {
+      return Collections.emptyList();
+    }
+    return list.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toList());
   }
 
   private <T> T get(String path, GenericType<T> returnType) throws ApiException {

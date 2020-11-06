@@ -12,6 +12,7 @@
             "pipelines": [
               {
                 "id": "1",
+                "programId": "4",
                 "name": "test1",
                 "status": "IDLE",
                 "phases": [
@@ -44,6 +45,7 @@
               },
               {
                 "id": "2",
+                "programId": "4",
                 "name": "test2",
                 "status": "BUSY",
                 "_links": {
@@ -61,6 +63,7 @@
               },
               {
                 "id": "3",
+                "programId": "4",
                 "name": "test3",
                 "status": "BUSY",
                 "_links": {
@@ -81,6 +84,7 @@
               },
               {
                 "id": "4",
+                "programId": "4",
                 "name": "test4",
                 "status": "IDLE",
                 "phases": [
@@ -113,6 +117,7 @@
               },
               {
                 "id": "5",
+                "programId": "4",
                 "name": "test5",
                 "status": "IDLE",
                 "phases": [
@@ -145,6 +150,7 @@
               },
               {
                 "id": "6",
+                "programId": "4",
                 "name": "test6",
                 "status": "NOT_STARTED",
                 "phases": [
@@ -177,6 +183,7 @@
               },
               {
                 "id": "7",
+                "programId": "4",
                 "name": "test7",
                 "status": "FINISHED",
                 "phases": [

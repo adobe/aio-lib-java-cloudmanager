@@ -12,6 +12,7 @@
             "pipelines": [
               {
                 "id": "1",
+                "programId": "3",
                 "name": "test1",
                 "status": "IDLE",
                 "phases": [
@@ -44,6 +45,7 @@
               },
               {
                 "id": "2",
+                "programId": "3",
                 "name": "test2",
                 "status": "BUSY",
                 "_links": {
@@ -61,6 +63,7 @@
               },
               {
                 "id": "3",
+                "programId": "3",
                 "name": "test3",
                 "status": "BUSY",
                 "_links": {
@@ -81,6 +84,7 @@
               },
               {
                 "id": "4",
+                "programId": "3",
                 "name": "test4",
                 "status": "IDLE",
                 "phases": [

@@ -33,12 +33,13 @@ Most of the tests will use a specific program to help delinate context. These he
 #### Pipeline Details
 |Program | Pipeline | Test State|
 | :--- | --- | ---: |
+| 1 | | Pipelines Not Found|
 | 2 | | List Empty|
 | 3 | | List Success |
-| 3 | 1 | Start Success <br/> Patch Success <br/> Delete Success |
-| 3 | 2 | Start Fails - Running |
-| 3 | 3 | Start Fails - Not Found |
-| 3 | 4 | Update Fails - Not Allowed <br/> Delete Fails - Bad Request |
+| 3 | 1 | Start Success <br/> Patch Success <br/> Delete Success <br/> Variable successes |
+| 3 | 2 | Start Fails - Running <br/> Missing Variables Link |
+| 3 | 3 | Start Fails - Not Found <br/> Get Variables not found <br/> Set Variables Bad Request |
+| 3 | 4 | Update Fails - Not Allowed <br/> Delete Fails - Bad Request <br/> Variable List Empty <br/> Set Variable Empty List |
 | 3 | 10 | Pipeline Missing |
 
 #### Execution Details:

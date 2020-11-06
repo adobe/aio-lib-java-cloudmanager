@@ -251,18 +251,85 @@ public interface CloudManagerApi {
    */
   Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException;
 
+  /**
+   * Lists all variables associated with the specified environment
+   *
+   * @param programId     the program id of the environment
+   * @param environmentId the environment id
+   * @return list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   */
   List<Variable> getEnvironmentVariables(String programId, String environmentId) throws CloudManagerApiException;
 
+  /**
+   * Lists all variables associated with the specified environment
+   *
+   * @param environment the environment
+   * @return list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   */
   List<Variable> getEnvironmentVariables(Environment environment) throws CloudManagerApiException;
 
+  /**
+   * Sets the specified variables in the environment.
+   *
+   * @param programId     the program id of the environment
+   * @param environmentId the environment id
+   * @param variables     the variables to set
+   * @return updated list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   */
   List<Variable> setEnvironmentVariables(String programId, String environmentId, Variable... variables) throws CloudManagerApiException;
 
+  /**
+   * Sets the specified variables in the environment.
+   *
+   * @param environment the environment context
+   * @param variables   the variables to set
+   * @return updated list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   */
   List<Variable> setEnvironmentVariables(Environment environment, Variable... variables) throws CloudManagerApiException;
-/*
-    Future<List<Variable>> getPipelineVariables(String programId, String pipelineId);
 
-    Future<Void> setPipelineVariables(String programId, String pipelineId, Variable ...variables);
-*/
+  /**
+   * Lists all variables associated with the specified pipeline
+   *
+   * @param programId  the program id of the pipeline
+   * @param pipelineId the pipeline id
+   * @return list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  List<Variable> getPipelineVariables(String programId, String pipelineId) throws CloudManagerApiException;
+
+  /**
+   * Lists all variables associated with the specified pipeline
+   *
+   * @param pipeline the pipeline context
+   * @return list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  List<Variable> getPipelineVariables(Pipeline pipeline) throws CloudManagerApiException;
+
+  /**
+   * Sets the specified variables in the pipeline
+   *
+   * @param programId  the program context for the pipeline
+   * @param pipelineId the pipeline id
+   * @param variables  the variables to set
+   * @return updated list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  List<Variable> setPipelineVariables(String programId, String pipelineId, Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Sets the specified variables in the pipeline
+   *
+   * @param pipeline  the pipeline context
+   * @param variables the variables to set
+   * @return updated list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  List<Variable> setPipelineVariables(Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
 
   /**
    * Delete the specified program.
