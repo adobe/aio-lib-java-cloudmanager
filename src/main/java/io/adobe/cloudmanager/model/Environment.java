@@ -20,6 +20,7 @@ package io.adobe.cloudmanager.model;
  * #L%
  */
 
+import java.io.File;
 import java.util.List;
 
 import io.adobe.cloudmanager.CloudManagerApi;
@@ -87,5 +88,19 @@ public class Environment extends io.adobe.cloudmanager.swagger.model.Environment
    */
   public List<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
     return client.setEnvironmentVariables(this, variables);
+  }
+
+  /**
+   * Downloads the logs for this environment
+   *
+   * @param service the service context for the logs
+   * @param name    the name of the log in the service
+   * @param days    the number of days to download
+   * @param dir     the directory in which to place the log files
+   * @return a list of EnvironmentLogs with details about the downloaded files
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  public List<EnvironmentLog> downloadLogs(String service, String name, int days, File dir) throws CloudManagerApiException {
+    return client.downloadLogs(this, service, name, days, dir);
   }
 }

@@ -20,11 +20,13 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.io.File;
 import java.util.List;
 import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Environment;
+import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.PipelineExecutionStepState;
@@ -206,12 +208,6 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    */
   List<Environment> listEnvironments(String programId) throws CloudManagerApiException;
-/*
-    Future<Void> getExecutionStepLog(String programId, String pipelineId, String executionId, StepStateAction action,
-                                     String logFile, OutputStream outputStream);
-
-    Future<List<DownloadedLog>> downloadLogs(String programId, String environmentId, Service service, LogName name, File dir);
-*/
 
   /**
    * Delete the specified pipeline.
@@ -364,4 +360,33 @@ public interface CloudManagerApi {
    */
   void deleteEnvironment(Environment environment) throws CloudManagerApiException;
 
+//  void getExecutionStepLog(String programId, String pipelineId, String executionId,
+//                           Predicate<PipelineExecutionStepState> action, String logFile, OutputStream outputStream) throws CloudManagerApiException;
+
+  /**
+   * Downloads the logs for the specified environment.
+   *
+   * @param programId     the program id context for the environment
+   * @param environmentId the environment id
+   * @param service       the service name for log filtering
+   * @param logName       the name of the logfile in the service to download
+   * @param days          how many days of log files to retrieve
+   * @param dir           the directory in which to save the files
+   * @return a list of EnvironmentLogs with details about the downloaded files
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  List<EnvironmentLog> downloadLogs(String programId, String environmentId, String service, String logName, int days, File dir) throws CloudManagerApiException;
+
+  /**
+   * Downloads the logs for the specified environment.
+   *
+   * @param environment the environment context
+   * @param service     the service name for log filtering
+   * @param logName     the name of the logfile in the service to download
+   * @param days        how many days of log files to retrieve
+   * @param dir         the directory in which to save the files
+   * @return a list of EnvironmentLogs with details about the downloaded files
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  List<EnvironmentLog> downloadLogs(Environment environment, String service, String logName, int days, File dir) throws CloudManagerApiException;
 }

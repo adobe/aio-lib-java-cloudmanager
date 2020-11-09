@@ -94,6 +94,10 @@
                 },
                 "http://ns.adobe.com/adobecloud/rel/variables": {
                   "href": "/api/program/2/environment/3/variables"
+                },
+                "http://ns.adobe.com/adobecloud/rel/logs": {
+                  "href": "/api/program/2/environment/3/logs?service={service}&name={name}&days={days}",
+                  "templated": true
                 }
               },
               "id": "3",

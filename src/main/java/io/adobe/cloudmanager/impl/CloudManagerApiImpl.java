@@ -20,14 +20,22 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipInputStream;
 import javax.ws.rs.core.GenericType;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.text.StringSubstitutor;
 
 import io.adobe.cloudmanager.CloudManagerApi;
@@ -35,6 +43,7 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Environment;
+import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.PipelineExecutionStepState;
@@ -43,6 +52,7 @@ import io.adobe.cloudmanager.swagger.invoker.ApiClient;
 import io.adobe.cloudmanager.swagger.invoker.ApiException;
 import io.adobe.cloudmanager.swagger.invoker.Pair;
 import io.adobe.cloudmanager.swagger.model.EnvironmentList;
+import io.adobe.cloudmanager.swagger.model.EnvironmentLogs;
 import io.adobe.cloudmanager.swagger.model.HalLink;
 import io.adobe.cloudmanager.swagger.model.PipelineExecutionEmbedded;
 import io.adobe.cloudmanager.swagger.model.PipelineList;
@@ -50,6 +60,7 @@ import io.adobe.cloudmanager.swagger.model.PipelinePhase;
 import io.adobe.cloudmanager.swagger.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.swagger.model.Program;
 import io.adobe.cloudmanager.swagger.model.ProgramList;
+import io.adobe.cloudmanager.swagger.model.Redirect;
 import io.adobe.cloudmanager.swagger.model.VariableList;
 import io.adobe.cloudmanager.util.Predicates;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
@@ -399,6 +410,43 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
+  @Override
+  public List<EnvironmentLog> downloadLogs(String programId, String environmentId, String service, String name, int days, File dir) throws CloudManagerApiException {
+    return downloadLogs(getEnvironment(programId, environmentId), service, name, days, dir);
+  }
+
+  @Override
+  public List<EnvironmentLog> downloadLogs(Environment environment, String service, String name, int days, File dir) throws CloudManagerApiException {
+    HalLink logLink = environment.getLinks().getHttpnsAdobeComadobecloudrellogs();
+    if (logLink == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_LOGS_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
+    }
+
+    Map<String, String> values = new HashMap<>();
+    values.put("service", service);
+    values.put("name", name);
+    values.put("days", Integer.toString(days));
+    String logHref = processTemplate(logLink.getHref(), values);
+    EnvironmentLogs logs = getLogs(logHref);
+
+    List<io.adobe.cloudmanager.swagger.model.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
+    List<EnvironmentLog> downloaded = new ArrayList<>();
+
+    if (downloads == null || downloads.isEmpty()) {
+      return Collections.emptyList();
+    } else {
+      for (io.adobe.cloudmanager.swagger.model.EnvironmentLog d : downloads) {
+        EnvironmentLog log = new EnvironmentLog(d);
+        String logfileName = String.format("%d-%s-%s-%s.log.gz", log.getEnvironmentId(), log.getService(), log.getName(), log.getDate());
+        log.setPath(dir.getPath() + "/" + logfileName);
+        log.setUrl(log.getLinks().getHttpnsAdobeComadobecloudrellogsdownload().getHref());
+        downloadLog(log);
+        downloaded.add(log);
+      }
+    }
+    return downloaded;
+  }
+
   private Program getProgram(String path) throws CloudManagerApiException {
     try {
       return get(path, new GenericType<Program>() {});
@@ -446,6 +494,27 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       return Collections.emptyList();
     }
     return list.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toList());
+  }
+
+  private EnvironmentLogs getLogs(String path) throws CloudManagerApiException {
+    try {
+      return get(path, new GenericType<EnvironmentLogs>() {});
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.GET_LOGS, baseUrl, path, e);
+    }
+  }
+
+  private void downloadLog(EnvironmentLog log) throws CloudManagerApiException {
+    Redirect redirect;
+    try {
+      redirect = get(log.getUrl(), new GenericType<Redirect>() {});
+      File downloadedFile = new File(log.getPath());
+      FileUtils.copyInputStreamToFile(new URL(redirect.getRedirect()).openStream(), downloadedFile);
+    } catch (ApiException | MalformedURLException e) {
+      throw new CloudManagerApiException(ErrorType.NO_LOG_REDIRECT, log.getUrl(), e.getMessage());
+    } catch (IOException e) {
+      throw new CloudManagerApiException(ErrorType.LOG_DOWNLOAD, e.getMessage(), log.getPath(), e.getMessage());
+    }
   }
 
   private <T> T get(String path, GenericType<T> returnType) throws ApiException {

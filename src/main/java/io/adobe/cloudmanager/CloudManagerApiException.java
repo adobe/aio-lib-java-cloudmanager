@@ -20,7 +20,6 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -161,9 +160,9 @@ public class CloudManagerApiException extends Exception {
     FIND_ENVIRONMENT("Could not find environment %s for program %s."),
     RETRIEVE_ENVIRONMENTS("Could not find environments: %s."),
     DELETE_PIPELINE("Cannot delete pipeline: %s"),
-    GET_LOG("Cannot get log: %s"),
+    GET_LOGS("Cannot get logs: %s"),
     NO_LOG_REDIRECT("Log %s did not contain a redirect. Was %s."),
-    LOG_DOWNLOAD("Could not download %s to %s (%s %s)."),
+    LOG_DOWNLOAD("Could not download %s to %s (%s)."),
     LOG_UNZIP("Could not unzip %s to %s."),
     LOG_INITIAL_SIZE("Could not get initial size of %s"),
     FIND_LOG("Log not found: %s (%s %s)"),
@@ -173,6 +172,7 @@ public class CloudManagerApiException extends Exception {
     NO_BUILD_PHASE("Pipeline %s does not appear to have a build phase."),
     NO_DEVELOPER_CONSOLE("Environment %s does not appear to support Developer Console."),
     FIND_VARIABLES_LINK_ENVIRONMENT("Could not find variables link for environment %s for program %s."),
+    FIND_LOGS_LINK_ENVIRONMENT("Could not find logs link for environment %s for program %s."),
     FIND_VARIABLES_LINK_PIPELINE("Could not find variables link for pipeline %s for program %s."),
     GET_VARIABLES("Cannot get variables: %s"),
     SET_VARIABLES("Cannot set variables: %s"),

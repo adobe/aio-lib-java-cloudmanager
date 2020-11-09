@@ -24,10 +24,10 @@ Most of the tests will use a specific program to help delinate context. These he
 | 3 | | Empty List |
 | 2 | | List Success |
 | 2 | 3 | Delete Fails - Bad Request |
-| 2 | 12 | Delete Fails - Not Found <br/> Get Variable Fails |
-| 2 | 1 | Delete Success <br/> Set Variables Success|
-| 2 | 2 | Missing Variables Link |
-| 2 | 3 | No Developer Console <br/> Get Variables Not Found <br/> Set Variables Bad Request |
+| 2 | 12 | Delete Fails - Not Found <br/> Get Variable Fails <br/> Download Log fails|
+| 2 | 1 | Delete Success <br/> Set Variables Success <br> Download Logs success |
+| 2 | 2 | Missing Variables Link <br/> Missing Logs Link |
+| 2 | 3 | No Developer Console <br/> Get Variables Not Found <br/> Set Variables Bad Request <br/> Download Logs 404 |
 | 2 | 4 | Variable List Empty <br/> Set Variable Empty List | 
 
 #### Pipeline Details
