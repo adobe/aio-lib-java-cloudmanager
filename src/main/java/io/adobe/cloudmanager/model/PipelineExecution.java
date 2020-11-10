@@ -61,6 +61,15 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
   }
 
   /**
+   * Advances this execution if in a valid state.
+   *
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  public void advance() throws CloudManagerApiException {
+    client.advanceExecution(this);
+  }
+
+  /**
    * Cancel this execution, if in a valid state.
    *
    * @throws CloudManagerApiException when any error occurs.

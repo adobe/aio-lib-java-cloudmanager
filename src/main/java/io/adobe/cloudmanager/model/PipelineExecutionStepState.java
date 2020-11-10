@@ -20,7 +20,10 @@ package io.adobe.cloudmanager.model;
  * #L%
  */
 
+import java.io.OutputStream;
+
 import io.adobe.cloudmanager.CloudManagerApi;
+import io.adobe.cloudmanager.CloudManagerApiException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -32,16 +35,34 @@ import lombok.experimental.Delegate;
 @EqualsAndHashCode
 public class PipelineExecutionStepState extends io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState {
 
+  @Delegate
+  private final io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate;
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  private final CloudManagerApi client;
+
   public PipelineExecutionStepState(io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }
 
-  @Delegate
-  private final io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate;
+  /**
+   * Streams the default log, if any, for this step to the specified output stream.
+   *
+   * @param outputStream the output stream to write to
+   * @throws CloudManagerApiException when any error occurs
+   */
+  public void getLog(OutputStream outputStream) throws CloudManagerApiException {
+    client.getExecutionStepLog(this, null, outputStream);
+  }
 
-  @ToString.Exclude
-  @EqualsAndHashCode.Exclude
-  private final CloudManagerApi client;
-
+  /**
+   * Streams the specified log, if any, for this step to the specified output stream.
+   *
+   * @param outputStream the output stream to write to
+   * @throws CloudManagerApiException when any error occurs
+   */
+  public void getLog(String name, OutputStream outputStream) throws CloudManagerApiException {
+    client.getExecutionStepLog(this, name, outputStream);
+  }
 }

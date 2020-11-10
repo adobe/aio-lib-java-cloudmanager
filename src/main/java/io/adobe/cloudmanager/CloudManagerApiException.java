@@ -174,6 +174,7 @@ public class CloudManagerApiException extends Exception {
     FIND_VARIABLES_LINK_ENVIRONMENT("Could not find variables link for environment %s for program %s."),
     FIND_LOGS_LINK_ENVIRONMENT("Could not find logs link for environment %s for program %s."),
     FIND_VARIABLES_LINK_PIPELINE("Could not find variables link for pipeline %s for program %s."),
+    FIND_LOGS_LINK_EXECUTION("Could not find logs link for action %s."),
     GET_VARIABLES("Cannot get variables: %s"),
     SET_VARIABLES("Cannot set variables: %s"),
     DELETE_PROGRAM("Cannot delete program: %s"),

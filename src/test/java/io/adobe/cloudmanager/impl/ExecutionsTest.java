@@ -20,15 +20,26 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.ws.rs.core.HttpHeaders;
+
+import org.apache.commons.io.IOUtils;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
+import io.adobe.cloudmanager.model.PipelineExecutionStepState;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.junit.jupiter.MockServerExtension;
+import org.mockserver.model.BinaryBody;
+import org.mockserver.model.HttpResponse;
+import org.mockserver.model.HttpStatusCode;
 import org.mockserver.model.MediaType;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
@@ -48,7 +59,42 @@ public class ExecutionsTest extends AbstractApiTest {
         "executions/specific-approval-waiting.json",
         "executions/specific-cancel-deploy-waiting.json",
         "executions/specific-cancel-deploy-invalid.json",
-        "executions/specific-advance-build-running.json");
+        "executions/specific-advance-build-running.json",
+        "executions/step-logs-not-found.json",
+        "executions/step-logs-redirect-empty.json"
+    );
+  }
+
+  @BeforeEach
+  public void setupLogsforEnvironments() throws IOException {
+    client.when(
+        request().withMethod("GET")
+            .withPath("/api/program/4/pipeline/3/execution/4/phase/8565/step/15483/logs")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/special.txt\" }", baseUrl))
+    );
+
+    client.when(
+        request()
+            .withMethod("GET")
+            .withPath("/api/program/4/pipeline/3/execution/4/phase/8565/step/15483/logs")
+            .withPathParameter("file", "somethingspecial")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/special.txt\" }", baseUrl))
+    );
+    client.when(
+        request().withMethod("GET").withPath("/logs/special.txt")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withBody("some log line\nsome other log line\n")
+    );
   }
 
   @Test
@@ -182,10 +228,104 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
+  void advanceExecution_codeQualityWaiting_via_execution() throws CloudManagerApiException {
+    PipelineExecution execution = underTest.getExecution("4", "3", "2");
+    execution.advance();
+    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/advance").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
   void advanceExecution_approvalWaiting() throws CloudManagerApiException {
     underTest.advanceExecution("4", "3", "4");
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
   }
+
+  @Test
+  void advanceExecution_approvalWaiting_via_execution() throws CloudManagerApiException {
+    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    execution.advance();
+    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void getExecutionStepLog_badPipeline() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "10", "1", "build", null), "Exception thrown");
+
+  }
+
+  @Test
+  void getExecutionStepLog_stepMissing() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "5", "devDeploy", null));
+    assertEquals("Cannot find step state for action devDeploy on execution 5.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getExecutionStepLog_executionNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "10", "codeQuality", null), "Exception thrown for 404");
+    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+
+  }
+
+  @Test
+  void getExecutionStepLog_linkNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "2", "validate", null));
+    assertEquals(String.format("Could not find logs link for action validate.", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getExecutionStepLog_notFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "2", "build", null));
+    assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/logs (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getExecutionStepLog_empty() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "2", "codeQuality", null));
+    assertEquals(String.format("Log %s/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs did not contain a redirect. Was null.", baseUrl), exception.getMessage(), "Message was correct");
+
+  }
+
+  @Test
+  void getExecutionStepLog_success() throws CloudManagerApiException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    underTest.getExecutionStepLog("4", "3", "4", "build", bos);
+    assertEquals("some log line\nsome other log line\n", bos.toString());
+  }
+
+  @Test
+  void getExecutionStepLog_success_alternateFile() throws CloudManagerApiException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    underTest.getExecutionStepLog("4", "3", "4", "build", "somethingspecial", bos);
+    assertEquals("some log line\nsome other log line\n", bos.toString());
+  }
+
+  @Test
+  void getExecutionStepLog_successExecutionStateStep() throws CloudManagerApiException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
+    underTest.getExecutionStepLog(stepState, bos);
+    assertEquals("some log line\nsome other log line\n", bos.toString());
+  }
+
+  @Test
+  void getExecutionStepLog_via_stepState() throws CloudManagerApiException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
+    stepState.getLog(bos);
+    assertEquals("some log line\nsome other log line\n", bos.toString());
+  }
+
+  @Test
+  void getExecutionStepLog_via_stepState_named() throws CloudManagerApiException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
+    stepState.getLog("somethingspecial", bos);
+    assertEquals("some log line\nsome other log line\n", bos.toString());
+  }
+
 }
 
 

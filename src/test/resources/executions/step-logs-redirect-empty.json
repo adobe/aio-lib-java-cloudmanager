@@ -1,0 +1,14 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs"
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json": {}
+      }
+    }
+  }
+]

@@ -47,12 +47,12 @@ Most of the tests will use a specific program to help delinate context. These he
 | Pipeline | Execution| Test State | 
 | :--- | :---: | ---: |
 | 1 |  |  Not Running (404) |
-| 2 | 1 | Current Running <br/> Cancel Current Running|
+| 2 | 1 | Current Running <br/> Cancel Current Running |
 | 3 | 1 | Specific Running <br/> Cancel Specific Running <br> Cancel via Execution |
-| 3 | 2 | Cancel/Advance - Code Quality |
+| 3 | 2 | Cancel/Advance - Code Quality <br/> Logs 404 <br/> Log Redirect Empty |
 | 3 | 3 | Cancel/Advance - Code Quality Invalid State |
-| 3 | 4 | Cancel/Advance - Approval Waiting |
-| 3 | 5 | Cancel - Deploy Waiting |
+| 3 | 4 | Cancel/Advance - Approval Waiting <br/> Log Download Successes |
+| 3 | 5 | Cancel - Deploy Waiting <br/> Missing Execution Step 'devDeploy' |
 | 3 | 6 | Cancel - Deploy Invalid State |
 | 3 | 7 | Advance - Build Running | 
 | 4 | 1 | No Steps | 

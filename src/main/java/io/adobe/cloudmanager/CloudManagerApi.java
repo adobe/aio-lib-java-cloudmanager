@@ -21,6 +21,7 @@ package io.adobe.cloudmanager;
  */
 
 import java.io.File;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -186,10 +187,20 @@ public interface CloudManagerApi {
    * Gets the waiting step for the execution.
    *
    * @param execution the pipeline execution
-   * @return the waiing step
+   * @return the waiting step
    * @throws CloudManagerApiException when any error occurs or waiting step is not found
    */
   PipelineExecutionStepState getWaitingStep(PipelineExecution execution) throws CloudManagerApiException;
+
+  /**
+   * Returns the specified action step for the pipeline execution
+   *
+   * @param execution the execution context
+   * @param action    the step state action
+   * @return the step state details
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  PipelineExecutionStepState getExecutionStepState(PipelineExecution execution, String action) throws CloudManagerApiException;
 
   /**
    * Retrieves the metrics for the specified execution step, if any.
@@ -360,9 +371,6 @@ public interface CloudManagerApi {
    */
   void deleteEnvironment(Environment environment) throws CloudManagerApiException;
 
-//  void getExecutionStepLog(String programId, String pipelineId, String executionId,
-//                           Predicate<PipelineExecutionStepState> action, String logFile, OutputStream outputStream) throws CloudManagerApiException;
-
   /**
    * Downloads the logs for the specified environment.
    *
@@ -389,4 +397,51 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    */
   List<EnvironmentLog> downloadLogs(Environment environment, String service, String logName, int days, File dir) throws CloudManagerApiException;
+
+  /**
+   * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
+   * <p>
+   * Uses the default log file name for the step.
+   *
+   * @param programId    the program id of the pipeline context
+   * @param pipelineId   the pipeline id for the execution context
+   * @param executionId  the execution id for the logs
+   * @param action       the execution step action for the log
+   * @param outputStream output stream to write to
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  void getExecutionStepLog(String programId, String pipelineId, String executionId, String action, OutputStream outputStream) throws CloudManagerApiException;
+
+  /**
+   * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
+   *
+   * @param programId    the program id of the pipeline context
+   * @param pipelineId   the pipeline id for the execution context
+   * @param executionId  the execution id for the logs
+   * @param action       the execution step action for the log
+   * @param name         custom log file name
+   * @param outputStream output stream to write to
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  void getExecutionStepLog(String programId, String pipelineId, String executionId, String action, String name, OutputStream outputStream) throws CloudManagerApiException;
+
+  /**
+   * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
+   *
+   * @param action       the execution step action for the log
+   * @param outputStream output stream to write to
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  void getExecutionStepLog(PipelineExecutionStepState action, OutputStream outputStream) throws CloudManagerApiException;
+
+  /**
+   * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
+   *
+   * @param action       the execution step action for the log
+   * @param name         the log file name or {@code null} for the default
+   * @param outputStream output stream to write to
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  void getExecutionStepLog(PipelineExecutionStepState action, String name, OutputStream outputStream) throws CloudManagerApiException;
+
 }
