@@ -28,7 +28,7 @@ Example:
 ```
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
-    <artifactId>aio-lib-cloud-manager</artifactId>
+    <artifactId>aio-lib-cloudmanager</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```

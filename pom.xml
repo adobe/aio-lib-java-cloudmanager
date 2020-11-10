@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.adobe.cloudmanager</groupId>
-    <artifactId>aio-lib-cloud-manager</artifactId>
+    <artifactId>aio-lib-cloudmanager</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
@@ -25,9 +25,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://github.com/adobe/cloudmanager-client-lib.git</connection>
-        <developerConnection>scm:git:https://github.com/adobe/cloudmanager-client-lib.git</developerConnection>
-        <url>https://github.com/adobe/cloudmanager-client-lib/tree/main</url>
+        <connection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</connection>
+        <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</developerConnection>
+        <url>https://github.com/adobe/aio-lib-java-cloudmanager/tree/main</url>
     </scm>
 
     <properties>
