@@ -34,5 +34,5 @@ public interface IdentityManagementApi {
    * @return the authenticated bearer token
    * @throws IdentityManagementApiException when any error occurs
    */
-  String authenticate(AdobeIMSOrg org) throws IdentityManagementApiException;
+  String authenticate(AdobeClientCredentials org) throws IdentityManagementApiException;
 }

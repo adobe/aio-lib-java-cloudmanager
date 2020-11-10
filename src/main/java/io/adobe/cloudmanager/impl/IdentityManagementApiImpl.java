@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.adobe.cloudmanager.AdobeIMSOrg;
+import io.adobe.cloudmanager.AdobeClientCredentials;
 import io.adobe.cloudmanager.IdentityManagementApi;
 import io.adobe.cloudmanager.IdentityManagementApiException;
 import io.adobe.cloudmanager.jwt.swagger.api.JwtApi;
@@ -43,7 +43,7 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
   }
 
   @Override
-  public String authenticate(AdobeIMSOrg org) throws IdentityManagementApiException {
+  public String authenticate(AdobeClientCredentials org) throws IdentityManagementApiException {
 
     Calendar expires = Calendar.getInstance();
     expires.add(Calendar.MINUTE, EXPIRATION);
@@ -62,7 +62,7 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
     return token.getAccessToken();
   }
 
-  private Token authenticate(AdobeIMSOrg org, String jwts) throws IdentityManagementApiException {
+  private Token authenticate(AdobeClientCredentials org, String jwts) throws IdentityManagementApiException {
     try {
       return new JwtApi(apiClient).authenticate(org.getApiKey(), org.getClientSecret(), jwts);
     } catch (ApiException e) {

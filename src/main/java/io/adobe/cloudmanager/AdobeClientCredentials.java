@@ -25,7 +25,7 @@ import java.security.Key;
 import lombok.Value;
 
 @Value
-public class AdobeIMSOrg {
+public class AdobeClientCredentials {
   String orgId;
   String technicalAccountId;
   String apiKey;

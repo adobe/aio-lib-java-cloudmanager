@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.adobe.cloudmanager.AdobeIMSOrg;
+import io.adobe.cloudmanager.AdobeClientCredentials;
 import io.adobe.cloudmanager.IdentityManagementApi;
 import io.adobe.cloudmanager.IdentityManagementApiException;
 import io.adobe.cloudmanager.jwt.swagger.model.Token;
@@ -116,7 +116,7 @@ public class IdentityManagementApiImplTest {
 
   @Test
   void testAuthenticate() throws IdentityManagementApiException {
-    AdobeIMSOrg org = new AdobeIMSOrg("AdobeImsOrg@AdobeOrg", "1234567890@techacct.adobe.com", "9876543210987654321", "12345678-9abc-def0-1234-56789abcdef0", privateKey);
+    AdobeClientCredentials org = new AdobeClientCredentials("AdobeImsOrg@AdobeOrg", "1234567890@techacct.adobe.com", "9876543210987654321", "12345678-9abc-def0-1234-56789abcdef0", privateKey);
     String token = underTest.authenticate(org);
     assertEquals("Access Token", token, "Access token matched.");
   }

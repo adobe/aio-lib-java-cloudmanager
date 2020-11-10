@@ -14,39 +14,28 @@ governing permissions and limitations under the License.
 
 # Adobe I/O Java Cloud Manager Library
 
-JavaScript SDK wrapping the [Adobe Cloud Manager API](https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html).
+This is a Java Library wrapping the [Adobe Cloud Manager API](https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html).
 
 ## Goals
 
-It is a good idea to provide a mission statement for your project, enshrining
-what the project wants to accomplish so that as more people join your project
-everyone can work in alignment.
+Provide a set of convenience methods for interacting with the Cloud Manager definitions for a given organization. 
 
-## Non-Goals
+### Maven Dependency
 
-It is also a good idea to declare what are _not_ goals of the project to prevent
-potential feature creep.
-
-### Installation
-
-Instructions for how to download/install the code onto your machine.
+Include via Maven:
 
 Example:
 ```
-npm install myProject --save
+<dependency>
+    <groupId>io.adobe.cloudmanager</groupId>
+    <artifactId>aio-lib-cloud-manager</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
 ```
 
 ### Usage
 
-Usage instructions for your code.
-
-Example:
-
-```
-var myMod = require('mymodule');
-
-myMod.foo('hi');
-```
+See the [JavaDocs]() for the API.
 
 ### Contributing
 
