@@ -24,10 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.ws.rs.core.HttpHeaders;
-
-import org.apache.commons.io.IOUtils;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.model.Pipeline;
@@ -37,7 +34,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.junit.jupiter.MockServerExtension;
-import org.mockserver.model.BinaryBody;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 import org.mockserver.model.MediaType;
@@ -66,7 +62,7 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @BeforeEach
-  public void setupLogsforEnvironments() throws IOException {
+  public void setupLogsforEnvironments() {
     client.when(
         request().withMethod("GET")
             .withPath("/api/program/4/pipeline/3/execution/4/phase/8565/step/15483/logs")
