@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 -->
-![Build](https://github.comadobe/aio-lib-java-cloudmanager/workflows/Build/badge.svg)
+![Build](https://github.com/adobe/aio-lib-java-cloudmanager/workflows/Build/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # Adobe I/O Java Cloud Manager Library
