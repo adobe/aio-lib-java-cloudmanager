@@ -35,4 +35,4 @@ jobs:
 
       - name: Check For Javadocs
         id: javadoc-check
-        run: exit $(git status | grep "nothing to commit, working tree clean" > /dev/null && echo $?)
+        run: git status | grep "nothing to commit, working tree clean" >> /dev/null || exit 1
