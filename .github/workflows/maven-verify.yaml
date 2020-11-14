@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 8, 11 ]
+
+    steps:
+      # Check out Git repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up environment with Java and Maven
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      # Set up dependency cache
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Build & Verify
+      - name: Build & Test with Maven
+        run: mvn -B -U clean verify
