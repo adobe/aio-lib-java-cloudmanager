@@ -75,8 +75,7 @@
 
         <jwt.api>${project.basedir}/src/main/resources/swagger/jwt.yaml</jwt.api>
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
-        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml
-        </cm.events>
+        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -189,14 +188,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
