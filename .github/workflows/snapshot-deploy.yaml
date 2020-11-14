@@ -3,7 +3,7 @@ name: Deploy SNAPSHOT
 on: workflow_dispatch
 
 jobs:
-  deploy:
+  deploy-snapshot:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:

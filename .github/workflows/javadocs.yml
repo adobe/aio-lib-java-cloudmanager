@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  check-javadocs:
     runs-on: ubuntu-latest
 
     steps:
