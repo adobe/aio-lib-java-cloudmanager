@@ -35,4 +35,4 @@ jobs:
 
       - name: Check For Javadocs
         id: javadoc-check
-        run: git status
+        run: git diff
