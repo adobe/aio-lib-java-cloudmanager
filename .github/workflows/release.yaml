@@ -1,0 +1,158 @@
+name: Tag & Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Tag/Version
+        required: false
+
+jobs:
+  tag-release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    outputs:
+      version: ${{ steps.store-version.outputs.version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+
+      - name: Release with Maven
+        run: mvn -B release:clean release:prepare -DreleaseVersion=${{ github.event.inputs.version }}
+
+      - name: Store Version
+        id: store-version
+        run: echo "::set-output name=version::$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aio-lib-java-cloudmanager-//g')"
+
+  github-release:
+    needs: tag-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Maven Verify
+        run: mvn verify -P release
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
+          release_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
+          body: |
+            See [Changelog](/CHANGELOG.md) for details.
+          draft: false
+          prerelease: false
+
+      - name: Upload Jar
+        id: upload-release-jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
+          asset_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload JavaDoc Jar
+        id: upload-release-javadoc
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
+          asset_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Sources Jar
+        id: upload-release-sources
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
+          asset_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
+          asset_content_type: application/java-archive
+
+  maven-central-deploy:
+    needs: tag-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # See https://github.com/actions/setup-java#publishing-using-apache-maven
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Publish to GitHub Packages Apache Maven
+        run: mvn verify -P release
+        env:
+          MAVEN_USERNAME: adobe-bot
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
