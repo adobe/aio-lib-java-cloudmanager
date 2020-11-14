@@ -9,7 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 -->
+![Maven Central](https://img.shields.io/maven-central/v/io.adobe.cloudmanager/aio-lib-cloudmanager)
 ![Build](https://github.com/adobe/aio-lib-java-cloudmanager/workflows/Build/badge.svg)
+![Codecov](https://img.shields.io/codecov/c/github/adobe/aio-lib-java-cloudmanager)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # Adobe I/O Java Cloud Manager Library
@@ -20,22 +22,9 @@ This is a Java Library wrapping the [Adobe Cloud Manager API](https://www.adobe.
 
 Provide a set of convenience methods for interacting with the Cloud Manager definitions for a given organization. 
 
-### Maven Dependency
-
-Include via Maven:
-
-Example:
-```
-<dependency>
-    <groupId>io.adobe.cloudmanager</groupId>
-    <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-</dependency>
-```
-
 ### Usage
 
-See the [JavaDocs]() for the API.
+See the [docs](https://opensource.adobe.com/aio-lib-java-cloudmanager/).
 
 ### Contributing
 

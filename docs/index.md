@@ -1,37 +1,48 @@
-## Welcome to GitHub Pages
+## Adobe I/O Java Cloud Manager Library
 
-You can use the [editor on GitHub](https://github.com/adobe/aio-lib-java-cloudmanager/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+This is a Java Library wrapping the [Adobe Cloud Manager API](https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+### Prerequisites
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+To use this library in a project, the Adobe IO organization must be set up to support [API Integrations](https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html#!AdobeDocs/cloudmanager-api-docs/master/create-api-integration.md). The API integration details are used to configure the clients.
 
-```markdown
-Syntax highlighted code block
+### Maven Dependency
 
-# Header 1
-## Header 2
-### Header 3
+Include via Maven:
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Example:
+```
+<dependency>
+<groupId>io.adobe.cloudmanager</groupId>
+<artifactId>aio-lib-cloudmanager</artifactId>
+<version>1.0.0</version>
+</dependency>
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Usage
 
-### Jekyll Themes
+To make API calls into Cloud Manager, a JWT Token is required. This is created using the `IdentityManagementApi`. For example:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/adobe/aio-lib-java-cloudmanager/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```java
 
-### Support or Contact
+PrivateKey privateKey; 
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+# Load the private key 
+
+# Values are from the API Integration configuration.
+AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
+String token = underTest.authenticate(org);
+
+``` 
+
+The token returned from the authentication API, is used to instantiate the Cloud Manager API, which is then used to make the desired requests:
+
+```java
+
+CloudManagerApi api = new CloudManagerApiImpl("Org Id", "API Key", token);
+List<EmbeddedProgram> programs = listPrograms();
+
+```
+
+See the [JavaDocs](https://opensource.adobe.com/aio-lib-java-cloudmanager/apidocs/) for the API.
