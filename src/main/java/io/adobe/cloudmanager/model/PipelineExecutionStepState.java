@@ -59,6 +59,7 @@ public class PipelineExecutionStepState extends io.adobe.cloudmanager.swagger.mo
   /**
    * Streams the specified log, if any, for this step to the specified output stream.
    *
+   * @param name         The name of the log to retrieve
    * @param outputStream the output stream to write to
    * @throws CloudManagerApiException when any error occurs
    */

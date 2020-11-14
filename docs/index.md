@@ -14,9 +14,9 @@ Include via Maven:
 Example:
 ```
 <dependency>
-<groupId>io.adobe.cloudmanager</groupId>
-<artifactId>aio-lib-cloudmanager</artifactId>
-<version>1.0.0</version>
+    <groupId>io.adobe.cloudmanager</groupId>
+    <artifactId>aio-lib-cloudmanager</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -28,9 +28,9 @@ To make API calls into Cloud Manager, a JWT Token is required. This is created u
 
 PrivateKey privateKey; 
 
-# Load the private key 
+// Load the private key 
 
-# Values are from the API Integration configuration.
+// Values are from the API Integration configuration.
 AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
 String token = underTest.authenticate(org);
 

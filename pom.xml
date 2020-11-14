@@ -287,6 +287,13 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
+                            <failOnWarnings>true</failOnWarnings>
+                            <notimestamp>true</notimestamp>
+                            <quiet>true</quiet>
+                            <excludePackageNames>
+                                io.adobe.cloudmanager.swagger.*,
+                                io.adobe.cloudmanager.jwt.swagger.*
+                            </excludePackageNames>
                         </configuration>
                     </plugin>
                 </plugins>
