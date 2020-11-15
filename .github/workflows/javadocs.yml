@@ -10,17 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out Git repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up environment with Java and Maven
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
-      # Set up dependency cache
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -29,10 +26,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Build & Verify
       - name: Build & Test with Maven
         run: mvn -B clean package -P generate-javadoc
 
-      - name: Check For Javadocs
-        id: javadoc-check
-        run: git diff
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+
+      - name: Add any JavaDoc Updates
+        id: add-javadoc
+        run: |
+          git add docs/apidocs
+          git commit -m "Add JavaDoc updates."
+          git push
+
