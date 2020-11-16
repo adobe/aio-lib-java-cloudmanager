@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      # Check out Git repository
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -23,7 +22,6 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      # Import GPG key used during the release to sign the artifacts (required by Sonatype)
       - name: Import GPG key
         env:
           GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
@@ -32,7 +30,6 @@ jobs:
           echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
-      # Set up dependency cache
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
