@@ -4,7 +4,7 @@
 
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
     <description>Library for accessing AdobeIO Cloud Manager endpoints.</description>

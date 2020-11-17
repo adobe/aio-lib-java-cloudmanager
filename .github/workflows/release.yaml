@@ -42,7 +42,7 @@ jobs:
 
       - name: Store Version
         id: store-version
-        run: echo "::set-output name=version::$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aio-lib-java-cloudmanager-//g')"
+        run: echo "::set-output name=version::$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aio-lib-cloudmanager-//g')"
 
   github-release:
     needs: tag-release
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
+          ref: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -76,8 +76,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
-          release_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
+          tag_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
+          release_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
           body: |
             See [Changelog](/CHANGELOG.md) for details.
           draft: false
@@ -90,8 +90,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
-          asset_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
+          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
+          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
           asset_content_type: application/java-archive
 
       - name: Upload JavaDoc Jar
@@ -101,8 +101,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
-          asset_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
+          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
+          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
           asset_content_type: application/java-archive
 
       - name: Upload Sources Jar
@@ -112,8 +112,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
-          asset_name: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
+          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
+          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
           asset_content_type: application/java-archive
 
   maven-central-deploy:
@@ -124,7 +124,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: aio-lib-java-cloudmanager-${{ needs.tag-release.outputs.version }}
+          ref: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
 
       # See https://github.com/actions/setup-java#publishing-using-apache-maven
       - name: Setup JDK
