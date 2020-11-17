@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build & Test with Maven
-        run: mvn -B -U clean verify
+        run: mvn -U clean verify
 
       - name: Upload CodeCov
         uses: codecov/codecov-action@v1

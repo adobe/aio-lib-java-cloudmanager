@@ -68,7 +68,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Maven Verify
-        run: mvn verify -P release
+        run: mvn -U clean verify
 
       - name: Create Release
         id: create_release
