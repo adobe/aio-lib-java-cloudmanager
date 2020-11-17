@@ -199,6 +199,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <source>8</source>
+                    <excludePackageNames>
+                        io.adobe.cloudmanager.swagger.*,
+                        io.adobe.cloudmanager.jwt.swagger.*
+                    </excludePackageNames>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -294,9 +301,12 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
+                            <source>11</source>
                             <failOnWarnings>true</failOnWarnings>
                             <notimestamp>true</notimestamp>
                             <quiet>true</quiet>
+                            <doctitle>${project.name} API</doctitle>
+                            <windowtitle>${project.name} API</windowtitle>
                             <excludePackageNames>
                                 io.adobe.cloudmanager.swagger.*,
                                 io.adobe.cloudmanager.jwt.swagger.*
