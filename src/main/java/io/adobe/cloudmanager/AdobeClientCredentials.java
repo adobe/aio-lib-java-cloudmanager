@@ -1,5 +1,7 @@
 package io.adobe.cloudmanager;
 
+import java.io.Serializable;
+
 /*-
  * #%L
  * Adobe Cloud Manager Client Library
@@ -25,7 +27,9 @@ import java.security.Key;
 import lombok.Value;
 
 @Value
-public class AdobeClientCredentials {
+public class AdobeClientCredentials implements Serializable {
+    
+  private static final long serialVersionUID = -8263353852586958089L;
   String orgId;
   String technicalAccountId;
   String apiKey;
