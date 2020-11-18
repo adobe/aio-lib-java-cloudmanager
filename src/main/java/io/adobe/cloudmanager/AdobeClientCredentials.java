@@ -1,7 +1,5 @@
 package io.adobe.cloudmanager;
 
-import java.io.Serializable;
-
 /*-
  * #%L
  * Adobe Cloud Manager Client Library
@@ -22,7 +20,9 @@ import java.io.Serializable;
  * #L%
  */
 
-import java.security.Key;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -35,14 +35,13 @@ import java.util.stream.Collectors;
 import lombok.Value;
 
 @Value
-public class AdobeClientCredentials implements Serializable {
-    
-  private static final long serialVersionUID = -8263353852586958089L;
+public class AdobeClientCredentials {
+
   String orgId;
   String technicalAccountId;
   String apiKey;
   String clientSecret;
-  Key privateKey;
+  PrivateKey privateKey;
 
   /**
    * Generates a private key object from a PEM encoded PKCS#8 key string.
