@@ -11,9 +11,6 @@ on:
 jobs:
   maven-verify:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ 8, 11 ]
 
     steps:
       - name: Checkout code
