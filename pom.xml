@@ -27,8 +27,8 @@
         <connection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</connection>
         <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</developerConnection>
         <url>https://github.com/adobe/aio-lib-java-cloudmanager/tree/main</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <system>GitHub</system>
@@ -161,8 +161,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -199,13 +199,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <source>8</source>
-                    <excludePackageNames>
-                        io.adobe.cloudmanager.swagger.*,
-                        io.adobe.cloudmanager.jwt.swagger.*
-                    </excludePackageNames>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -282,6 +275,32 @@
 
     <profiles>
         <profile>
+            <id>java8</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <configuration>
+                            <classifier>java8</classifier>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <source>8</source>
+                            <target>8</target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>generate-javadoc</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -290,27 +309,14 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>11</source>
-                            <target>11</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
                             <source>11</source>
-                            <failOnWarnings>true</failOnWarnings>
                             <notimestamp>true</notimestamp>
                             <quiet>true</quiet>
                             <doctitle>${project.name} API</doctitle>
                             <windowtitle>${project.name} API</windowtitle>
-                            <excludePackageNames>
-                                io.adobe.cloudmanager.swagger.*,
-                                io.adobe.cloudmanager.jwt.swagger.*
-                            </excludePackageNames>
                         </configuration>
                     </plugin>
                 </plugins>

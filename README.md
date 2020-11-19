@@ -30,6 +30,8 @@ See the [docs](https://opensource.adobe.com/aio-lib-java-cloudmanager/).
 
 Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
 
+Please run the and include the output from the `generate-javadoc` Maven profile for any Pull Requests, to keep the documentation up-to-date. 
+
 ### Licensing
 
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
