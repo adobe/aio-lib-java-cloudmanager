@@ -116,6 +116,20 @@ jobs:
           asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
           asset_content_type: application/java-archive
 
+      - name: Maven Verify
+        run: mvn -U clean verify -P java8
+
+      - name: Upload Java8 Jar
+        id: upload-java8-release-jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-java8.jar
+          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-java8.jar
+          asset_content_type: application/java-archive
+
   maven-central-deploy:
     needs: tag-release
     runs-on: ubuntu-latest
@@ -154,8 +168,16 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Publish to Apache Maven Central
-        run: mvn deploy -P release
+        run: mvn clean deploy -P release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish to Apache Maven Central
+        run: mvn clean deploy -P release,java8
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+

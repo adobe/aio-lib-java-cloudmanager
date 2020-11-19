@@ -11,9 +11,6 @@ on:
 jobs:
   maven-verify:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ 8, 11 ]
 
     steps:
       - name: Checkout code
@@ -22,7 +19,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ matrix.java }}
+          java-version: 11
 
       - name: Cache local Maven repository
         uses: actions/cache@v2

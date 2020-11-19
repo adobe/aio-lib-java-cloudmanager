@@ -9,9 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 -->
-![Maven Central](https://img.shields.io/maven-central/v/io.adobe.cloudmanager/aio-lib-cloudmanager)
-![Build](https://github.com/adobe/aio-lib-java-cloudmanager/workflows/Build/badge.svg)
-![Codecov](https://img.shields.io/codecov/c/github/adobe/aio-lib-java-cloudmanager)
+[![Maven Central](https://img.shields.io/maven-central/v/io.adobe.cloudmanager/aio-lib-cloudmanager)](https://search.maven.org/artifact/io.adobe.cloudmanager/aio-lib-cloudmanager)
+[![Build](https://github.com/adobe/aio-lib-java-cloudmanager/workflows/Build/badge.svg)](https://github.com/adobe/aio-lib-java-cloudmanager/actions?query=workflow%3ABuild)
+[![Codecov](https://img.shields.io/codecov/c/github/adobe/aio-lib-java-cloudmanager)](https://codecov.io/gh/adobe/aio-lib-java-cloudmanager)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # Adobe I/O Java Cloud Manager Library
@@ -29,6 +29,8 @@ See the [docs](https://opensource.adobe.com/aio-lib-java-cloudmanager/).
 ### Contributing
 
 Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
+
+Please run the and include the output from the `generate-javadoc` Maven profile for any Pull Requests, to keep the documentation up-to-date. 
 
 ### Licensing
 
