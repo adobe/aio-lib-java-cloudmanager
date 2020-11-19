@@ -30,7 +30,6 @@ import java.security.spec.InvalidKeySpecException;
 
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.openssl.jcajce.JcaPKCS8Generator;
-import org.bouncycastle.util.io.pem.PemObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -38,18 +37,17 @@ public class AdobeClientCredentialsTest {
 
     @Test
     public void testGetKeyFromPem() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+
+        // Derived from: https://techxperiment.blogspot.com/2016/10/create-and-read-pkcs-8-format-private.html
         KeyPairGenerator kpGen = KeyPairGenerator.getInstance("RSA");
         kpGen.initialize(2048);
         KeyPair keyPair = kpGen.generateKeyPair();
         PrivateKey expectedKey = keyPair.getPrivate();
-        JcaPKCS8Generator gen1 = new JcaPKCS8Generator(expectedKey, null);
-        PemObject obj1 = gen1.generate();
-        StringWriter sw1 = new StringWriter();
-        try (JcaPEMWriter pw = new JcaPEMWriter(sw1)) {
-            pw.writeObject(obj1);
+        StringWriter sw = new StringWriter();
+        try (JcaPEMWriter pw = new JcaPEMWriter(sw)) {
+            pw.writeObject(new JcaPKCS8Generator(expectedKey, null).generate());
         }
-        String pem = sw1.toString();
-
+        String pem = sw.toString();
         PrivateKey actualKey = AdobeClientCredentials.getKeyFromPem(pem);
         Assertions.assertEquals(expectedKey, actualKey);
     }
