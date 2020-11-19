@@ -21,15 +21,16 @@ package io.adobe.cloudmanager;
  */
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
+import java.io.StringWriter;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.security.spec.PKCS8EncodedKeySpec;
 
-import org.apache.commons.io.IOUtils;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.openssl.jcajce.JcaPKCS8Generator;
+import org.bouncycastle.util.io.pem.PemObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -37,13 +38,19 @@ public class AdobeClientCredentialsTest {
 
     @Test
     public void testGetKeyFromPem() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        String pem = IOUtils.resourceToString("/keys/private-key-pkcs8-rsa.pem", StandardCharsets.US_ASCII);
+        KeyPairGenerator kpGen = KeyPairGenerator.getInstance("RSA");
+        kpGen.initialize(2048);
+        KeyPair keyPair = kpGen.generateKeyPair();
+        PrivateKey expectedKey = keyPair.getPrivate();
+        JcaPKCS8Generator gen1 = new JcaPKCS8Generator(expectedKey, null);
+        PemObject obj1 = gen1.generate();
+        StringWriter sw1 = new StringWriter();
+        try (JcaPEMWriter pw = new JcaPEMWriter(sw1)) {
+            pw.writeObject(obj1);
+        }
+        String pem = sw1.toString();
+
         PrivateKey actualKey = AdobeClientCredentials.getKeyFromPem(pem);
-        
-        byte[] derBytes = IOUtils.resourceToByteArray("/keys/private-key-pkcs8-rsa.der");
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        KeySpec ks = new PKCS8EncodedKeySpec(derBytes);
-        PrivateKey expectedKey =  keyFactory.generatePrivate(ks);
         Assertions.assertEquals(expectedKey, actualKey);
     }
 }
