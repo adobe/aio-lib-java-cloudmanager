@@ -37,6 +37,9 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
 
   private final ApiClient apiClient = new ApiClient();
 
+  public IdentityManagementApiImpl() {
+
+  }
 
   public IdentityManagementApiImpl(String baseUrl) {
     apiClient.setBasePath(baseUrl);
