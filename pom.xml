@@ -27,8 +27,8 @@
         <connection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</connection>
         <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</developerConnection>
         <url>https://github.com/adobe/aio-lib-java-cloudmanager/tree/main</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <system>GitHub</system>
@@ -161,8 +161,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -190,32 +190,26 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
+                <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>attach-javadocs</id>
+                        <id>process-readme</id>
+                        <phase>process-resources</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>copy-resources</goal>
                         </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <source>8</source>
-                    <excludePackageNames>
-                        io.adobe.cloudmanager.swagger.*,
-                        io.adobe.cloudmanager.jwt.swagger.*
-                    </excludePackageNames>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/docs</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <filtering>true</filtering>
+                                    <directory>${project.basedir}/src/doc/resources</directory>
+                                    <includes>
+                                        <include>index.md</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -246,6 +240,11 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -282,7 +281,51 @@
 
     <profiles>
         <profile>
-            <id>generate-javadoc</id>
+            <id>attach-javadoc</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>attach-source</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>java8</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -290,27 +333,40 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>3.2.0</version>
                         <configuration>
-                            <source>11</source>
-                            <target>11</target>
+                            <classifier>java8</classifier>
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <source>8</source>
+                            <target>8</target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>generate-site-javadoc</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
                             <source>11</source>
-                            <failOnWarnings>true</failOnWarnings>
                             <notimestamp>true</notimestamp>
                             <quiet>true</quiet>
                             <doctitle>${project.name} API</doctitle>
                             <windowtitle>${project.name} API</windowtitle>
-                            <excludePackageNames>
-                                io.adobe.cloudmanager.swagger.*,
-                                io.adobe.cloudmanager.jwt.swagger.*
-                            </excludePackageNames>
                         </configuration>
                     </plugin>
                 </plugins>

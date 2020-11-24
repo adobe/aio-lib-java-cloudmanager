@@ -16,7 +16,19 @@ Example:
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>1.0.0</version>
+    <version>0.2.1-SNAPSHOT</version>
+</dependency>
+```
+
+#### Java 8
+
+The default library is Java11, to use the Java8 library, use the classifier.
+```
+<dependency>
+    <groupId>io.adobe.cloudmanager</groupId>
+    <artifactId>aio-lib-cloudmanager</artifactId>
+    <version>0.2.1-SNAPSHOT</version>
+    <classifier>java8</classifier>
 </dependency>
 ```
 
@@ -32,16 +44,16 @@ PrivateKey privateKey;
 
 // Values are from the API Integration configuration.
 AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
-String token = underTest.authenticate(org);
+String token = org.authenticate(org);
 
 ``` 
 
-The token returned from the authentication API, is used to instantiate the Cloud Manager API, which is then used to make the desired requests:
+Use the token returned from the authentication API to instantiate the Cloud Manager API. Then make the desired requests:
 
 ```java
 
 CloudManagerApi api = new CloudManagerApiImpl("Org Id", "API Key", token);
-List<EmbeddedProgram> programs = listPrograms();
+List<EmbeddedProgram> programs = api.listPrograms();
 
 ```
 
