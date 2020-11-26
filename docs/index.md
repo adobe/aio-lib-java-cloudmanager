@@ -44,11 +44,12 @@ PrivateKey privateKey;
 
 // Values are from the API Integration configuration.
 AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
-String token = org.authenticate(org);
+IdentityManagementApi imApi = new IdentityManagementApiImpl();
+String token = imApi.authenticate(org);
 
 ``` 
 
-Use the token returned from the authentication API to instantiate the Cloud Manager API. Then make the desired requests:
+Use the token returned from the IdentityManagementApi to instantiate the Cloud Manager API. Then make the desired requests:
 
 ```java
 
