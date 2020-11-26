@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.adobe.cloudmanager.AdobeClientCredentials;
 import io.adobe.cloudmanager.IdentityManagementApi;
 import io.adobe.cloudmanager.IdentityManagementApiException;
@@ -38,7 +40,6 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
   private final ApiClient apiClient = new ApiClient();
 
   public IdentityManagementApiImpl() {
-
   }
 
   public IdentityManagementApiImpl(String baseUrl) {
@@ -51,13 +52,15 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
     Calendar expires = Calendar.getInstance();
     expires.add(Calendar.MINUTE, EXPIRATION);
 
+    String audienceFormat = StringUtils.endsWith(apiClient.getBasePath(), "/") ? "%sc/%s" :"%s/c/%s";
+
     String jws = Jwts.builder()
         .setHeaderParam("alg", ALGORITHM)
         .setHeaderParam("typ", TYPE)
         .setExpiration(expires.getTime())
         .setIssuer(org.getOrgId())
         .setSubject(org.getTechnicalAccountId())
-        .setAudience(String.format("%s/c/%s", apiClient.getBasePath(), org.getApiKey()))
+        .setAudience(String.format(audienceFormat, apiClient.getBasePath(), org.getApiKey()))
         .addClaims(buildClaims())
         .signWith(org.getPrivateKey())
         .compact();
@@ -69,7 +72,7 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
     try {
       return new JwtApi(apiClient).authenticate(org.getApiKey(), org.getClientSecret(), jwts);
     } catch (ApiException e) {
-      throw new IdentityManagementApiException("Unable to authenticate to AdobeIO.", e) ;
+      throw new IdentityManagementApiException("Unable to authenticate to AdobeIO.", e);
     }
   }
 
@@ -78,6 +81,4 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
     claims.put(META_SCOPE, true);
     return claims;
   }
-
-
 }
