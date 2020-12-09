@@ -46,6 +46,8 @@ import static io.adobe.cloudmanager.CloudManagerApiException.*;
 @EqualsAndHashCode
 public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.PipelineExecution {
 
+  private static final long serialVersionUID = 1L;
+
   public static final String ACTION_APPROVAL = "approval";
   public static final String ACTION_SCHEDULE = "schedule";
   public static final String ACTION_DEPLOY = "deploy";

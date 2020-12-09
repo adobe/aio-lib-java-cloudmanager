@@ -32,6 +32,7 @@ import lombok.experimental.Delegate;
 @ToString
 @EqualsAndHashCode
 public class EmbeddedProgram extends io.adobe.cloudmanager.swagger.model.EmbeddedProgram {
+  private static final long serialVersionUID = 1L;
 
   public EmbeddedProgram(io.adobe.cloudmanager.swagger.model.EmbeddedProgram delegate, CloudManagerApi client) {
     this.delegate = delegate;

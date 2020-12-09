@@ -36,6 +36,8 @@ import lombok.experimental.Delegate;
 @EqualsAndHashCode
 public class Pipeline extends io.adobe.cloudmanager.swagger.model.Pipeline {
 
+  private static final long serialVersionUID = 1L;
+
   @Delegate
   private final io.adobe.cloudmanager.swagger.model.Pipeline delegate;
   @ToString.Exclude
