@@ -95,25 +95,25 @@ public interface CloudManagerApi {
    * @param programId  the program id context of the pipeline
    * @param pipelineId the pipeline id of to find the execution
    * @return the execution details of the pipeline
-   * @throws CloudManagerApiException when any error occurs
+   * @throws CloudManagerApiException when any error occurs or if no current execution exists
    */
   PipelineExecution getCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Cancels the current execution of the specified pipeline, if any execution exists.
+   * Cancels the current execution of the specified pipeline.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the id of the pipeline to cancel
-   * @throws CloudManagerApiException when any error occurs
+   * @throws CloudManagerApiException when any error occurs or if no current execution exists
    */
   void cancelCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Advances the current execution of the specified pipeline, if in an appropriate state.
+   * Advances the current execution of the specified pipeline.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the id of the pipeline to cancel
-   * @throws CloudManagerApiException when any error occurs
+   * @throws CloudManagerApiException when any error occurs or if no current execution exists
    */
   void advanceCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
 
