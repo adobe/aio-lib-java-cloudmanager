@@ -28,6 +28,8 @@ import lombok.experimental.Delegate;
 @EqualsAndHashCode
 public class Variable extends io.adobe.cloudmanager.swagger.model.Variable {
 
+  private static final long serialVersionUID = 1L;
+
   public Variable() {
     this.delegate = new io.adobe.cloudmanager.swagger.model.Variable();
   }

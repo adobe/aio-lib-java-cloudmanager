@@ -33,6 +33,7 @@ import lombok.experimental.Delegate;
 @ToString
 @EqualsAndHashCode
 public class Environment extends io.adobe.cloudmanager.swagger.model.Environment {
+  private static final long serialVersionUID = 1L;
 
   @Delegate
   private final io.adobe.cloudmanager.swagger.model.Environment delegate;

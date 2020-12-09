@@ -30,6 +30,8 @@ import lombok.experimental.Delegate;
 @EqualsAndHashCode
 public class EnvironmentLog extends io.adobe.cloudmanager.swagger.model.EnvironmentLog {
 
+  private static final long serialVersionUID = 1L;
+
   public EnvironmentLog(io.adobe.cloudmanager.swagger.model.EnvironmentLog log) {
     this.delegate = log;
   }

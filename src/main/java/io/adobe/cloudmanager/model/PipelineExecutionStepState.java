@@ -35,6 +35,8 @@ import lombok.experimental.Delegate;
 @EqualsAndHashCode
 public class PipelineExecutionStepState extends io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState {
 
+  private static final long serialVersionUID = 1L;
+
   @Delegate
   private final io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate;
   @ToString.Exclude
