@@ -70,7 +70,6 @@
         <jersey.version>2.29.1</jersey.version>
 
         <jackson.version>2.10.0</jackson.version>
-        <jodatime.version>2.10.5</jodatime.version>
 
         <jwt.api>${project.basedir}/src/main/resources/swagger/jwt.yaml</jwt.api>
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
@@ -104,7 +103,7 @@
                             <language>java</language>
                             <configOptions>
                                 <serializableModel>true</serializableModel>
-                                <dateLibrary>joda</dateLibrary>
+                                <dateLibrary>java8</dateLibrary>
                             </configOptions>
                             <library>jersey2</library>
                         </configuration>
@@ -126,7 +125,7 @@
                             <language>java</language>
                             <configOptions>
                                 <serializableModel>true</serializableModel>
-                                <dateLibrary>joda</dateLibrary>
+                                <dateLibrary>java8</dateLibrary>
                             </configOptions>
                             <library>jersey2</library>
                         </configuration>
@@ -149,7 +148,7 @@
                             <language>java</language>
                             <configOptions>
                                 <serializableModel>true</serializableModel>
-                                <dateLibrary>joda</dateLibrary>
+                                <dateLibrary>java8</dateLibrary>
                             </configOptions>
                             <library>jersey2</library>
                         </configuration>
@@ -463,17 +462,10 @@
             <artifactId>jackson-module-jaxb-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
-        <!-- Joda time: if you use it -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${jodatime.version}</version>
         </dependency>
 
         <!-- Base64 encoding that works in both JVM and Android -->
