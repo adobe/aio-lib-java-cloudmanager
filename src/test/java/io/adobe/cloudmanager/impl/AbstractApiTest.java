@@ -38,6 +38,6 @@ public abstract class AbstractApiTest {
   public void beforeEach(MockServerClient client) {
     this.client = client;
     this.baseUrl = String.format("http://localhost:%s", client.getPort());
-    underTest = new CloudManagerApiImpl("success", "test-apikey", "test-token", baseUrl);
+    underTest = new CloudManagerApiImpl("success", "test-apikey", "test-token", baseUrl + "/");
   }
 }

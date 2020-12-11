@@ -41,6 +41,8 @@ public class CloudManagerApiException extends Exception {
 
   private final String message;
 
+  private final ApiException cause;
+
   /**
    * Creates a new exception.
    *
@@ -52,6 +54,7 @@ public class CloudManagerApiException extends Exception {
   public CloudManagerApiException(ErrorType type, String baseUrl, String apiPath, ApiException cause) {
     super(cause);
 
+    this.cause = cause;
     ProblemPayload problemBody = getProblemBody(cause);
     ErrorPayload errorBody = getErrorBody(cause);
 
@@ -85,6 +88,12 @@ public class CloudManagerApiException extends Exception {
    */
   public CloudManagerApiException(ErrorType type, String... vars) {
     this.message = String.format(type.message, (Object[]) vars);
+    this.cause = null;
+  }
+
+  @Override
+  public ApiException getCause() {
+    return this.cause;
   }
 
   private static ProblemPayload getProblemBody(ApiException cause) {
