@@ -40,6 +40,7 @@ public class CloudManagerApiException extends Exception {
   private static final String DEFAULT_REASON = "Unknown";
 
   private final String message;
+  private final int code;
 
   /**
    * Creates a new exception.
@@ -75,6 +76,7 @@ public class CloudManagerApiException extends Exception {
     }
 
     this.message = String.format(type.message, errorBuilder.toString());
+    this.code = cause.getCode();
   }
 
   /**
@@ -85,6 +87,7 @@ public class CloudManagerApiException extends Exception {
    */
   public CloudManagerApiException(ErrorType type, String... vars) {
     this.message = String.format(type.message, (Object[]) vars);
+    this.code = 0;
   }
 
   private static ProblemPayload getProblemBody(ApiException cause) {
@@ -135,6 +138,14 @@ public class CloudManagerApiException extends Exception {
   @Override
   public String getMessage() {
     return message;
+  }
+
+  /**
+   * 
+   * @return the HTTP status code which triggered this exception or 0 in case this exception is not connected to an HTTP status code.
+   */
+  public int getCode() {
+      return code;
   }
 
   public enum ErrorType {
