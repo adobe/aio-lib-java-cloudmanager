@@ -83,12 +83,13 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     this.orgId = orgId;
     this.apiKey = apiKey;
     this.accessToken = accessToken;
-    if (baseUrl != null) {
-      this.baseUrl = baseUrl;
-      apiClient.setBasePath(baseUrl);
-    } else {
-      this.baseUrl = apiClient.getBasePath();
+    if (baseUrl == null) {
+      baseUrl = apiClient.getBasePath();
     }
+
+    baseUrl = StringUtils.removeEnd(baseUrl, "/");
+    apiClient.setBasePath(baseUrl);
+    this.baseUrl = baseUrl;
   }
 
   private static String processTemplate(String path, Map<String, String> values) {
