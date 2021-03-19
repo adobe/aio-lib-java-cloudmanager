@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.util;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,12 +57,12 @@ public class Predicates {
   /**
    * Filters metrics that have passed.
    */
-  public static final Predicate<Metric> PASSED = Metric::isPassed;
+  public static final Predicate<Metric> PASSED = Metric::getPassed;
 
   /**
    * Filters metrics that have failed.
    */
-  public static final Predicate<Metric> FAILED = (m -> !m.isPassed());
+  public static final Predicate<Metric> FAILED = (m -> !m.getPassed());
 
   /**
    * Filters metrics that are of critical importance.

@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.model;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
    */
   public String getAdvanceLink() throws CloudManagerApiException {
     PipelineExecutionStepState step = client.getWaitingStep(this);
-    HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
+    HalLink link = step.getLinks().getHttpColonNsAdobeComAdobecloudRelPipelineAdvance();
     if (link == null) {
       throw new CloudManagerApiException(ErrorType.FIND_ADVANCE_LINK, step.getAction());
     }
@@ -138,9 +138,9 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
 
     if (io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
         ACTION_DEPLOY.equals(step.getAction())) {
-      link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
+      link = step.getLinks().getHttpColonNsAdobeComAdobecloudRelPipelineAdvance();
     } else {
-      link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinecancel();
+      link = step.getLinks().getHttpColonNsAdobeComAdobecloudRelPipelineCancel();
     }
     if (link == null) {
       throw new CloudManagerApiException(ErrorType.FIND_CANCEL_LINK, step.getAction());

@@ -16,7 +16,7 @@ Example:
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.4.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -27,7 +27,7 @@ The default library is Java11, to use the Java8 library, use the classifier.
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.4.1-SNAPSHOT</version>
     <classifier>java8</classifier>
 </dependency>
 ```
@@ -40,16 +40,15 @@ To make API calls into Cloud Manager, a JWT Token is required. This is created u
 
 PrivateKey privateKey; 
 
-// Load the private key...
+// Load the private key 
 
 // Values are from the API Integration configuration.
 AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
-IdentityManagementApi imApi = new IdentityManagementApiImpl();
-String token = imApi.authenticate(org);
+String token = org.authenticate(org);
 
 ``` 
 
-Use the token returned from the IdentityManagementApi to instantiate the Cloud Manager API. Then make the desired requests:
+Use the token returned from the authentication API to instantiate the Cloud Manager API. Then make the desired requests:
 
 ```java
 

@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.model;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class Environment extends io.adobe.cloudmanager.swagger.model.Environment
    * @throws CloudManagerApiException when any error occurs
    */
   public String getDeveloperConsoleUrl() throws CloudManagerApiException {
-    HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
+    HalLink link = delegate.getLinks().getHttpColonNsAdobeComAdobecloudRelDeveloperConsole();
     if (link == null) {
       throw new CloudManagerApiException(CloudManagerApiException.ErrorType.NO_DEVELOPER_CONSOLE, getId(), getProgramId());
     } else {
