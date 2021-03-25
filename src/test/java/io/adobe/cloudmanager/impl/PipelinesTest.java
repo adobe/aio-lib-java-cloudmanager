@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.impl;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.Variable;
-import io.adobe.cloudmanager.swagger.model.PipelinePhase;
+import io.adobe.cloudmanager.generated.model.PipelinePhase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.HttpRequest;
@@ -80,7 +80,7 @@ class PipelinesTest extends AbstractApiTest {
 
   private HttpResponse handleGoodPatch(HttpRequest request) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    io.adobe.cloudmanager.swagger.model.Pipeline pipeline = objectMapper.readValue(request.getBodyAsJsonOrXmlString(), io.adobe.cloudmanager.swagger.model.Pipeline.class);
+    io.adobe.cloudmanager.generated.model.Pipeline pipeline = objectMapper.readValue(request.getBodyAsJsonOrXmlString(), io.adobe.cloudmanager.generated.model.Pipeline.class);
 
     Optional<PipelinePhase> buildPhase = pipeline.getPhases().stream().filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType()).findFirst();
     if (buildPhase.isPresent()) {
@@ -278,12 +278,12 @@ class PipelinesTest extends AbstractApiTest {
     List<Variable> variables = underTest.getPipelineVariables("3", "1");
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -293,12 +293,12 @@ class PipelinesTest extends AbstractApiTest {
     List<Variable> variables = underTest.getPipelineVariables(pipeline);
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -308,12 +308,12 @@ class PipelinesTest extends AbstractApiTest {
     List<Variable> variables = pipeline.getVariables();
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -362,8 +362,8 @@ class PipelinesTest extends AbstractApiTest {
     v2.setValue("bar2");
 
     List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");
     assertTrue(results.contains(v2), "Results contains foo2");
@@ -375,12 +375,12 @@ class PipelinesTest extends AbstractApiTest {
     Variable v = new Variable();
     v.setName("secretFoo");
     v.setValue("secretBar");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     Variable v2 = new Variable();
     v2.setName("secretFoo2");
     v2.setValue("secretBar2");
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
     v.setValue(null);
@@ -400,10 +400,10 @@ class PipelinesTest extends AbstractApiTest {
     Variable v2 = new Variable();
     v2.setName("secretFoo");
     v2.setValue("secretBar");
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");
@@ -420,12 +420,12 @@ class PipelinesTest extends AbstractApiTest {
     Variable v2 = new Variable();
     v2.setName("secretFoo");
     v2.setValue("secretBar");
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
 
     List<Variable> results = pipeline.setVariables(v, v2);
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");

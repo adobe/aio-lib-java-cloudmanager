@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.PipelineExecutionStepState;
 import io.adobe.cloudmanager.model.Variable;
-import io.adobe.cloudmanager.swagger.model.PipelineStepMetrics;
+import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.

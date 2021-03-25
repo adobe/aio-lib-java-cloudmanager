@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.impl.ConfiguredApiClient;
-import io.adobe.cloudmanager.swagger.invoker.ApiException;
+import io.adobe.cloudmanager.generated.invoker.ApiException;
 
 /**
  * Represents exception states that may occur during interactions with the AdobeIO API.

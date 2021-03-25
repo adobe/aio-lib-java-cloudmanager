@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.impl;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ import org.apache.commons.lang3.StringUtils;
 import io.adobe.cloudmanager.AdobeClientCredentials;
 import io.adobe.cloudmanager.IdentityManagementApi;
 import io.adobe.cloudmanager.IdentityManagementApiException;
-import io.adobe.cloudmanager.jwt.swagger.api.JwtApi;
-import io.adobe.cloudmanager.jwt.swagger.invoker.ApiClient;
-import io.adobe.cloudmanager.jwt.swagger.invoker.ApiException;
-import io.adobe.cloudmanager.jwt.swagger.model.Token;
+import io.adobe.cloudmanager.jwt.generated.api.JwtApi;
+import io.adobe.cloudmanager.jwt.generated.invoker.ApiClient;
+import io.adobe.cloudmanager.jwt.generated.invoker.ApiException;
+import io.adobe.cloudmanager.jwt.generated.model.Token;
 import io.jsonwebtoken.Jwts;
 
 public class IdentityManagementApiImpl implements IdentityManagementApi {

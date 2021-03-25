@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.model;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,17 +33,17 @@ import lombok.experimental.Delegate;
  */
 @ToString
 @EqualsAndHashCode
-public class PipelineExecutionStepState extends io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState {
+public class PipelineExecutionStepState extends io.adobe.cloudmanager.generated.model.PipelineExecutionStepState {
 
   private static final long serialVersionUID = 1L;
 
   @Delegate
-  private final io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate;
+  private final io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
-  public PipelineExecutionStepState(io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState delegate, CloudManagerApi client) {
+  public PipelineExecutionStepState(io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }

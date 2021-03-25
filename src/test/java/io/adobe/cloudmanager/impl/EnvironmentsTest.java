@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.impl;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -204,12 +204,12 @@ class EnvironmentsTest extends AbstractApiTest {
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -220,12 +220,12 @@ class EnvironmentsTest extends AbstractApiTest {
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -236,12 +236,12 @@ class EnvironmentsTest extends AbstractApiTest {
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -290,8 +290,8 @@ class EnvironmentsTest extends AbstractApiTest {
     v2.setValue("bar2");
 
     List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");
     assertTrue(results.contains(v2), "Results contains foo2");
@@ -303,12 +303,12 @@ class EnvironmentsTest extends AbstractApiTest {
     Variable v = new Variable();
     v.setName("secretFoo");
     v.setValue("secretBar");
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     Variable v2 = new Variable();
     v2.setName("secretFoo2");
     v2.setValue("secretBar2");
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
     v.setValue(null);
@@ -328,10 +328,10 @@ class EnvironmentsTest extends AbstractApiTest {
     Variable v2 = new Variable();
     v2.setName("secretFoo");
     v2.setValue("secretBar");
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");
@@ -348,12 +348,12 @@ class EnvironmentsTest extends AbstractApiTest {
     Variable v2 = new Variable();
     v2.setName("secretFoo");
     v2.setValue("secretBar");
-    v2.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     List<Variable> results = env.setVariables(v, v2);
-    v.setType(io.adobe.cloudmanager.swagger.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");

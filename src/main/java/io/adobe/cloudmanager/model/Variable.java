@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.model;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,19 +26,19 @@ import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode
-public class Variable extends io.adobe.cloudmanager.swagger.model.Variable {
+public class Variable extends io.adobe.cloudmanager.generated.model.Variable {
 
   private static final long serialVersionUID = 1L;
 
   public Variable() {
-    this.delegate = new io.adobe.cloudmanager.swagger.model.Variable();
+    this.delegate = new io.adobe.cloudmanager.generated.model.Variable();
   }
 
-  public Variable(io.adobe.cloudmanager.swagger.model.Variable delegate) {
+  public Variable(io.adobe.cloudmanager.generated.model.Variable delegate) {
     this.delegate = delegate;
   }
 
   @Delegate
-  private final io.adobe.cloudmanager.swagger.model.Variable delegate;
+  private final io.adobe.cloudmanager.generated.model.Variable delegate;
 
 }

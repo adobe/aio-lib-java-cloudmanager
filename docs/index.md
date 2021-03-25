@@ -16,7 +16,7 @@ Example:
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.4.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -27,7 +27,7 @@ The default library is Java11, to use the Java8 library, use the classifier.
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.4.1-SNAPSHOT</version>
     <classifier>java8</classifier>
 </dependency>
 ```
@@ -38,7 +38,7 @@ To make API calls into Cloud Manager, a JWT Token is required. This is created u
 
 ```java
 
-PrivateKey privateKey; 
+PrivateKey privateKey;
 
 // Load the private key...
 

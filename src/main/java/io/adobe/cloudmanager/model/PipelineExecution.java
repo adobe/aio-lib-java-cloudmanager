@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.model;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.swagger.model.HalLink;
-import io.adobe.cloudmanager.swagger.model.Metric;
-import io.adobe.cloudmanager.swagger.model.PipelineStepMetrics;
+import io.adobe.cloudmanager.generated.model.HalLink;
+import io.adobe.cloudmanager.generated.model.Metric;
+import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.util.Predicates;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -44,7 +44,7 @@ import static io.adobe.cloudmanager.CloudManagerApiException.*;
  */
 @ToString
 @EqualsAndHashCode
-public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.PipelineExecution {
+public class PipelineExecution extends io.adobe.cloudmanager.generated.model.PipelineExecution {
 
   private static final long serialVersionUID = 1L;
 
@@ -52,12 +52,12 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
   public static final String ACTION_SCHEDULE = "schedule";
   public static final String ACTION_DEPLOY = "deploy";
   @Delegate
-  private final io.adobe.cloudmanager.swagger.model.PipelineExecution delegate;
+  private final io.adobe.cloudmanager.generated.model.PipelineExecution delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
-  public PipelineExecution(io.adobe.cloudmanager.swagger.model.PipelineExecution delegate, CloudManagerApi client) {
+  public PipelineExecution(io.adobe.cloudmanager.generated.model.PipelineExecution delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }
@@ -136,7 +136,7 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
     PipelineExecutionStepState step = client.getCurrentStep(this);
     HalLink link;
 
-    if (io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+    if (io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
         ACTION_DEPLOY.equals(step.getAction())) {
       link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
     } else {
@@ -164,10 +164,10 @@ public class PipelineExecution extends io.adobe.cloudmanager.swagger.model.Pipel
       gen.writeStartObject();
       if (ACTION_APPROVAL.equals(step.getAction())) {
         gen.writeBooleanField("approved", false);
-      } else if (io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+      } else if (io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
           !ACTION_SCHEDULE.equals(step.getAction()) && !ACTION_DEPLOY.equals(step.getAction())) {
         gen.writeBooleanField("override", false);
-      } else if (io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+      } else if (io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
           ACTION_DEPLOY.equals(step.getAction())) {
         gen.writeBooleanField("resume", false);
       } else {
