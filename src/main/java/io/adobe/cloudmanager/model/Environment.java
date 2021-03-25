@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.model;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,23 +25,23 @@ import java.util.List;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.swagger.model.HalLink;
+import io.adobe.cloudmanager.generated.model.HalLink;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode
-public class Environment extends io.adobe.cloudmanager.swagger.model.Environment {
+public class Environment extends io.adobe.cloudmanager.generated.model.Environment {
   private static final long serialVersionUID = 1L;
 
   @Delegate
-  private final io.adobe.cloudmanager.swagger.model.Environment delegate;
+  private final io.adobe.cloudmanager.generated.model.Environment delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
-  public Environment(io.adobe.cloudmanager.swagger.model.Environment delegate, CloudManagerApi client) {
+  public Environment(io.adobe.cloudmanager.generated.model.Environment delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }

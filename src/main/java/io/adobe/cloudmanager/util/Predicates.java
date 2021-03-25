@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.util;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ package io.adobe.cloudmanager.util;
 import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.model.Pipeline;
-import io.adobe.cloudmanager.swagger.model.Metric;
-import io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState;
-import static io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState.*;
+import io.adobe.cloudmanager.generated.model.Metric;
+import io.adobe.cloudmanager.generated.model.PipelineExecutionStepState;
+import static io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.*;
 
 
 /**
@@ -37,7 +37,7 @@ public class Predicates {
    * Predicate for pipelines based on BUSY status.
    */
   public static final Predicate<Pipeline> IS_BUSY = (pipeline ->
-      io.adobe.cloudmanager.swagger.model.Pipeline.StatusEnum.BUSY == pipeline.getStatus()
+      io.adobe.cloudmanager.generated.model.Pipeline.StatusEnum.BUSY == pipeline.getStatus()
   );
 
   /**

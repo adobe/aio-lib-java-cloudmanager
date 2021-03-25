@@ -62,21 +62,25 @@
     </distributionManagement>
 
     <properties>
-        <jjwt.version>0.11.2</jjwt.version>
-        <junit.jupiter.version>5.7.0</junit.jupiter.version>
 
-        <swagger.annotations.version>2.0.10</swagger.annotations.version>
-        <swagger.codegen.version>3.0.22</swagger.codegen.version>
-        <jersey.version>2.29.1</jersey.version>
-
-        <jackson.version>2.10.0</jackson.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <jwt.api>${project.basedir}/src/main/resources/swagger/jwt.yaml</jwt.api>
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <jjwt.version>0.11.2</jjwt.version>
+        <junit.jupiter.version>5.7.0</junit.jupiter.version>
+
+        <swagger.codegen.version>3.0.22</swagger.codegen.version>
+
+        <!-- START Generated Properties -->
+        <swagger-core-version>2.0.0</swagger-core-version>
+        <jersey-version>2.29.1</jersey-version>
+        <jackson-version>2.10.1</jackson-version>
+        <!-- END Generated Properties -->
+
     </properties>
 
     <build>
@@ -94,9 +98,9 @@
                         </goals>
                         <configuration>
                             <inputSpec>${jwt.api}</inputSpec>
-                            <modelPackage>${project.groupId}.jwt.swagger.model</modelPackage>
-                            <apiPackage>${project.groupId}.jwt.swagger.api</apiPackage>
-                            <invokerPackage>${project.groupId}.jwt.swagger.invoker</invokerPackage>
+                            <modelPackage>${project.groupId}.jwt.generated.model</modelPackage>
+                            <apiPackage>${project.groupId}.jwt.generated.api</apiPackage>
+                            <invokerPackage>${project.groupId}.jwt.generated.invoker</invokerPackage>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -116,9 +120,9 @@
                         </goals>
                         <configuration>
                             <inputSpec>${cm.api}</inputSpec>
-                            <modelPackage>${project.groupId}.swagger.model</modelPackage>
-                            <apiPackage>${project.groupId}.swagger.api</apiPackage>
-                            <invokerPackage>${project.groupId}.swagger.invoker</invokerPackage>
+                            <modelPackage>${project.groupId}.generated.model</modelPackage>
+                            <apiPackage>${project.groupId}.generated.api</apiPackage>
+                            <invokerPackage>${project.groupId}.generated.invoker</invokerPackage>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -138,7 +142,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>${cm.events}</inputSpec>
-                            <modelPackage>${project.groupId}.swagger.events</modelPackage>
+                            <modelPackage>${project.groupId}.generated.events</modelPackage>
                             <generateApis>false</generateApis>
                             <generateModelTests>false</generateModelTests>
                             <generateSupportingFiles>false</generateSupportingFiles>
@@ -403,77 +407,57 @@
     </profiles>
 
     <dependencies>
-        <!-- Pulled from generated client -->
+        <!-- START Generated Dependencies -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>${swagger.annotations.version}</version>
+            <version>${swagger-core-version}</version>
         </dependency>
 
         <!-- HTTP client: jersey-client -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey.version}</version>
+            <version>${jersey-version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
-            <version>${jersey.version}</version>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${jersey-version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
-            <version>${jersey.version}</version>
+            <version>${jersey-version}</version>
         </dependency>
+
         <!-- JSON processing: jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-base</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-version}</version>
         </dependency>
-
-        <!-- Base64 encoding that works in both JVM and Android -->
-        <dependency>
-            <groupId>com.brsanthu</groupId>
-            <artifactId>migbase64</artifactId>
-            <version>2.2</version>
-        </dependency>
+        <!-- END Generated Dependencies -->
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

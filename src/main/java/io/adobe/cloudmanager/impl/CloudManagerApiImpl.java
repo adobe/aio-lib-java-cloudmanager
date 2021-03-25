@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.impl;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,20 +50,20 @@ import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.PipelineExecutionStepState;
 import io.adobe.cloudmanager.model.Variable;
-import io.adobe.cloudmanager.swagger.invoker.ApiClient;
-import io.adobe.cloudmanager.swagger.invoker.ApiException;
-import io.adobe.cloudmanager.swagger.invoker.Pair;
-import io.adobe.cloudmanager.swagger.model.EnvironmentList;
-import io.adobe.cloudmanager.swagger.model.EnvironmentLogs;
-import io.adobe.cloudmanager.swagger.model.HalLink;
-import io.adobe.cloudmanager.swagger.model.PipelineExecutionEmbedded;
-import io.adobe.cloudmanager.swagger.model.PipelineList;
-import io.adobe.cloudmanager.swagger.model.PipelinePhase;
-import io.adobe.cloudmanager.swagger.model.PipelineStepMetrics;
-import io.adobe.cloudmanager.swagger.model.Program;
-import io.adobe.cloudmanager.swagger.model.ProgramList;
-import io.adobe.cloudmanager.swagger.model.Redirect;
-import io.adobe.cloudmanager.swagger.model.VariableList;
+import io.adobe.cloudmanager.generated.invoker.ApiClient;
+import io.adobe.cloudmanager.generated.invoker.ApiException;
+import io.adobe.cloudmanager.generated.invoker.Pair;
+import io.adobe.cloudmanager.generated.model.EnvironmentList;
+import io.adobe.cloudmanager.generated.model.EnvironmentLogs;
+import io.adobe.cloudmanager.generated.model.HalLink;
+import io.adobe.cloudmanager.generated.model.PipelineExecutionEmbedded;
+import io.adobe.cloudmanager.generated.model.PipelineList;
+import io.adobe.cloudmanager.generated.model.PipelinePhase;
+import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
+import io.adobe.cloudmanager.generated.model.Program;
+import io.adobe.cloudmanager.generated.model.ProgramList;
+import io.adobe.cloudmanager.generated.model.Redirect;
+import io.adobe.cloudmanager.generated.model.VariableList;
 import io.adobe.cloudmanager.util.Predicates;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
@@ -144,9 +144,9 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   @Override
   public PipelineExecution startExecution(Pipeline pipeline) throws CloudManagerApiException {
     String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
-    io.adobe.cloudmanager.swagger.model.PipelineExecution execution = null;
+    io.adobe.cloudmanager.generated.model.PipelineExecution execution = null;
     try {
-      execution = put(executionHref, new GenericType<io.adobe.cloudmanager.swagger.model.PipelineExecution>() {});
+      execution = put(executionHref, new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
     } catch (ApiException e) {
       if (412 == e.getCode()) {
         throw new CloudManagerApiException(ErrorType.PIPELINE_START_RUNNING);
@@ -164,7 +164,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public Pipeline updatePipeline(Pipeline original, PipelineUpdate updates) throws CloudManagerApiException {
-    io.adobe.cloudmanager.swagger.model.Pipeline toUpdate = new io.adobe.cloudmanager.swagger.model.Pipeline();
+    io.adobe.cloudmanager.generated.model.Pipeline toUpdate = new io.adobe.cloudmanager.generated.model.Pipeline();
     PipelinePhase buildPhase = original.getPhases().stream().filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType())
         .findFirst().orElseThrow(() -> new CloudManagerApiException(ErrorType.NO_BUILD_PHASE, original.getId()));
     if (updates.getBranch() != null) {
@@ -178,7 +178,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
     String pipelinePath = original.getLinks().getSelf().getHref();
     try {
-      io.adobe.cloudmanager.swagger.model.Pipeline result = patch(pipelinePath, toUpdate, new GenericType<io.adobe.cloudmanager.swagger.model.Pipeline>() {});
+      io.adobe.cloudmanager.generated.model.Pipeline result = patch(pipelinePath, toUpdate, new GenericType<io.adobe.cloudmanager.generated.model.Pipeline>() {});
       return new Pipeline(result, this);
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.UPDATE_PIPELINE, baseUrl, pipelinePath, e);
@@ -246,7 +246,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     Pipeline pipeline = getPipeline(programId, pipelineId);
     String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
     try {
-      io.adobe.cloudmanager.swagger.model.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.swagger.model.PipelineExecution>() {});
+      io.adobe.cloudmanager.generated.model.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
       return new PipelineExecution(execution, this);
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
@@ -275,7 +275,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     values.put("executionId", executionId);
     String executionHref = processTemplate(pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecutionid().getHref(), values);
     try {
-      io.adobe.cloudmanager.swagger.model.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.swagger.model.PipelineExecution>() {});
+      io.adobe.cloudmanager.generated.model.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
       return new PipelineExecution(execution, this);
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
@@ -314,7 +314,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public PipelineExecutionStepState getExecutionStepState(PipelineExecution execution, String action) throws CloudManagerApiException {
-    io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState stepState = execution.getEmbedded().getStepStates()
+    io.adobe.cloudmanager.generated.model.PipelineExecutionStepState stepState = execution.getEmbedded().getStepStates()
         .stream()
         .filter(s -> s.getAction().equals(action))
         .findFirst()
@@ -397,7 +397,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
       throw new CloudManagerApiException(ErrorType.FIND_CURRENT_STEP, execution.getPipelineId());
     }
-    io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState step = embeddeds.getStepStates().stream().filter(Predicates.IS_CURRENT)
+    io.adobe.cloudmanager.generated.model.PipelineExecutionStepState step = embeddeds.getStepStates().stream().filter(Predicates.IS_CURRENT)
         .findFirst().orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_CURRENT_STEP, execution.getPipelineId()));
     return new PipelineExecutionStepState(step, this);
   }
@@ -408,7 +408,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
       throw new CloudManagerApiException(ErrorType.FIND_WAITING_STEP, execution.getPipelineId());
     }
-    io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState step = embeddeds.getStepStates().stream().filter(Predicates.IS_WAITING)
+    io.adobe.cloudmanager.generated.model.PipelineExecutionStepState step = embeddeds.getStepStates().stream().filter(Predicates.IS_WAITING)
         .findFirst().orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_WAITING_STEP, execution.getPipelineId()));
     return new PipelineExecutionStepState(step, this);
   }
@@ -442,13 +442,13 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     String logHref = processTemplate(logLink.getHref(), values);
     EnvironmentLogs logs = getLogs(logHref);
 
-    List<io.adobe.cloudmanager.swagger.model.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
+    List<io.adobe.cloudmanager.generated.model.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
     List<EnvironmentLog> downloaded = new ArrayList<>();
 
     if (downloads == null || downloads.isEmpty()) {
       return Collections.emptyList();
     } else {
-      for (io.adobe.cloudmanager.swagger.model.EnvironmentLog d : downloads) {
+      for (io.adobe.cloudmanager.generated.model.EnvironmentLog d : downloads) {
         EnvironmentLog log = new EnvironmentLog(d);
         String logfileName = String.format("%d-%s-%s-%s.log.gz", log.getEnvironmentId(), log.getService(), log.getName(), log.getDate());
         log.setPath(dir.getPath() + "/" + logfileName);

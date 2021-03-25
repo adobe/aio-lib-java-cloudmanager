@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.impl;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-import io.adobe.cloudmanager.swagger.invoker.ApiClient;
+import io.adobe.cloudmanager.generated.invoker.ApiClient;
 
 import javax.ws.rs.core.Response;
 import java.util.Collections;
