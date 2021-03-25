@@ -1,11 +1,14 @@
 name: Deploy SNAPSHOT
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   deploy-snapshot:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

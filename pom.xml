@@ -78,7 +78,8 @@
         <!-- START Generated Properties -->
         <swagger-core-version>2.0.0</swagger-core-version>
         <jersey-version>2.29.1</jersey-version>
-        <jackson-version>2.10.1</jackson-version>
+        <jackson-version>2.10.5</jackson-version>
+        <jackson-databind-version>2.10.5.1</jackson-databind-version>
         <!-- END Generated Properties -->
 
     </properties>
@@ -240,6 +241,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <stagingProfileId>io.adobe.cloudmanager</stagingProfileId>
+                </configuration>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -277,6 +288,11 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -450,7 +466,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-version}</version>
+            <version>${jackson-databind-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>

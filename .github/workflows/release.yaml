@@ -168,16 +168,37 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Publish to Apache Maven Central
-        run: mvn clean deploy -P release,attach-javadoc,attach-source
+        run: mvn clean deploy -P release,attach-javadoc,attach-source -DskipStagingRepositoryClose=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
-        run: mvn clean deploy -P release,java8
+        run: mvn clean deploy -P release,java8 -DautoReleaseAfterClose=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+  changelog:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate Changelog
+        uses: heinrichreimer/github-changelog-generator-action@v2.2
+        with:
+          issues: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit Changelog
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+          git add CHANGELOG.md
+          git commit -m 'Update Changelog.'
+          git push
