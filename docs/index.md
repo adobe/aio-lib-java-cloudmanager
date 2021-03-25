@@ -38,7 +38,7 @@ To make API calls into Cloud Manager, a JWT Token is required. This is created u
 
 ```java
 
-PrivateKey privateKey; 
+PrivateKey privateKey;
 
 // Load the private key...
 
