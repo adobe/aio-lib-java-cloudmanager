@@ -244,38 +244,38 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void getPipelineVariables_pipeline404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("1", "1"), "Exception was thrown");
+  void listPipelineVariables_pipeline404() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("1", "1"), "Exception was thrown");
     assertEquals(String.format("Cannot retrieve pipelines: %s/api/program/1/pipelines (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void getPipelineVariables_pipelineMissing() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("3", "10"), "Exception was thrown");
+  void listPipelineVariables_pipelineMissing() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("3", "10"), "Exception was thrown");
     assertEquals("Pipeline 10 does not exist in program 3.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void getPipelineVariables_noLink() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("3", "2"), "Exception was thrown");
+  void listPipelineVariables_noLink() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("3", "2"), "Exception was thrown");
     assertEquals("Could not find variables link for pipeline 2 for program 3.", exception.getMessage(), "Message was correct.");
   }
 
   @Test
-  void getPipelineVariables_link404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getPipelineVariables("3", "3"), "Exception was thrown");
+  void listPipelineVariables_link404() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("3", "3"), "Exception was thrown");
     assertEquals(String.format("Cannot get variables: %s/api/program/3/pipeline/3/variables (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct.");
   }
 
   @Test
-  void getPipelineVariables_emptyList() throws CloudManagerApiException {
-    List<Variable> variables = underTest.getPipelineVariables("3", "4");
+  void listPipelineVariables_emptyList() throws CloudManagerApiException {
+    List<Variable> variables = underTest.listPipelineVariables("3", "4");
     assertTrue(variables.isEmpty(), "empty body return zero length list.");
   }
 
   @Test
-  void getPipelineVariables_success() throws CloudManagerApiException {
-    List<Variable> variables = underTest.getPipelineVariables("3", "1");
+  void listPipelineVariables_success() throws CloudManagerApiException {
+    List<Variable> variables = underTest.listPipelineVariables("3", "1");
     Variable v = new Variable();
     v.setName("KEY");
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
@@ -288,9 +288,9 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void getPipelineVariables_successPipeline() throws CloudManagerApiException {
+  void listPipelineVariables_successPipeline() throws CloudManagerApiException {
     Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
-    List<Variable> variables = underTest.getPipelineVariables(pipeline);
+    List<Variable> variables = underTest.listPipelineVariables(pipeline);
     Variable v = new Variable();
     v.setName("KEY");
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
@@ -303,9 +303,9 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void getPipelineVariables_via_pipeline() throws CloudManagerApiException {
+  void listPipelineVariables_via_pipeline() throws CloudManagerApiException {
     Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
-    List<Variable> variables = pipeline.getVariables();
+    List<Variable> variables = pipeline.listVariables();
     Variable v = new Variable();
     v.setName("KEY");
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);

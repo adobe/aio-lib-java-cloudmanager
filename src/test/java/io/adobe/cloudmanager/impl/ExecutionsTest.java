@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
@@ -94,17 +95,17 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
-  void getCurrentExecution_executionReturns404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getCurrentExecution("4", "1"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/1/execution (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  void getCurrentExecution_executionReturns404() throws CloudManagerApiException {
+    assertFalse(underTest.getCurrentExecution("4", "1").isPresent());
   }
 
   @Test
   void getCurrentExecution_success() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getCurrentExecution("4", "2");
-    assertEquals("1", execution.getId(), "Execution Id matches");
-    assertEquals("2", execution.getPipelineId(), "Pipeline Id matches");
-    assertEquals("4", execution.getProgramId(), "Program Id matches");
+    Optional<PipelineExecution> execution = underTest.getCurrentExecution("4", "2");
+    assertTrue(execution.isPresent());
+    assertEquals("1", execution.get().getId(), "Execution Id matches");
+    assertEquals("2", execution.get().getPipelineId(), "Pipeline Id matches");
+    assertEquals("4", execution.get().getProgramId(), "Program Id matches");
   }
 
   @Test

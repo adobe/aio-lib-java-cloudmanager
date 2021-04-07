@@ -96,8 +96,8 @@ public class Pipeline extends io.adobe.cloudmanager.generated.model.Pipeline {
    * @return the variables in this pipeline
    * @throws CloudManagerApiException when any errors occur
    */
-  public List<Variable> getVariables() throws CloudManagerApiException {
-    return client.getPipelineVariables(this);
+  public List<Variable> listVariables() throws CloudManagerApiException {
+    return client.listPipelineVariables(this);
   }
 
   /**

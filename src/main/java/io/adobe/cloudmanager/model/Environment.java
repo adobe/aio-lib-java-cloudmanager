@@ -26,6 +26,7 @@ import java.util.List;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.generated.model.HalLink;
+import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -77,7 +78,7 @@ public class Environment extends io.adobe.cloudmanager.generated.model.Environme
    * @throws CloudManagerApiException when any error occurs.
    */
   public List<Variable> getVariables() throws CloudManagerApiException {
-    return client.getEnvironmentVariables(this);
+    return client.listEnvironmentVariables(this);
   }
 
   /**
@@ -94,14 +95,13 @@ public class Environment extends io.adobe.cloudmanager.generated.model.Environme
   /**
    * Downloads the logs for this environment
    *
-   * @param service the service context for the logs
-   * @param name    the name of the log in the service
-   * @param days    the number of days to download
-   * @param dir     the directory in which to place the log files
+   * @param logOption the log file reference
+   * @param days       the number of days to download
+   * @param dir        the directory in which to place the log files
    * @return a list of EnvironmentLogs with details about the downloaded files
    * @throws CloudManagerApiException when any error occurs.
    */
-  public List<EnvironmentLog> downloadLogs(String service, String name, int days, File dir) throws CloudManagerApiException {
-    return client.downloadLogs(this, service, name, days, dir);
+  public List<EnvironmentLog> downloadLogs(LogOptionRepresentation logOption, int days, File dir) throws CloudManagerApiException {
+    return client.downloadLogs(this, logOption, days, dir);
   }
 }
