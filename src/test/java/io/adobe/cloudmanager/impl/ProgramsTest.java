@@ -90,7 +90,7 @@ class ProgramsTest extends AbstractApiTest {
   @Test
   void listPrograms_success() throws CloudManagerApiException {
     List<EmbeddedProgram> programs = underTest.listPrograms();
-    assertEquals(5, programs.size(), "Correct length of program list");
+    assertEquals(7, programs.size(), "Correct length of program list");
   }
 
   @Test

@@ -7,5 +7,14 @@
     "httpResponse": {
       "statusCode": 204
     }
+  },
+  {
+    "httpRequest": {
+      "method": "DELETE",
+      "path": "/api/program/2/environment/2"
+    },
+    "httpResponse": {
+      "statusCode": 204
+    }
   }
 ]

@@ -250,11 +250,11 @@ public interface CloudManagerApi {
   void advanceExecution(PipelineExecution execution) throws CloudManagerApiException;
 
   /**
-   * Advances the current execution of the specified pipeline.
+   * Advances the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the id of the pipeline to cancel
-   * @throws CloudManagerApiException when any error occurs or if no current execution exists
+   * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/advancePipelineExecution">Advance Pipeline API</a>
    */
   void advanceCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;
@@ -280,11 +280,11 @@ public interface CloudManagerApi {
   void cancelExecution(PipelineExecution execution) throws CloudManagerApiException;
 
   /**
-   * Cancels the current execution of the specified pipeline.
+   * Cancels the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the id of the pipeline to cancel
-   * @throws CloudManagerApiException when any error occurs or if no current execution exists
+   * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/cancelPipelineExecutionStep">Cancel Pipeline API</a>
    */
   void cancelCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException;

@@ -170,7 +170,7 @@ public class CloudManagerApiException extends Exception {
     RETRIEVE_ENVIRONMENTS("Could not find environments: %s."),
     DELETE_PIPELINE("Cannot delete pipeline: %s"),
     GET_LOGS("Cannot get logs: %s"),
-    NO_LOG_REDIRECT("Log %s did not contain a redirect. Was %s."),
+    NO_LOG_REDIRECT("Log %s did not contain a redirect. Was: %s."),
     LOG_DOWNLOAD("Could not download %s to %s (%s)."),
     LOG_UNZIP("Could not unzip %s to %s."),
     LOG_INITIAL_SIZE("Could not get initial size of %s"),

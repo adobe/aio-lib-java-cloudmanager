@@ -21,10 +21,8 @@ package io.adobe.cloudmanager.impl;
  */
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
@@ -38,6 +36,7 @@ import org.mockserver.junit.jupiter.MockServerExtension;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 
@@ -48,7 +47,7 @@ public class ExecutionsTest extends AbstractApiTest {
     return Arrays.asList(
         "executions/pipelines.json",
         "executions/current-success.json",
-        "executions/specific-success.json",
+        "executions/specific-cancel-success.json",
         "executions/current-no-steps.json",
         "executions/current-no-active-step.json",
         "executions/specific-code-quality.json",
@@ -101,35 +100,10 @@ public class ExecutionsTest extends AbstractApiTest {
 
   @Test
   void getCurrentExecution_success() throws CloudManagerApiException {
-    Optional<PipelineExecution> execution = underTest.getCurrentExecution("4", "2");
-    assertTrue(execution.isPresent());
-    assertEquals("1", execution.get().getId(), "Execution Id matches");
-    assertEquals("2", execution.get().getPipelineId(), "Pipeline Id matches");
-    assertEquals("4", execution.get().getProgramId(), "Program Id matches");
-  }
-
-  @Test
-  void cancelCurrentExecution_missingPipeline() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelCurrentExecution("4", "10"), "Exception thrown");
-    assertEquals("Pipeline 10 does not exist in program 4.", exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void cancelCurrentExecution_noStateSteps() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelCurrentExecution("4", "4"), "Exception thrown");
-    assertEquals("Cannot find a current step for pipeline 4.", exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void cancelCurrentExecution_noActiveStateStep() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelCurrentExecution("4", "5"), "Exception thrown");
-    assertEquals("Cannot find a current step for pipeline 5.", exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void cancelCurrentExecution_buildRunning() throws CloudManagerApiException {
-    underTest.cancelCurrentExecution("4", "2");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/8492/cancel").withContentType(MediaType.APPLICATION_JSON));
+    PipelineExecution execution = underTest.getCurrentExecution("4", "2").get();
+    assertEquals("1", execution.getId(), "Execution Id matches");
+    assertEquals("2", execution.getPipelineId(), "Pipeline Id matches");
+    assertEquals("4", execution.getProgramId(), "Program Id matches");
   }
 
   @Test
@@ -195,21 +169,45 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
-  void cancelExecution_deploylWaiting() throws CloudManagerApiException {
+  void cancelExecution_deployWaiting() throws CloudManagerApiException {
     underTest.cancelExecution("4", "3", "5");
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/5/phase/8567/step/15492/advance").withContentType(MediaType.APPLICATION_JSON));
   }
 
   @Test
-  void cancelExecution_deploylWaiting_errorState() {
+  void cancelExecution_deployWaiting_errorState() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution("4", "3", "6"), "Exception thrown");
     assertEquals("Cannot find a cancel link for the current step (deploy). Step may not be cancellable.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void advanceCurrentExecution_missingPipeline() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.advanceCurrentExecution("4", "10"), "Exception thrown");
+  void cancelCurrentExecution_missingPipeline() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelCurrentExecution("4", "10"), "Exception thrown");
     assertEquals("Pipeline 10 does not exist in program 4.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void cancelCurrentExecution_noStateSteps() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelCurrentExecution("4", "4"), "Exception thrown");
+    assertEquals("Cannot find a current step for pipeline 4.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void cancelCurrentExecution_noActiveStateStep() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelCurrentExecution("4", "5"), "Exception thrown");
+    assertEquals("Cannot find a current step for pipeline 5.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void cancelCurrentExecution_buildRunning() throws CloudManagerApiException {
+    underTest.cancelCurrentExecution("4", "2");
+    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/cancel").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void cancelCurrentExecution_noCurrent() throws CloudManagerApiException {
+    underTest.cancelCurrentExecution("4", "1");
+    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/1/execution/.*"), VerificationTimes.exactly(0));
   }
 
   @Test
@@ -242,6 +240,25 @@ public class ExecutionsTest extends AbstractApiTest {
     PipelineExecution execution = underTest.getExecution("4", "3", "4");
     execution.advance();
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void advanceCurrentExecution_missingPipeline() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.advanceCurrentExecution("4", "10"), "Exception thrown");
+    assertEquals("Pipeline 10 does not exist in program 4.", exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void advanceCurrentExecution_success() throws CloudManagerApiException {
+    underTest.advanceCurrentExecution("4", "2");
+    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
+
+  }
+
+  @Test
+  void advanceCurrentExecution_noCurrent() throws CloudManagerApiException {
+    underTest.advanceCurrentExecution("4", "1");
+    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/1/execution/.*"), VerificationTimes.exactly(0));
   }
 
   @Test
@@ -278,7 +295,7 @@ public class ExecutionsTest extends AbstractApiTest {
   @Test
   void getExecutionStepLog_empty() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "2", "codeQuality", null));
-    assertEquals(String.format("Log %s/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs did not contain a redirect. Was null.", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Log %s/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs did not contain a redirect. Was: null.", baseUrl), exception.getMessage(), "Message was correct");
 
   }
 
@@ -324,5 +341,3 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
 }
-
-

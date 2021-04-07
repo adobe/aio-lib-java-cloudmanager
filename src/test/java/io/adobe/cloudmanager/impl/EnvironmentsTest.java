@@ -63,7 +63,7 @@ class EnvironmentsTest extends AbstractApiTest {
         "environments/set-variables-variables-only.json",
         "environments/set-variables-secrets-only.json",
         "environments/set-variables-mixed.json",
-        "environments/download-logs-not-found.json",
+        "environments/download-logs-errors.json",
         "environments/download-logs-success.json"
     );
   }
@@ -104,8 +104,20 @@ class EnvironmentsTest extends AbstractApiTest {
           request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-7.log.gz")
       ).respond(
           HttpResponse.response()
-            .withStatusCode(HttpStatusCode.OK_200.code())
-            .withBody(BinaryBody.binary(zipBytes))
+              .withStatusCode(HttpStatusCode.OK_200.code())
+              .withBody(BinaryBody.binary(zipBytes))
+      );
+
+      client.when(
+          request().withMethod("GET")
+              .withPath("/api/program/2/environment/3/logs/download")
+              .withQueryStringParameter("name", "invalidurl")
+              .withQueryStringParameter("date", "2019-09-8")
+      ).respond(
+          HttpResponse.response()
+              .withStatusCode(HttpStatusCode.OK_200.code())
+              .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+              .withBody("{ \"redirect\": \"zf:)2{/logs/author_aemerror_2019-09-8.log.gz\" }")
       );
     }
   }
@@ -154,6 +166,13 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @Test
+  void deleteEnvironment_via_environment() throws Exception {
+    Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("2")).findFirst().orElseThrow(Exception::new);
+    environment.delete();
+    client.verify(request().withMethod("DELETE").withPath("/api/program/2/environment/2"));
+  }
+
+  @Test
   void getDeveloperConsoleUrl_missing() throws Exception {
     List<Environment> environments = underTest.listEnvironments("2");
     Environment environment = environments.stream().filter(e -> e.getId().equals("3")).findFirst().orElseThrow(Exception::new);
@@ -170,37 +189,37 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @Test
-  void listEnvironmentVariables_environmentNotFound() {
+  void getEnvironmentVariables_environmentNotFound() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("1", "1"), "Exception thrown for 404");
     assertEquals(String.format("Could not find environments: %s/api/program/1/environments (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void listEnvironmentVariables_noEnvironment() {
+  void getEnvironmentVariables_noEnvironment() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("2", "12"), "Exception thrown for 404");
     assertEquals("Could not find environment 12 for program 2.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void listEnvironmentVariables_noLink() {
+  void getEnvironmentVariables_noLink() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("2", "2"), "Exception thrown for missing link");
     assertEquals("Could not find variables link for environment 2 for program 2.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void listEnvironmentVariables_linkReturnsNotFound() {
+  void getEnvironmentVariables_linkReturnsNotFound() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("2", "3"), "Exception thrown for 404");
     assertEquals(String.format("Cannot get variables: %s/api/program/2/environment/3/variables (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void listEnvironmentVariables_emptyList() throws CloudManagerApiException {
+  void getEnvironmentVariables_emptyList() throws CloudManagerApiException {
     List<Variable> variables = underTest.listEnvironmentVariables("2", "4");
     assertTrue(variables.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
-  void listEnvironmentVariables_success() throws CloudManagerApiException {
+  void getEnvironmentVariables_success() throws CloudManagerApiException {
     List<Variable> variables = underTest.listEnvironmentVariables("2", "1");
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
@@ -215,7 +234,7 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @Test
-  void listEnvironmentVariables_successEnvironment() throws Exception {
+  void getEnvironmentVariables_successEnvironment() throws Exception {
     Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     List<Variable> variables = underTest.listEnvironmentVariables(environment);
     assertEquals(2, variables.size(), "Empty body returns zero length list");
@@ -231,7 +250,7 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @Test
-  void listEnvironmentVariables_via_environment() throws Exception {
+  void getEnvironmentVariables_via_environment() throws Exception {
     Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     List<Variable> variables = environment.getVariables();
     assertEquals(2, variables.size(), "Empty body returns zero length list");
@@ -363,21 +382,27 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @Test
-  void downloadLogs_fails() {
+  void downloadLogs_noLogs() throws CloudManagerApiException {
+    List<EnvironmentLog> logs = underTest.downloadLogs("2", "2", new LogOptionRepresentation().service("author").name("aemerror"), 1, new File("."));
+    assertTrue(logs.isEmpty());
+  }
+
+  @Test
+  void downloadLogs_failsInvalidDownloadUrl() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionRepresentation().service("service").name("invalidurl"), 1, new File(".")), "Exception thrown for invalid url");
+    assertEquals(String.format("Log %s did not contain a redirect. Was: %s.", "/api/program/2/environment/3/logs/download?service=service&name=invalidurl&date=2019-09-8", "unknown protocol: zf"), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void downloadLogs_failsGetLogsErrors() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionRepresentation().service("service").name("getlogerror"), 1, new File(".")), "Exception thrown for invalid url");
+    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs?service=service&name=getlogerror&days=1 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void downloadLogs_failsNoEnvironment() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "12", new LogOptionRepresentation().service("service").name("name"), 1, new File(".")), "Exception thrown for 404");
     assertEquals("Could not find environment 12 for program 2.", exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void downloadLogs_noLogLink() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "2", new LogOptionRepresentation().service("service").name("name"), 1, new File(".")), "Exception thrown for missing link");
-    assertEquals("Could not find logs link for environment 2 for program 2.", exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void downloadLogs_getLogsFails() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionRepresentation().service("author").name("aemerror"), 1, new File(".")), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs?service=author&name=aemerror&days=1 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct.");
   }
 
   @Test

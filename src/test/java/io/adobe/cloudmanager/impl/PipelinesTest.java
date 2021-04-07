@@ -95,10 +95,24 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void listPipelines_successEmpty() throws CloudManagerApiException {
-    List<Pipeline> pipelines = underTest.listPipelines("2");
-    assertTrue(pipelines.isEmpty(), "Empty body returns zero length list");
+  void listPipelines_successEmptyBody() throws CloudManagerApiException {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("6"), "Exception thrown for no body");
+    assertEquals(String.format("Could not find pipelines for program %s", "6"), exception.getMessage(), "Message was correct");
+
   }
+
+  @Test
+  void listPipelines_successEmptyEmbedded() throws CloudManagerApiException {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("2"), "Exception thrown for no embedded");
+    assertEquals(String.format("Could not find pipelines for program %s", "2"), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void listPipelines_successEmptyPipelines() throws CloudManagerApiException {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("7"), "Exception thrown for no pipelines");
+    assertEquals(String.format("Could not find pipelines for program %s", "7"), exception.getMessage(), "Message was correct");
+  }
+
 
   @Test
   void listPipelines_success() throws CloudManagerApiException {
@@ -244,37 +258,37 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void listPipelineVariables_pipeline404() {
+  void getPipelineVariables_pipeline404() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("1", "1"), "Exception was thrown");
     assertEquals(String.format("Cannot retrieve pipelines: %s/api/program/1/pipelines (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void listPipelineVariables_pipelineMissing() {
+  void getPipelineVariables_pipelineMissing() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("3", "10"), "Exception was thrown");
     assertEquals("Pipeline 10 does not exist in program 3.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void listPipelineVariables_noLink() {
+  void getPipelineVariables_noLink() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("3", "2"), "Exception was thrown");
     assertEquals("Could not find variables link for pipeline 2 for program 3.", exception.getMessage(), "Message was correct.");
   }
 
   @Test
-  void listPipelineVariables_link404() {
+  void getPipelineVariables_link404() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("3", "3"), "Exception was thrown");
     assertEquals(String.format("Cannot get variables: %s/api/program/3/pipeline/3/variables (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct.");
   }
 
   @Test
-  void listPipelineVariables_emptyList() throws CloudManagerApiException {
+  void getPipelineVariables_emptyList() throws CloudManagerApiException {
     List<Variable> variables = underTest.listPipelineVariables("3", "4");
     assertTrue(variables.isEmpty(), "empty body return zero length list.");
   }
 
   @Test
-  void listPipelineVariables_success() throws CloudManagerApiException {
+  void getPipelineVariables_success() throws CloudManagerApiException {
     List<Variable> variables = underTest.listPipelineVariables("3", "1");
     Variable v = new Variable();
     v.setName("KEY");
@@ -288,7 +302,7 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void listPipelineVariables_successPipeline() throws CloudManagerApiException {
+  void getPipelineVariables_successPipeline() throws CloudManagerApiException {
     Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
     List<Variable> variables = underTest.listPipelineVariables(pipeline);
     Variable v = new Variable();
@@ -303,7 +317,7 @@ class PipelinesTest extends AbstractApiTest {
   }
 
   @Test
-  void listPipelineVariables_via_pipeline() throws CloudManagerApiException {
+  void getPipelineVariables_via_pipeline() throws CloudManagerApiException {
     Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
     List<Variable> variables = pipeline.listVariables();
     Variable v = new Variable();
