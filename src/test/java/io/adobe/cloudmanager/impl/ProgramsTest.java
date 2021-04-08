@@ -25,6 +25,7 @@ import java.util.List;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.model.ProgramImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,13 +84,13 @@ class ProgramsTest extends AbstractApiTest {
   void listPrograms_successEmpty() throws CloudManagerApiException {
     CloudManagerApi api = new CloudManagerApiImpl("empty", "test-apikey", "test-token", baseUrl);
 
-    List<ProgramImpl> programs = api.listPrograms();
+    List<? extends Program> programs = api.listPrograms();
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void listPrograms_success() throws CloudManagerApiException {
-    List<ProgramImpl> programs = underTest.listPrograms();
+    List<? extends Program> programs = underTest.listPrograms();
     assertEquals(7, programs.size(), "Correct length of program list");
   }
 
@@ -116,8 +117,8 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void deleteProgram_viaProgram() throws Exception {
-    List<ProgramImpl> programs = underTest.listPrograms();
-    ProgramImpl program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
+    List<? extends Program> programs = underTest.listPrograms();
+    Program program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
     program.delete();
     client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
   }

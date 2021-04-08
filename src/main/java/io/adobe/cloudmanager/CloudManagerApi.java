@@ -55,7 +55,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/getPrograms">List Programs API</a>
    */
-  <P extends Program> List<P> listPrograms() throws CloudManagerApiException;
+  List<? extends Program> listPrograms() throws CloudManagerApiException;
 
   /**
    * Delete the specified program.
