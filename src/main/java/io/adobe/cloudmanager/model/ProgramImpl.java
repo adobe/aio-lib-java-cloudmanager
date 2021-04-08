@@ -22,6 +22,7 @@ package io.adobe.cloudmanager.model;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Program;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -31,10 +32,10 @@ import lombok.experimental.Delegate;
  */
 @ToString
 @EqualsAndHashCode
-public class EmbeddedProgram extends io.adobe.cloudmanager.generated.model.EmbeddedProgram {
+public class ProgramImpl extends io.adobe.cloudmanager.generated.model.EmbeddedProgram implements Program {
   private static final long serialVersionUID = 1L;
 
-  public EmbeddedProgram(io.adobe.cloudmanager.generated.model.EmbeddedProgram delegate, CloudManagerApi client) {
+  public ProgramImpl(io.adobe.cloudmanager.generated.model.EmbeddedProgram delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }

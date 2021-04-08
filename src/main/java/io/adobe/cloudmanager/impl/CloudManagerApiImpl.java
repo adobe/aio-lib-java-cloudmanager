@@ -45,6 +45,7 @@ import org.apache.commons.text.StringSubstitutor;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineUpdate;
+import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.generated.invoker.ApiClient;
 import io.adobe.cloudmanager.generated.invoker.ApiException;
 import io.adobe.cloudmanager.generated.invoker.Pair;
@@ -56,11 +57,10 @@ import io.adobe.cloudmanager.generated.model.PipelineExecutionEmbedded;
 import io.adobe.cloudmanager.generated.model.PipelineList;
 import io.adobe.cloudmanager.generated.model.PipelinePhase;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
-import io.adobe.cloudmanager.generated.model.Program;
 import io.adobe.cloudmanager.generated.model.ProgramList;
 import io.adobe.cloudmanager.generated.model.Redirect;
 import io.adobe.cloudmanager.generated.model.VariableList;
-import io.adobe.cloudmanager.model.EmbeddedProgram;
+import io.adobe.cloudmanager.model.ProgramImpl;
 import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Pipeline;
@@ -96,8 +96,8 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<EmbeddedProgram> listPrograms() throws CloudManagerApiException {
-    ProgramList programList = null;
+  public List<ProgramImpl> listPrograms() throws CloudManagerApiException {
+    ProgramList programList;
     try {
       programList = get("/api/programs", new GenericType<ProgramList>() {});
     } catch (ApiException e) {
@@ -105,19 +105,20 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
     return programList.getEmbedded() == null ?
         Collections.emptyList() :
-        programList.getEmbedded().getPrograms().stream().map(p -> new EmbeddedProgram(p, this)).collect(Collectors.toList());
+        programList.getEmbedded().getPrograms().stream().map(p -> new ProgramImpl(p, this)).collect(Collectors.toList());
   }
 
   @Override
   public void deleteProgram(String programId) throws CloudManagerApiException {
-    List<EmbeddedProgram> programs = listPrograms();
-    EmbeddedProgram program = programs.stream().filter(p -> programId.equals(p.getId())).findFirst().
+    List<ProgramImpl> programs = listPrograms();
+    ProgramImpl program = programs.stream().filter(p -> programId.equals(p.getId())).findFirst().
         orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
     deleteProgram(program);
   }
 
   @Override
-  public void deleteProgram(EmbeddedProgram program) throws CloudManagerApiException {
+  public void deleteProgram(Program p) throws CloudManagerApiException {
+    io.adobe.cloudmanager.generated.model.Program program = getProgramDetail(p.getId());
     String href = program.getLinks().getSelf().getHref();
     try {
       delete(href);
@@ -133,9 +134,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public List<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
-    EmbeddedProgram embeddedProgram = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst()
-        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
-    Program program = getProgram(embeddedProgram.getSelfLink());
+    io.adobe.cloudmanager.generated.model.Program program = getProgramDetail(programId);
     String pipelinesHref = program.getLinks().getHttpnsAdobeComadobecloudrelpipelines().getHref();
     PipelineList pipelineList;
     try {
@@ -374,9 +373,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public List<Environment> listEnvironments(String programId) throws CloudManagerApiException {
-    EmbeddedProgram embeddedProgram = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst()
-        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
-    Program program = getProgram(embeddedProgram.getSelfLink());
+    io.adobe.cloudmanager.generated.model.Program program = getProgramDetail(programId);
     String environmentsHref = program.getLinks().getHttpnsAdobeComadobecloudrelenvironments().getHref();
     EnvironmentList environmentList;
     try {
@@ -531,11 +528,13 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
-  private Program getProgram(String path) throws CloudManagerApiException {
+  private io.adobe.cloudmanager.generated.model.Program getProgramDetail(String programId) throws CloudManagerApiException {
+    ProgramImpl program = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst()
+        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
     try {
-      return get(path, new GenericType<Program>() {});
+      return get(program.getSelfLink(), new GenericType<io.adobe.cloudmanager.generated.model.Program>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_PROGRAM, baseUrl, path, e);
+      throw new CloudManagerApiException(ErrorType.GET_PROGRAM, baseUrl, program.getSelfLink(), e);
     }
   }
 

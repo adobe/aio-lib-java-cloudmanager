@@ -28,7 +28,6 @@ import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
-import io.adobe.cloudmanager.model.EmbeddedProgram;
 import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Pipeline;
@@ -52,11 +51,11 @@ public interface CloudManagerApi {
   /**
    * List all programs in the organization
    *
-   * @return a list of {@link EmbeddedProgram}s
+   * @return a list of {@link Program}s
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/getPrograms">List Programs API</a>
    */
-  List<EmbeddedProgram> listPrograms() throws CloudManagerApiException;
+  <P extends Program> List<P> listPrograms() throws CloudManagerApiException;
 
   /**
    * Delete the specified program.
@@ -74,7 +73,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/deleteProgram">Delete Program API</a>
    */
-  void deleteProgram(EmbeddedProgram program) throws CloudManagerApiException;
+  void deleteProgram(Program program) throws CloudManagerApiException;
 
   /**
    * Lists all pipelines within the specified program.
