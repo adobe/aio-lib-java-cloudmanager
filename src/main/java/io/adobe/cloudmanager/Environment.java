@@ -23,7 +23,6 @@ package io.adobe.cloudmanager;
 import java.io.File;
 import java.util.List;
 
-import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Variable;
 
@@ -62,7 +61,7 @@ public interface Environment {
    *
    * @return list of log options
    */
-  List<LogOptionRepresentation> getAvailableLogOptions();
+  List<LogOption> getLogOptions();
 
   /**
    * Delete this program.
@@ -105,6 +104,6 @@ public interface Environment {
    * @return a list of EnvironmentLogs with details about the downloaded files
    * @throws CloudManagerApiException when any error occurs.
    */
-  List<EnvironmentLog> downloadLogs(LogOptionRepresentation logOption, int days, File dir) throws CloudManagerApiException;
+  List<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException;
 
 }

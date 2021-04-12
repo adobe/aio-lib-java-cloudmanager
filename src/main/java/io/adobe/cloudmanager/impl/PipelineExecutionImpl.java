@@ -29,11 +29,10 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.generated.model.HalLink;
-import io.adobe.cloudmanager.generated.model.Metric;
-import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -161,8 +160,8 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model
    * Builds the body needed to override any blocking metrics for advancing the pipeline.
    */
   private void buildMetricsOverride(ObjectMapper mapper, JsonGenerator gen) throws CloudManagerApiException, IOException {
-    PipelineStepMetrics metrics = client.getQualityGateResults(this, PipelineExecutionStepState.ACTION_CODE_QUALITY);
-    List<Metric> failed = metrics.getMetrics().stream().filter(m -> !m.isPassed()).collect(Collectors.toList());
+    List<Metric> metrics = client.getQualityGateResults(this, PipelineExecutionStepState.ACTION_CODE_QUALITY);
+    List<Metric> failed = metrics.stream().filter(m -> !m.isPassed()).collect(Collectors.toList());
     for (Metric m : failed) {
       mapper.writeValue(gen, m);
     }

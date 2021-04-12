@@ -383,32 +383,32 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void downloadLogs_noLogs() throws CloudManagerApiException {
-    List<EnvironmentLog> logs = underTest.downloadLogs("2", "2", new LogOptionRepresentation().service("author").name("aemerror"), 1, new File("."));
+    List<EnvironmentLog> logs = underTest.downloadLogs("2", "2", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, new File("."));
     assertTrue(logs.isEmpty());
   }
 
   @Test
   void downloadLogs_failsInvalidDownloadUrl() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionRepresentation().service("service").name("invalidurl"), 1, new File(".")), "Exception thrown for invalid url");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionImpl(new LogOptionRepresentation().service("service").name("invalidurl")), 1, new File(".")), "Exception thrown for invalid url");
     assertEquals(String.format("Log %s did not contain a redirect. Was: %s.", "/api/program/2/environment/3/logs/download?service=service&name=invalidurl&date=2019-09-8", "unknown protocol: zf"), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void downloadLogs_failsGetLogsErrors() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionRepresentation().service("service").name("getlogerror"), 1, new File(".")), "Exception thrown for invalid url");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionImpl(new LogOptionRepresentation().service("service").name("getlogerror")), 1, new File(".")), "Exception thrown for invalid url");
     assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs?service=service&name=getlogerror&days=1 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void downloadLogs_failsNoEnvironment() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "12", new LogOptionRepresentation().service("service").name("name"), 1, new File(".")), "Exception thrown for 404");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "12", new LogOptionImpl(new LogOptionRepresentation().service("service").name("name")), 1, new File(".")), "Exception thrown for 404");
     assertEquals("Could not find environment 12 for program 2.", exception.getMessage(), "Message was correct");
   }
 
   @Test
   void downloadLogs_success() throws CloudManagerApiException, IOException {
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = underTest.downloadLogs("2", "1", new LogOptionRepresentation().service("author").name("aemerror"), 1, outputDir);
+    List<EnvironmentLog> logs = underTest.downloadLogs("2", "1", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir);
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
@@ -421,7 +421,7 @@ class EnvironmentsTest extends AbstractApiTest {
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = underTest.downloadLogs(env, new LogOptionRepresentation().service("author").name("aemerror"), 1, outputDir);
+    List<EnvironmentLog> logs = underTest.downloadLogs(env, new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir);
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
@@ -434,7 +434,7 @@ class EnvironmentsTest extends AbstractApiTest {
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = env.downloadLogs(new LogOptionRepresentation().service("author").name("aemerror"), 1, outputDir);
+    List<EnvironmentLog> logs = env.downloadLogs(new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir);
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");

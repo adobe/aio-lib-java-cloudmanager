@@ -21,10 +21,13 @@ package io.adobe.cloudmanager.impl;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.LogOption;
 import io.adobe.cloudmanager.generated.model.HalLink;
 import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.model.EnvironmentLog;
@@ -47,6 +50,11 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.generated.model.Envir
   public EnvironmentImpl(io.adobe.cloudmanager.generated.model.Environment delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
+  }
+
+  @Override
+  public List<LogOption> getLogOptions() {
+    return getAvailableLogOptions().stream().map(LogOptionImpl::new).collect(Collectors.toList());
   }
 
   @Override
@@ -78,7 +86,7 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.generated.model.Envir
   }
 
   @Override
-  public List<EnvironmentLog> downloadLogs(LogOptionRepresentation logOption, int days, File dir) throws CloudManagerApiException {
+  public List<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException {
     return client.downloadLogs(this, logOption, days, dir);
   }
 }

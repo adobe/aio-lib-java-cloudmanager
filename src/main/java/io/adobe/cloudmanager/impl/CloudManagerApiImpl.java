@@ -44,6 +44,8 @@ import org.apache.commons.text.StringSubstitutor;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.LogOption;
+import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
@@ -349,11 +351,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public PipelineStepMetrics getQualityGateResults(PipelineExecution pe, String action) throws CloudManagerApiException {
+  public List<Metric> getQualityGateResults(PipelineExecution pe, String action) throws CloudManagerApiException {
     PipelineExecutionStepStateImpl step = getExecutionStepState(pe, action);
     String href = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinemetrics().getHref();
     try {
-      return get(href, new GenericType<PipelineStepMetrics>() {});
+      PipelineStepMetrics psm = get(href, new GenericType<PipelineStepMetrics>() {});
+      return psm.getMetrics().stream().map(MetricImpl::new).collect(Collectors.toList());
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_METRICS, baseUrl, href, e);
     }
@@ -383,12 +386,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
 
   @Override
-  public List<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOptionRepresentation logOptions, int days, File dir) throws CloudManagerApiException {
+  public List<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOption logOptions, int days, File dir) throws CloudManagerApiException {
     return downloadLogs(getEnvironment(programId, environmentId), logOptions, days, dir);
   }
 
   @Override
-  public List<EnvironmentLog> downloadLogs(Environment e, LogOptionRepresentation logOptions, int days, File dir) throws CloudManagerApiException {
+  public List<EnvironmentLog> downloadLogs(Environment e, LogOption logOptions, int days, File dir) throws CloudManagerApiException {
 
     EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
     HalLink logLink = environment.getLinks().getHttpnsAdobeComadobecloudrellogs();
@@ -521,6 +524,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       return get(program.getSelfLink(), new GenericType<io.adobe.cloudmanager.generated.model.Program>() {});
     } catch (ApiException e) {
+
       throw new CloudManagerApiException(ErrorType.GET_PROGRAM, baseUrl, program.getSelfLink(), e);
     }
   }

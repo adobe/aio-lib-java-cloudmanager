@@ -26,6 +26,7 @@ import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
@@ -349,6 +350,20 @@ public class ExecutionsTest extends AbstractApiTest {
     assertEquals(PipelineExecutionStepState.Status.fromValue("FAILED"), PipelineExecutionStepState.Status.FAILED);
     assertNull(PipelineExecutionStepState.Status.fromValue("foo"));
     assertEquals(PipelineExecutionStepState.Status.FAILED.getValue(), PipelineExecutionStepState.Status.FAILED.toString());
+  }
+
+  @Test
+  void Metric_Sev() {
+    assertEquals(Metric.Severity.fromValue("informational"), Metric.Severity.INFORMATIONAL);
+    assertNull(Metric.Severity.fromValue("foo"));
+    assertEquals(Metric.Severity.INFORMATIONAL.getValue(), Metric.Severity.INFORMATIONAL.toString());
+  }
+
+  @Test
+  void Metric_Comp() {
+    assertEquals(Metric.Comparator.fromValue("NEQ"), Metric.Comparator.NEQ);
+    assertNull(Metric.Comparator.fromValue("foo"));
+    assertEquals(Metric.Comparator.NEQ.getValue(), Metric.Comparator.NEQ.toString());
   }
 
 }

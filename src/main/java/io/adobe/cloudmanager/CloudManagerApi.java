@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
-import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Variable;
 
@@ -345,7 +343,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepMetric">Get Step Metrics API</a>
    */
-  PipelineStepMetrics getQualityGateResults(PipelineExecution execution, String action) throws CloudManagerApiException;
+  List<Metric> getQualityGateResults(PipelineExecution execution, String action) throws CloudManagerApiException;
 
   /**
    * Lists all environments in the specified program.
@@ -388,7 +386,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
    */
-  List<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOptionRepresentation logOption, int days, File dir) throws CloudManagerApiException;
+  List<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOption logOption, int days, File dir) throws CloudManagerApiException;
 
   /**
    * Downloads the logs for the specified environment.
@@ -401,7 +399,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
    */
-  List<EnvironmentLog> downloadLogs(Environment environment, LogOptionRepresentation logOption, int days, File dir) throws CloudManagerApiException;
+  List<EnvironmentLog> downloadLogs(Environment environment, LogOption logOption, int days, File dir) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified environment
