@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager.impl;
 
 /*-
  * #%L
@@ -28,8 +28,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.PipelineExecution;
+import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.generated.model.HalLink;
 import io.adobe.cloudmanager.generated.model.Metric;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
@@ -44,50 +45,39 @@ import static io.adobe.cloudmanager.CloudManagerApiException.*;
  */
 @ToString
 @EqualsAndHashCode
-public class PipelineExecution extends io.adobe.cloudmanager.generated.model.PipelineExecution {
+public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model.PipelineExecution implements PipelineExecution {
 
   private static final long serialVersionUID = 1L;
 
   public static final String ACTION_APPROVAL = "approval";
   public static final String ACTION_SCHEDULE = "schedule";
   public static final String ACTION_DEPLOY = "deploy";
+
   @Delegate
   private final io.adobe.cloudmanager.generated.model.PipelineExecution delegate;
+
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
-  private final CloudManagerApi client;
+  private final CloudManagerApiImpl client;
 
-  public PipelineExecution(io.adobe.cloudmanager.generated.model.PipelineExecution delegate, CloudManagerApi client) {
+  public PipelineExecutionImpl(io.adobe.cloudmanager.generated.model.PipelineExecution delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }
 
-  /**
-   * Advances this execution if in a valid state.
-   *
-   * @throws CloudManagerApiException when any error occurs.
-   */
+  @Override
   public void advance() throws CloudManagerApiException {
     client.advanceExecution(this);
   }
 
-  /**
-   * Cancel this execution, if in a valid state.
-   *
-   * @throws CloudManagerApiException when any error occurs.
-   */
+  @Override
   public void cancel() throws CloudManagerApiException {
     client.cancelExecution(this);
   }
 
-  /**
-   * Get the url to advance this pipeline.
-   *
-   * @return the URL to the Advance API endpoint
-   * @throws CloudManagerApiException when any error occurs
-   */
+  @Override
   public String getAdvanceLink() throws CloudManagerApiException {
-    PipelineExecutionStepState step = client.getWaitingStep(this);
+    PipelineExecutionStepStateImpl step = client.getWaitingStep(this);
     HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
     if (link == null) {
       throw new CloudManagerApiException(ErrorType.FIND_ADVANCE_LINK, step.getAction());
@@ -95,14 +85,8 @@ public class PipelineExecution extends io.adobe.cloudmanager.generated.model.Pip
     return link.getHref();
   }
 
-  /**
-   * Build the necessary request body to advance this execution.
-   *
-   * @return the body to submit to the API
-   * @throws CloudManagerApiException when any error occurs
-   */
   public String getAdvanceBody() throws CloudManagerApiException {
-    PipelineExecutionStepState step = client.getWaitingStep(this);
+    PipelineExecutionStepStateImpl step = client.getWaitingStep(this);
     StringWriter writer = new StringWriter();
     JsonFactory jsonFactory = new JsonFactory();
     try {
@@ -114,7 +98,7 @@ public class PipelineExecution extends io.adobe.cloudmanager.generated.model.Pip
         ObjectMapper mapper = new ObjectMapper(jsonFactory);
         gen.writeFieldName("metrics");
         gen.writeStartArray();
-        buildMetricsOverride(mapper, gen, step);
+        buildMetricsOverride(mapper, gen);
         gen.writeEndArray();
         gen.writeBooleanField("override", true);
       }
@@ -126,14 +110,8 @@ public class PipelineExecution extends io.adobe.cloudmanager.generated.model.Pip
     }
   }
 
-  /**
-   * Get the url to cacnel this pipeline.
-   *
-   * @return the URL to the Cancel API endpoint
-   * @throws CloudManagerApiException when any error occurs
-   */
   public String getCancelLink() throws CloudManagerApiException {
-    PipelineExecutionStepState step = client.getCurrentStep(this);
+    PipelineExecutionStepStateImpl step = client.getCurrentStep(this);
     HalLink link;
 
     if (io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
@@ -148,14 +126,8 @@ public class PipelineExecution extends io.adobe.cloudmanager.generated.model.Pip
     return link.getHref();
   }
 
-  /**
-   * Build the necessary request body to cancel this execution.
-   *
-   * @return the body to submit to the API
-   * @throws CloudManagerApiException when any error occurs
-   */
   public String getCancelBody() throws CloudManagerApiException {
-    PipelineExecutionStepState step = client.getCurrentStep(this);
+    PipelineExecutionStepStateImpl step = client.getCurrentStep(this);
     StringWriter writer = new StringWriter();
     JsonFactory jsonFactory = new JsonFactory();
 
@@ -181,12 +153,16 @@ public class PipelineExecution extends io.adobe.cloudmanager.generated.model.Pip
     }
   }
 
+  @Override
+  public Status getStatusState() {
+    return Status.fromValue(getStatus().getValue());
+  }
+
   /*
    * Builds the body needed to override any blocking metrics for advancing the pipeline.
    */
-  private void buildMetricsOverride(ObjectMapper mapper, JsonGenerator gen,
-                                    PipelineExecutionStepState step) throws CloudManagerApiException, IOException {
-    PipelineStepMetrics metrics = client.getQualityGateResults(step);
+  private void buildMetricsOverride(ObjectMapper mapper, JsonGenerator gen) throws CloudManagerApiException, IOException {
+    PipelineStepMetrics metrics = client.getQualityGateResults(this, PipelineExecutionStepState.ACTION_CODE_QUALITY);
     List<Metric> failed = metrics.getMetrics().stream().filter(Predicates.FAILED).collect(Collectors.toList());
     for (Metric m : failed) {
       mapper.writeValue(gen, m);

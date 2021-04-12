@@ -30,8 +30,6 @@ import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.EnvironmentLog;
-import io.adobe.cloudmanager.model.PipelineExecution;
-import io.adobe.cloudmanager.model.PipelineExecutionStepState;
 import io.adobe.cloudmanager.model.Variable;
 
 /**
@@ -44,7 +42,7 @@ import io.adobe.cloudmanager.model.Variable;
 public interface CloudManagerApi {
 
   // Try to keep the APIs in the order they are listed on the Reference Docs
-  // Helper APIs come after the publicly defined ones
+  // Helper APIs come after the associated publicly defined ones
   // Reference: https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml
 
   /**
@@ -300,7 +298,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void getExecutionStepLog(String programId, String pipelineId, String executionId, String action, OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(String programId, String pipelineId, String executionId, String action, OutputStream outputStream) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
@@ -314,38 +312,41 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void getExecutionStepLog(String programId, String pipelineId, String executionId, String action, String name, OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(String programId, String pipelineId, String executionId, String action, String name, OutputStream outputStream) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
    *
-   * @param action       the execution step action for the log
+   * @param execution    the execution for the log
+   * @param action       the step action for the log
    * @param outputStream output stream to write to
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void getExecutionStepLog(PipelineExecutionStepState action, OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(PipelineExecution execution, String action, OutputStream outputStream) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
    *
-   * @param action       the execution step action for the log
-   * @param name         the log file name or {@code null} for the default
+   * @param execution    the execution for the log
+   * @param action       the step action for the log
+   * @param filename     the log file name or {@code null} for the default
    * @param outputStream output stream to write to
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void getExecutionStepLog(PipelineExecutionStepState action, String name, OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(PipelineExecution execution, String action, String filename, OutputStream outputStream) throws CloudManagerApiException;
 
   /**
-   * Retrieves the metrics for the specified execution step, if any.
+   * Retrieves the metrics for the specified execution and step, if any.
    *
-   * @param step the execution step
-   * @return the metrics for the step
+   * @param execution the execution step
+   * @param action the action step for which quality metrics are desired
+   * @return the metrics for the execution
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepMetric">Get Step Metrics API</a>
    */
-  PipelineStepMetrics getQualityGateResults(PipelineExecutionStepState step) throws CloudManagerApiException;
+  PipelineStepMetrics getQualityGateResults(PipelineExecution execution, String action) throws CloudManagerApiException;
 
   /**
    * Lists all environments in the specified program.

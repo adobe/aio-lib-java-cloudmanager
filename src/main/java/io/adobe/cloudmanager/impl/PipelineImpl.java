@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager.impl;
 
 /*-
  * #%L
@@ -25,7 +25,9 @@ import java.util.List;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
+import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
+import io.adobe.cloudmanager.model.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -52,7 +54,7 @@ public class PipelineImpl extends io.adobe.cloudmanager.generated.model.Pipeline
 
   @Override
   public Status getStatusState() {
-    return Status.fromValue(super.getStatus().getValue());
+    return Status.fromValue(getStatus().getValue());
   }
 
   @Override
@@ -85,6 +87,7 @@ public class PipelineImpl extends io.adobe.cloudmanager.generated.model.Pipeline
     return client.setPipelineVariables(this, variables);
   }
 
+  @Override
   public String getSelfLink() {
     return getLinks().getSelf().getHref();
   }

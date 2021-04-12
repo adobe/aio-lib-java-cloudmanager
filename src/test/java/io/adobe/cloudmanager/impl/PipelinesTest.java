@@ -31,10 +31,9 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
+import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.generated.model.PipelinePhase;
-import io.adobe.cloudmanager.model.PipelineExecution;
-import io.adobe.cloudmanager.model.PipelineImpl;
 import io.adobe.cloudmanager.model.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -138,7 +137,7 @@ class PipelinesTest extends AbstractApiTest {
     List<Pipeline> pipelines = underTest.listPipelines("3");
     Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     PipelineExecution execution = pipeline.startExecution();
-    assertEquals("/api/program/3/pipeline/1/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
+    assertEquals("/api/program/3/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
   }
 
   @Test
@@ -162,7 +161,7 @@ class PipelinesTest extends AbstractApiTest {
   @Test
   void startExecution_success() throws CloudManagerApiException {
     PipelineExecution execution = underTest.startExecution("3", "1");
-    assertEquals("/api/program/3/pipeline/1/execution/5000", execution.getLinks().getSelf().getHref(), "URL was correct");
+    assertEquals("/api/program/3/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
   }
 
   @Test
@@ -446,6 +445,22 @@ class PipelinesTest extends AbstractApiTest {
     assertTrue(results.contains(v), "Results contains foo");
     assertTrue(results.contains(v2), "Results contains secretFoo");
     client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1/variables").withContentType(MediaType.APPLICATION_JSON));
+  }
+
+  @Test
+  void status() {
+    assertEquals(Pipeline.Status.fromValue("WAITING"), Pipeline.Status.WAITING);
+    assertNull(Pipeline.Status.fromValue("foo"));
+    assertEquals(Pipeline.Status.IDLE.getValue(), Pipeline.Status.IDLE.toString());
+  }
+
+  @Test
+  void predicates() throws CloudManagerApiException {
+    List<Pipeline> busy = underTest.listPipelines("3", Pipeline.IS_BUSY);
+    assertEquals(2, busy.size());
+
+    List<Pipeline> named = underTest.listPipelines("3", new Pipeline.NamePredicate("test1"));
+    assertEquals(1, named.size());
   }
 
   private String buildPipeline1() throws IOException {

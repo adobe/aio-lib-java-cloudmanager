@@ -22,7 +22,6 @@ package io.adobe.cloudmanager.util;
 
 import java.util.function.Predicate;
 
-import io.adobe.cloudmanager.model.PipelineImpl;
 import io.adobe.cloudmanager.generated.model.Metric;
 import io.adobe.cloudmanager.generated.model.PipelineExecutionStepState;
 import static io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.*;
@@ -33,19 +32,6 @@ import static io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.*
  */
 public class Predicates {
 
-  /**
-   * Predicate for pipelines based on they are the current execution.
-   */
-  public static final Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
-    stepState.getStatus() != StatusEnum.FINISHED
-  );
-
-  /**
-   * Predicate for pipelines that are in a waiting state.
-   */
-  public static final Predicate<PipelineExecutionStepState> IS_WAITING = (stepState ->
-    stepState.getStatus() == StatusEnum.WAITING
-  );
 
   /**
    * Filters metrics that have passed.

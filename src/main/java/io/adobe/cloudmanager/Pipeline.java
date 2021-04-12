@@ -25,9 +25,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.Variable;
 
 public interface Pipeline {
@@ -118,7 +115,9 @@ public interface Pipeline {
   String getSelfLink();
 
   /**
-   * Pipeline status
+   * Pipeline status values
+   *
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
   enum Status {
     IDLE("IDLE"),
@@ -130,7 +129,7 @@ public interface Pipeline {
     Status(String value) {
       this.value = value;
     }
-    @JsonValue
+
     public String getValue() {
       return value;
     }
@@ -139,7 +138,7 @@ public interface Pipeline {
     public String toString() {
       return String.valueOf(value);
     }
-    @JsonCreator
+
     public static Status fromValue(String text) {
       for (Status b : Status.values()) {
         if (String.valueOf(b.value).equals(text)) {

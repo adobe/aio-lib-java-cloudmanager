@@ -27,8 +27,8 @@ import javax.ws.rs.core.HttpHeaders;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
-import io.adobe.cloudmanager.model.PipelineExecution;
-import io.adobe.cloudmanager.model.PipelineExecutionStepState;
+import io.adobe.cloudmanager.PipelineExecution;
+import io.adobe.cloudmanager.PipelineExecutionStepState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -252,7 +252,6 @@ public class ExecutionsTest extends AbstractApiTest {
   void advanceCurrentExecution_success() throws CloudManagerApiException {
     underTest.advanceCurrentExecution("4", "2");
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
-
   }
 
   @Test
@@ -262,68 +261,66 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
-  void getExecutionStepLog_badPipeline() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "10", "1", "build", null), "Exception thrown");
+  void downloadExecutionStepLog_badPipeline() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "10", "1", "build", null), "Exception thrown");
 
   }
 
   @Test
-  void getExecutionStepLog_stepMissing() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "5", "devDeploy", null));
+  void downloadExecutionStepLog_stepMissing() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "3", "5", "devDeploy", null));
     assertEquals("Cannot find step state for action devDeploy on execution 5.", exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void getExecutionStepLog_executionNotFound() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "10", "codeQuality", null), "Exception thrown for 404");
+  void downloadExecutionStepLog_executionNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "3", "10", "codeQuality", null), "Exception thrown for 404");
     assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
-
   }
 
   @Test
-  void getExecutionStepLog_linkNotFound() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "2", "validate", null));
+  void downloadExecutionStepLog_linkNotFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "3", "2", "validate", null));
     assertEquals(String.format("Could not find logs link for action validate.", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void getExecutionStepLog_notFound() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "2", "build", null));
+  void downloadExecutionStepLog_notFound() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "3", "2", "build", null));
     assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/logs (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void getExecutionStepLog_empty() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLog("4", "3", "2", "codeQuality", null));
+  void downloadExecutionStepLog_empty() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "3", "2", "codeQuality", null));
     assertEquals(String.format("Log %s/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs did not contain a redirect. Was: null.", baseUrl), exception.getMessage(), "Message was correct");
 
   }
 
   @Test
-  void getExecutionStepLog_success() throws CloudManagerApiException {
+  void downloadExecutionStepLog_success() throws CloudManagerApiException {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    underTest.getExecutionStepLog("4", "3", "4", "build", bos);
+    underTest.downloadExecutionStepLog("4", "3", "4", "build", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
   }
 
   @Test
-  void getExecutionStepLog_success_alternateFile() throws CloudManagerApiException {
+  void downloadExecutionStepLog_success_alternateFile() throws CloudManagerApiException {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    underTest.getExecutionStepLog("4", "3", "4", "build", "somethingspecial", bos);
+    underTest.downloadExecutionStepLog("4", "3", "4", "build", "somethingspecial", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
   }
 
   @Test
-  void getExecutionStepLog_successExecutionStateStep() throws CloudManagerApiException {
+  void downloadExecutionStepLog_successExecutionStateStep() throws CloudManagerApiException {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     PipelineExecution execution = underTest.getExecution("4", "3", "4");
-    PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
-    underTest.getExecutionStepLog(stepState, bos);
+    underTest.downloadExecutionStepLog(execution, "build", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
   }
 
   @Test
-  void getExecutionStepLog_via_stepState() throws CloudManagerApiException {
+  void downloadExecutionStepLog_via_stepState() throws CloudManagerApiException {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     PipelineExecution execution = underTest.getExecution("4", "3", "4");
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
@@ -332,12 +329,26 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
-  void getExecutionStepLog_via_stepState_named() throws CloudManagerApiException {
+  void downloadExecutionStepLog_via_stepState_named() throws CloudManagerApiException {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     PipelineExecution execution = underTest.getExecution("4", "3", "4");
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
     stepState.getLog("somethingspecial", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
+  }
+
+  @Test
+  void PipelineExecution_Status() {
+    assertEquals(PipelineExecution.Status.fromValue("FAILED"), PipelineExecution.Status.FAILED);
+    assertNull(PipelineExecution.Status.fromValue("foo"));
+    assertEquals(PipelineExecution.Status.FAILED.getValue(), PipelineExecution.Status.FAILED.toString());
+  }
+
+  @Test
+  void PipelineExecutionStepState_Status() {
+    assertEquals(PipelineExecutionStepState.Status.fromValue("FAILED"), PipelineExecutionStepState.Status.FAILED);
+    assertNull(PipelineExecutionStepState.Status.fromValue("foo"));
+    assertEquals(PipelineExecutionStepState.Status.FAILED.getValue(), PipelineExecutionStepState.Status.FAILED.toString());
   }
 
 }

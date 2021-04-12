@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager.impl;
 
 /*-
  * #%L
@@ -40,16 +40,16 @@ public class ProgramImpl extends io.adobe.cloudmanager.generated.model.EmbeddedP
     this.client = client;
   }
 
-  public String getSelfLink() {
-    return delegate.getLinks().getSelf().getHref();
-  }
-
   @Delegate
   private final io.adobe.cloudmanager.generated.model.EmbeddedProgram delegate;
 
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
+
+  public String getSelfLink() {
+    return delegate.getLinks().getSelf().getHref();
+  }
 
   public void delete() throws CloudManagerApiException {
     client.deleteProgram(this);

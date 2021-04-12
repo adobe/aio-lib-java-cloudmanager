@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager.impl;
 
 /*-
  * #%L
@@ -21,9 +21,10 @@ package io.adobe.cloudmanager.model;
  */
 
 import java.io.OutputStream;
+import java.util.function.Predicate;
 
-import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.PipelineExecutionStepState;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -33,7 +34,7 @@ import lombok.experimental.Delegate;
  */
 @ToString
 @EqualsAndHashCode
-public class PipelineExecutionStepState extends io.adobe.cloudmanager.generated.model.PipelineExecutionStepState {
+public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.generated.model.PipelineExecutionStepState implements PipelineExecutionStepState {
 
   private static final long serialVersionUID = 1L;
 
@@ -41,31 +42,40 @@ public class PipelineExecutionStepState extends io.adobe.cloudmanager.generated.
   private final io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
-  private final CloudManagerApi client;
+  private final CloudManagerApiImpl client;
 
-  public PipelineExecutionStepState(io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate, CloudManagerApi client) {
+  public PipelineExecutionStepStateImpl(io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }
 
-  /**
-   * Streams the default log, if any, for this step to the specified output stream.
-   *
-   * @param outputStream the output stream to write to
-   * @throws CloudManagerApiException when any error occurs
-   */
+  @Override
+  public Status getStatusState() {
+    return Status.fromValue(getStatus().getValue());
+  }
+
+  @Override
   public void getLog(OutputStream outputStream) throws CloudManagerApiException {
-    client.getExecutionStepLog(this, null, outputStream);
+    client.downloadExecutionStepLog(this, null, outputStream);
+  }
+
+  @Override
+  public void getLog(String name, OutputStream outputStream) throws CloudManagerApiException {
+    client.downloadExecutionStepLog(this, name, outputStream);
   }
 
   /**
-   * Streams the specified log, if any, for this step to the specified output stream.
-   *
-   * @param name         The name of the log to retrieve
-   * @param outputStream the output stream to write to
-   * @throws CloudManagerApiException when any error occurs
+   * Predicate for pipelines based on they are the current execution.
    */
-  public void getLog(String name, OutputStream outputStream) throws CloudManagerApiException {
-    client.getExecutionStepLog(this, name, outputStream);
-  }
+  public static final Predicate<io.adobe.cloudmanager.generated.model.PipelineExecutionStepState> IS_CURRENT = (stepState ->
+      stepState.getStatus() != io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.FINISHED
+  );
+
+  /**
+   * Predicate for pipelines that are in a waiting state.
+   */
+  public static final Predicate<io.adobe.cloudmanager.generated.model.PipelineExecutionStepState> IS_WAITING = (stepState ->
+      stepState.getStatus() == io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING
+  );
+
 }
