@@ -28,7 +28,6 @@ import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
-import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Variable;
 
@@ -341,7 +340,7 @@ public interface CloudManagerApi {
    * Retrieves the metrics for the specified execution and step, if any.
    *
    * @param execution the execution step
-   * @param action the action step for which quality metrics are desired
+   * @param action    the action step for which quality metrics are desired
    * @return the metrics for the execution
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepMetric">Get Step Metrics API</a>

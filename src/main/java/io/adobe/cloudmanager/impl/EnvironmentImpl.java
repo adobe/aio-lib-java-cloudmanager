@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager.impl;
 
 /*-
  * #%L
@@ -27,13 +27,15 @@ import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.generated.model.HalLink;
 import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
+import io.adobe.cloudmanager.model.EnvironmentLog;
+import io.adobe.cloudmanager.model.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode
-public class Environment extends io.adobe.cloudmanager.generated.model.Environment {
+public class EnvironmentImpl extends io.adobe.cloudmanager.generated.model.Environment implements io.adobe.cloudmanager.Environment {
   private static final long serialVersionUID = 1L;
 
   @Delegate
@@ -42,26 +44,17 @@ public class Environment extends io.adobe.cloudmanager.generated.model.Environme
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
-  public Environment(io.adobe.cloudmanager.generated.model.Environment delegate, CloudManagerApi client) {
+  public EnvironmentImpl(io.adobe.cloudmanager.generated.model.Environment delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }
 
-  /**
-   * Delete this program.
-   *
-   * @throws CloudManagerApiException when any error occurs.
-   */
+  @Override
   public void delete() throws CloudManagerApiException {
     client.deleteEnvironment(this);
   }
 
-  /**
-   * Retrieve the Developer Console URL for this Environment.
-   *
-   * @return the url to the developer console.
-   * @throws CloudManagerApiException when any error occurs
-   */
+  @Override
   public String getDeveloperConsoleUrl() throws CloudManagerApiException {
     HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
     if (link == null) {
@@ -71,36 +64,20 @@ public class Environment extends io.adobe.cloudmanager.generated.model.Environme
     }
   }
 
-  /**
-   * Lists the variables configured in this environment.
-   *
-   * @return the list of variables
-   * @throws CloudManagerApiException when any error occurs.
-   */
+  @Override
+  public String getSelfLink() {
+    return getLinks().getSelf().getHref();
+  }
+
   public List<Variable> getVariables() throws CloudManagerApiException {
     return client.listEnvironmentVariables(this);
   }
 
-  /**
-   * Sets the specified variables on this environment.
-   *
-   * @param variables the variables to set
-   * @return the complete list of variables in this environment
-   * @throws CloudManagerApiException when any error occurs.
-   */
   public List<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
     return client.setEnvironmentVariables(this, variables);
   }
 
-  /**
-   * Downloads the logs for this environment
-   *
-   * @param logOption the log file reference
-   * @param days       the number of days to download
-   * @param dir        the directory in which to place the log files
-   * @return a list of EnvironmentLogs with details about the downloaded files
-   * @throws CloudManagerApiException when any error occurs.
-   */
+  @Override
   public List<EnvironmentLog> downloadLogs(LogOptionRepresentation logOption, int days, File dir) throws CloudManagerApiException {
     return client.downloadLogs(this, logOption, days, dir);
   }

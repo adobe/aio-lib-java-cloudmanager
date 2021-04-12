@@ -46,9 +46,9 @@ import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
-import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.Program;
+import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.generated.invoker.ApiClient;
 import io.adobe.cloudmanager.generated.invoker.ApiException;
 import io.adobe.cloudmanager.generated.invoker.Pair;
@@ -63,10 +63,8 @@ import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.generated.model.ProgramList;
 import io.adobe.cloudmanager.generated.model.Redirect;
 import io.adobe.cloudmanager.generated.model.VariableList;
-import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Variable;
-import io.adobe.cloudmanager.util.Predicates;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
 public class CloudManagerApiImpl implements CloudManagerApi {
@@ -364,29 +362,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   @Override
   public List<Environment> listEnvironments(String programId) throws CloudManagerApiException {
     io.adobe.cloudmanager.generated.model.Program program = getProgramDetail(programId);
-    String environmentsHref = program.getLinks().getHttpnsAdobeComadobecloudrelenvironments().getHref();
-    EnvironmentList environmentList;
-    try {
-      environmentList = get(environmentsHref, new GenericType<EnvironmentList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.RETRIEVE_ENVIRONMENTS, baseUrl, environmentsHref, e);
-    }
-    if (environmentList == null ||
-        environmentList.getEmbedded() == null ||
-        environmentList.getEmbedded().getEnvironments() == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_ENVIRONMENTS, programId);
-    }
-    return environmentList.getEmbedded().getEnvironments().stream().map(e -> new Environment(e, this)).collect(Collectors.toList());
-  }
-
-  @Override
-  public void deleteEnvironment(Environment environment) throws CloudManagerApiException {
-    String environmentPath = environment.getLinks().getSelf().getHref();
-    try {
-      delete(environmentPath);
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.DELETE_ENVIRONMENT, baseUrl, environmentPath, e);
-    }
+    return new ArrayList<>(listEnvironments(program));
   }
 
   @Override
@@ -395,12 +371,26 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
+  public void deleteEnvironment(Environment environment) throws CloudManagerApiException {
+
+    String environmentPath = environment.getSelfLink();
+    try {
+      delete(environmentPath);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.DELETE_ENVIRONMENT, baseUrl, environmentPath, e);
+    }
+  }
+
+
+  @Override
   public List<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOptionRepresentation logOptions, int days, File dir) throws CloudManagerApiException {
     return downloadLogs(getEnvironment(programId, environmentId), logOptions, days, dir);
   }
 
   @Override
-  public List<EnvironmentLog> downloadLogs(Environment environment, LogOptionRepresentation logOptions, int days, File dir) throws CloudManagerApiException {
+  public List<EnvironmentLog> downloadLogs(Environment e, LogOptionRepresentation logOptions, int days, File dir) throws CloudManagerApiException {
+
+    EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
     HalLink logLink = environment.getLinks().getHttpnsAdobeComadobecloudrellogs();
     if (logLink == null) {
       throw new CloudManagerApiException(ErrorType.FIND_LOGS_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
@@ -437,7 +427,8 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Variable> listEnvironmentVariables(Environment environment) throws CloudManagerApiException {
+  public List<Variable> listEnvironmentVariables(Environment e) throws CloudManagerApiException {
+    EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
     HalLink variableLink = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
     if (variableLink == null) {
       throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
@@ -451,7 +442,8 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Variable> setEnvironmentVariables(Environment environment, Variable... variables) throws CloudManagerApiException {
+  public List<Variable> setEnvironmentVariables(Environment e, Variable... variables) throws CloudManagerApiException {
+    EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
     HalLink variableLInk = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
     if (variableLInk == null) {
       throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
@@ -573,8 +565,25 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     streamLog(outputStream, url);
   }
 
-  private Environment getEnvironment(String programId, String environmentId) throws CloudManagerApiException {
-    List<Environment> environments = listEnvironments(programId);
+  public List<EnvironmentImpl> listEnvironments(io.adobe.cloudmanager.generated.model.Program program) throws CloudManagerApiException {
+    String environmentsHref = program.getLinks().getHttpnsAdobeComadobecloudrelenvironments().getHref();
+    EnvironmentList environmentList;
+    try {
+      environmentList = get(environmentsHref, new GenericType<EnvironmentList>() {});
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.RETRIEVE_ENVIRONMENTS, baseUrl, environmentsHref, e);
+    }
+    if (environmentList == null ||
+        environmentList.getEmbedded() == null ||
+        environmentList.getEmbedded().getEnvironments() == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_ENVIRONMENTS, program.getId());
+    }
+    return environmentList.getEmbedded().getEnvironments().stream().map(e -> new EnvironmentImpl(e, this)).collect(Collectors.toList());
+  }
+
+  private EnvironmentImpl getEnvironment(String programId, String environmentId) throws CloudManagerApiException {
+    io.adobe.cloudmanager.generated.model.Program program = getProgramDetail(programId);
+    List<EnvironmentImpl> environments = listEnvironments(program);
     return environments.stream().filter(e -> environmentId.equals(e.getId())).findFirst().
         orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_ENVIRONMENT, environmentId, programId));
   }
