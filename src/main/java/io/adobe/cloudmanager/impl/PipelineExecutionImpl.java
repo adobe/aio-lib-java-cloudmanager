@@ -34,7 +34,6 @@ import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.generated.model.HalLink;
 import io.adobe.cloudmanager.generated.model.Metric;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
-import io.adobe.cloudmanager.util.Predicates;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -163,7 +162,7 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model
    */
   private void buildMetricsOverride(ObjectMapper mapper, JsonGenerator gen) throws CloudManagerApiException, IOException {
     PipelineStepMetrics metrics = client.getQualityGateResults(this, PipelineExecutionStepState.ACTION_CODE_QUALITY);
-    List<Metric> failed = metrics.getMetrics().stream().filter(Predicates.FAILED).collect(Collectors.toList());
+    List<Metric> failed = metrics.getMetrics().stream().filter(m -> !m.isPassed()).collect(Collectors.toList());
     for (Metric m : failed) {
       mapper.writeValue(gen, m);
     }
