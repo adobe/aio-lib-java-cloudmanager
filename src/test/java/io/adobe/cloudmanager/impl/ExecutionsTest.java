@@ -26,7 +26,7 @@ import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.PipelineExecutionStepState;
 import org.junit.jupiter.api.BeforeEach;

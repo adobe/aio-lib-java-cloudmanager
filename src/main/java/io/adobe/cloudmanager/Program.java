@@ -37,6 +37,13 @@ public interface Program {
   String getName();
 
   /**
+   * Link to this program.
+   *
+   * @return the link to this program.
+   */
+  String getSelfLink();
+
+  /**
    * Delete this program.
    *
    * @throws CloudManagerApiException when an error occurs

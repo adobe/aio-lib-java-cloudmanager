@@ -30,7 +30,6 @@ import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.model.Environment;
 import io.adobe.cloudmanager.model.EnvironmentLog;
-import io.adobe.cloudmanager.model.Pipeline;
 import io.adobe.cloudmanager.model.PipelineExecution;
 import io.adobe.cloudmanager.model.PipelineExecutionStepState;
 import io.adobe.cloudmanager.model.Variable;
@@ -55,7 +54,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/getPrograms">List Programs API</a>
    */
-  List<? extends Program> listPrograms() throws CloudManagerApiException;
+  List<Program> listPrograms() throws CloudManagerApiException;
 
   /**
    * Delete the specified program.

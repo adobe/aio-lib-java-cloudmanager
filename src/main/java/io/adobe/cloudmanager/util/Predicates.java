@@ -22,7 +22,7 @@ package io.adobe.cloudmanager.util;
 
 import java.util.function.Predicate;
 
-import io.adobe.cloudmanager.model.Pipeline;
+import io.adobe.cloudmanager.model.PipelineImpl;
 import io.adobe.cloudmanager.generated.model.Metric;
 import io.adobe.cloudmanager.generated.model.PipelineExecutionStepState;
 import static io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.*;
@@ -32,13 +32,6 @@ import static io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.*
  * Predicates used to filter response lists from the API calls.
  */
 public class Predicates {
-
-  /**
-   * Predicate for pipelines based on BUSY status.
-   */
-  public static final Predicate<Pipeline> IS_BUSY = (pipeline ->
-      io.adobe.cloudmanager.generated.model.Pipeline.StatusEnum.BUSY == pipeline.getStatus()
-  );
 
   /**
    * Predicate for pipelines based on they are the current execution.

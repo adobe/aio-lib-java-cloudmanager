@@ -30,11 +30,12 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineUpdate;
-import io.adobe.cloudmanager.model.Pipeline;
-import io.adobe.cloudmanager.model.PipelineExecution;
-import io.adobe.cloudmanager.model.Variable;
 import io.adobe.cloudmanager.generated.model.PipelinePhase;
+import io.adobe.cloudmanager.model.PipelineExecution;
+import io.adobe.cloudmanager.model.PipelineImpl;
+import io.adobe.cloudmanager.model.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.HttpRequest;
@@ -192,7 +193,7 @@ class PipelinesTest extends AbstractApiTest {
 
     client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1").withContentType(MediaType.APPLICATION_JSON));
 
-    assertThat("update was successful", result.getPhases(), hasItem(expected));
+    assertThat("update was successful", ((PipelineImpl) result).getPhases(), hasItem(expected));
   }
 
   @Test
@@ -207,7 +208,7 @@ class PipelinesTest extends AbstractApiTest {
 
     client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1").withContentType(MediaType.APPLICATION_JSON));
 
-    assertThat("update was successful", result.getPhases(), hasItem(expected));
+    assertThat("update was successful", ((PipelineImpl) result).getPhases(), hasItem(expected));
   }
 
   @Test
@@ -224,7 +225,7 @@ class PipelinesTest extends AbstractApiTest {
 
     client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/1").withContentType(MediaType.APPLICATION_JSON));
 
-    assertThat("update was successful", result.getPhases(), hasItem(expected));
+    assertThat("update was successful", ((PipelineImpl) result).getPhases(), hasItem(expected));
   }
 
   @Test

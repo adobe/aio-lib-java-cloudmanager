@@ -40,11 +40,6 @@ public class ProgramImpl extends io.adobe.cloudmanager.generated.model.EmbeddedP
     this.client = client;
   }
 
-  /**
-   * Link to this program.
-   *
-   * @return the link to this program.
-   */
   public String getSelfLink() {
     return delegate.getLinks().getSelf().getHref();
   }
