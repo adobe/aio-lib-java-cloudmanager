@@ -91,9 +91,8 @@ public class CloudManagerApiException extends Exception {
     this.cause = null;
   }
 
-  @Override
-  public ApiException getCause() {
-    return this.cause;
+  public int getErrorCode() {
+    return cause.getCode();
   }
 
   private static ProblemPayload getProblemBody(ApiException cause) {
