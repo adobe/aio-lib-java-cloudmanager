@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import io.adobe.cloudmanager.model.Variable;
-
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.
  * <p>

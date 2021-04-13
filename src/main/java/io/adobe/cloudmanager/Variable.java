@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager;
 
 /*-
  * #%L

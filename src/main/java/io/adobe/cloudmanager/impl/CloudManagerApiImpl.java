@@ -65,7 +65,7 @@ import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.generated.model.ProgramList;
 import io.adobe.cloudmanager.generated.model.Redirect;
 import io.adobe.cloudmanager.generated.model.VariableList;
-import io.adobe.cloudmanager.model.Variable;
+import io.adobe.cloudmanager.Variable;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
 public class CloudManagerApiImpl implements CloudManagerApi {

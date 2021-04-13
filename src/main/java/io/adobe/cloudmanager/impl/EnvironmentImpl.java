@@ -29,7 +29,7 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
 import io.adobe.cloudmanager.generated.model.HalLink;
-import io.adobe.cloudmanager.model.Variable;
+import io.adobe.cloudmanager.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;

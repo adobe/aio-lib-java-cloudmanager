@@ -25,8 +25,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.adobe.cloudmanager.model.Variable;
-
 public interface Pipeline {
 
   /**

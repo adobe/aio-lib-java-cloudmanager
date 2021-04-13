@@ -34,7 +34,7 @@ import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.generated.model.PipelinePhase;
-import io.adobe.cloudmanager.model.Variable;
+import io.adobe.cloudmanager.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.HttpRequest;

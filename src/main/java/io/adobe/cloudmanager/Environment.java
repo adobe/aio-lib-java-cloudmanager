@@ -23,8 +23,6 @@ package io.adobe.cloudmanager;
 import java.io.File;
 import java.util.List;
 
-import io.adobe.cloudmanager.model.Variable;
-
 public interface Environment {
 
   /**

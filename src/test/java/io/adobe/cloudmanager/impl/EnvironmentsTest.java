@@ -34,7 +34,7 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
-import io.adobe.cloudmanager.model.Variable;
+import io.adobe.cloudmanager.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.BinaryBody;
