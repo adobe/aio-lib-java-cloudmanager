@@ -20,12 +20,32 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import io.adobe.cloudmanager.impl.IdentityManagementApiImpl;
+
 public interface IdentityManagementApi {
 
   String META_SCOPE = "https://ims-na1.adobelogin.com/s/ent_cloudmgr_sdk";
   String ALGORITHM = "RS256";
   String TYPE = "jwt";
   int EXPIRATION = 5; // 5 Minutes
+
+  /**
+   * Create a new API instance
+   *
+   * @return an IdentityManagementApi
+   */
+  static IdentityManagementApi create() {
+    return new IdentityManagementApiImpl();
+  }
+
+  /**
+   * Create a new API instance, with the specified baseUrl
+   *
+   * @return an IdentityManagementApi
+   */
+  static IdentityManagementApi create(String baseUrl) {
+    return new IdentityManagementApiImpl(baseUrl);
+  }
 
   /**
    * Authenticates to Adobe IMS and returns an Auth Token.

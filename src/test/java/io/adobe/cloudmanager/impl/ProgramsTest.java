@@ -57,7 +57,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_failure403() {
-    CloudManagerApi api = new CloudManagerApiImpl("forbidden", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("forbidden", "test-apikey", "test-token", baseUrl);
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message (Code: 1234)", baseUrl), exception.getMessage(), "Message was correct");
@@ -65,7 +65,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_failure403_errorMessageOnly() {
-    CloudManagerApi api = new CloudManagerApiImpl("forbidden-messageonly", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("forbidden-messageonly", "test-apikey", "test-token", baseUrl);
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message", baseUrl), exception.getMessage(), "Message was correct");
@@ -73,7 +73,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_failure403_errorCodeOnly() {
-    CloudManagerApi api = new CloudManagerApiImpl("forbidden-codeonly", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("forbidden-codeonly", "test-apikey", "test-token", baseUrl);
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden)", baseUrl), exception.getMessage(), "Message was correct");
@@ -81,7 +81,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_successEmpty() throws CloudManagerApiException {
-    CloudManagerApi api = new CloudManagerApiImpl("empty", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("empty", "test-apikey", "test-token", baseUrl);
 
     List<Program> programs = api.listPrograms();
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");

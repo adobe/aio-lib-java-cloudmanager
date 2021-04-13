@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
+
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.
  * <p>
@@ -34,6 +36,24 @@ import java.util.function.Predicate;
  * @since 1.0
  */
 public interface CloudManagerApi {
+
+  /**
+   * Create a new API instance
+   *
+   * @return an CloudManagerApi
+   */
+  static CloudManagerApi create(String orgId, String apiKey, String accessToken) {
+    return CloudManagerApi.create(orgId, apiKey, accessToken);
+  }
+
+  /**
+   * Create a new API instance, with the specified baseUrl
+   *
+   * @return an CloudManagerApi
+   */
+  static CloudManagerApi create(String orgId, String apiKey, String accessToken, String baseUrl) {
+    return new CloudManagerApiImpl(orgId, apiKey, accessToken, baseUrl);
+  }
 
   // Try to keep the APIs in the order they are listed on the Reference Docs
   // Helper APIs come after the associated publicly defined ones
