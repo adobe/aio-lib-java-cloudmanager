@@ -44,6 +44,7 @@ import org.apache.commons.text.StringSubstitutor;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
 import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
@@ -57,7 +58,6 @@ import io.adobe.cloudmanager.generated.invoker.Pair;
 import io.adobe.cloudmanager.generated.model.EnvironmentList;
 import io.adobe.cloudmanager.generated.model.EnvironmentLogs;
 import io.adobe.cloudmanager.generated.model.HalLink;
-import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.generated.model.PipelineExecutionEmbedded;
 import io.adobe.cloudmanager.generated.model.PipelineList;
 import io.adobe.cloudmanager.generated.model.PipelinePhase;
@@ -65,7 +65,6 @@ import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.generated.model.ProgramList;
 import io.adobe.cloudmanager.generated.model.Redirect;
 import io.adobe.cloudmanager.generated.model.VariableList;
-import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Variable;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
@@ -413,7 +412,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       return Collections.emptyList();
     } else {
       for (io.adobe.cloudmanager.generated.model.EnvironmentLog d : downloads) {
-        EnvironmentLog log = new EnvironmentLog(d);
+        EnvironmentLogImpl log = new EnvironmentLogImpl(d);
         String logfileName = String.format("%d-%s-%s-%s.log.gz", log.getEnvironmentId(), log.getService(), log.getName(), log.getDate());
         log.setPath(dir.getPath() + "/" + logfileName);
         log.setUrl(log.getLinks().getHttpnsAdobeComadobecloudrellogsdownload().getHref());
@@ -626,7 +625,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
-  private void downloadLog(EnvironmentLog log) throws CloudManagerApiException {
+  private void downloadLog(EnvironmentLogImpl log) throws CloudManagerApiException {
     Redirect redirect;
     try {
       redirect = get(log.getUrl(), new GenericType<Redirect>() {});

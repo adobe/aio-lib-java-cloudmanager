@@ -21,16 +21,14 @@ package io.adobe.cloudmanager.impl;
  */
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
 import io.adobe.cloudmanager.generated.model.HalLink;
-import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
-import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

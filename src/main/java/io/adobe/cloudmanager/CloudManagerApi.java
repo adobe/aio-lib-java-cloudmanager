@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import io.adobe.cloudmanager.model.EnvironmentLog;
 import io.adobe.cloudmanager.model.Variable;
 
 /**
