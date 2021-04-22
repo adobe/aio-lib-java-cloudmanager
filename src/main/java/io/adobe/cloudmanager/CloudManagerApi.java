@@ -43,7 +43,7 @@ public interface CloudManagerApi {
    * @return an CloudManagerApi
    */
   static CloudManagerApi create(String orgId, String apiKey, String accessToken) {
-    return CloudManagerApi.create(orgId, apiKey, accessToken);
+    return new CloudManagerApiImpl(orgId, apiKey, accessToken, null);
   }
 
   /**
