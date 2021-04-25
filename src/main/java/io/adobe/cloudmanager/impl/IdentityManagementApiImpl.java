@@ -20,19 +20,28 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 
 import io.adobe.cloudmanager.AdobeClientCredentials;
 import io.adobe.cloudmanager.IdentityManagementApi;
 import io.adobe.cloudmanager.IdentityManagementApiException;
-import io.adobe.cloudmanager.jwt.generated.api.JwtApi;
-import io.adobe.cloudmanager.jwt.generated.invoker.ApiClient;
-import io.adobe.cloudmanager.jwt.generated.invoker.ApiException;
-import io.adobe.cloudmanager.jwt.generated.model.Token;
+import io.adobe.cloudmanager.ims.generated.api.AdobeImsApi;
+import io.adobe.cloudmanager.ims.generated.invoker.ApiClient;
+import io.adobe.cloudmanager.ims.generated.invoker.ApiException;
+import io.adobe.cloudmanager.ims.generated.invoker.Pair;
+import io.adobe.cloudmanager.ims.generated.model.Token;
+import io.adobe.cloudmanager.ims.generated.model.User;
 import io.jsonwebtoken.Jwts;
 
 public class IdentityManagementApiImpl implements IdentityManagementApi {
@@ -68,9 +77,26 @@ public class IdentityManagementApiImpl implements IdentityManagementApi {
     return token.getAccessToken();
   }
 
-  private Token authenticate(AdobeClientCredentials org, String jwts) throws IdentityManagementApiException {
+  @Override
+  public boolean isValid(AdobeClientCredentials org, String accessToken) throws IdentityManagementApiException {
     try {
-      return new JwtApi(apiClient).authenticate(org.getApiKey(), org.getClientSecret(), jwts);
+      List<Pair> queryParams = new ArrayList<>();
+      queryParams.add(new Pair("client_id", org.getApiKey()));
+      Map<String, String> headers = new HashMap<>();
+      headers.put("Authorization", String.format("Bearer %s", accessToken));
+      apiClient.invokeAPI("/ims/userinfo/v2", "GET", queryParams, null, headers,  Collections.emptyMap(),"application/json", "application/json", new String[0], new GenericType<User>() {});
+      return true;
+    } catch (ApiException e) {
+      if (Response.Status.UNAUTHORIZED.getStatusCode() != e.getCode()) {
+        throw new IdentityManagementApiException("Unable to validate Token", e);
+      }
+    }
+    return false;
+  }
+
+  private Token authenticate(AdobeClientCredentials org, String imss) throws IdentityManagementApiException {
+    try {
+      return new AdobeImsApi(apiClient).authenticate(org.getApiKey(), org.getClientSecret(), imss);
     } catch (ApiException e) {
       throw new IdentityManagementApiException("Unable to authenticate to AdobeIO.", e);
     }

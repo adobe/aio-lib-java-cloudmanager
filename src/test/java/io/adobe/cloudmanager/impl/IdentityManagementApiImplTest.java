@@ -28,11 +28,14 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.AdobeClientCredentials;
 import io.adobe.cloudmanager.IdentityManagementApi;
 import io.adobe.cloudmanager.IdentityManagementApiException;
-import io.adobe.cloudmanager.jwt.generated.model.Token;
+import io.adobe.cloudmanager.ims.generated.model.Token;
+import io.adobe.cloudmanager.ims.generated.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
@@ -45,7 +48,6 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 import org.mockserver.model.MediaType;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 
@@ -59,6 +61,12 @@ public class IdentityManagementApiImplTest {
   private PrivateKey privateKey;
   private PublicKey publicKey;
 
+  private static final String CLIENT_ID = "9876543210987654321";
+  private static final String VALID_TOKEN = "Valid Token";
+  private static final String EXPIRED_TOKEN = "Expired Token";
+
+  private AdobeClientCredentials org;
+
   @BeforeEach
   public void beforeEach(MockServerClient client) throws Exception {
     this.client = client;
@@ -70,11 +78,10 @@ public class IdentityManagementApiImplTest {
     KeyPair kp = kpg.generateKeyPair();
     privateKey = kp.getPrivate();
     publicKey = kp.getPublic();
-    client.when(
-        request()
-            .withMethod("POST")
-            .withPath("/ims/exchange/jwt")
-    ).respond(this::processJwtRequest);
+    client.when(request().withMethod("POST").withPath("/ims/exchange/jwt")).respond(this::processJwtRequest);
+
+    client.when(request().withMethod("GET").withPath("/ims/userinfo/v2")).respond(this::processUserRequest);
+    org = new AdobeClientCredentials("AdobeImsOrg@AdobeOrg", "1234567890@techacct.adobe.com", CLIENT_ID, "12345678-9abc-def0-1234-56789abcdef0", privateKey);
   }
 
   private HttpResponse processJwtRequest(HttpRequest request) throws Exception {
@@ -114,11 +121,39 @@ public class IdentityManagementApiImplTest {
 
   }
 
+  private HttpResponse processUserRequest(HttpRequest request) throws Exception {
+    String clientId = request.getFirstQueryStringParameter("client_id");
+    assertEquals(CLIENT_ID, clientId);
+    String authorization = request.getFirstHeader("Authorization");
+    if (("Bearer " + VALID_TOKEN).equals(authorization)) {
+      User user = new User();
+      user.setSub("User Id");
+      return HttpResponse.response().withStatusCode(HttpStatusCode.OK_200.code()).withContentType(MediaType.APPLICATION_JSON).withBody(new ObjectMapper().writeValueAsString(user));
+    } else if (("Bearer " + EXPIRED_TOKEN).equals(authorization)) {
+      return HttpResponse.response().withStatusCode(HttpStatusCode.UNAUTHORIZED_401.code());
+    }
+    return HttpResponse.response().withStatusCode(HttpStatusCode.BAD_REQUEST_400.code());
+  }
+
   @Test
   void testAuthenticate() throws IdentityManagementApiException {
-    AdobeClientCredentials org = new AdobeClientCredentials("AdobeImsOrg@AdobeOrg", "1234567890@techacct.adobe.com", "9876543210987654321", "12345678-9abc-def0-1234-56789abcdef0", privateKey);
     String token = underTest.authenticate(org);
     assertEquals("Access Token", token, "Access token matched.");
+  }
+
+  @Test
+  void testIsValidSuccess() throws IdentityManagementApiException {
+    assertTrue(underTest.isValid(org, VALID_TOKEN));
+  }
+
+  @Test
+  void testIsValidExpired() throws IdentityManagementApiException {
+    assertFalse(underTest.isValid(org, EXPIRED_TOKEN));
+  }
+
+  @Test
+  void testIsValidError(){
+    assertThrows(IdentityManagementApiException.class, () -> underTest.isValid(org, "Unknown Token"));
   }
 
 }

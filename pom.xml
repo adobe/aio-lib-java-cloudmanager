@@ -66,7 +66,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <jwt.api>${project.basedir}/src/main/resources/swagger/jwt.yaml</jwt.api>
+        <ims.api>${project.basedir}/src/main/resources/swagger/ims.yaml</ims.api>
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
 
@@ -92,16 +92,16 @@
                 <version>${swagger.codegen.version}</version>
                 <executions>
                     <execution>
-                        <id>generate-swagger-jwt</id>
+                        <id>generate-swagger-ims</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${jwt.api}</inputSpec>
-                            <modelPackage>${project.groupId}.jwt.generated.model</modelPackage>
-                            <apiPackage>${project.groupId}.jwt.generated.api</apiPackage>
-                            <invokerPackage>${project.groupId}.jwt.generated.invoker</invokerPackage>
+                            <inputSpec>${ims.api}</inputSpec>
+                            <modelPackage>${project.groupId}.ims.generated.model</modelPackage>
+                            <apiPackage>${project.groupId}.ims.generated.api</apiPackage>
+                            <invokerPackage>${project.groupId}.ims.generated.invoker</invokerPackage>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -175,9 +175,12 @@
                 <version>2.0.0</version>
                 <configuration>
                     <verbose>false</verbose>
-                    <canUpdateCopyright>true</canUpdateCopyright>
-                    <canUpdateDescription>true</canUpdateDescription>
-                    <excludes>**/*.json</excludes>
+                    <canUpdateCopyright>false</canUpdateCopyright>
+                    <canUpdateDescription>false</canUpdateDescription>
+                    <canUpdateLicense>false</canUpdateLicense>
+                    <failOnMissingHeader>true</failOnMissingHeader>
+                    <failOnNotUptodateHeader>true</failOnNotUptodateHeader>
+                    <excludes>**/*.json,**/swagger/**</excludes>
                 </configuration>
                 <executions>
                     <execution>
