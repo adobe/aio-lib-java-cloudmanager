@@ -58,7 +58,8 @@ public class ExecutionsTest extends AbstractApiTest {
         "executions/specific-cancel-deploy-invalid.json",
         "executions/specific-advance-build-running.json",
         "executions/step-logs-not-found.json",
-        "executions/step-logs-redirect-empty.json"
+        "executions/step-logs-redirect-empty.json",
+        "executions/running-check.json"
     );
   }
 
@@ -134,6 +135,41 @@ public class ExecutionsTest extends AbstractApiTest {
     assertEquals("1", execution.getId(), "Execution Id matches");
     assertEquals("3", execution.getPipelineId(), "Pipeline Id matches");
     assertEquals("4", execution.getProgramId(), "Program Id matches");
+  }
+
+  @Test
+  void isExecutionRunning_notStarted() throws CloudManagerApiException {
+    assertTrue(underTest.isExecutionRunning("4", "7", "10"));
+  }
+
+  @Test
+  void isExecutionRunning_running() throws CloudManagerApiException {
+    assertTrue(underTest.isExecutionRunning("4", "7", "11"));
+  }
+
+  @Test
+  void isExecutionRunning_cancelling() throws CloudManagerApiException {
+    assertTrue(underTest.isExecutionRunning("4", "7", "12"));
+  }
+
+  @Test
+  void isExecutionRunning_canceled() throws CloudManagerApiException {
+    assertFalse(underTest.isExecutionRunning("4", "7", "13"));
+  }
+
+  @Test
+  void isExecutionRunning_finished() throws CloudManagerApiException {
+    assertFalse(underTest.isExecutionRunning("4", "7", "14"));
+  }
+
+  @Test
+  void isExecutionRunning_error() throws CloudManagerApiException {
+    assertFalse(underTest.isExecutionRunning("4", "7", "15"));
+  }
+
+  @Test
+  void isExecutionRunning_failed() throws CloudManagerApiException {
+    assertFalse(underTest.isExecutionRunning("4", "7", "16"));
   }
 
   @Test

@@ -238,6 +238,20 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
+  public boolean isExecutionRunning(PipelineExecution execution) throws CloudManagerApiException {
+    return isExecutionRunning(execution.getProgramId(), execution.getPipelineId(),execution.getId());
+  }
+
+  @Override
+  public boolean isExecutionRunning(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+    PipelineExecution execution = getExecution(programId, pipelineId, executionId);
+    PipelineExecution.Status current = execution.getStatusState();
+    return current == PipelineExecution.Status.NOT_STARTED ||
+        current == PipelineExecution.Status.RUNNING ||
+        current == PipelineExecution.Status.CANCELLING;
+  }
+
+  @Override
   public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecution pe, String action) throws CloudManagerApiException {
     PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
     io.adobe.cloudmanager.generated.model.PipelineExecutionStepState stepState = execution.getEmbedded().getStepStates()

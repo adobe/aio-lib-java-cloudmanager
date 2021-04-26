@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -207,6 +207,26 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getExecution">Get Pipeline Execution API</a>
    */
   PipelineExecution getExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException;
+
+  /**
+   * Indicates if the specified pipeline execution is running. No assumptions are made about it's state - only that it has ended.
+   *
+   * @param execution the execution context to check
+   * @return true if the pipeline is running, false if has ended
+   * @throws CloudManagerApiException when any error occurs
+   */
+  boolean isExecutionRunning(PipelineExecution execution) throws CloudManagerApiException;
+
+  /**
+   * Indicates if the specified pipeline execution is running. No assumptions are made about it's state - only that it has ended.
+   *
+   * @param programId the program context for the pipeline execution
+   * @param pipelineId the pipeline id for the execution
+   * @param executionId the execution id
+   * @return true if the pipeline is running, false if has ended
+   * @throws CloudManagerApiException when any error occurs
+   */
+  boolean isExecutionRunning(String programId, String pipelineId, String executionId) throws CloudManagerApiException;
 
   /**
    * Returns the specified action step for the pipeline execution
