@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -44,6 +45,7 @@ import org.apache.commons.text.StringSubstitutor;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
 import io.adobe.cloudmanager.Metric;
@@ -51,7 +53,7 @@ import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.Program;
-import io.adobe.cloudmanager.Environment;
+import io.adobe.cloudmanager.Variable;
 import io.adobe.cloudmanager.generated.invoker.ApiClient;
 import io.adobe.cloudmanager.generated.invoker.ApiException;
 import io.adobe.cloudmanager.generated.invoker.Pair;
@@ -65,7 +67,6 @@ import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
 import io.adobe.cloudmanager.generated.model.ProgramList;
 import io.adobe.cloudmanager.generated.model.Redirect;
 import io.adobe.cloudmanager.generated.model.VariableList;
-import io.adobe.cloudmanager.Variable;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
 public class CloudManagerApiImpl implements CloudManagerApi {
@@ -93,6 +94,10 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     this.baseUrl = baseUrl;
   }
 
+  private static String processTemplate(String path, Map<String, String> values) {
+    return new StringSubstitutor(values, "{", StringSubstitutor.DEFAULT_VAR_END).replace(path);
+  }
+
   @Override
   public List<Program> listPrograms() throws CloudManagerApiException {
     ProgramList programList;
@@ -107,7 +112,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void deleteProgram(String programId) throws CloudManagerApiException {
+  public void deleteProgram(@Nonnull String programId) throws CloudManagerApiException {
     List<Program> programs = listPrograms();
     Program program = programs.stream().filter(p -> programId.equals(p.getId())).findFirst().
         orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
@@ -115,7 +120,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void deleteProgram(Program p) throws CloudManagerApiException {
+  public void deleteProgram(@Nonnull Program p) throws CloudManagerApiException {
     io.adobe.cloudmanager.generated.model.Program program = getProgramDetail(p.getId());
     String href = program.getLinks().getSelf().getHref();
     try {
@@ -126,23 +131,23 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Pipeline> listPipelines(String programId) throws CloudManagerApiException {
+  public List<Pipeline> listPipelines(@Nonnull String programId) throws CloudManagerApiException {
     return listPipelines(programId, p -> true);
   }
 
   @Override
-  public List<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
+  public List<Pipeline> listPipelines(@Nonnull String programId, @Nonnull Predicate<Pipeline> predicate) throws CloudManagerApiException {
     return new ArrayList<>(listPipelineDetails(programId, predicate));
   }
 
   @Override
-  public void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException {
+  public void deletePipeline(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException {
     PipelineImpl original = getPipeline(programId, pipelineId);
     deletePipeline(original);
   }
 
   @Override
-  public void deletePipeline(Pipeline pipeline) throws CloudManagerApiException {
+  public void deletePipeline(@Nonnull Pipeline pipeline) throws CloudManagerApiException {
     try {
       delete(pipeline.getSelfLink());
     } catch (ApiException e) {
@@ -151,13 +156,13 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public PipelineImpl updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException {
+  public PipelineImpl updatePipeline(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull PipelineUpdate updates) throws CloudManagerApiException {
     Pipeline original = getPipeline(programId, pipelineId);
     return updatePipeline(original, updates);
   }
 
   @Override
-  public PipelineImpl updatePipeline(Pipeline original, PipelineUpdate updates) throws CloudManagerApiException {
+  public PipelineImpl updatePipeline(@Nonnull Pipeline original, @Nonnull PipelineUpdate updates) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(original);
     io.adobe.cloudmanager.generated.model.Pipeline toUpdate = new io.adobe.cloudmanager.generated.model.Pipeline();
     PipelinePhase buildPhase = pipeline.getPhases().stream().filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType())
@@ -181,7 +186,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public Optional<PipelineExecution> getCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
+  public Optional<PipelineExecution> getCurrentExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(programId, pipelineId);
     String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
     try {
@@ -196,13 +201,13 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public PipelineExecutionImpl startExecution(String programId, String pipelineId) throws CloudManagerApiException {
+  public PipelineExecutionImpl startExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(programId, pipelineId, ErrorType.FIND_PIPELINE_START);
     return startExecution(pipeline);
   }
 
   @Override
-  public PipelineExecutionImpl startExecution(Pipeline p) throws CloudManagerApiException {
+  public PipelineExecutionImpl startExecution(@Nonnull Pipeline p) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(p);
     String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
     io.adobe.cloudmanager.generated.model.PipelineExecution execution;
@@ -218,13 +223,13 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public PipelineExecutionImpl getExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+  public PipelineExecutionImpl getExecution(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(programId, pipelineId);
     return getExecution(pipeline, executionId);
   }
 
   @Override
-  public PipelineExecutionImpl getExecution(Pipeline p, String executionId) throws CloudManagerApiException {
+  public PipelineExecutionImpl getExecution(@Nonnull Pipeline p, @Nonnull String executionId) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(p);
     Map<String, String> values = new HashMap<>();
     values.put("executionId", executionId);
@@ -238,12 +243,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public boolean isExecutionRunning(PipelineExecution execution) throws CloudManagerApiException {
-    return isExecutionRunning(execution.getProgramId(), execution.getPipelineId(),execution.getId());
+  public boolean isExecutionRunning(@Nonnull PipelineExecution execution) throws CloudManagerApiException {
+    return isExecutionRunning(execution.getProgramId(), execution.getPipelineId(), execution.getId());
   }
 
   @Override
-  public boolean isExecutionRunning(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+  public boolean isExecutionRunning(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException {
     PipelineExecution execution = getExecution(programId, pipelineId, executionId);
     PipelineExecution.Status current = execution.getStatusState();
     return current == PipelineExecution.Status.NOT_STARTED ||
@@ -252,7 +257,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecution pe, String action) throws CloudManagerApiException {
+  public PipelineExecutionStepStateImpl getExecutionStepState(@Nonnull PipelineExecution pe, @Nonnull String action) throws CloudManagerApiException {
     PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
     io.adobe.cloudmanager.generated.model.PipelineExecutionStepState stepState = execution.getEmbedded().getStepStates()
         .stream()
@@ -263,7 +268,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getCurrentStep(PipelineExecution pe) throws CloudManagerApiException {
+  public PipelineExecutionStepStateImpl getCurrentStep(@Nonnull PipelineExecution pe) throws CloudManagerApiException {
     PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
     PipelineExecutionEmbedded embeddeds = execution.getEmbedded();
     if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
@@ -278,7 +283,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getWaitingStep(PipelineExecution pe) throws CloudManagerApiException {
+  public PipelineExecutionStepStateImpl getWaitingStep(@Nonnull PipelineExecution pe) throws CloudManagerApiException {
     PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
     PipelineExecutionEmbedded embeddeds = execution.getEmbedded();
     if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
@@ -293,12 +298,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void advanceExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+  public void advanceExecution(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException {
     advanceExecution(getExecution(programId, pipelineId, executionId));
   }
 
   @Override
-  public void advanceExecution(PipelineExecution pe) throws CloudManagerApiException {
+  public void advanceExecution(@Nonnull PipelineExecution pe) throws CloudManagerApiException {
     PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
     String href = execution.getAdvanceLink();
     try {
@@ -309,7 +314,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void advanceCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
+  public void advanceCurrentExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException {
     Optional<PipelineExecution> execution = getCurrentExecution(programId, pipelineId);
     if (execution.isPresent()) {
       advanceExecution(execution.get());
@@ -317,12 +322,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void cancelExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+  public void cancelExecution(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException {
     cancelExecution(getExecution(programId, pipelineId, executionId));
   }
 
   @Override
-  public void cancelExecution(PipelineExecution pe) throws CloudManagerApiException {
+  public void cancelExecution(@Nonnull PipelineExecution pe) throws CloudManagerApiException {
     PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
     String href = execution.getCancelLink();
     try {
@@ -333,7 +338,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void cancelCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
+  public void cancelCurrentExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException {
     Optional<PipelineExecution> execution = getCurrentExecution(programId, pipelineId);
     if (execution.isPresent()) {
       cancelExecution(execution.get());
@@ -341,30 +346,30 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void downloadExecutionStepLog(String programId, String pipelineId, String executionId, String action, OutputStream outputStream) throws CloudManagerApiException {
+  public void downloadExecutionStepLog(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId, @Nonnull String action, @Nonnull OutputStream outputStream) throws CloudManagerApiException {
     downloadExecutionStepLog(programId, pipelineId, executionId, action, null, outputStream);
   }
 
   @Override
-  public void downloadExecutionStepLog(String programId, String pipelineId, String executionId, String action, String name, OutputStream outputStream) throws CloudManagerApiException {
+  public void downloadExecutionStepLog(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId, @Nonnull String action, @Nonnull String name, @Nonnull OutputStream outputStream) throws CloudManagerApiException {
     PipelineExecution execution = getExecution(programId, pipelineId, executionId);
     PipelineExecutionStepStateImpl stepState = getExecutionStepState(execution, action);
     downloadExecutionStepLog(stepState, name, outputStream);
   }
 
   @Override
-  public void downloadExecutionStepLog(PipelineExecution execution, String action, OutputStream outputStream) throws CloudManagerApiException {
+  public void downloadExecutionStepLog(@Nonnull PipelineExecution execution, @Nonnull String action, @Nonnull OutputStream outputStream) throws CloudManagerApiException {
     downloadExecutionStepLog(execution, action, null, outputStream);
   }
 
   @Override
-  public void downloadExecutionStepLog(PipelineExecution execution, String action, String filename, OutputStream outputStream) throws CloudManagerApiException {
+  public void downloadExecutionStepLog(@Nonnull PipelineExecution execution, @Nonnull String action, @Nonnull String filename, @Nonnull OutputStream outputStream) throws CloudManagerApiException {
     PipelineExecutionStepStateImpl stepState = getExecutionStepState(execution, action);
     downloadExecutionStepLog(stepState, filename, outputStream);
   }
 
   @Override
-  public List<Metric> getQualityGateResults(PipelineExecution pe, String action) throws CloudManagerApiException {
+  public List<Metric> getQualityGateResults(@Nonnull PipelineExecution pe, @Nonnull String action) throws CloudManagerApiException {
     PipelineExecutionStepStateImpl step = getExecutionStepState(pe, action);
     String href = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinemetrics().getHref();
     try {
@@ -376,18 +381,18 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Environment> listEnvironments(String programId) throws CloudManagerApiException {
+  public List<Environment> listEnvironments(@Nonnull String programId) throws CloudManagerApiException {
     io.adobe.cloudmanager.generated.model.Program program = getProgramDetail(programId);
     return new ArrayList<>(listEnvironments(program));
   }
 
   @Override
-  public void deleteEnvironment(String programId, String environmentId) throws CloudManagerApiException {
+  public void deleteEnvironment(@Nonnull String programId, @Nonnull String environmentId) throws CloudManagerApiException {
     deleteEnvironment(getEnvironment(programId, environmentId));
   }
 
   @Override
-  public void deleteEnvironment(Environment environment) throws CloudManagerApiException {
+  public void deleteEnvironment(@Nonnull Environment environment) throws CloudManagerApiException {
 
     String environmentPath = environment.getSelfLink();
     try {
@@ -397,14 +402,13 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
-
   @Override
-  public List<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOption logOptions, int days, File dir) throws CloudManagerApiException {
+  public List<EnvironmentLog> downloadLogs(@Nonnull String programId, @Nonnull String environmentId, @Nonnull LogOption logOptions, int days, @Nonnull File dir) throws CloudManagerApiException {
     return downloadLogs(getEnvironment(programId, environmentId), logOptions, days, dir);
   }
 
   @Override
-  public List<EnvironmentLog> downloadLogs(Environment e, LogOption logOptions, int days, File dir) throws CloudManagerApiException {
+  public List<EnvironmentLog> downloadLogs(@Nonnull Environment e, @Nonnull LogOption logOptions, int days, @Nonnull File dir) throws CloudManagerApiException {
 
     EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
     HalLink logLink = environment.getLinks().getHttpnsAdobeComadobecloudrellogs();
@@ -438,12 +442,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Variable> listEnvironmentVariables(String programId, String environmentId) throws CloudManagerApiException {
+  public List<Variable> listEnvironmentVariables(@Nonnull String programId, @Nonnull String environmentId) throws CloudManagerApiException {
     return listEnvironmentVariables(getEnvironment(programId, environmentId));
   }
 
   @Override
-  public List<Variable> listEnvironmentVariables(Environment e) throws CloudManagerApiException {
+  public List<Variable> listEnvironmentVariables(@Nonnull Environment e) throws CloudManagerApiException {
     EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
     HalLink variableLink = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
     if (variableLink == null) {
@@ -453,12 +457,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Variable> setEnvironmentVariables(String programId, String environmentId, Variable... variables) throws CloudManagerApiException {
+  public List<Variable> setEnvironmentVariables(@Nonnull String programId, @Nonnull String environmentId, Variable... variables) throws CloudManagerApiException {
     return setEnvironmentVariables(getEnvironment(programId, environmentId), variables);
   }
 
   @Override
-  public List<Variable> setEnvironmentVariables(Environment e, Variable... variables) throws CloudManagerApiException {
+  public List<Variable> setEnvironmentVariables(@Nonnull Environment e, Variable... variables) throws CloudManagerApiException {
     EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
     HalLink variableLInk = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
     if (variableLInk == null) {
@@ -468,12 +472,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Variable> listPipelineVariables(String programId, String pipelineId) throws CloudManagerApiException {
+  public List<Variable> listPipelineVariables(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException {
     return listPipelineVariables(getPipeline(programId, pipelineId));
   }
 
   @Override
-  public List<Variable> listPipelineVariables(Pipeline p) throws CloudManagerApiException {
+  public List<Variable> listPipelineVariables(@Nonnull Pipeline p) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(p);
     HalLink variableLink = pipeline.getLinks().getHttpnsAdobeComadobecloudrelvariables();
     if (variableLink == null) {
@@ -483,12 +487,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public List<Variable> setPipelineVariables(String programId, String pipelineId, Variable... variables) throws CloudManagerApiException {
+  public List<Variable> setPipelineVariables(@Nonnull String programId, @Nonnull String pipelineId, Variable... variables) throws CloudManagerApiException {
     return setPipelineVariables(getPipeline(programId, pipelineId), variables);
   }
 
   @Override
-  public List<Variable> setPipelineVariables(Pipeline p, Variable... variables) throws CloudManagerApiException {
+  public List<Variable> setPipelineVariables(@Nonnull Pipeline p, Variable... variables) throws CloudManagerApiException {
     PipelineImpl pipeline = getPipeline(p);
     HalLink variableLink = pipeline.getLinks().getHttpnsAdobeComadobecloudrelvariables();
     if (variableLink == null) {
@@ -514,6 +518,8 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     return url;
   }
 
+  // Private Implementation detail methods.
+
   private void streamLog(OutputStream outputStream, String url) throws CloudManagerApiException {
     try (InputStream is = new URL(url).openStream()) {
       IOUtils.copy(is, outputStream);
@@ -527,9 +533,6 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       }
     }
   }
-
-
-  // Private Implementation detail methods.
 
   private io.adobe.cloudmanager.generated.model.Program getProgramDetail(String programId) throws CloudManagerApiException {
     Program program = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst()
@@ -687,9 +690,5 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     headers.put("x-api-key", apiKey);
 
     return apiClient.invokeAPI(path, method, queryParams, body, headers, Collections.emptyMap(), "application/json", "application/json", new String[0], returnType);
-  }
-
-  private static String processTemplate(String path, Map<String, String> values) {
-    return new StringSubstitutor(values, "{", StringSubstitutor.DEFAULT_VAR_END).replace(path);
   }
 }
