@@ -189,7 +189,8 @@ public class CloudManagerApiException extends Exception {
     DELETE_ENVIRONMENT("Cannot delete environment: %s"),
     UPDATE_PIPELINE("Cannot update pipeline: %s"),
     GENERATE_BODY("Unable to generate request body: %s"),
-    PROCESS_EVENT("Unable to process event: %s");
+    PROCESS_EVENT("Unable to process event: %s"),
+    VALIDATE_EVENT("Unable to validate event: %s");
 
     private final String message;
 

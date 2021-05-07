@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,15 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEvent;
@@ -34,6 +40,10 @@ import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.generated.invoker.JSON;
 
 public class CloudManagerEvents {
+
+  private static final String HMAC_ALG = "HmacSHA256";
+
+  public static final String SIGNATURE_HEADER = "x-adobe-signature";
 
   public static final String STARTED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/started";
   public static final String WAITING_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/waiting";
@@ -93,6 +103,7 @@ public class CloudManagerEvents {
    * @param type   class type of event
    * @param <T>    the type of event
    * @return a fully populated event of the specified type
+   * @throws CloudManagerApiException if an error occurs during parsing
    */
   @Nonnull
   public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException {
@@ -104,6 +115,26 @@ public class CloudManagerEvents {
       return new JSON().getContext(type).readValue(source, type);
     } catch (JsonProcessingException e) {
       throw new CloudManagerApiException(CloudManagerApiException.ErrorType.PROCESS_EVENT, e.getMessage());
+    }
+  }
+
+  /**
+   * Validates an event against a signature.
+   *
+   * @param eventBody the original String representation of the event, in UTF-8 encoding
+   * @param signature the digest from the header
+   * @param clientSecret the client secret signature for calculations
+   * @return true if the body signature is valid, false otherwise
+   * @throws CloudManagerApiException when an error occurs during processing
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html#!AdobeDocs/cloudmanager-api-docs/master/tutorial/2-webhook-signature-validation.md">Webhook Signature Validation</a>
+   */
+  public static boolean isValidSignature(@Nonnull String eventBody, @Nonnull String signature, @Nonnull String clientSecret) throws CloudManagerApiException {
+    try {
+      Mac mac = Mac.getInstance(HMAC_ALG);
+      mac.init(new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), HMAC_ALG));
+      return signature.equals(Base64.getEncoder().encodeToString(mac.doFinal(eventBody.getBytes(StandardCharsets.UTF_8))));
+    } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.VALIDATE_EVENT, e.getLocalizedMessage());
     }
   }
 }

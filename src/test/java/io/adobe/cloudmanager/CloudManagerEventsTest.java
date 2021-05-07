@@ -20,6 +20,11 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -177,5 +182,23 @@ public class CloudManagerEventsTest {
                 .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
         );
     assertEquals(event.getClass(), typeFrom(mapper.writeValueAsString(event)));
+  }
+
+  @Test
+  public void invalidSignature() throws Exception {
+    assertFalse(CloudManagerEvents.isValidSignature("Body", "Signature", "Client Secret"));
+  }
+
+  @Test
+  public void validSignature() throws Exception {
+
+    String body = "Body";
+    String clientSecret = "Client Secret";
+    String sha256 = "HmacSHA256";
+    Mac mac = Mac.getInstance(sha256);
+    mac.init(new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), sha256));
+    String signature = Base64.getEncoder().encodeToString(mac.doFinal(body.getBytes(StandardCharsets.UTF_8)));
+
+    assertTrue(CloudManagerEvents.isValidSignature(body, signature, clientSecret));
   }
 }
