@@ -25,10 +25,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Set;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEvent;
@@ -41,16 +40,12 @@ import io.adobe.cloudmanager.generated.invoker.JSON;
 
 public class CloudManagerEvents {
 
-  private static final String HMAC_ALG = "HmacSHA256";
-
   public static final String SIGNATURE_HEADER = "x-adobe-signature";
-
   public static final String STARTED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/started";
   public static final String WAITING_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/waiting";
   public static final String ENDED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/ended";
   public static final String PIPELINE_EXECUTION_TYPE = "https://ns.adobe.com/experience/cloudmanager/pipeline-execution";
   public static final String PIPELINE_STEP_STATE_TYPE = "https://ns.adobe.com/experience/cloudmanager/execution-step-state";
-
   public static final Set<Class<?>> EVENTS = Set.of(
       PipelineExecutionStartEvent.class,
       PipelineExecutionStepStartEvent.class,
@@ -58,14 +53,15 @@ public class CloudManagerEvents {
       PipelineExecutionStepEndEvent.class,
       PipelineExecutionEndEvent.class
   );
+  private static final String HMAC_ALG = "HmacSHA256";
 
   /**
    * Attempts to determine which event type from the provided JSON String.
    *
    * @param source event JSON string
    * @return Event class type or null
+   * @throws CloudManagerApiException if an error occurs during parsing
    */
-  @CheckForNull
   public static Class<?> typeFrom(String source) throws CloudManagerApiException {
     try {
       // Any object will do, to get the root of the object tree.
@@ -105,7 +101,7 @@ public class CloudManagerEvents {
    * @return a fully populated event of the specified type
    * @throws CloudManagerApiException if an error occurs during parsing
    */
-  @Nonnull
+  @NotNull
   public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException {
 
     if (!EVENTS.contains(type)) {
@@ -121,14 +117,14 @@ public class CloudManagerEvents {
   /**
    * Validates an event against a signature.
    *
-   * @param eventBody the original String representation of the event, in UTF-8 encoding
-   * @param signature the digest from the header
+   * @param eventBody    the original String representation of the event, in UTF-8 encoding
+   * @param signature    the digest from the header
    * @param clientSecret the client secret signature for calculations
    * @return true if the body signature is valid, false otherwise
    * @throws CloudManagerApiException when an error occurs during processing
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html#!AdobeDocs/cloudmanager-api-docs/master/tutorial/2-webhook-signature-validation.md">Webhook Signature Validation</a>
    */
-  public static boolean isValidSignature(@Nonnull String eventBody, @Nonnull String signature, @Nonnull String clientSecret) throws CloudManagerApiException {
+  public static boolean isValidSignature(@NotNull String eventBody, @NotNull String signature, @NotNull String clientSecret) throws CloudManagerApiException {
     try {
       Mac mac = Mac.getInstance(HMAC_ALG);
       mac.init(new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), HMAC_ALG));

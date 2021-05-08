@@ -266,6 +266,14 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.2.0</version>
+                    <configuration>
+                        <source>11</source>
+                        <notimestamp>true</notimestamp>
+                        <quiet>true</quiet>
+                        <doctitle>${project.name} API</doctitle>
+                        <windowtitle>${project.name} API</windowtitle>
+                        <excludePackageNames>*.impl:*.model:*.generated.*</excludePackageNames>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -390,15 +398,17 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <reportOutputDirectory>${project.basedir}/docs/apidocs</reportOutputDirectory>
-                            <source>11</source>
-                            <notimestamp>true</notimestamp>
-                            <quiet>true</quiet>
-                            <doctitle>${project.name} API</doctitle>
-                            <windowtitle>${project.name} API</windowtitle>
-                            <excludePackageNames>*.impl:*.model:*.generated.*</excludePackageNames>
-                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -488,9 +498,9 @@
         <!-- END Generated Dependencies -->
 
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
         </dependency>
 
         <dependency>

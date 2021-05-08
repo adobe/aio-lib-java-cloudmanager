@@ -41,6 +41,7 @@ public interface IdentityManagementApi {
   /**
    * Create a new API instance, with the specified baseUrl
    *
+   * @param baseUrl the base url for the API
    * @return an IdentityManagementApi
    */
   static IdentityManagementApi create(String baseUrl) {
@@ -59,7 +60,7 @@ public interface IdentityManagementApi {
   /**
    * Checks if the provided token is still valid for the Org context.
    *
-   * @param org   The Adobe Client org details
+   * @param org         The Adobe Client org details
    * @param accessToken the access token to check
    * @return state of access token
    * @throws IdentityManagementApiException when any error occurs

@@ -25,7 +25,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
 
@@ -46,7 +46,7 @@ public interface CloudManagerApi {
    * @param accessToken the access token
    * @return an api instance
    */
-  static CloudManagerApi create(@Nonnull String orgId, @Nonnull String apiKey, @Nonnull String accessToken) {
+  static CloudManagerApi create(@NotNull String orgId, @NotNull String apiKey, @NotNull String accessToken) {
     return new CloudManagerApiImpl(orgId, apiKey, accessToken, null);
   }
 
@@ -59,7 +59,7 @@ public interface CloudManagerApi {
    * @param baseUrl     the base url for the API
    * @return an api instance
    */
-  static CloudManagerApi create(@Nonnull String orgId, @Nonnull String apiKey, @Nonnull String accessToken, @Nonnull String baseUrl) {
+  static CloudManagerApi create(@NotNull String orgId, @NotNull String apiKey, @NotNull String accessToken, @NotNull String baseUrl) {
     return new CloudManagerApiImpl(orgId, apiKey, accessToken, baseUrl);
   }
 
@@ -83,7 +83,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/deleteProgram">Delete Program API</a>
    */
-  void deleteProgram(@Nonnull String programId) throws CloudManagerApiException;
+  void deleteProgram(@NotNull String programId) throws CloudManagerApiException;
 
   /**
    * Delete the specified program.
@@ -92,7 +92,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/deleteProgram">Delete Program API</a>
    */
-  void deleteProgram(@Nonnull Program program) throws CloudManagerApiException;
+  void deleteProgram(@NotNull Program program) throws CloudManagerApiException;
 
   /**
    * Lists all pipelines within the specified program.
@@ -102,7 +102,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/getPipelines">List Pipelines API</a>
    */
-  List<Pipeline> listPipelines(@Nonnull String programId) throws CloudManagerApiException;
+  List<Pipeline> listPipelines(@NotNull String programId) throws CloudManagerApiException;
 
   /**
    * Lists all pipelines in the program that meet the predicate clause.
@@ -113,7 +113,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/getPipelines">List Pipelines API</a>
    */
-  List<Pipeline> listPipelines(@Nonnull String programId, @Nonnull Predicate<Pipeline> predicate) throws CloudManagerApiException;
+  List<Pipeline> listPipelines(@NotNull String programId, @NotNull Predicate<Pipeline> predicate) throws CloudManagerApiException;
 
   /**
    * Delete the specified pipeline.
@@ -123,7 +123,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/deletePipeline">Delete Pipeline API</a>
    */
-  void deletePipeline(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException;
+  void deletePipeline(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Delete the specified pipeline.
@@ -132,7 +132,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/deletePipeline">Delete Pipeline API</a>
    */
-  void deletePipeline(@Nonnull Pipeline pipeline) throws CloudManagerApiException;
+  void deletePipeline(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
    * Changes details about a pipeline.
@@ -144,7 +144,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/patchPipeline">Patch Pipeline API</a>
    */
-  Pipeline updatePipeline(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull PipelineUpdate updates) throws CloudManagerApiException;
+  Pipeline updatePipeline(@NotNull String programId, @NotNull String pipelineId, @NotNull PipelineUpdate updates) throws CloudManagerApiException;
 
   /**
    * Changes details about a pipeline.
@@ -155,7 +155,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/patchPipeline">Patch Pipeline API</a>
    */
-  Pipeline updatePipeline(@Nonnull Pipeline pipeline, @Nonnull PipelineUpdate updates) throws CloudManagerApiException;
+  Pipeline updatePipeline(@NotNull Pipeline pipeline, @NotNull PipelineUpdate updates) throws CloudManagerApiException;
 
   /**
    * Returns an optional current execution of the specified pipeline.
@@ -166,12 +166,12 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getCurrentExecution">Get Current Pipeline Execution API</a>
    */
-  Optional<PipelineExecution> getCurrentExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException;
+  Optional<PipelineExecution> getCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Starts the specified pipeline.
    * <p>
-   * Note: This API call may return before the requested action takes effect. i.e. The Pipelines are <i>scheduled</i> to start once called. However, an immediate subsequent call to {@link #getCurrentExecution(@Nonnull String, @Nonnull String)} may not return a result.
+   * Note: This API call may return before the requested action takes effect. i.e. The Pipelines are <i>scheduled</i> to start once called. However, an immediate subsequent call to {@link #getCurrentExecution(String, String)} may not return a result.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the id of the pipeline
@@ -180,19 +180,19 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/startPipeline">Start Pipeline API</a>
    *
    */
-  PipelineExecution startExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException;
+  PipelineExecution startExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Starts the specified pipeline.
    * <p>
-   * Note: This API call may return before the requested action takes effect. i.e. The Pipelines are <i>scheduled</i> to start once called. However, an immediate subsequent call to {@link #getCurrentExecution(@Nonnull String, @Nonnull String)} may not return a result.
+   * Note: This API call may return before the requested action takes effect. i.e. The Pipelines are <i>scheduled</i> to start once called. However, an immediate subsequent call to {@link #getCurrentExecution(String, String)} may not return a result.
    *
    * @param pipeline the {@link Pipeline} to start
    * @return the new execution
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/startPipeline">Start Pipeline API</a>
    */
-  PipelineExecution startExecution(@Nonnull Pipeline pipeline) throws CloudManagerApiException;
+  PipelineExecution startExecution(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
    * Returns the specified execution of the pipeline.
@@ -203,7 +203,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getExecution">Get Pipeline Execution API</a>
    */
-  PipelineExecution getExecution(@Nonnull Pipeline pipeline, @Nonnull String executionId) throws CloudManagerApiException;
+  PipelineExecution getExecution(@NotNull Pipeline pipeline, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
    * Returns the specified execution of the pipeline.
@@ -215,7 +215,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getExecution">Get Pipeline Execution API</a>
    */
-  PipelineExecution getExecution(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException;
+  PipelineExecution getExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
    * Indicates if the specified pipeline execution is running. No assumptions are made about it's state - only that it has ended.
@@ -224,7 +224,7 @@ public interface CloudManagerApi {
    * @return true if the pipeline is running, false if has ended
    * @throws CloudManagerApiException when any error occurs
    */
-  boolean isExecutionRunning(@Nonnull PipelineExecution execution) throws CloudManagerApiException;
+  boolean isExecutionRunning(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
    * Indicates if the specified pipeline execution is running. No assumptions are made about it's state - only that it has ended.
@@ -235,7 +235,7 @@ public interface CloudManagerApi {
    * @return true if the pipeline is running, false if has ended
    * @throws CloudManagerApiException when any error occurs
    */
-  boolean isExecutionRunning(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException;
+  boolean isExecutionRunning(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
    * Returns the specified action step for the pipeline execution
@@ -246,7 +246,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepState">Get Step State API</a>
    */
-  PipelineExecutionStepState getExecutionStepState(@Nonnull PipelineExecution execution, @Nonnull String action) throws CloudManagerApiException;
+  PipelineExecutionStepState getExecutionStepState(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
 
   /**
    * Gets the current step for the execution.
@@ -256,7 +256,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepState">Get Step State API</a>
    */
-  PipelineExecutionStepState getCurrentStep(@Nonnull PipelineExecution execution) throws CloudManagerApiException;
+  PipelineExecutionStepState getCurrentStep(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
    * Gets the waiting step for the execution.
@@ -266,7 +266,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs or waiting step is not found
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepState">Get Step State API</a>
    */
-  PipelineExecutionStepState getWaitingStep(@Nonnull PipelineExecution execution) throws CloudManagerApiException;
+  PipelineExecutionStepState getWaitingStep(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
    * Advances the execution of the specified pipeline execution, if in an appropriate state.
@@ -277,7 +277,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/advancePipelineExecution">Advance Pipeline API</a>
    */
-  void advanceExecution(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException;
+  void advanceExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
    * Advances the execution of the specified pipeline execution, if in an appropriate state.
@@ -286,7 +286,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/advancePipelineExecution">Advance Pipeline API</a>
    */
-  void advanceExecution(@Nonnull PipelineExecution execution) throws CloudManagerApiException;
+  void advanceExecution(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
    * Advances the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
@@ -296,7 +296,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/advancePipelineExecution">Advance Pipeline API</a>
    */
-  void advanceCurrentExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException;
+  void advanceCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Cancels the execution of the specified pipeline execution, if in an appropriate state.
@@ -307,7 +307,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/cancelPipelineExecutionStep">Cancel Pipeline API</a>
    */
-  void cancelExecution(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId) throws CloudManagerApiException;
+  void cancelExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
    * Cancels the execution of the specified pipeline execution, if in an appropriate state.
@@ -316,7 +316,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/cancelPipelineExecutionStep">Cancel Pipeline API</a>
    */
-  void cancelExecution(@Nonnull PipelineExecution execution) throws CloudManagerApiException;
+  void cancelExecution(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
    * Cancels the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
@@ -326,7 +326,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/cancelPipelineExecutionStep">Cancel Pipeline API</a>
    */
-  void cancelCurrentExecution(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException;
+  void cancelCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
@@ -341,7 +341,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void downloadExecutionStepLog(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId, @Nonnull String action, @Nonnull OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull OutputStream outputStream) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
@@ -355,7 +355,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void downloadExecutionStepLog(@Nonnull String programId, @Nonnull String pipelineId, @Nonnull String executionId, @Nonnull String action, @Nonnull String name, @Nonnull OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull String name, @NotNull OutputStream outputStream) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
@@ -366,7 +366,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void downloadExecutionStepLog(@Nonnull PipelineExecution execution, @Nonnull String action, @Nonnull OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(@NotNull PipelineExecution execution, @NotNull String action, @NotNull OutputStream outputStream) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
@@ -378,7 +378,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
-  void downloadExecutionStepLog(@Nonnull PipelineExecution execution, @Nonnull String action, @Nonnull String filename, @Nonnull OutputStream outputStream) throws CloudManagerApiException;
+  void downloadExecutionStepLog(@NotNull PipelineExecution execution, @NotNull String action, @NotNull String filename, @NotNull OutputStream outputStream) throws CloudManagerApiException;
 
   /**
    * Retrieves the metrics for the specified execution and step, if any.
@@ -389,7 +389,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepMetric">Get Step Metrics API</a>
    */
-  List<Metric> getQualityGateResults(@Nonnull PipelineExecution execution, @Nonnull String action) throws CloudManagerApiException;
+  List<Metric> getQualityGateResults(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
 
   /**
    * Lists all environments in the specified program.
@@ -399,7 +399,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/getEnvironments">List Environments API</a>
    */
-  List<Environment> listEnvironments(@Nonnull String programId) throws CloudManagerApiException;
+  List<Environment> listEnvironments(@NotNull String programId) throws CloudManagerApiException;
 
   /**
    * Delete the environment in the specified program.
@@ -409,7 +409,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/deleteEnvironment">Delete Environment API</a>
    */
-  void deleteEnvironment(@Nonnull String programId, @Nonnull String environmentId) throws CloudManagerApiException;
+  void deleteEnvironment(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
 
   /**
    * Delete the specified environment.
@@ -418,7 +418,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/deleteEnvironment">Delete Environment API</a>
    */
-  void deleteEnvironment(@Nonnull Environment environment) throws CloudManagerApiException;
+  void deleteEnvironment(@NotNull Environment environment) throws CloudManagerApiException;
 
   /**
    * Downloads the logs for the specified environment.
@@ -432,7 +432,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
    */
-  List<EnvironmentLog> downloadLogs(@Nonnull String programId, @Nonnull String environmentId, @Nonnull LogOption logOption, int days, @Nonnull File dir) throws CloudManagerApiException;
+  List<EnvironmentLog> downloadLogs(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
 
   /**
    * Downloads the logs for the specified environment.
@@ -445,7 +445,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
    */
-  List<EnvironmentLog> downloadLogs(@Nonnull Environment environment, @Nonnull LogOption logOption, int days, @Nonnull File dir) throws CloudManagerApiException;
+  List<EnvironmentLog> downloadLogs(@NotNull Environment environment, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified environment
@@ -456,7 +456,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getEnvironmentVariables">List User Environment Variables API</a>
    */
-  List<Variable> listEnvironmentVariables(@Nonnull String programId, @Nonnull String environmentId) throws CloudManagerApiException;
+  List<Variable> listEnvironmentVariables(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified environment
@@ -466,7 +466,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getEnvironmentVariables">List User Environment Variables API</a>
    */
-  List<Variable> listEnvironmentVariables(@Nonnull Environment environment) throws CloudManagerApiException;
+  List<Variable> listEnvironmentVariables(@NotNull Environment environment) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the environment.
@@ -478,7 +478,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchEnvironmentVariables">Patch User Environment Variables</a>
    */
-  List<Variable> setEnvironmentVariables(@Nonnull String programId, @Nonnull String environmentId, Variable... variables) throws CloudManagerApiException;
+  List<Variable> setEnvironmentVariables(@NotNull String programId, @NotNull String environmentId, Variable... variables) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the environment.
@@ -489,7 +489,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchEnvironmentVariables">Patch User Environment Variables</a>
    */
-  List<Variable> setEnvironmentVariables(@Nonnull Environment environment, Variable... variables) throws CloudManagerApiException;
+  List<Variable> setEnvironmentVariables(@NotNull Environment environment, Variable... variables) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified pipeline
@@ -500,7 +500,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
    */
-  List<Variable> listPipelineVariables(@Nonnull String programId, @Nonnull String pipelineId) throws CloudManagerApiException;
+  List<Variable> listPipelineVariables(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified pipeline
@@ -510,7 +510,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
    */
-  List<Variable> listPipelineVariables(@Nonnull Pipeline pipeline) throws CloudManagerApiException;
+  List<Variable> listPipelineVariables(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the pipeline
@@ -522,7 +522,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchPipelineVariables">Patch User Pipeline Variables</a>
    */
-  List<Variable> setPipelineVariables(@Nonnull String programId, @Nonnull String pipelineId, Variable... variables) throws CloudManagerApiException;
+  List<Variable> setPipelineVariables(@NotNull String programId, @NotNull String pipelineId, Variable... variables) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the pipeline
@@ -533,6 +533,6 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchPipelineVariables">Patch User Pipeline Variables</a>
    */
-  List<Variable> setPipelineVariables(@Nonnull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
+  List<Variable> setPipelineVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
 
 }
