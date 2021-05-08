@@ -23,7 +23,10 @@ package io.adobe.cloudmanager;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -46,12 +49,14 @@ public class CloudManagerEvents {
   public static final String ENDED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/ended";
   public static final String PIPELINE_EXECUTION_TYPE = "https://ns.adobe.com/experience/cloudmanager/pipeline-execution";
   public static final String PIPELINE_STEP_STATE_TYPE = "https://ns.adobe.com/experience/cloudmanager/execution-step-state";
-  public static final Set<Class<?>> EVENTS = Set.of(
-      PipelineExecutionStartEvent.class,
-      PipelineExecutionStepStartEvent.class,
-      PipelineExecutionStepWaitingEvent.class,
-      PipelineExecutionStepEndEvent.class,
-      PipelineExecutionEndEvent.class
+  public static final Set<Class<?>> EVENTS = Collections.unmodifiableSet(
+      new HashSet<>(Arrays.asList(
+        PipelineExecutionStartEvent.class,
+        PipelineExecutionStepStartEvent.class,
+        PipelineExecutionStepWaitingEvent.class,
+        PipelineExecutionStepEndEvent.class,
+        PipelineExecutionEndEvent.class
+      ))
   );
   private static final String HMAC_ALG = "HmacSHA256";
 
