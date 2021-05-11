@@ -38,10 +38,10 @@ import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEventEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
 import org.junit.jupiter.api.Test;
-import static io.adobe.cloudmanager.CloudManagerEvents.*;
+import static io.adobe.cloudmanager.CloudManagerEvent.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CloudManagerEventsTest {
+public class CloudManagerEventTest {
 
   private ObjectMapper mapper = new ObjectMapper();
 
@@ -112,82 +112,6 @@ public class CloudManagerEventsTest {
     assertEquals(event, parseEvent(mapper.writeValueAsString(event), PipelineExecutionEndEvent.class));
   }
 
-  @Test
-  public void typeFromInvalidContent() {
-    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> typeFrom(""));
-    assertTrue(StringUtils.contains(e.getMessage(),"Unable to process event:"));
-  }
-
-  @Test
-  public void typeFromUnknownData() throws Exception {
-    PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent()
-        .event(
-            new PipelineExecutionStepStartEventEvent()
-            ._atType(WAITING_EVENT_TYPE)
-            .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
-        );
-    assertNull(typeFrom(mapper.writeValueAsString(event)));
-  }
-
-  @Test
-  public void typeFromPipelineExecutionStartEvent() throws Exception {
-    PipelineExecutionStartEvent event = new PipelineExecutionStartEvent()
-        .event(
-            new PipelineExecutionStartEventEvent()
-              ._atType(STARTED_EVENT_TYPE)
-              .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
-        );
-    assertEquals(event.getClass(), typeFrom(mapper.writeValueAsString(event)));
-  }
-
-  @Test
-  public void typeFromPipelineExecutionEndEvent() throws Exception {
-    PipelineExecutionEndEvent event = new PipelineExecutionEndEvent()
-        .event(
-            new PipelineExecutionEndEventEvent()
-                ._atType(ENDED_EVENT_TYPE)
-                .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
-        );
-    assertEquals(event.getClass(), typeFrom(mapper.writeValueAsString(event)));
-  }
-
-  @Test
-  public void typeFromPipelineExecutionStepStartEvent() throws Exception {
-    PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent()
-        .event(
-            new PipelineExecutionStepStartEventEvent()
-                ._atType(STARTED_EVENT_TYPE)
-                .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
-        );
-    assertEquals(event.getClass(), typeFrom(mapper.writeValueAsString(event)));
-  }
-
-  @Test
-  public void typeFromPipelineExecutionStepWaitingEvent() throws Exception {
-    PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent()
-        .event(
-            new PipelineExecutionStepStartEventEvent()
-                ._atType(WAITING_EVENT_TYPE)
-                .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
-        );
-    assertEquals(event.getClass(), typeFrom(mapper.writeValueAsString(event)));
-  }
-
-  @Test
-  public void typeFromPipelineExecutionStepEndEvent() throws Exception {
-    PipelineExecutionStepEndEvent event = new PipelineExecutionStepEndEvent()
-        .event(
-            new PipelineExecutionStepStartEventEvent()
-                ._atType(ENDED_EVENT_TYPE)
-                .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
-        );
-    assertEquals(event.getClass(), typeFrom(mapper.writeValueAsString(event)));
-  }
-
-  @Test
-  public void invalidSignature() throws Exception {
-    assertFalse(CloudManagerEvents.isValidSignature("Body", "Signature", "Client Secret"));
-  }
 
   @Test
   public void validSignature() throws Exception {
@@ -199,6 +123,84 @@ public class CloudManagerEventsTest {
     mac.init(new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), sha256));
     String signature = Base64.getEncoder().encodeToString(mac.doFinal(body.getBytes(StandardCharsets.UTF_8)));
 
-    assertTrue(CloudManagerEvents.isValidSignature(body, signature, clientSecret));
+    assertTrue(CloudManagerEvent.isValidSignature(body, signature, clientSecret));
   }
+
+  @Test
+  public void typeFromInvalidContent() {
+    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> Type.from(""));
+    assertTrue(StringUtils.contains(e.getMessage(),"Unable to process event:"));
+  }
+
+  @Test
+  public void typeFromUnknownData() throws Exception {
+    PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent()
+        .event(
+            new PipelineExecutionStepStartEventEvent()
+            ._atType(WAITING_EVENT_TYPE)
+            .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
+        );
+    assertNull(Type.from(mapper.writeValueAsString(event)));
+  }
+
+  @Test
+  public void typeFromPipelineExecutionStartEvent() throws Exception {
+    PipelineExecutionStartEvent event = new PipelineExecutionStartEvent()
+        .event(
+            new PipelineExecutionStartEventEvent()
+              ._atType(STARTED_EVENT_TYPE)
+              .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
+        );
+    assertEquals(Type.PIPELINE_STARTED, Type.from(mapper.writeValueAsString(event)));
+  }
+
+  @Test
+  public void typeFromPipelineExecutionEndEvent() throws Exception {
+    PipelineExecutionEndEvent event = new PipelineExecutionEndEvent()
+        .event(
+            new PipelineExecutionEndEventEvent()
+                ._atType(ENDED_EVENT_TYPE)
+                .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
+        );
+    assertEquals(Type.PIPELINE_ENDED, Type.from(mapper.writeValueAsString(event)));
+  }
+
+  @Test
+  public void typeFromPipelineExecutionStepStartEvent() throws Exception {
+    PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent()
+        .event(
+            new PipelineExecutionStepStartEventEvent()
+                ._atType(STARTED_EVENT_TYPE)
+                .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
+        );
+    assertEquals(Type.STEP_STARTED, Type.from(mapper.writeValueAsString(event)));
+  }
+
+  @Test
+  public void typeFromPipelineExecutionStepWaitingEvent() throws Exception {
+    PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent()
+        .event(
+            new PipelineExecutionStepStartEventEvent()
+                ._atType(WAITING_EVENT_TYPE)
+                .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
+        );
+    assertEquals(Type.STEP_WAITING, Type.from(mapper.writeValueAsString(event)));
+  }
+
+  @Test
+  public void typeFromPipelineExecutionStepEndEvent() throws Exception {
+    PipelineExecutionStepEndEvent event = new PipelineExecutionStepEndEvent()
+        .event(
+            new PipelineExecutionStepStartEventEvent()
+                ._atType(ENDED_EVENT_TYPE)
+                .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
+        );
+    assertEquals(Type.STEP_ENDED, Type.from(mapper.writeValueAsString(event)));
+  }
+
+  @Test
+  public void invalidSignature() throws Exception {
+    assertFalse(CloudManagerEvent.isValidSignature("Body", "Signature", "Client Secret"));
+  }
+
 }

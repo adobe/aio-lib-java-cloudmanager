@@ -41,7 +41,7 @@ import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.generated.invoker.JSON;
 
-public class CloudManagerEvents {
+public class CloudManagerEvent {
 
   public static final String SIGNATURE_HEADER = "x-adobe-signature";
   public static final String STARTED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/started";
@@ -49,46 +49,8 @@ public class CloudManagerEvents {
   public static final String ENDED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/ended";
   public static final String PIPELINE_EXECUTION_TYPE = "https://ns.adobe.com/experience/cloudmanager/pipeline-execution";
   public static final String PIPELINE_STEP_STATE_TYPE = "https://ns.adobe.com/experience/cloudmanager/execution-step-state";
-  public static final Set<Class<?>> EVENTS = Collections.unmodifiableSet(
-      new HashSet<>(Arrays.asList(
-        PipelineExecutionStartEvent.class,
-        PipelineExecutionStepStartEvent.class,
-        PipelineExecutionStepWaitingEvent.class,
-        PipelineExecutionStepEndEvent.class,
-        PipelineExecutionEndEvent.class
-      ))
-  );
+
   private static final String HMAC_ALG = "HmacSHA256";
-
-  /**
-   * Attempts to determine which event type from the provided JSON String.
-   *
-   * @param source event JSON string
-   * @return Event class type or null
-   * @throws CloudManagerApiException if an error occurs during parsing
-   */
-  public static Class<?> typeFrom(String source) throws CloudManagerApiException {
-    try {
-      // Any object will do, to get the root of the object tree.
-      PipelineExecutionStartEvent tester = new JSON().getContext(PipelineExecutionStartEvent.class).readValue(source, PipelineExecutionStartEvent.class);
-      PipelineExecutionStartEventEvent event = tester.getEvent();
-
-      if (PIPELINE_EXECUTION_TYPE.equals(event.getXdmEventEnvelopeobjectType()) && STARTED_EVENT_TYPE.equals(event.getAtType())) {
-        return PipelineExecutionStartEvent.class;
-      } else if (PIPELINE_EXECUTION_TYPE.equals(event.getXdmEventEnvelopeobjectType()) && ENDED_EVENT_TYPE.equals(event.getAtType())) {
-        return PipelineExecutionEndEvent.class;
-      } else if (PIPELINE_STEP_STATE_TYPE.equals(event.getXdmEventEnvelopeobjectType()) && STARTED_EVENT_TYPE.equals(event.getAtType())) {
-        return PipelineExecutionStepStartEvent.class;
-      } else if (PIPELINE_STEP_STATE_TYPE.equals(event.getXdmEventEnvelopeobjectType()) && WAITING_EVENT_TYPE.equals(event.getAtType())) {
-        return PipelineExecutionStepWaitingEvent.class;
-      } else if (PIPELINE_STEP_STATE_TYPE.equals(event.getXdmEventEnvelopeobjectType()) && ENDED_EVENT_TYPE.equals(event.getAtType())) {
-        return PipelineExecutionStepEndEvent.class;
-      }
-      return null;
-    } catch (JsonProcessingException e) {
-      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.PROCESS_EVENT, e.getMessage());
-    }
-  }
 
   /**
    * Attempts to convert the provided string source into the specified event type T.
@@ -109,7 +71,7 @@ public class CloudManagerEvents {
   @NotNull
   public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException {
 
-    if (!EVENTS.contains(type)) {
+    if (Type.from(type) == null ) {
       throw new IllegalArgumentException(String.format("Unknown event type: %s", type));
     }
     try {
@@ -136,6 +98,74 @@ public class CloudManagerEvents {
       return signature.equals(Base64.getEncoder().encodeToString(mac.doFinal(eventBody.getBytes(StandardCharsets.UTF_8))));
     } catch (NoSuchAlgorithmException | InvalidKeyException e) {
       throw new CloudManagerApiException(CloudManagerApiException.ErrorType.VALIDATE_EVENT, e.getLocalizedMessage());
+    }
+  }
+
+
+  public enum Type {
+    PIPELINE_STARTED(PipelineExecutionStartEvent.class, STARTED_EVENT_TYPE, PIPELINE_EXECUTION_TYPE),
+    PIPELINE_ENDED(PipelineExecutionEndEvent.class, ENDED_EVENT_TYPE, PIPELINE_EXECUTION_TYPE),
+    STEP_STARTED(PipelineExecutionStepStartEvent.class, STARTED_EVENT_TYPE, PIPELINE_STEP_STATE_TYPE),
+    STEP_WAITING(PipelineExecutionStepWaitingEvent.class, WAITING_EVENT_TYPE, PIPELINE_STEP_STATE_TYPE),
+    STEP_ENDED(PipelineExecutionStepEndEvent.class, ENDED_EVENT_TYPE, PIPELINE_STEP_STATE_TYPE);
+
+    private final Class clazz;
+    private final String eventType;
+    private final String objectType;
+
+    Type(Class<?> clazz, String eventType, String objectType) {
+      this.clazz = clazz;
+      this.eventType = eventType;
+      this.objectType = objectType;
+    }
+
+    public Class<?> getClazz() {
+      return this.clazz;
+    }
+
+    public String getEventType() {
+      return this.eventType;
+    }
+
+    public String getObjectType() {
+      return this.objectType;
+    }
+
+    /**
+     * Attempts to determine which event type from the provided JSON String.
+     *
+     * @param source event JSON string
+     * @return Event class type or null
+     * @throws CloudManagerApiException if an error occurs during parsing
+     */
+    public static Type from(String source) throws CloudManagerApiException {
+      try {
+        // Any object will do, to get the root of the object tree.
+        PipelineExecutionStartEvent tester = new JSON().getContext(PipelineExecutionStartEvent.class).readValue(source, PipelineExecutionStartEvent.class);
+        PipelineExecutionStartEventEvent event = tester.getEvent();
+        return Arrays.stream(Type.values()).filter( t -> t.getObjectType().equals(event.getXdmEventEnvelopeobjectType()) && t.getEventType().equals(event.getAtType())).findFirst().orElse(null);
+      } catch (JsonProcessingException e) {
+        throw new CloudManagerApiException(CloudManagerApiException.ErrorType.PROCESS_EVENT, e.getMessage());
+      }
+    }
+
+    /**
+     * Returns the Type for the specified Class.
+     *
+     * Class must be one of:
+     * <ul>
+     *  <li>{@link PipelineExecutionStartEvent}</li>
+     *  <li>{@link PipelineExecutionStepStartEvent}</li>
+     *  <li>{@link PipelineExecutionStepWaitingEvent}</li>
+     *  <li>{@link PipelineExecutionStepEndEvent}</li>
+     *  <li>{@link PipelineExecutionEndEvent}</li>
+     * </ul>
+     *
+     * @param clazz Event class type
+     * @return event type or null
+     */
+    public static Type from(Class<?> clazz) {
+      return Arrays.stream(Type.values()).filter(t -> t.getClazz() == clazz).findFirst().orElse(null);
     }
   }
 }
