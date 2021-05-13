@@ -72,7 +72,7 @@ public class ExecutionsTest extends AbstractApiTest {
   public void setupLogsforEnvironments() {
     client.when(
         request().withMethod("GET")
-            .withPath("/api/program/4/pipeline/3/execution/4/phase/8565/step/15483/logs")
+            .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
     ).respond(
         HttpResponse.response()
             .withStatusCode(HttpStatusCode.OK_200.code())
@@ -83,7 +83,7 @@ public class ExecutionsTest extends AbstractApiTest {
     client.when(
         request()
             .withMethod("GET")
-            .withPath("/api/program/4/pipeline/3/execution/4/phase/8565/step/15483/logs")
+            .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
             .withPathParameter("file", "somethingspecial")
     ).respond(
         HttpResponse.response()
@@ -317,7 +317,7 @@ public class ExecutionsTest extends AbstractApiTest {
   void getExecutionStepState_startEvent() throws CloudManagerApiException {
     PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/2/phase/4596/step/8491")
+            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491")
         )
     );
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
@@ -328,7 +328,7 @@ public class ExecutionsTest extends AbstractApiTest {
   void getExecutionStepState_waitingEvent() throws CloudManagerApiException {
     PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/2/phase/4596/step/8492")
+            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8492")
         )
     );
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
@@ -339,7 +339,7 @@ public class ExecutionsTest extends AbstractApiTest {
   void getExecutionStepState_endEvent() throws CloudManagerApiException {
     PipelineExecutionStepEndEvent event = new PipelineExecutionStepEndEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493")
+            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8493")
         )
     );
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
@@ -403,6 +403,16 @@ public class ExecutionsTest extends AbstractApiTest {
     PipelineExecution execution = underTest.getExecution("4", "3", "4");
     underTest.downloadExecutionStepLog(execution, "build", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
+  }
+
+  @Test
+  void getExecution_via_stepState() throws CloudManagerApiException {
+    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
+    PipelineExecution found = stepState.getExecution();
+    assertEquals(execution.getProgramId(), found.getProgramId());
+    assertEquals(execution.getPipelineId(), found.getPipelineId());
+    assertEquals(execution.getId(), found.getId());
   }
 
   @Test

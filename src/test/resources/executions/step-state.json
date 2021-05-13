@@ -2,27 +2,31 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8491"
+      "path": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491"
     },
     "httpResponse": {
       "body": {
         "type": "JSON",
         "json": {
           "_links": {
+            "http://ns.adobe.com/adobecloud/rel/execution": {
+              "href": "/api/program/4/pipeline/3/execution/4",
+              "templated":false
+            },
             "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
-              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491/cancel",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/cancel",
               "templated": false
             },
             "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
-              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491/logs",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs",
               "templated": false
             },
             "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
-              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491/metrics",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/metrics",
               "templated": false
             },
             "self": {
-              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491",
               "templated": false
             }
           },
@@ -45,7 +49,7 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492"
+      "path": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8492"
     },
     "httpResponse": {
       "body": {
@@ -53,23 +57,23 @@
         "json": {
           "_links": {
             "http://ns.adobe.com/adobecloud/rel/pipeline/advance": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/advance",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8492/advance",
               "templated": false
             },
             "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/cancel",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8492/cancel",
               "templated": false
             },
             "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/logs",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8492/logs",
               "templated": false
             },
             "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/metrics",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8492/metrics",
               "templated": false
             },
             "self": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8492",
               "templated": false
             }
           },
@@ -91,7 +95,7 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493"
+      "path": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8493"
     },
     "httpResponse": {
       "body": {
@@ -99,15 +103,15 @@
         "json": {
           "_links": {
             "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8493/logs",
               "templated": false
             },
             "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/metrics",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8493/metrics",
               "templated": false
             },
             "self": {
-              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493",
+              "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8493",
               "templated": false
             }
           },

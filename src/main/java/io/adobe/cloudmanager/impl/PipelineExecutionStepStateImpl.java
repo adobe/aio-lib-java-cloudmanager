@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -52,6 +53,11 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.genera
   @Override
   public Status getStatusState() {
     return Status.fromValue(getStatus().getValue());
+  }
+
+  @Override
+  public PipelineExecution getExecution() throws CloudManagerApiException {
+    return client.getExecution(this);
   }
 
   @Override

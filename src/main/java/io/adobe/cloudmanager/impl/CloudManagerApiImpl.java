@@ -606,7 +606,20 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
-  void downloadExecutionStepLog(PipelineExecutionStepStateImpl step, String filename, OutputStream outputStream) throws CloudManagerApiException {
+  protected PipelineExecution getExecution(PipelineExecutionStepStateImpl step) throws CloudManagerApiException {
+    HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelexecution();
+    if (link == null) {
+      throw new CloudManagerApiException(ErrorType.FIND_EXECUTION_LINK, step.getLinks().getSelf().getHref());
+    }
+    try {
+      io.adobe.cloudmanager.generated.model.PipelineExecution execution = get(link.getHref(), new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
+      return new PipelineExecutionImpl(execution, this);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, link.getHref(), e);
+    }
+  }
+
+  protected void downloadExecutionStepLog(PipelineExecutionStepStateImpl step, String filename, OutputStream outputStream) throws CloudManagerApiException {
     HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinelogs();
     if (link == null) {
       throw new CloudManagerApiException(ErrorType.FIND_LOGS_LINK_EXECUTION, step.getAction());

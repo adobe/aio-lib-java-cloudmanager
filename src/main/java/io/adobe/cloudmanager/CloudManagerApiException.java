@@ -160,6 +160,7 @@ public class CloudManagerApiException extends Exception {
     FIND_STEP_STATE("Cannot find step state for action %s on execution %s."),
     GET_METRICS("Cannot get metrics: %s."),
     FIND_CURRENT_STEP("Cannot find a current step for pipeline %s."),
+    FIND_EXECUTION_LINK("Cannot find execution link for the current step (%s)"),
     FIND_CANCEL_LINK("Cannot find a cancel link for the current step (%s). Step may not be cancellable."),
     FIND_ADVANCE_LINK("Cannot find an advance link for the current step (%s)."),
     CANCEL_EXECUTION("Cannot cancel execution: %s"),
