@@ -20,6 +20,8 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import javax.validation.constraints.NotNull;
+
 import io.adobe.cloudmanager.impl.IdentityManagementApiImpl;
 
 public interface IdentityManagementApi {
@@ -34,6 +36,7 @@ public interface IdentityManagementApi {
    *
    * @return an IdentityManagementApi
    */
+  @NotNull
   static IdentityManagementApi create() {
     return new IdentityManagementApiImpl();
   }
@@ -44,6 +47,7 @@ public interface IdentityManagementApi {
    * @param baseUrl the base url for the API
    * @return an IdentityManagementApi
    */
+  @NotNull
   static IdentityManagementApi create(String baseUrl) {
     return new IdentityManagementApiImpl(baseUrl);
   }
@@ -55,6 +59,7 @@ public interface IdentityManagementApi {
    * @return the authenticated bearer token
    * @throws IdentityManagementApiException when any error occurs
    */
+  @NotNull
   String authenticate(AdobeClientCredentials org) throws IdentityManagementApiException;
 
   /**

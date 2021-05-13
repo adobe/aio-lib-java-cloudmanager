@@ -156,6 +156,7 @@ public class CloudManagerApiException extends Exception {
     PIPELINE_START("Cannot create execution: %s"),
     PIPELINE_START_RUNNING("Cannot create execution. Pipeline already running."),
     GET_EXECUTION("Cannot get execution: %s"),
+    GET_STEP_STATE("Cannot get step state: %s"),
     FIND_STEP_STATE("Cannot find step state for action %s on execution %s."),
     GET_METRICS("Cannot get metrics: %s."),
     FIND_CURRENT_STEP("Cannot find a current step for pipeline %s."),

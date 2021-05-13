@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +30,10 @@ import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
+import io.adobe.cloudmanager.generated.events.PipelineExecutionStepEndEvent;
+import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
+import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEventEvent;
+import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +63,8 @@ public class ExecutionsTest extends AbstractApiTest {
         "executions/specific-advance-build-running.json",
         "executions/step-logs-not-found.json",
         "executions/step-logs-redirect-empty.json",
-        "executions/running-check.json"
+        "executions/running-check.json",
+        "executions/step-state.json"
     );
   }
 
@@ -298,9 +303,53 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
+  void getExecutionStepState_notFound() {
+    PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent().event(
+        new PipelineExecutionStepStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/10/execution/1/phase/4596/step/8491")
+        )
+    );
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(event), "Exception thrown");
+    assertEquals(String.format("Cannot get step state: %s/api/program/4/pipeline/10/execution/1/phase/4596/step/8491 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getExecutionStepState_startEvent() throws CloudManagerApiException {
+    PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent().event(
+        new PipelineExecutionStepStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/2/phase/4596/step/8491")
+        )
+    );
+    PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
+    assertEquals(PipelineExecutionStepState.Status.RUNNING, stepState.getStatusState());
+  }
+
+  @Test
+  void getExecutionStepState_waitingEvent() throws CloudManagerApiException {
+    PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent().event(
+        new PipelineExecutionStepStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/2/phase/4596/step/8492")
+        )
+    );
+    PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
+    assertEquals(PipelineExecutionStepState.Status.WAITING, stepState.getStatusState());
+  }
+
+  @Test
+  void getExecutionStepState_endEvent() throws CloudManagerApiException {
+    PipelineExecutionStepEndEvent event = new PipelineExecutionStepEndEvent().event(
+        new PipelineExecutionStepStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493")
+        )
+    );
+    PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
+    assertEquals(PipelineExecutionStepState.Status.FINISHED, stepState.getStatusState());
+  }
+
+  @Test
   void downloadExecutionStepLog_badPipeline() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "10", "1", "build", null), "Exception thrown");
-
+    assertEquals("Pipeline 10 does not exist in program 4.", exception.getMessage(), "Message was correct");
   }
 
   @Test

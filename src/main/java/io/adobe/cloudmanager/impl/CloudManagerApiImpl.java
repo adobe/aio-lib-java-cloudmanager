@@ -54,6 +54,9 @@ import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Variable;
+import io.adobe.cloudmanager.generated.events.PipelineExecutionStepEndEvent;
+import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
+import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.generated.invoker.ApiClient;
 import io.adobe.cloudmanager.generated.invoker.ApiException;
 import io.adobe.cloudmanager.generated.invoker.Pair;
@@ -61,6 +64,7 @@ import io.adobe.cloudmanager.generated.model.EnvironmentList;
 import io.adobe.cloudmanager.generated.model.EnvironmentLogs;
 import io.adobe.cloudmanager.generated.model.HalLink;
 import io.adobe.cloudmanager.generated.model.PipelineExecutionEmbedded;
+import io.adobe.cloudmanager.generated.model.PipelineExecutionStepState;
 import io.adobe.cloudmanager.generated.model.PipelineList;
 import io.adobe.cloudmanager.generated.model.PipelinePhase;
 import io.adobe.cloudmanager.generated.model.PipelineStepMetrics;
@@ -268,6 +272,21 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
+  public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecutionStepStartEvent event) throws CloudManagerApiException {
+    return getExecutionStepState(event.getEvent().getActivitystreamsobject().getAtId());
+  }
+
+  @Override
+  public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecutionStepWaitingEvent event) throws CloudManagerApiException {
+    return getExecutionStepState(event.getEvent().getActivitystreamsobject().getAtId());
+  }
+
+  @Override
+  public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecutionStepEndEvent event) throws CloudManagerApiException {
+    return getExecutionStepState(event.getEvent().getActivitystreamsobject().getAtId());
+  }
+
+  @Override
   public PipelineExecutionStepStateImpl getCurrentStep(@NotNull PipelineExecution pe) throws CloudManagerApiException {
     PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
     PipelineExecutionEmbedded embeddeds = execution.getEmbedded();
@@ -356,6 +375,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     PipelineExecutionStepStateImpl stepState = getExecutionStepState(execution, action);
     downloadExecutionStepLog(stepState, name, outputStream);
   }
+
 
   @Override
   public void downloadExecutionStepLog(@NotNull PipelineExecution execution, @NotNull String action, @NotNull OutputStream outputStream) throws CloudManagerApiException {
@@ -574,6 +594,16 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   private PipelineImpl getPipeline(String programId, String pipelineId, CloudManagerApiException.ErrorType errorType) throws CloudManagerApiException {
     return listPipelineDetails(programId, new Pipeline.IdPredicate(pipelineId)).stream().findFirst()
         .orElseThrow(() -> new CloudManagerApiException(errorType, pipelineId, programId));
+  }
+
+  private PipelineExecutionStepStateImpl getExecutionStepState(String path) throws CloudManagerApiException {
+    PipelineExecutionStepState stepState;
+    try {
+      stepState = get(path, new GenericType<PipelineExecutionStepState>() {});
+      return new PipelineExecutionStepStateImpl(stepState, this);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.GET_STEP_STATE, baseUrl, path, e);
+    }
   }
 
   void downloadExecutionStepLog(PipelineExecutionStepStateImpl step, String filename, OutputStream outputStream) throws CloudManagerApiException {

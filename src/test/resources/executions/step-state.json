@@ -1,0 +1,131 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8491"
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json": {
+          "_links": {
+            "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491/cancel",
+              "templated": false
+            },
+            "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491/logs",
+              "templated": false
+            },
+            "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491/metrics",
+              "templated": false
+            },
+            "self": {
+              "href": "/api/program/4/pipeline/6/execution/1/phase/4596/step/8491",
+              "templated": false
+            }
+          },
+          "id": "53083",
+          "stepId": "8491",
+          "phaseId": "4596",
+          "executionId": "1005",
+          "pipelineId": "5",
+          "programId": "7",
+          "action": "build",
+          "repository": "weretail",
+          "branch": "master",
+          "startedAt": "2019-07-08T22:44:36.814+0000",
+          "updatedAt": "2019-07-08T22:44:36.877+0000",
+          "status": "RUNNING"
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492"
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json": {
+          "_links": {
+            "http://ns.adobe.com/adobecloud/rel/pipeline/advance": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/advance",
+              "templated": false
+            },
+            "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/cancel",
+              "templated": false
+            },
+            "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/logs",
+              "templated": false
+            },
+            "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492/metrics",
+              "templated": false
+            },
+            "self": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8492",
+              "templated": false
+            }
+          },
+          "id": "53084",
+          "stepId": "8492",
+          "phaseId": "4596",
+          "executionId": "2",
+          "pipelineId": "3",
+          "programId": "4",
+          "action": "codeQuality",
+          "repository": "weretail",
+          "branch": "master",
+          "updatedAt": "2019-07-08T22:51:00.625+0000",
+          "status": "WAITING"
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493"
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json": {
+          "_links": {
+            "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs",
+              "templated": false
+            },
+            "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/metrics",
+              "templated": false
+            },
+            "self": {
+              "href": "/api/program/4/pipeline/3/execution/2/phase/4596/step/8493",
+              "templated": false
+            }
+          },
+          "id": "53083",
+          "stepId": "8493",
+          "phaseId": "4596",
+          "executionId": "2",
+          "pipelineId": "3",
+          "programId": "4",
+          "action": "build",
+          "repository": "weretail",
+          "branch": "master",
+          "startedAt": "2019-07-08T22:44:36.814+0000",
+          "finishedAt": "2019-07-08T22:50:54.175+0000",
+          "updatedAt": "2019-07-08T22:50:54.259+0000",
+          "status": "FINISHED"
+        }
+      }
+    }
+  }
+]
