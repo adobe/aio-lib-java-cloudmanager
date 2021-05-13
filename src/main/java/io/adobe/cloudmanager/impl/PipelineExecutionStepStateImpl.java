@@ -45,6 +45,10 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.genera
   @EqualsAndHashCode.Exclude
   private final CloudManagerApiImpl client;
 
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  private PipelineExecution execution;
+
   public PipelineExecutionStepStateImpl(io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
@@ -57,7 +61,10 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.genera
 
   @Override
   public PipelineExecution getExecution() throws CloudManagerApiException {
-    return client.getExecution(this);
+    if (execution == null) {
+      execution = client.getExecution(this);
+    }
+    return execution;
   }
 
   @Override
