@@ -36,6 +36,7 @@ public enum StepAction {
   productTest,
   functionalTest,
   contentAudit,
+  approval,
   schedule,
   managed,
   deploy
