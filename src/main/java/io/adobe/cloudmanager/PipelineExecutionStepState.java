@@ -24,11 +24,6 @@ import java.io.OutputStream;
 
 public interface PipelineExecutionStepState {
 
-  String ACTION_BUILD = "build";
-  String ACTION_CODE_QUALITY = "codeQuality";
-  String ACTION_DEPLOY = "deploy";
-  String ACTION_VALIDATE = "validate";
-
   /**
    * The id of this execution step state.
    *
