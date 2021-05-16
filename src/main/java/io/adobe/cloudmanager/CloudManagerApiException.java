@@ -81,7 +81,7 @@ public class CloudManagerApiException extends Exception {
   }
 
   /**
-   * Generates a new exception with the specified message for the Error Type context.
+   * Generates a new exception with the specified message for the Error EventType context.
    *
    * @param type the {@link ErrorType} that occurred
    * @param vars the custom message for the type context

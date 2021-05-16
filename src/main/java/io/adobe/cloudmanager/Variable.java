@@ -20,13 +20,15 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.io.Serializable;
+
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode
-public class Variable extends io.adobe.cloudmanager.generated.model.Variable {
+public class Variable implements Serializable {
 
   private static final long serialVersionUID = 1L;
 

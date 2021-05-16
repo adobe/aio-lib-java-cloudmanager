@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager;
+package io.adobe.cloudmanager.event;
 
 /*-
  * #%L
@@ -25,14 +25,12 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStartEventEvent;
@@ -71,7 +69,7 @@ public class CloudManagerEvent {
   @NotNull
   public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException {
 
-    if (Type.from(type) == null ) {
+    if (EventType.from(type) == null ) {
       throw new IllegalArgumentException(String.format("Unknown event type: %s", type));
     }
     try {
@@ -102,7 +100,7 @@ public class CloudManagerEvent {
   }
 
 
-  public enum Type {
+  public enum EventType {
     PIPELINE_STARTED(PipelineExecutionStartEvent.class, STARTED_EVENT_TYPE, PIPELINE_EXECUTION_TYPE),
     PIPELINE_ENDED(PipelineExecutionEndEvent.class, ENDED_EVENT_TYPE, PIPELINE_EXECUTION_TYPE),
     STEP_STARTED(PipelineExecutionStepStartEvent.class, STARTED_EVENT_TYPE, PIPELINE_STEP_STATE_TYPE),
@@ -113,7 +111,7 @@ public class CloudManagerEvent {
     private final String eventType;
     private final String objectType;
 
-    Type(Class<?> clazz, String eventType, String objectType) {
+    EventType(Class<?> clazz, String eventType, String objectType) {
       this.clazz = clazz;
       this.eventType = eventType;
       this.objectType = objectType;
@@ -138,19 +136,19 @@ public class CloudManagerEvent {
      * @return Event class type or null
      * @throws CloudManagerApiException if an error occurs during parsing
      */
-    public static Type from(String source) throws CloudManagerApiException {
+    public static EventType from(String source) throws CloudManagerApiException {
       try {
         // Any object will do, to get the root of the object tree.
         PipelineExecutionStartEvent tester = new JSON().getContext(PipelineExecutionStartEvent.class).readValue(source, PipelineExecutionStartEvent.class);
         PipelineExecutionStartEventEvent event = tester.getEvent();
-        return Arrays.stream(Type.values()).filter( t -> t.getObjectType().equals(event.getXdmEventEnvelopeobjectType()) && t.getEventType().equals(event.getAtType())).findFirst().orElse(null);
+        return Arrays.stream(EventType.values()).filter(t -> t.getObjectType().equals(event.getXdmEventEnvelopeobjectType()) && t.getEventType().equals(event.getAtType())).findFirst().orElse(null);
       } catch (JsonProcessingException e) {
         throw new CloudManagerApiException(CloudManagerApiException.ErrorType.PROCESS_EVENT, e.getMessage());
       }
     }
 
     /**
-     * Returns the Type for the specified Class.
+     * Returns the EventType for the specified Class.
      *
      * Class must be one of:
      * <ul>
@@ -164,8 +162,8 @@ public class CloudManagerEvent {
      * @param clazz Event class type
      * @return event type or null
      */
-    public static Type from(Class<?> clazz) {
-      return Arrays.stream(Type.values()).filter(t -> t.getClazz() == clazz).findFirst().orElse(null);
+    public static EventType from(Class<?> clazz) {
+      return Arrays.stream(EventType.values()).filter(t -> t.getClazz() == clazz).findFirst().orElse(null);
     }
   }
 }

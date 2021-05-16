@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager;
+package io.adobe.cloudmanager.event;
 
 /*-
  * #%L
@@ -28,6 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.generated.events.PipelineExecution;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEventEvent;
@@ -37,8 +38,9 @@ import io.adobe.cloudmanager.generated.events.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEventEvent;
 import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import static io.adobe.cloudmanager.CloudManagerEvent.*;
+import static io.adobe.cloudmanager.event.CloudManagerEvent.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CloudManagerEventTest {
@@ -123,12 +125,12 @@ public class CloudManagerEventTest {
     mac.init(new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), sha256));
     String signature = Base64.getEncoder().encodeToString(mac.doFinal(body.getBytes(StandardCharsets.UTF_8)));
 
-    assertTrue(CloudManagerEvent.isValidSignature(body, signature, clientSecret));
+    Assertions.assertTrue(CloudManagerEvent.isValidSignature(body, signature, clientSecret));
   }
 
   @Test
   public void typeFromInvalidContent() {
-    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> Type.from(""));
+    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> EventType.from(""));
     assertTrue(StringUtils.contains(e.getMessage(),"Unable to process event:"));
   }
 
@@ -140,7 +142,7 @@ public class CloudManagerEventTest {
             ._atType(WAITING_EVENT_TYPE)
             .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
         );
-    assertNull(Type.from(mapper.writeValueAsString(event)));
+    assertNull(EventType.from(mapper.writeValueAsString(event)));
   }
 
   @Test
@@ -151,7 +153,7 @@ public class CloudManagerEventTest {
               ._atType(STARTED_EVENT_TYPE)
               .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
         );
-    assertEquals(Type.PIPELINE_STARTED, Type.from(mapper.writeValueAsString(event)));
+    assertEquals(EventType.PIPELINE_STARTED, EventType.from(mapper.writeValueAsString(event)));
   }
 
   @Test
@@ -162,7 +164,7 @@ public class CloudManagerEventTest {
                 ._atType(ENDED_EVENT_TYPE)
                 .xdmEventEnvelopeobjectType(PIPELINE_EXECUTION_TYPE)
         );
-    assertEquals(Type.PIPELINE_ENDED, Type.from(mapper.writeValueAsString(event)));
+    assertEquals(EventType.PIPELINE_ENDED, EventType.from(mapper.writeValueAsString(event)));
   }
 
   @Test
@@ -173,7 +175,7 @@ public class CloudManagerEventTest {
                 ._atType(STARTED_EVENT_TYPE)
                 .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
         );
-    assertEquals(Type.STEP_STARTED, Type.from(mapper.writeValueAsString(event)));
+    assertEquals(EventType.STEP_STARTED, EventType.from(mapper.writeValueAsString(event)));
   }
 
   @Test
@@ -184,7 +186,7 @@ public class CloudManagerEventTest {
                 ._atType(WAITING_EVENT_TYPE)
                 .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
         );
-    assertEquals(Type.STEP_WAITING, Type.from(mapper.writeValueAsString(event)));
+    assertEquals(EventType.STEP_WAITING, EventType.from(mapper.writeValueAsString(event)));
   }
 
   @Test
@@ -195,7 +197,7 @@ public class CloudManagerEventTest {
                 ._atType(ENDED_EVENT_TYPE)
                 .xdmEventEnvelopeobjectType(PIPELINE_STEP_STATE_TYPE)
         );
-    assertEquals(Type.STEP_ENDED, Type.from(mapper.writeValueAsString(event)));
+    assertEquals(EventType.STEP_ENDED, EventType.from(mapper.writeValueAsString(event)));
   }
 
   @Test
