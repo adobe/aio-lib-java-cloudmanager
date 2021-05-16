@@ -22,8 +22,9 @@ package io.adobe.cloudmanager;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
@@ -80,7 +81,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/getPrograms">List Programs API</a>
    */
   @NotNull
-  List<Program> listPrograms() throws CloudManagerApiException;
+  Collection<Program> listPrograms() throws CloudManagerApiException;
 
   /**
    * Delete the specified program.
@@ -109,7 +110,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/getPipelines">List Pipelines API</a>
    */
   @NotNull
-  List<Pipeline> listPipelines(@NotNull String programId) throws CloudManagerApiException;
+  Collection<Pipeline> listPipelines(@NotNull String programId) throws CloudManagerApiException;
 
   /**
    * Lists all pipelines in the program that meet the predicate clause.
@@ -121,7 +122,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipelines/getPipelines">List Pipelines API</a>
    */
   @NotNull
-  List<Pipeline> listPipelines(@NotNull String programId, @NotNull Predicate<Pipeline> predicate) throws CloudManagerApiException;
+  Collection<Pipeline> listPipelines(@NotNull String programId, @NotNull Predicate<Pipeline> predicate) throws CloudManagerApiException;
 
   /**
    * Delete the specified pipeline.
@@ -441,7 +442,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/stepMetric">Get Step Metrics API</a>
    */
   @NotNull
-  List<Metric> getQualityGateResults(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
+  Collection<Metric> getQualityGateResults(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
 
   /**
    * Lists all environments in the specified program.
@@ -451,7 +452,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/getEnvironments">List Environments API</a>
    */
-  List<Environment> listEnvironments(@NotNull String programId) throws CloudManagerApiException;
+  Collection<Environment> listEnvironments(@NotNull String programId) throws CloudManagerApiException;
 
   /**
    * Delete the environment in the specified program.
@@ -485,7 +486,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
    */
   @NotNull
-  List<EnvironmentLog> downloadLogs(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
+  Collection<EnvironmentLog> downloadLogs(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
 
   /**
    * Downloads the logs for the specified environment.
@@ -499,7 +500,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
    */
   @NotNull
-  List<EnvironmentLog> downloadLogs(@NotNull Environment environment, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
+  Collection<EnvironmentLog> downloadLogs(@NotNull Environment environment, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified environment
@@ -511,7 +512,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getEnvironmentVariables">List User Environment Variables API</a>
    */
   @NotNull
-  List<Variable> listEnvironmentVariables(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
+  Set<Variable> listEnvironmentVariables(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified environment
@@ -522,7 +523,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getEnvironmentVariables">List User Environment Variables API</a>
    */
   @NotNull
-  List<Variable> listEnvironmentVariables(@NotNull Environment environment) throws CloudManagerApiException;
+  Set<Variable> listEnvironmentVariables(@NotNull Environment environment) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the environment.
@@ -535,7 +536,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchEnvironmentVariables">Patch User Environment Variables</a>
    */
   @NotNull
-  List<Variable> setEnvironmentVariables(@NotNull String programId, @NotNull String environmentId, Variable... variables) throws CloudManagerApiException;
+  Set<Variable> setEnvironmentVariables(@NotNull String programId, @NotNull String environmentId, Variable... variables) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the environment.
@@ -547,7 +548,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchEnvironmentVariables">Patch User Environment Variables</a>
    */
   @NotNull
-  List<Variable> setEnvironmentVariables(@NotNull Environment environment, Variable... variables) throws CloudManagerApiException;
+  Set<Variable> setEnvironmentVariables(@NotNull Environment environment, Variable... variables) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified pipeline
@@ -559,7 +560,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
    */
   @NotNull
-  List<Variable> listPipelineVariables(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
+  Set<Variable> listPipelineVariables(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified pipeline
@@ -570,7 +571,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
    */
   @NotNull
-  List<Variable> listPipelineVariables(@NotNull Pipeline pipeline) throws CloudManagerApiException;
+  Set<Variable> listPipelineVariables(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the pipeline
@@ -583,7 +584,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchPipelineVariables">Patch User Pipeline Variables</a>
    */
   @NotNull
-  List<Variable> setPipelineVariables(@NotNull String programId, @NotNull String pipelineId, Variable... variables) throws CloudManagerApiException;
+  Set<Variable> setPipelineVariables(@NotNull String programId, @NotNull String pipelineId, Variable... variables) throws CloudManagerApiException;
 
   /**
    * Sets the specified variables in the pipeline
@@ -595,6 +596,6 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchPipelineVariables">Patch User Pipeline Variables</a>
    */
   @NotNull
-  List<Variable> setPipelineVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
+  Set<Variable> setPipelineVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
 
 }

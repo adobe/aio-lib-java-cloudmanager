@@ -20,7 +20,7 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-import java.util.List;
+import java.util.Set;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
@@ -78,12 +78,12 @@ public class PipelineImpl extends io.adobe.cloudmanager.generated.model.Pipeline
   }
 
   @Override
-  public List<Variable> listVariables() throws CloudManagerApiException {
+  public Set<Variable> listVariables() throws CloudManagerApiException {
     return client.listPipelineVariables(this);
   }
 
   @Override
-  public List<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
+  public Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
     return client.setPipelineVariables(this, variables);
   }
 

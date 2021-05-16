@@ -135,7 +135,7 @@ public class ExecutionsTest extends AbstractApiTest {
 
   @Test
   void getExecution_via_pipeline() throws CloudManagerApiException {
-    Pipeline pipeline = underTest.listPipelines("4", p -> p.getId().equals("3")).get(0);
+    Pipeline pipeline = underTest.listPipelines("4", p -> p.getId().equals("3")).stream().findFirst().orElse(null);
     PipelineExecution execution = pipeline.getExecution("1");
     assertEquals("1", execution.getId(), "Execution Id matches");
     assertEquals("3", execution.getPipelineId(), "Pipeline Id matches");
@@ -185,7 +185,7 @@ public class ExecutionsTest extends AbstractApiTest {
 
   @Test
   void cancelExecution_via_execution() throws CloudManagerApiException {
-    Pipeline pipeline = underTest.listPipelines("4", p -> p.getId().equals("3")).get(0);
+    Pipeline pipeline = underTest.listPipelines("4", p -> p.getId().equals("3")).stream().findFirst().orElse(null);
     PipelineExecution execution = pipeline.getExecution("1");
 
     execution.cancel();

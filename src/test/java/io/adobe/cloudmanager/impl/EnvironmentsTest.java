@@ -23,8 +23,11 @@ package io.adobe.cloudmanager.impl;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.ws.rs.core.HttpHeaders;
 
 import org.apache.commons.io.FileUtils;
@@ -33,8 +36,8 @@ import org.apache.commons.io.IOUtils;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentLog;
-import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import io.adobe.cloudmanager.Variable;
+import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.BinaryBody;
@@ -130,13 +133,13 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void listEnvironments_successEmpty() throws CloudManagerApiException {
-    List<Environment> environments = underTest.listEnvironments("3");
+    Collection<Environment> environments = underTest.listEnvironments("3");
     assertTrue(environments.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void listEnvironments_success() throws CloudManagerApiException {
-    List<Environment> environments = underTest.listEnvironments("2");
+    Collection<Environment> environments = underTest.listEnvironments("2");
     assertEquals(4, environments.size(), "Correct environment length list");
   }
 
@@ -174,7 +177,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void getDeveloperConsoleUrl_missing() throws Exception {
-    List<Environment> environments = underTest.listEnvironments("2");
+    Collection<Environment> environments = underTest.listEnvironments("2");
     Environment environment = environments.stream().filter(e -> e.getId().equals("3")).findFirst().orElseThrow(Exception::new);
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> environment.getDeveloperConsoleUrl(), "Exception thrown");
     assertEquals("Environment 3 does not appear to support Developer Console.", exception.getMessage(), "Exception message is correct");
@@ -182,7 +185,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void getDeveloperConsoleUrl_success() throws Exception {
-    List<Environment> environments = underTest.listEnvironments("2");
+    Collection<Environment> environments = underTest.listEnvironments("2");
     Environment environment = environments.stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     String url = environment.getDeveloperConsoleUrl();
     assertEquals("https://github.com/adobe/aio-cli-plugin-cloudmanager", url, "URL correctly read");
@@ -214,13 +217,13 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void getEnvironmentVariables_emptyList() throws CloudManagerApiException {
-    List<Variable> variables = underTest.listEnvironmentVariables("2", "4");
+    Set<Variable> variables = underTest.listEnvironmentVariables("2", "4");
     assertTrue(variables.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void getEnvironmentVariables_success() throws CloudManagerApiException {
-    List<Variable> variables = underTest.listEnvironmentVariables("2", "1");
+    Set<Variable> variables = underTest.listEnvironmentVariables("2", "1");
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
@@ -236,7 +239,7 @@ class EnvironmentsTest extends AbstractApiTest {
   @Test
   void getEnvironmentVariables_successEnvironment() throws Exception {
     Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
-    List<Variable> variables = underTest.listEnvironmentVariables(environment);
+    Set<Variable> variables = underTest.listEnvironmentVariables(environment);
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
@@ -252,7 +255,7 @@ class EnvironmentsTest extends AbstractApiTest {
   @Test
   void getEnvironmentVariables_via_environment() throws Exception {
     Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
-    List<Variable> variables = environment.getVariables();
+    Set<Variable> variables = environment.getVariables();
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
@@ -294,7 +297,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void setEnvironmentVariables_successEmpty() throws CloudManagerApiException {
-    List<Variable> results = underTest.setEnvironmentVariables("2", "4");
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "4");
     assertTrue(results.isEmpty());
     client.verify(request().withMethod("PATCH").withPath("/api/program/2/environment/4/variables").withContentType(MediaType.APPLICATION_JSON));
   }
@@ -309,7 +312,7 @@ class EnvironmentsTest extends AbstractApiTest {
     v2.setName("foo2");
     v2.setValue("bar2");
 
-    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -330,7 +333,7 @@ class EnvironmentsTest extends AbstractApiTest {
     v2.setValue("secretBar2");
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
-    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
     v.setValue(null);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -350,7 +353,7 @@ class EnvironmentsTest extends AbstractApiTest {
     v2.setValue("secretBar");
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
-    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -372,7 +375,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
-    List<Variable> results = env.setVariables(v, v2);
+    Set<Variable> results = env.setVariables(v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -383,7 +386,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void downloadLogs_noLogs() throws CloudManagerApiException {
-    List<EnvironmentLog> logs = underTest.downloadLogs("2", "2", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, new File("."));
+    Collection<EnvironmentLog> logs = underTest.downloadLogs("2", "2", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, new File("."));
     assertTrue(logs.isEmpty());
   }
 
@@ -408,7 +411,7 @@ class EnvironmentsTest extends AbstractApiTest {
   @Test
   void downloadLogs_success() throws CloudManagerApiException, IOException {
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = underTest.downloadLogs("2", "1", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir);
+    List<EnvironmentLog> logs = new ArrayList<>(underTest.downloadLogs("2", "1", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir));
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
@@ -421,7 +424,7 @@ class EnvironmentsTest extends AbstractApiTest {
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = underTest.downloadLogs(env, new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir);
+    List<EnvironmentLog> logs = new ArrayList<>(underTest.downloadLogs(env, new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir));
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
@@ -434,7 +437,7 @@ class EnvironmentsTest extends AbstractApiTest {
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = env.downloadLogs(new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir);
+    List<EnvironmentLog> logs = new ArrayList<>(env.downloadLogs(new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir));
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");

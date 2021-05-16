@@ -21,7 +21,7 @@ package io.adobe.cloudmanager.impl;
  */
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
@@ -35,7 +35,7 @@ import static org.mockserver.model.HttpRequest.*;
 @ExtendWith(MockServerExtension.class)
 class ProgramsTest extends AbstractApiTest {
 
-  public static List<String> getTestExpectationFiles() {
+  public static Collection<String> getTestExpectationFiles() {
     return Arrays.asList(
         "programs/not-found.json",
         "programs/forbidden.json",
@@ -83,13 +83,13 @@ class ProgramsTest extends AbstractApiTest {
   void listPrograms_successEmpty() throws CloudManagerApiException {
     CloudManagerApi api = CloudManagerApi.create("empty", "test-apikey", "test-token", baseUrl);
 
-    List<Program> programs = api.listPrograms();
+    Collection<Program> programs = api.listPrograms();
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void listPrograms_success() throws CloudManagerApiException {
-    List<Program> programs = underTest.listPrograms();
+    Collection<Program> programs = underTest.listPrograms();
     assertEquals(7, programs.size(), "Correct length of program list");
   }
 
@@ -116,7 +116,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void deleteProgram_viaProgram() throws Exception {
-    List<Program> programs = underTest.listPrograms();
+    Collection<Program> programs = underTest.listPrograms();
     Program program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
     program.delete();
     client.verify(request().withMethod("DELETE").withPath("/api/program/3"));

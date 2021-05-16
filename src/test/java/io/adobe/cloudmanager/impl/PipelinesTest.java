@@ -23,8 +23,10 @@ package io.adobe.cloudmanager.impl;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -116,7 +118,7 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void listPipelines_success() throws CloudManagerApiException {
-    List<Pipeline> pipelines = underTest.listPipelines("3");
+    Collection<Pipeline> pipelines = underTest.listPipelines("3");
     assertEquals(4, pipelines.size(), "Correct pipelines list length");
   }
 
@@ -134,7 +136,7 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void startExecution_via_pipeline() throws Exception {
-    List<Pipeline> pipelines = underTest.listPipelines("3");
+    Collection<Pipeline> pipelines = underTest.listPipelines("3");
     Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     PipelineExecution execution = pipeline.startExecution();
     assertEquals("/api/program/3/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
@@ -212,7 +214,7 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void updatePipeline_via_pipeline() throws Exception {
-    List<Pipeline> pipelines = underTest.listPipelines("3");
+    Collection<Pipeline> pipelines = underTest.listPipelines("3");
     Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     Pipeline result = pipeline.update(PipelineUpdate.builder().branch("develop").repositoryId("4").build());
 
@@ -249,7 +251,7 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void deletePipeline_viaPipeline() throws Exception {
-    List<Pipeline> pipelines = underTest.listPipelines("3");
+    Collection<Pipeline> pipelines = underTest.listPipelines("3");
     Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     pipeline.delete();
@@ -283,13 +285,13 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void getPipelineVariables_emptyList() throws CloudManagerApiException {
-    List<Variable> variables = underTest.listPipelineVariables("3", "4");
+    Set<Variable> variables = underTest.listPipelineVariables("3", "4");
     assertTrue(variables.isEmpty(), "empty body return zero length list.");
   }
 
   @Test
   void getPipelineVariables_success() throws CloudManagerApiException {
-    List<Variable> variables = underTest.listPipelineVariables("3", "1");
+    Set<Variable> variables = underTest.listPipelineVariables("3", "1");
     Variable v = new Variable();
     v.setName("KEY");
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
@@ -303,8 +305,8 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void getPipelineVariables_successPipeline() throws CloudManagerApiException {
-    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
-    List<Variable> variables = underTest.listPipelineVariables(pipeline);
+    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).stream().findFirst().orElse(null);
+    Set<Variable> variables = underTest.listPipelineVariables(pipeline);
     Variable v = new Variable();
     v.setName("KEY");
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
@@ -318,8 +320,8 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void getPipelineVariables_via_pipeline() throws CloudManagerApiException {
-    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
-    List<Variable> variables = pipeline.listVariables();
+    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).stream().findFirst().orElse(null);
+    Set<Variable> variables = pipeline.listVariables();
     Variable v = new Variable();
     v.setName("KEY");
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
@@ -360,7 +362,7 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void setPipelineVariables_successEmpty() throws CloudManagerApiException {
-    List<Variable> results = underTest.setPipelineVariables("3", "4");
+    Set<Variable> results = underTest.setPipelineVariables("3", "4");
     assertTrue(results.isEmpty());
     client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/4/variables").withContentType(MediaType.APPLICATION_JSON));
   }
@@ -375,7 +377,7 @@ class PipelinesTest extends AbstractApiTest {
     v2.setName("foo2");
     v2.setValue("bar2");
 
-    List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
+    Set<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -396,7 +398,7 @@ class PipelinesTest extends AbstractApiTest {
     v2.setValue("secretBar2");
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
-    List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
+    Set<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
     v.setValue(null);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -416,7 +418,7 @@ class PipelinesTest extends AbstractApiTest {
     v2.setValue("secretBar");
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
-    List<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
+    Set<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -436,9 +438,9 @@ class PipelinesTest extends AbstractApiTest {
     v2.setValue("secretBar");
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
-    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).get(0);
+    Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).stream().findFirst().orElse(null);
 
-    List<Variable> results = pipeline.setVariables(v, v2);
+    Set<Variable> results = pipeline.setVariables(v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -456,10 +458,10 @@ class PipelinesTest extends AbstractApiTest {
 
   @Test
   void predicates() throws CloudManagerApiException {
-    List<Pipeline> busy = underTest.listPipelines("3", Pipeline.IS_BUSY);
+    Collection<Pipeline> busy = underTest.listPipelines("3", Pipeline.IS_BUSY);
     assertEquals(2, busy.size());
 
-    List<Pipeline> named = underTest.listPipelines("3", new Pipeline.NamePredicate("test1"));
+    Collection<Pipeline> named = underTest.listPipelines("3", new Pipeline.NamePredicate("test1"));
     assertEquals(1, named.size());
   }
 

@@ -21,7 +21,8 @@ package io.adobe.cloudmanager;
  */
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
 
 public interface Environment {
 
@@ -58,7 +59,7 @@ public interface Environment {
    *
    * @return list of log options
    */
-  List<LogOption> getLogOptions();
+  Collection<LogOption> getLogOptions();
 
   /**
    * Delete this program.
@@ -81,7 +82,7 @@ public interface Environment {
    * @return the list of variables
    * @throws CloudManagerApiException when any error occurs.
    */
-  List<Variable> getVariables() throws CloudManagerApiException;
+  Set<Variable> getVariables() throws CloudManagerApiException;
 
   /**
    * Sets the specified variables on this environment.
@@ -90,7 +91,7 @@ public interface Environment {
    * @return the complete list of variables in this environment
    * @throws CloudManagerApiException when any error occurs.
    */
-  List<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
+  Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
 
   /**
    * Downloads the logs for this environment
@@ -101,6 +102,6 @@ public interface Environment {
    * @return a list of EnvironmentLogs with details about the downloaded files
    * @throws CloudManagerApiException when any error occurs.
    */
-  List<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException;
+  Collection<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException;
 
 }

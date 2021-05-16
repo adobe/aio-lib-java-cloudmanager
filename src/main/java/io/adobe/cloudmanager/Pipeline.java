@@ -20,7 +20,7 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
@@ -94,7 +94,7 @@ public interface Pipeline {
    * @return the variables in this pipeline
    * @throws CloudManagerApiException when any errors occur
    */
-  List<Variable> listVariables() throws CloudManagerApiException;
+  Set<Variable> listVariables() throws CloudManagerApiException;
 
   /**
    * Sets the specified variables on this pipeline.
@@ -103,7 +103,7 @@ public interface Pipeline {
    * @return the complete list of variables in this pipeline
    * @throws CloudManagerApiException when any error occurs.
    */
-  List<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
+  Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
 
   /**
    * Link to this pipeline.
