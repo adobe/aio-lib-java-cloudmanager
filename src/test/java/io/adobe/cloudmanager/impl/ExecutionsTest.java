@@ -30,10 +30,10 @@ import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepEndEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEventEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStepStartEventEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -306,7 +306,7 @@ public class ExecutionsTest extends AbstractApiTest {
   void getExecutionStepState_notFound() {
     PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/10/execution/1/phase/4596/step/8491")
+            new io.adobe.cloudmanager.event.PipelineExecutionStepState()._atId("/api/program/4/pipeline/10/execution/1/phase/4596/step/8491")
         )
     );
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(event), "Exception thrown");
@@ -317,7 +317,7 @@ public class ExecutionsTest extends AbstractApiTest {
   void getExecutionStepState_startEvent() throws CloudManagerApiException {
     PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491")
+            new io.adobe.cloudmanager.event.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491")
         )
     );
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
@@ -328,7 +328,7 @@ public class ExecutionsTest extends AbstractApiTest {
   void getExecutionStepState_waitingEvent() throws CloudManagerApiException {
     PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8492")
+            new io.adobe.cloudmanager.event.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8492")
         )
     );
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
@@ -339,7 +339,7 @@ public class ExecutionsTest extends AbstractApiTest {
   void getExecutionStepState_endEvent() throws CloudManagerApiException {
     PipelineExecutionStepEndEvent event = new PipelineExecutionStepEndEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new io.adobe.cloudmanager.generated.events.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8493")
+            new io.adobe.cloudmanager.event.PipelineExecutionStepState()._atId("/api/program/4/pipeline/3/execution/4/phase/4596/step/8493")
         )
     );
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);

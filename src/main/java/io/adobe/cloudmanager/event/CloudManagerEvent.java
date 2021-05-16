@@ -31,12 +31,6 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStartEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStartEventEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepEndEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.generated.invoker.JSON;
 
 public class CloudManagerEvent {

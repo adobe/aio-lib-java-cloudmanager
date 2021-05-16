@@ -27,9 +27,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepEndEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
 
 /**

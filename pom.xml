@@ -135,29 +135,6 @@
                             <library>jersey2</library>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>generate-swagger-cm-events</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${cm.events}</inputSpec>
-                            <modelPackage>${project.groupId}.generated.events</modelPackage>
-                            <generateApis>false</generateApis>
-                            <generateModelTests>false</generateModelTests>
-                            <generateSupportingFiles>false</generateSupportingFiles>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <!-- override the default library to retrofit2 -->
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -436,6 +413,48 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>generate-event-model</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.swagger.codegen.v3</groupId>
+                        <artifactId>swagger-codegen-maven-plugin</artifactId>
+                        <version>${swagger.codegen.version}</version>
+                        <executions>
+                            <execution>
+                                <id>generate-swagger-cm-events</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpec>${cm.events}</inputSpec>
+                                    <modelPackage>${project.groupId}.event</modelPackage>
+                                    <output>${project.basedir}</output>
+                                    <generateApis>false</generateApis>
+                                    <generateModelTests>false</generateModelTests>
+                                    <generateSupportingFiles>false</generateSupportingFiles>
+                                    <generateApiDocumentation>false</generateApiDocumentation>
+                                    <generateModelDocumentation>false</generateModelDocumentation>
+                                    <!-- override the default library to retrofit2 -->
+                                    <language>java</language>
+                                    <configOptions>
+                                        <serializableModel>true</serializableModel>
+                                        <dateLibrary>java8</dateLibrary>
+                                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                    </configOptions>
+                                    <library>jersey2</library>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

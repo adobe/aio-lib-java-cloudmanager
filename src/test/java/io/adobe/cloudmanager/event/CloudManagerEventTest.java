@@ -29,15 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.generated.events.PipelineExecution;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionEndEventEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStartEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStartEventEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepEndEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepStartEventEvent;
-import io.adobe.cloudmanager.generated.events.PipelineExecutionStepWaitingEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static io.adobe.cloudmanager.event.CloudManagerEvent.*;
