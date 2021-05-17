@@ -59,9 +59,10 @@ public class CloudManagerEvent {
    * @param <T>    the type of event
    * @return a fully populated event of the specified type
    * @throws CloudManagerApiException if an error occurs during parsing
+   * @throws IllegalArgumentException if passed and unknown event type.
    */
   @NotNull
-  public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException {
+  public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException, IllegalArgumentException {
 
     if (EventType.from(type) == null ) {
       throw new IllegalArgumentException(String.format("Unknown event type: %s", type));
