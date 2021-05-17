@@ -30,6 +30,8 @@ import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
+import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStartEventEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEventEvent;
@@ -132,6 +134,55 @@ public class ExecutionsTest extends AbstractApiTest {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution("4", "3", "10"), "Exception thrown for 404");
     assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
+
+  @Test
+  void getExecution_startEvent() throws CloudManagerApiException {
+    PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
+        new PipelineExecutionStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.event.PipelineExecution()._atId("/api/program/4/pipeline/4/execution/1")
+        )
+    );
+    PipelineExecution execution = underTest.getExecution(event);
+    assertEquals("1", execution.getId());
+    assertEquals("4", execution.getPipelineId());
+    assertEquals("4", execution.getProgramId());
+  }
+
+  @Test
+  void getExecution_startEvent_executionReturns404() {
+    PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
+        new PipelineExecutionStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.event.PipelineExecution()._atId("/api/program/4/pipeline/4/execution/10")
+        )
+    );
+    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event));
+    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found)", baseUrl), e.getMessage(), "Message was correct.");
+  }
+
+  @Test
+  void getExecution_endEvent() throws CloudManagerApiException {
+    PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
+        new PipelineExecutionStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.event.PipelineExecution()._atId("/api/program/4/pipeline/4/execution/1")
+        )
+    );
+    PipelineExecution execution = underTest.getExecution(event);
+    assertEquals("1", execution.getId());
+    assertEquals("4", execution.getPipelineId());
+    assertEquals("4", execution.getProgramId());
+  }
+
+  @Test
+  void getExecution_endEvent_executionReturns404() {
+    PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
+        new PipelineExecutionStartEventEvent().activitystreamsobject(
+            new io.adobe.cloudmanager.event.PipelineExecution()._atId("/api/program/4/pipeline/4/execution/10")
+        )
+    );
+    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event));
+    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found)", baseUrl), e.getMessage(), "Message was correct.");
+  }
+
 
   @Test
   void getExecution_via_pipeline() throws CloudManagerApiException {

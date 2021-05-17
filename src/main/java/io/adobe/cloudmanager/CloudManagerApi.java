@@ -28,6 +28,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
+import io.adobe.cloudmanager.event.PipelineExecutionEndEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
@@ -232,6 +234,24 @@ public interface CloudManagerApi {
    */
   @NotNull
   PipelineExecution getExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
+
+  /**
+   * Returns the Pipeline Execution associated with the AdobeIO Execution Start event
+   * @param event the pipeline start event
+   * @return the execution details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecution getExecution(@NotNull PipelineExecutionStartEvent event) throws CloudManagerApiException;
+
+  /**
+   * Returns the Pipeline Execution associated with the AdobeIO Execution End event
+   * @param event the pipeline end event
+   * @return the execution details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecution getExecution(@NotNull PipelineExecutionEndEvent event) throws CloudManagerApiException;
 
   /**
    * Indicates if the specified pipeline execution is running. No assumptions are made about it's state - only that it has ended.

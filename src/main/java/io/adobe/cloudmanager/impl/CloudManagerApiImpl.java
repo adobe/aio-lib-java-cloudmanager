@@ -56,6 +56,8 @@ import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Variable;
+import io.adobe.cloudmanager.event.PipelineExecutionEndEvent;
+import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
@@ -246,6 +248,16 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
     }
+  }
+
+  @Override
+  public PipelineExecutionImpl getExecution(@NotNull PipelineExecutionStartEvent event) throws CloudManagerApiException {
+    return getExecution(event.getEvent().getActivitystreamsobject().getAtId());
+  }
+
+  @Override
+  public PipelineExecutionImpl getExecution(@NotNull PipelineExecutionEndEvent event) throws CloudManagerApiException {
+    return getExecution(event.getEvent().getActivitystreamsobject().getAtId());
   }
 
   @Override
@@ -608,7 +620,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
-  protected PipelineExecution getExecution(PipelineExecutionStepStateImpl step) throws CloudManagerApiException {
+  protected PipelineExecutionImpl getExecution(PipelineExecutionStepStateImpl step) throws CloudManagerApiException {
     HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelexecution();
     if (link == null) {
       throw new CloudManagerApiException(ErrorType.FIND_EXECUTION_LINK, step.getLinks().getSelf().getHref());
@@ -619,6 +631,17 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, link.getHref(), e);
     }
+  }
+
+  protected PipelineExecutionImpl getExecution(String path) throws CloudManagerApiException {
+    io.adobe.cloudmanager.generated.model.PipelineExecution execution;
+    try {
+      execution = get(path, new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
+      return new PipelineExecutionImpl(execution, this);
+    } catch (ApiException e) {
+      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, path, e);
+    }
+
   }
 
   protected void downloadExecutionStepLog(PipelineExecutionStepStateImpl step, String filename, OutputStream outputStream) throws CloudManagerApiException {
