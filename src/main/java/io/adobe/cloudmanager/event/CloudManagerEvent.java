@@ -35,7 +35,7 @@ import io.adobe.cloudmanager.generated.invoker.JSON;
 
 public class CloudManagerEvent {
 
-  public static final String SIGNATURE_HEADER = "x-adobe-signature";
+  public static final String SIGNATURE_HEADER = "X-Adobe-Signature";
   public static final String STARTED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/started";
   public static final String WAITING_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/waiting";
   public static final String ENDED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/ended";
