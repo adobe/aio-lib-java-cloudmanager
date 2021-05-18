@@ -28,8 +28,6 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.AdobeClientCredentials;
 import io.adobe.cloudmanager.IdentityManagementApi;
