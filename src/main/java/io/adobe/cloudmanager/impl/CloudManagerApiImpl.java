@@ -610,11 +610,15 @@ public class CloudManagerApiImpl implements CloudManagerApi {
         .orElseThrow(() -> new CloudManagerApiException(errorType, pipelineId, programId));
   }
 
-  private PipelineExecutionStepStateImpl getExecutionStepState(String path) throws CloudManagerApiException {
+  private PipelineExecutionStepStateImpl getExecutionStepState(String url) throws CloudManagerApiException {
     PipelineExecutionStepState stepState;
+    String path = null;
     try {
+      path = new URL(url).getPath();
       stepState = get(path, new GenericType<PipelineExecutionStepState>() {});
       return new PipelineExecutionStepStateImpl(stepState, this);
+    } catch (MalformedURLException e) {
+      throw new CloudManagerApiException(ErrorType.PROCESS_EVENT, e.getLocalizedMessage());
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_STEP_STATE, baseUrl, path, e);
     }
@@ -633,11 +637,15 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
   }
 
-  protected PipelineExecutionImpl getExecution(String path) throws CloudManagerApiException {
+  protected PipelineExecutionImpl getExecution(@NotNull String url) throws CloudManagerApiException {
     io.adobe.cloudmanager.generated.model.PipelineExecution execution;
+    String path = null;
     try {
+      path = new URL(url).getPath();
       execution = get(path, new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
       return new PipelineExecutionImpl(execution, this);
+    } catch (MalformedURLException e) {
+      throw new CloudManagerApiException(ErrorType.PROCESS_EVENT, e.getLocalizedMessage());
     } catch (ApiException e) {
       throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, path, e);
     }
