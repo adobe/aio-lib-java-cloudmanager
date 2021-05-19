@@ -29,6 +29,7 @@ public enum StepAction {
   validate,
   build,
   codeQuality,
+  buildImage,
   securityTest,
   loadTest,
   assetsTest,
