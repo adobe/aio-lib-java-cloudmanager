@@ -98,7 +98,6 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model
         gen.writeStartArray();
         buildMetricsOverride(mapper, gen);
         gen.writeEndArray();
-        gen.writeBooleanField("override", true);
       }
       gen.writeEndObject();
       gen.close();
@@ -161,9 +160,12 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model
    */
   private void buildMetricsOverride(ObjectMapper mapper, JsonGenerator gen) throws CloudManagerApiException, IOException {
     Collection<Metric> metrics = client.getQualityGateResults(this, StepAction.codeQuality.name());
-    Collection<Metric> failed = metrics.stream().filter(m -> !m.isPassed()).collect(Collectors.toList());
+    Collection<Metric> failed = metrics.stream().filter(m -> !m.isPassed() && Metric.Severity.IMPORTANT.equals(m.getSev())).collect(Collectors.toList());
     for (Metric m : failed) {
-      mapper.writeValue(gen, m);
+      gen.writeStartObject();
+      gen.writeStringField("kpi", m.getKpi());
+      gen.writeBooleanField("override", true);
+      gen.writeEndObject();
     }
   }
 }

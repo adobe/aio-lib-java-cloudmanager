@@ -21,10 +21,14 @@ package io.adobe.cloudmanager.impl;
  */
 
 import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
@@ -71,7 +75,7 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @BeforeEach
-  public void setupLogsforEnvironments() {
+  public void setupLogsForEnvironments() {
     client.when(
         request().withMethod("GET")
             .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
@@ -310,13 +314,14 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
-  void advanceExecution_codeQualityWaiting() throws CloudManagerApiException {
+  void advanceExecution_codeQualityWaiting() throws Exception {
     underTest.advanceExecution("4", "3", "2");
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/advance").withContentType(MediaType.APPLICATION_JSON));
+
   }
 
   @Test
-  void advanceExecution_codeQualityWaiting_via_execution() throws CloudManagerApiException {
+  void advanceExecution_codeQualityWaiting_via_execution() throws Exception {
     PipelineExecution execution = underTest.getExecution("4", "3", "2");
     execution.advance();
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/advance").withContentType(MediaType.APPLICATION_JSON));

@@ -134,7 +134,7 @@
             {
               "id": "69548",
               "severity": "important",
-              "passed": true,
+              "passed": false,
               "override": false,
               "actualValue": "50.5",
               "expectedValue": "50",
@@ -144,7 +144,7 @@
             {
               "id": "69549",
               "severity": "important",
-              "passed": true,
+              "passed": false,
               "override": false,
               "actualValue": "A",
               "expectedValue": "A",
@@ -154,7 +154,7 @@
             {
               "id": "69550",
               "severity": "informational",
-              "passed": true,
+              "passed": false,
               "override": false,
               "actualValue": "0.0",
               "expectedValue": "1",
@@ -194,7 +194,7 @@
             {
               "id": "69605",
               "severity": "important",
-              "passed": true,
+              "passed": false,
               "override": false,
               "actualValue": "A",
               "expectedValue": "A",
@@ -225,17 +225,22 @@
         "json": {
           "metrics": [
             {
-              "id": "69551",
-              "severity": "important",
-              "passed": false,
-              "override": true,
-              "actualValue": "D",
-              "expectedValue": "C",
-              "comparator": "GTE",
-              "kpi": "reliability_rating"
+             "kpi": "coverage",
+              "override": true
+            },
+            {
+              "kpi": "security_rating",
+              "override": true
+            },
+            {
+              "kpi": "sqale_rating",
+              "override": true
+            },
+            {
+              "kpi": "reliability_rating",
+              "override": true
             }
-          ],
-          "override": true
+          ]
         }
       }
     },
