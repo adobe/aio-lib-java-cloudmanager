@@ -23,6 +23,8 @@ package io.adobe.cloudmanager.impl;
 import java.io.OutputStream;
 import java.util.function.Predicate;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
@@ -65,6 +67,11 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.genera
       execution = client.getExecution(this);
     }
     return execution;
+  }
+
+  @Override
+  public boolean hasLogs() {
+    return delegate.getLinks().getHttpnsAdobeComadobecloudrelpipelinelogs() != null;
   }
 
   @Override

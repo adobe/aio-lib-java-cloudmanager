@@ -68,6 +68,13 @@ public interface PipelineExecutionStepState {
   PipelineExecution getExecution() throws CloudManagerApiException;
 
   /**
+   * Indicates whether or not this step has a log which can be downloaded.
+   *
+   * @return {@code true} if a log exists, {@code false} otherwise.
+   */
+  boolean hasLogs();
+
+  /**
    * Streams the default log, if any, for this step to the specified output stream.
    *
    * @param outputStream the output stream to write to
