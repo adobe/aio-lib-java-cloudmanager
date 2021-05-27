@@ -401,6 +401,58 @@ public interface CloudManagerApi {
   void cancelCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
+   * @param programId    the program id of the pipeline context
+   * @param pipelineId   the pipeline id for the execution context
+   * @param executionId  the execution id for the logs
+   * @param action       the execution step action for the log
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action) throws CloudManagerApiException;
+
+  /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
+   * @param programId    the program id of the pipeline context
+   * @param pipelineId   the pipeline id for the execution context
+   * @param executionId  the execution id for the logs
+   * @param action       the execution step action for the log
+   * @param name         custom log file name
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull String name) throws CloudManagerApiException;
+
+
+  /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
+   * @param execution    the execution for the log
+   * @param action       the execution step action for the log
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
+
+  /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
+   * @param execution    the execution for the log
+   * @param action       the execution step action for the log
+   * @param name         custom log file name
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull String action, @NotNull String name) throws CloudManagerApiException;
+
+
+  /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
    * <p>
    * Uses the default log file name for the step.
@@ -410,7 +462,7 @@ public interface CloudManagerApi {
    * @param executionId  the execution id for the logs
    * @param action       the execution step action for the log
    * @param outputStream output stream to write to
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
    */
   void downloadExecutionStepLog(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull OutputStream outputStream) throws CloudManagerApiException;

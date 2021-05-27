@@ -403,6 +403,29 @@ public class ExecutionsTest extends AbstractApiTest {
   }
 
   @Test
+  void getExecutionStepLogDownloadUrl_success() throws CloudManagerApiException {
+    assertEquals(String.format("%s/logs/special.txt", baseUrl),  underTest.getExecutionStepLogDownloadUrl("4", "3", "4", "build"));
+  }
+
+  @Test
+  void getExecutionStepLogDownloadUrl_success_alternateFile() throws CloudManagerApiException {
+    assertEquals(String.format("%s/logs/special.txt", baseUrl),  underTest.getExecutionStepLogDownloadUrl("4", "3", "4", "build", "somethingspecial"));
+  }
+
+  @Test
+  void downloadExecutionStepLog_success_execution() throws CloudManagerApiException {
+    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    assertEquals(String.format("%s/logs/special.txt", baseUrl),  underTest.getExecutionStepLogDownloadUrl(execution, "build"));
+  }
+
+  @Test
+  void downloadExecutionStepLog_success_execution_alternateFile() throws CloudManagerApiException {
+    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    assertEquals(String.format("%s/logs/special.txt", baseUrl),  underTest.getExecutionStepLogDownloadUrl(execution, "build", "somethingspecial"));
+  }
+
+
+  @Test
   void downloadExecutionStepLog_badPipeline() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadExecutionStepLog("4", "10", "1", "build", null), "Exception thrown");
     assertEquals("Pipeline 10 does not exist in program 4.", exception.getMessage(), "Message was correct");

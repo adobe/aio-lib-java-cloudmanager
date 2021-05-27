@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,57 +72,58 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @BeforeEach
-  public void setupLogsforEnvironments() throws IOException {
+  public void setupLogsForEnvironments() throws IOException {
     if (zipBytes == null) {
       zipBytes = IOUtils.toByteArray(getClass().getClassLoader().getResourceAsStream("file.log.gz"));
-      client.when(
-          request().withMethod("GET")
-              .withPath("/api/program/2/environment/1/logs/download")
-              .withQueryStringParameter("date", "2019-09-8")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-              .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-8.log.gz\" }", baseUrl))
-      );
-      client.when(
-          request().withMethod("GET")
-              .withPath("/api/program/2/environment/1/logs/download")
-              .withQueryStringParameter("date", "2019-09-7")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-              .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-7.log.gz\" }", baseUrl))
-      );
-
-      client.when(
-          request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-8.log.gz")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withBody(BinaryBody.binary(zipBytes))
-      );
-      client.when(
-          request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-7.log.gz")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withBody(BinaryBody.binary(zipBytes))
-      );
-
-      client.when(
-          request().withMethod("GET")
-              .withPath("/api/program/2/environment/3/logs/download")
-              .withQueryStringParameter("name", "invalidurl")
-              .withQueryStringParameter("date", "2019-09-8")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-              .withBody("{ \"redirect\": \"zf:)2{/logs/author_aemerror_2019-09-8.log.gz\" }")
-      );
     }
+    client.when(
+        request().withMethod("GET")
+            .withPath("/api/program/2/environment/1/logs/download")
+            .withQueryStringParameter("date", "2019-09-8")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-8.log.gz\" }", baseUrl))
+    );
+    client.when(
+        request().withMethod("GET")
+            .withPath("/api/program/2/environment/1/logs/download")
+            .withQueryStringParameter("date", "2019-09-7")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-7.log.gz\" }", baseUrl))
+    );
+
+
+    client.when(
+        request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-8.log.gz")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withBody("some log line\nsome other log line\n")
+    );
+    client.when(
+        request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-7.log.gz")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withBody("some log line\nsome other log line\n")
+    );
+
+    client.when(
+        request().withMethod("GET")
+            .withPath("/api/program/2/environment/3/logs/download")
+            .withQueryStringParameter("name", "invalidurl")
+            .withQueryStringParameter("date", "2019-09-8")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody("{ \"redirect\": \"git://logs/author_aemerror_2019-09-8.log.gz\" }")
+    );
   }
 
   @Test
@@ -393,7 +394,7 @@ class EnvironmentsTest extends AbstractApiTest {
   @Test
   void downloadLogs_failsInvalidDownloadUrl() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionImpl(new LogOptionRepresentation().service("service").name("invalidurl")), 1, new File(".")), "Exception thrown for invalid url");
-    assertEquals(String.format("Log %s did not contain a redirect. Was: %s.", "/api/program/2/environment/3/logs/download?service=service&name=invalidurl&date=2019-09-8", "unknown protocol: zf"), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Log %s did not contain a redirect. Was: %s.", "/api/program/2/environment/3/logs/download?service=service&name=invalidurl&date=2019-09-8", "unknown protocol: git"), exception.getMessage(), "Message was correct");
   }
 
   @Test

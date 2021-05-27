@@ -379,6 +379,32 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
+  public String getExecutionStepLogDownloadUrl(String programId, String pipelineId, String executionId, String action) throws CloudManagerApiException {
+    PipelineExecution execution = getExecution(programId, pipelineId, executionId);
+    return getExecutionStepLogDownloadUrl(execution, action, null);
+  }
+
+  @Override
+  public String getExecutionStepLogDownloadUrl(String programId, String pipelineId, String executionId, String action, String name) throws CloudManagerApiException {
+    PipelineExecution execution = getExecution(programId, pipelineId, executionId);
+    return getExecutionStepLogDownloadUrl(execution, action, name);
+  }
+
+  @Override
+  public String getExecutionStepLogDownloadUrl(PipelineExecution execution, String action) throws CloudManagerApiException {
+    return getExecutionStepLogDownloadUrl(execution, action, null);
+  }
+
+  @Override
+  public String getExecutionStepLogDownloadUrl(PipelineExecution execution, String action, String name) throws CloudManagerApiException {
+    PipelineExecutionStepStateImpl stepState = getExecutionStepState(execution, action);
+    if (!stepState.hasLogs()) {
+      throw new CloudManagerApiException(ErrorType.FIND_LOGS_LINK_EXECUTION, stepState.getAction());
+    }
+    return getLogRedirect(stepState.getLinks().getHttpnsAdobeComadobecloudrelpipelinelogs(), name);
+  }
+
+  @Override
   public void downloadExecutionStepLog(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull OutputStream outputStream) throws CloudManagerApiException {
     downloadExecutionStepLog(programId, pipelineId, executionId, action, null, outputStream);
   }
