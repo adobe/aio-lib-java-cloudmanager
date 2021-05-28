@@ -31,16 +31,20 @@
               },
               {
                 "_links": {
+                  "http://ns.adobe.com/adobecloud/rel/execution": {
+                    "href": "/api/program/4/pipeline/3/execution/4",
+                    "templated":false
+                  },
                   "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
-                    "href": "/api/program/4/pipeline/3/execution/4/phase/8565/step/15483/logs",
+                    "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs",
                     "templated": false
                   },
                   "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
-                    "href": "/api/program/4/pipeline/3/execution/4/phase/8565/step/15483/metrics",
+                    "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/metrics",
                     "templated": false
                   },
                   "self": {
-                    "href": "/api/program/4/pipeline/3/execution/4/phase/8565/step/15483",
+                    "href": "/api/program/4/pipeline/3/execution/4/phase/4596/step/8491",
                     "templated": false
                   }
                 },

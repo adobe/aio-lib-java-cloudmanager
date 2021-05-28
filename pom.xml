@@ -4,7 +4,7 @@
 
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.4.1-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
     <description>Library for accessing AdobeIO Cloud Manager endpoints.</description>
@@ -66,7 +66,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <jwt.api>${project.basedir}/src/main/resources/swagger/jwt.yaml</jwt.api>
+        <ims.api>${project.basedir}/src/main/resources/swagger/ims.yaml</ims.api>
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
 
@@ -89,19 +89,18 @@
             <plugin>
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger.codegen.version}</version>
                 <executions>
                     <execution>
-                        <id>generate-swagger-jwt</id>
+                        <id>generate-swagger-ims</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${jwt.api}</inputSpec>
-                            <modelPackage>${project.groupId}.jwt.generated.model</modelPackage>
-                            <apiPackage>${project.groupId}.jwt.generated.api</apiPackage>
-                            <invokerPackage>${project.groupId}.jwt.generated.invoker</invokerPackage>
+                            <inputSpec>${ims.api}</inputSpec>
+                            <modelPackage>${project.groupId}.ims.generated.model</modelPackage>
+                            <apiPackage>${project.groupId}.ims.generated.api</apiPackage>
+                            <invokerPackage>${project.groupId}.ims.generated.invoker</invokerPackage>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -135,35 +134,11 @@
                             <library>jersey2</library>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>generate-swagger-cm-events</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${cm.events}</inputSpec>
-                            <modelPackage>${project.groupId}.generated.events</modelPackage>
-                            <generateApis>false</generateApis>
-                            <generateModelTests>false</generateModelTests>
-                            <generateSupportingFiles>false</generateSupportingFiles>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <!-- override the default library to retrofit2 -->
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
@@ -172,12 +147,14 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>2.0.0</version>
                 <configuration>
                     <verbose>false</verbose>
-                    <canUpdateCopyright>true</canUpdateCopyright>
-                    <canUpdateDescription>true</canUpdateDescription>
-                    <excludes>**/*.json</excludes>
+                    <canUpdateCopyright>false</canUpdateCopyright>
+                    <canUpdateDescription>false</canUpdateDescription>
+                    <canUpdateLicense>false</canUpdateLicense>
+                    <failOnMissingHeader>true</failOnMissingHeader>
+                    <failOnNotUptodateHeader>true</failOnNotUptodateHeader>
+                    <excludes>**/*.json,**/swagger/**</excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -222,7 +199,8 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        io/adobe/cloudmanager/**/generated/**/*.class
+                        io/adobe/cloudmanager/**/generated/**/*.class,
+                        io/adobe/cloudmanager/event/*.class
                     </excludes>
                 </configuration>
                 <executions>
@@ -255,6 +233,21 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>io.swagger.codegen.v3</groupId>
+                    <artifactId>swagger-codegen-maven-plugin</artifactId>
+                    <version>${swagger.codegen.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.2.0</version>
@@ -263,6 +256,14 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.2.0</version>
+                    <configuration>
+                        <source>11</source>
+                        <notimestamp>true</notimestamp>
+                        <quiet>true</quiet>
+                        <doctitle>${project.name} API</doctitle>
+                        <windowtitle>${project.name} API</windowtitle>
+                        <excludePackageNames>*.impl:*.model:*.generated.*</excludePackageNames>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -378,15 +379,26 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.1.0</version>
                         <configuration>
-                            <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
-                            <source>11</source>
-                            <notimestamp>true</notimestamp>
-                            <quiet>true</quiet>
-                            <doctitle>${project.name} API</doctitle>
-                            <windowtitle>${project.name} API</windowtitle>
+                            <directory>docs/apidocs</directory>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -414,6 +426,48 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>generate-event-model</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.swagger.codegen.v3</groupId>
+                        <artifactId>swagger-codegen-maven-plugin</artifactId>
+                        <version>${swagger.codegen.version}</version>
+                        <executions>
+                            <execution>
+                                <id>generate-swagger-cm-events</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpec>${cm.events}</inputSpec>
+                                    <modelPackage>${project.groupId}.event</modelPackage>
+                                    <output>${project.basedir}</output>
+                                    <generateApis>false</generateApis>
+                                    <generateModelTests>false</generateModelTests>
+                                    <generateSupportingFiles>false</generateSupportingFiles>
+                                    <generateApiDocumentation>false</generateApiDocumentation>
+                                    <generateModelDocumentation>false</generateModelDocumentation>
+                                    <!-- override the default library to retrofit2 -->
+                                    <language>java</language>
+                                    <configOptions>
+                                        <serializableModel>true</serializableModel>
+                                        <dateLibrary>java8</dateLibrary>
+                                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                    </configOptions>
+                                    <library>jersey2</library>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -474,6 +528,12 @@
             <version>${jackson-version}</version>
         </dependency>
         <!-- END Generated Dependencies -->
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

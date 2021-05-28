@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager;
 
 /*-
  * #%L
@@ -20,25 +20,19 @@ package io.adobe.cloudmanager.model;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Delegate;
+public interface LogOption {
 
-@ToString
-@EqualsAndHashCode
-public class Variable extends io.adobe.cloudmanager.generated.model.Variable {
+  /**
+   * Name of the service in environment. Example: author
+   *
+   * @return service
+   **/
+  String getService();
 
-  private static final long serialVersionUID = 1L;
-
-  public Variable() {
-    this.delegate = new io.adobe.cloudmanager.generated.model.Variable();
-  }
-
-  public Variable(io.adobe.cloudmanager.generated.model.Variable delegate) {
-    this.delegate = delegate;
-  }
-
-  @Delegate
-  private final io.adobe.cloudmanager.generated.model.Variable delegate;
-
+  /**
+   * Name of the log for service in environment. Example: aemerror
+   *
+   * @return name
+   **/
+  String getName();
 }

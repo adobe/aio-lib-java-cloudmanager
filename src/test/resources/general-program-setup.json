@@ -64,6 +64,26 @@
                     "href": "/api/program/5"
                   }
                 }
+              },
+              {
+                "id": "6",
+                "name": "test6",
+                "enabled": true,
+                "_links": {
+                  "self": {
+                    "href": "/api/program/6"
+                  }
+                }
+              },
+              {
+                "id": "7",
+                "name": "test7",
+                "enabled": true,
+                "_links": {
+                  "self": {
+                    "href": "/api/program/7"
+                  }
+                }
               }
             ]
           }
@@ -174,6 +194,54 @@
     },
     "httpResponse": {
       "statusCode": 404
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/6"
+    },
+    "httpResponse": {
+      "body": {
+        "id": "6",
+        "name": "test6",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/6"
+          },
+          "http://ns.adobe.com/adobecloud/rel/pipelines": {
+            "href": "/api/program/6/pipelines"
+          },
+          "http://ns.adobe.com/adobecloud/rel/environments": {
+            "href": "/api/program/6/environments"
+          }
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/7"
+    },
+    "httpResponse": {
+      "body": {
+        "id": "7",
+        "name": "test7",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/7"
+          },
+          "http://ns.adobe.com/adobecloud/rel/pipelines": {
+            "href": "/api/program/7/pipelines"
+          },
+          "http://ns.adobe.com/adobecloud/rel/environments": {
+            "href": "/api/program/7/environments"
+          }
+        }
+      }
     }
   }
 ]

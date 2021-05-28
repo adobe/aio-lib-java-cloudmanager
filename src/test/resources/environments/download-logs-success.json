@@ -72,5 +72,49 @@
         }
       }
     }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/2/environment/2/logs",
+      "queryStringParameters": {
+        "service": [
+          "author"
+        ],
+        "name": [
+          "aemerror"
+        ],
+        "days": [
+          "1"
+        ]
+      }
+    },
+    "httpResponse": {
+      "body": {
+        "_links": {
+          "self": {
+            "href": "/api/program/2/environment/2/logs?service=author&type=aemerror&days=1"
+          },
+          "http://ns.adobe.com/adobecloud/rel/program": {
+            "href": "/api/program/2",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/environment": {
+            "href": "/api/program/2/environment/2",
+            "templated": false
+          }
+        },
+        "service": [
+          "author"
+        ],
+        "name": [
+          "aemerror"
+        ],
+        "days": 1,
+        "_embedded": {
+          "downloads": []
+        }
+      }
+    }
   }
 ]

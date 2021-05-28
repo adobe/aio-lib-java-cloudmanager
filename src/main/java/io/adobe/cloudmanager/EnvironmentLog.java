@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.model;
+package io.adobe.cloudmanager;
 
 /*-
  * #%L
@@ -20,25 +20,26 @@ package io.adobe.cloudmanager.model;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Delegate;
+public interface EnvironmentLog {
 
-@ToString
-@EqualsAndHashCode
-public class EnvironmentLog extends io.adobe.cloudmanager.generated.model.EnvironmentLog {
+  /**
+   * The index of the log file.
+   *
+   * @return the index
+   */
+  int getIndex();
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * The path to the downlaoded file.
+   *
+   * @return the path
+   */
+  String getPath();
 
-  public EnvironmentLog(io.adobe.cloudmanager.generated.model.EnvironmentLog log) {
-    this.delegate = log;
-  }
-
-  @Delegate
-  io.adobe.cloudmanager.generated.model.EnvironmentLog delegate;
-  @Getter @Setter int index;
-  @Getter @Setter String path;
-  @Getter @Setter String url;
+  /**
+   * The URL of the original log file.
+   *
+   * @return the url
+   */
+  String getUrl();
 }

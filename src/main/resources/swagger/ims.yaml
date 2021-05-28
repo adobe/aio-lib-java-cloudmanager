@@ -8,18 +8,19 @@ schemes:
   - https
 consumes:
   - application/json
+  - application/x-www-form-urlencoded
 produces:
   - application/json
 tags:
-  - JWT
+  - AdobeIMS
 
 paths:
   /ims/exchange/jwt:
-    summary: Authentication API
-    description: API to create a Bearer token from a signed JWT Object
     post:
+      summary: Authentication API
+      description: API to create a Bearer token from a signed JWT Object
       tags:
-        - JWT
+        - Adobe IMS
       operationId: authenticate
       consumes:
         - application/x-www-form-urlencoded
@@ -46,6 +47,28 @@ paths:
           description: A token object
           schema:
             $ref: '#/definitions/Token'
+  /ims/userinfo/v2:
+    get:
+      summary: User Info
+      description: Retrieve information about the user
+      tags:
+        - Adobe IMS
+      operationId: userinfo
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - aaplication/json
+      parameters:
+        - name: client_id
+          in: path
+          type: string
+          description: The Client ID from the integration.
+          required: true
+      responses:
+        200:
+          description: The user info
+          schema:
+            $ref: '#/definitions/User'
 
 definitions:
   Token:
@@ -60,3 +83,8 @@ definitions:
       expires_in:
         type: integer
         format: int64
+  User:
+    type: object
+    properties:
+      sub:
+        type: string

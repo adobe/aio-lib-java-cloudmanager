@@ -21,11 +21,11 @@ package io.adobe.cloudmanager.impl;
  */
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.model.EmbeddedProgram;
+import io.adobe.cloudmanager.Program;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.junit.jupiter.MockServerExtension;
@@ -35,7 +35,7 @@ import static org.mockserver.model.HttpRequest.*;
 @ExtendWith(MockServerExtension.class)
 class ProgramsTest extends AbstractApiTest {
 
-  public static List<String> getTestExpectationFiles() {
+  public static Collection<String> getTestExpectationFiles() {
     return Arrays.asList(
         "programs/not-found.json",
         "programs/forbidden.json",
@@ -57,7 +57,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_failure403() {
-    CloudManagerApi api = new CloudManagerApiImpl("forbidden", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("forbidden", "test-apikey", "test-token", baseUrl);
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message (Code: 1234)", baseUrl), exception.getMessage(), "Message was correct");
@@ -65,7 +65,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_failure403_errorMessageOnly() {
-    CloudManagerApi api = new CloudManagerApiImpl("forbidden-messageonly", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("forbidden-messageonly", "test-apikey", "test-token", baseUrl);
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message", baseUrl), exception.getMessage(), "Message was correct");
@@ -73,7 +73,7 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_failure403_errorCodeOnly() {
-    CloudManagerApi api = new CloudManagerApiImpl("forbidden-codeonly", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("forbidden-codeonly", "test-apikey", "test-token", baseUrl);
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden)", baseUrl), exception.getMessage(), "Message was correct");
@@ -81,16 +81,16 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void listPrograms_successEmpty() throws CloudManagerApiException {
-    CloudManagerApi api = new CloudManagerApiImpl("empty", "test-apikey", "test-token", baseUrl);
+    CloudManagerApi api = CloudManagerApi.create("empty", "test-apikey", "test-token", baseUrl);
 
-    List<EmbeddedProgram> programs = api.listPrograms();
+    Collection<Program> programs = api.listPrograms();
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void listPrograms_success() throws CloudManagerApiException {
-    List<EmbeddedProgram> programs = underTest.listPrograms();
-    assertEquals(5, programs.size(), "Correct length of program list");
+    Collection<Program> programs = underTest.listPrograms();
+    assertEquals(7, programs.size(), "Correct length of program list");
   }
 
   @Test
@@ -116,8 +116,8 @@ class ProgramsTest extends AbstractApiTest {
 
   @Test
   void deleteProgram_viaProgram() throws Exception {
-    List<EmbeddedProgram> programs = underTest.listPrograms();
-    EmbeddedProgram program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
+    Collection<Program> programs = underTest.listPrograms();
+    Program program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
     program.delete();
     client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
   }

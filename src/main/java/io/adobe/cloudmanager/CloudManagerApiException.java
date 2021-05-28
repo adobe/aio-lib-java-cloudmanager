@@ -91,9 +91,8 @@ public class CloudManagerApiException extends Exception {
     this.cause = null;
   }
 
-  @Override
-  public ApiException getCause() {
-    return this.cause;
+  public int getErrorCode() {
+    return cause.getCode();
   }
 
   private static ProblemPayload getProblemBody(ApiException cause) {
@@ -157,9 +156,11 @@ public class CloudManagerApiException extends Exception {
     PIPELINE_START("Cannot create execution: %s"),
     PIPELINE_START_RUNNING("Cannot create execution. Pipeline already running."),
     GET_EXECUTION("Cannot get execution: %s"),
+    GET_STEP_STATE("Cannot get step state: %s"),
     FIND_STEP_STATE("Cannot find step state for action %s on execution %s."),
     GET_METRICS("Cannot get metrics: %s."),
     FIND_CURRENT_STEP("Cannot find a current step for pipeline %s."),
+    FIND_EXECUTION_LINK("Cannot find execution link for the current step (%s)"),
     FIND_CANCEL_LINK("Cannot find a cancel link for the current step (%s). Step may not be cancellable."),
     FIND_ADVANCE_LINK("Cannot find an advance link for the current step (%s)."),
     CANCEL_EXECUTION("Cannot cancel execution: %s"),
@@ -170,7 +171,7 @@ public class CloudManagerApiException extends Exception {
     RETRIEVE_ENVIRONMENTS("Could not find environments: %s."),
     DELETE_PIPELINE("Cannot delete pipeline: %s"),
     GET_LOGS("Cannot get logs: %s"),
-    NO_LOG_REDIRECT("Log %s did not contain a redirect. Was %s."),
+    NO_LOG_REDIRECT("Log %s did not contain a redirect. Was: %s."),
     LOG_DOWNLOAD("Could not download %s to %s (%s)."),
     LOG_UNZIP("Could not unzip %s to %s."),
     LOG_INITIAL_SIZE("Could not get initial size of %s"),
@@ -189,7 +190,9 @@ public class CloudManagerApiException extends Exception {
     DELETE_PROGRAM("Cannot delete program: %s"),
     DELETE_ENVIRONMENT("Cannot delete environment: %s"),
     UPDATE_PIPELINE("Cannot update pipeline: %s"),
-    GENERATE_BODY("Unable to generate request body: %s");
+    GENERATE_BODY("Unable to generate request body: %s"),
+    PROCESS_EVENT("Unable to process event: %s"),
+    VALIDATE_EVENT("Unable to validate event: %s");
 
     private final String message;
 

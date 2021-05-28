@@ -62,3 +62,4 @@ coverage/
 reports/
 
 *.log
+*.log.gz

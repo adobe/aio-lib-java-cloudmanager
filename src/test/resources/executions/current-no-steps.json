@@ -22,5 +22,29 @@
         }
       }
     }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/4/pipeline/4/execution/1"
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json": {
+          "_embedded": {
+            "stepStates": []
+          },
+          "id": "1",
+          "programId": "4",
+          "pipelineId": "4",
+          "trigger": "MANUAL",
+          "user": "3E8367615C0A78710A495EEF@AdobeID",
+          "status": "FINISHED",
+          "createdAt": "2019-05-23T13:49:47.688+0000",
+          "updatedAt": "2019-05-23T13:56:43.811+0000"
+        }
+      }
+    }
   }
 ]

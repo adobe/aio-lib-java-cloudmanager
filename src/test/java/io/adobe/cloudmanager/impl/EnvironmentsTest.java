@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,17 +23,21 @@ package io.adobe.cloudmanager.impl;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.ws.rs.core.HttpHeaders;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.model.Environment;
-import io.adobe.cloudmanager.model.EnvironmentLog;
-import io.adobe.cloudmanager.model.Variable;
+import io.adobe.cloudmanager.Environment;
+import io.adobe.cloudmanager.EnvironmentLog;
+import io.adobe.cloudmanager.Variable;
+import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.BinaryBody;
@@ -62,51 +66,64 @@ class EnvironmentsTest extends AbstractApiTest {
         "environments/set-variables-variables-only.json",
         "environments/set-variables-secrets-only.json",
         "environments/set-variables-mixed.json",
-        "environments/download-logs-not-found.json",
+        "environments/download-logs-errors.json",
         "environments/download-logs-success.json"
     );
   }
 
   @BeforeEach
-  public void setupLogsforEnvironments() throws IOException {
+  public void setupLogsForEnvironments() throws IOException {
     if (zipBytes == null) {
       zipBytes = IOUtils.toByteArray(getClass().getClassLoader().getResourceAsStream("file.log.gz"));
-      client.when(
-          request().withMethod("GET")
-              .withPath("/api/program/2/environment/1/logs/download")
-              .withQueryStringParameter("date", "2019-09-8")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-              .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-8.log.gz\" }", baseUrl))
-      );
-      client.when(
-          request().withMethod("GET")
-              .withPath("/api/program/2/environment/1/logs/download")
-              .withQueryStringParameter("date", "2019-09-7")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-              .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-7.log.gz\" }", baseUrl))
-      );
-
-      client.when(
-          request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-8.log.gz")
-      ).respond(
-          HttpResponse.response()
-              .withStatusCode(HttpStatusCode.OK_200.code())
-              .withBody(BinaryBody.binary(zipBytes))
-      );
-      client.when(
-          request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-7.log.gz")
-      ).respond(
-          HttpResponse.response()
-            .withStatusCode(HttpStatusCode.OK_200.code())
-            .withBody(BinaryBody.binary(zipBytes))
-      );
     }
+    client.when(
+        request().withMethod("GET")
+            .withPath("/api/program/2/environment/1/logs/download")
+            .withQueryStringParameter("date", "2019-09-8")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-8.log.gz\" }", baseUrl))
+    );
+    client.when(
+        request().withMethod("GET")
+            .withPath("/api/program/2/environment/1/logs/download")
+            .withQueryStringParameter("date", "2019-09-7")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-7.log.gz\" }", baseUrl))
+    );
+
+
+    client.when(
+        request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-8.log.gz")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withBody("some log line\nsome other log line\n")
+    );
+    client.when(
+        request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-7.log.gz")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withBody("some log line\nsome other log line\n")
+    );
+
+    client.when(
+        request().withMethod("GET")
+            .withPath("/api/program/2/environment/3/logs/download")
+            .withQueryStringParameter("name", "invalidurl")
+            .withQueryStringParameter("date", "2019-09-8")
+    ).respond(
+        HttpResponse.response()
+            .withStatusCode(HttpStatusCode.OK_200.code())
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withBody("{ \"redirect\": \"git://logs/author_aemerror_2019-09-8.log.gz\" }")
+    );
   }
 
   @Test
@@ -117,13 +134,13 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void listEnvironments_successEmpty() throws CloudManagerApiException {
-    List<Environment> environments = underTest.listEnvironments("3");
+    Collection<Environment> environments = underTest.listEnvironments("3");
     assertTrue(environments.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void listEnvironments_success() throws CloudManagerApiException {
-    List<Environment> environments = underTest.listEnvironments("2");
+    Collection<Environment> environments = underTest.listEnvironments("2");
     assertEquals(4, environments.size(), "Correct environment length list");
   }
 
@@ -153,8 +170,15 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @Test
+  void deleteEnvironment_via_environment() throws Exception {
+    Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("2")).findFirst().orElseThrow(Exception::new);
+    environment.delete();
+    client.verify(request().withMethod("DELETE").withPath("/api/program/2/environment/2"));
+  }
+
+  @Test
   void getDeveloperConsoleUrl_missing() throws Exception {
-    List<Environment> environments = underTest.listEnvironments("2");
+    Collection<Environment> environments = underTest.listEnvironments("2");
     Environment environment = environments.stream().filter(e -> e.getId().equals("3")).findFirst().orElseThrow(Exception::new);
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> environment.getDeveloperConsoleUrl(), "Exception thrown");
     assertEquals("Environment 3 does not appear to support Developer Console.", exception.getMessage(), "Exception message is correct");
@@ -162,7 +186,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void getDeveloperConsoleUrl_success() throws Exception {
-    List<Environment> environments = underTest.listEnvironments("2");
+    Collection<Environment> environments = underTest.listEnvironments("2");
     Environment environment = environments.stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     String url = environment.getDeveloperConsoleUrl();
     assertEquals("https://github.com/adobe/aio-cli-plugin-cloudmanager", url, "URL correctly read");
@@ -170,37 +194,37 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void getEnvironmentVariables_environmentNotFound() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("1", "1"), "Exception thrown for 404");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("1", "1"), "Exception thrown for 404");
     assertEquals(String.format("Could not find environments: %s/api/program/1/environments (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void getEnvironmentVariables_noEnvironment() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("2", "12"), "Exception thrown for 404");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("2", "12"), "Exception thrown for 404");
     assertEquals("Could not find environment 12 for program 2.", exception.getMessage(), "Message was correct");
   }
 
   @Test
   void getEnvironmentVariables_noLink() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("2", "2"), "Exception thrown for missing link");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("2", "2"), "Exception thrown for missing link");
     assertEquals("Could not find variables link for environment 2 for program 2.", exception.getMessage(), "Message was correct");
   }
 
   @Test
   void getEnvironmentVariables_linkReturnsNotFound() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getEnvironmentVariables("2", "3"), "Exception thrown for 404");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("2", "3"), "Exception thrown for 404");
     assertEquals(String.format("Cannot get variables: %s/api/program/2/environment/3/variables (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void getEnvironmentVariables_emptyList() throws CloudManagerApiException {
-    List<Variable> variables = underTest.getEnvironmentVariables("2", "4");
+    Set<Variable> variables = underTest.listEnvironmentVariables("2", "4");
     assertTrue(variables.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
   void getEnvironmentVariables_success() throws CloudManagerApiException {
-    List<Variable> variables = underTest.getEnvironmentVariables("2", "1");
+    Set<Variable> variables = underTest.listEnvironmentVariables("2", "1");
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
@@ -216,7 +240,7 @@ class EnvironmentsTest extends AbstractApiTest {
   @Test
   void getEnvironmentVariables_successEnvironment() throws Exception {
     Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
-    List<Variable> variables = underTest.getEnvironmentVariables(environment);
+    Set<Variable> variables = underTest.listEnvironmentVariables(environment);
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
@@ -232,7 +256,7 @@ class EnvironmentsTest extends AbstractApiTest {
   @Test
   void getEnvironmentVariables_via_environment() throws Exception {
     Environment environment = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
-    List<Variable> variables = environment.getVariables();
+    Set<Variable> variables = environment.getVariables();
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
     v.setName("KEY");
@@ -274,7 +298,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
   @Test
   void setEnvironmentVariables_successEmpty() throws CloudManagerApiException {
-    List<Variable> results = underTest.setEnvironmentVariables("2", "4");
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "4");
     assertTrue(results.isEmpty());
     client.verify(request().withMethod("PATCH").withPath("/api/program/2/environment/4/variables").withContentType(MediaType.APPLICATION_JSON));
   }
@@ -289,7 +313,7 @@ class EnvironmentsTest extends AbstractApiTest {
     v2.setName("foo2");
     v2.setValue("bar2");
 
-    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -310,7 +334,7 @@ class EnvironmentsTest extends AbstractApiTest {
     v2.setValue("secretBar2");
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
-    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
     v.setValue(null);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -330,7 +354,7 @@ class EnvironmentsTest extends AbstractApiTest {
     v2.setValue("secretBar");
     v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
 
-    List<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
+    Set<Variable> results = underTest.setEnvironmentVariables("2", "1", v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -352,7 +376,7 @@ class EnvironmentsTest extends AbstractApiTest {
 
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
-    List<Variable> results = env.setVariables(v, v2);
+    Set<Variable> results = env.setVariables(v, v2);
     v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
@@ -362,27 +386,33 @@ class EnvironmentsTest extends AbstractApiTest {
   }
 
   @Test
-  void downloadLogs_fails() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "12", "service", "name", 1, new File(".")), "Exception thrown for 404");
+  void downloadLogs_noLogs() throws CloudManagerApiException {
+    Collection<EnvironmentLog> logs = underTest.downloadLogs("2", "2", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, new File("."));
+    assertTrue(logs.isEmpty());
+  }
+
+  @Test
+  void downloadLogs_failsInvalidDownloadUrl() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionImpl(new LogOptionRepresentation().service("service").name("invalidurl")), 1, new File(".")), "Exception thrown for invalid url");
+    assertEquals(String.format("Log %s did not contain a redirect. Was: %s.", "/api/program/2/environment/3/logs/download?service=service&name=invalidurl&date=2019-09-8", "unknown protocol: git"), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void downloadLogs_failsGetLogsErrors() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", new LogOptionImpl(new LogOptionRepresentation().service("service").name("getlogerror")), 1, new File(".")), "Exception thrown for invalid url");
+    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs?service=service&name=getlogerror&days=1 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void downloadLogs_failsNoEnvironment() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "12", new LogOptionImpl(new LogOptionRepresentation().service("service").name("name")), 1, new File(".")), "Exception thrown for 404");
     assertEquals("Could not find environment 12 for program 2.", exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void downloadLogs_noLogLink() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "2", "service", "name", 1, new File(".")), "Exception thrown for missing link");
-    assertEquals("Could not find logs link for environment 2 for program 2.", exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void downloadLogs_getLogsFails() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("2", "3", "author", "aemerror", 1, new File(".")), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs?service=author&name=aemerror&days=1 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct.");
   }
 
   @Test
   void downloadLogs_success() throws CloudManagerApiException, IOException {
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = underTest.downloadLogs("2", "1", "author", "aemerror", 1, outputDir);
+    List<EnvironmentLog> logs = new ArrayList<>(underTest.downloadLogs("2", "1", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir));
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
@@ -395,7 +425,7 @@ class EnvironmentsTest extends AbstractApiTest {
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = underTest.downloadLogs(env, "author", "aemerror", 1, outputDir);
+    List<EnvironmentLog> logs = new ArrayList<>(underTest.downloadLogs(env, new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir));
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
@@ -408,7 +438,7 @@ class EnvironmentsTest extends AbstractApiTest {
     Environment env = underTest.listEnvironments("2").stream().filter(e -> e.getId().equals("1")).findFirst().orElseThrow(Exception::new);
 
     File outputDir = Files.createTempDirectory("log-output").toFile();
-    List<EnvironmentLog> logs = env.downloadLogs("author", "aemerror", 1, outputDir);
+    List<EnvironmentLog> logs = new ArrayList<>(env.downloadLogs(new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir));
     assertEquals(2, logs.size(), "Correct Object response");
     assertEquals(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
     assertTrue(FileUtils.sizeOf(new File(outputDir.toString() + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
