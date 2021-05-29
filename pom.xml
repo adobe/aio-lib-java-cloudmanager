@@ -4,7 +4,7 @@
 
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
     <description>Library for accessing AdobeIO Cloud Manager endpoints.</description>
@@ -148,6 +148,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
+                    <dryRun>true</dryRun>
                     <verbose>false</verbose>
                     <canUpdateCopyright>false</canUpdateCopyright>
                     <canUpdateDescription>false</canUpdateDescription>
@@ -226,7 +227,6 @@
                 <configuration>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <stagingProfileId>io.adobe.cloudmanager</stagingProfileId>
                 </configuration>
             </plugin>
         </plugins>

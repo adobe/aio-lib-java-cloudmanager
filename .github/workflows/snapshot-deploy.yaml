@@ -54,3 +54,9 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Upload CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./target/site/jacoco/jacoco.xml
+          flags: unittests
