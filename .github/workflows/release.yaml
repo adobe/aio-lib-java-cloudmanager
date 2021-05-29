@@ -10,7 +10,7 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
-    if: ithub.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     outputs:
       version: ${{ steps.store-version.outputs.version }}
