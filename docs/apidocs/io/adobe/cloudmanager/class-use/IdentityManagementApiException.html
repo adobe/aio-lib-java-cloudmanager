@@ -13,7 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../jquery/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -109,10 +109,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager">io.adobe.cloudmanager</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager.impl">io.adobe.cloudmanager.impl</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 </li>
@@ -132,33 +128,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">IdentityManagementApi.</span><code><span class="memberNameLink"><a href="../IdentityManagementApi.html#authenticate(io.adobe.cloudmanager.AdobeClientCredentials)">authenticate</a></span>&#8203;(<a href="../AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org)</code></th>
 <td class="colLast">
 <div class="block">Authenticates to Adobe IMS and returns an Auth Token.</div>
 </td>
 </tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="io.adobe.cloudmanager.impl">
-<!--   -->
-</a>
-<h3>Uses of <a href="../IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a> in <a href="../impl/package-summary.html">io.adobe.cloudmanager.impl</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../impl/package-summary.html">io.adobe.cloudmanager.impl</a> that throw <a href="../IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">IdentityManagementApiImpl.</span><code><span class="memberNameLink"><a href="../impl/IdentityManagementApiImpl.html#authenticate(io.adobe.cloudmanager.AdobeClientCredentials)">authenticate</a></span>&#8203;(<a href="../AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org)</code></th>
-<td class="colLast">&nbsp;</td>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">IdentityManagementApi.</span><code><span class="memberNameLink"><a href="../IdentityManagementApi.html#isValid(io.adobe.cloudmanager.AdobeClientCredentials,java.lang.String)">isValid</a></span>&#8203;(<a href="../AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org,
+       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;accessToken)</code></th>
+<td class="colLast">
+<div class="block">Checks if the provided token is still valid for the Org context.</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -214,7 +196,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020 Adobe Inc.. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 Adobe Inc.. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

@@ -13,7 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../jquery/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -110,11 +110,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager.impl">io.adobe.cloudmanager.impl</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager.model">io.adobe.cloudmanager.model</a></th>
+<th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager.event">io.adobe.cloudmanager.event</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -135,13 +131,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/CloudManagerApi.html#io.adobe.cloudmanager">CloudManagerApi</a></th>
+<td class="colLast">
+<div class="block">API for interacting with Cloud Manager AdobeIO endpoints.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="class-use/CloudManagerApiException.html#io.adobe.cloudmanager">CloudManagerApiException</a></th>
 <td class="colLast">
 <div class="block">Represents exception states that may occur during interactions with the AdobeIO API.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="class-use/CloudManagerApiException.ErrorType.html#io.adobe.cloudmanager">CloudManagerApiException.ErrorType</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/Environment.html#io.adobe.cloudmanager">Environment</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/EnvironmentLog.html#io.adobe.cloudmanager">EnvironmentLog</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/IdentityManagementApi.html#io.adobe.cloudmanager">IdentityManagementApi</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -151,85 +165,92 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/LogOption.html#io.adobe.cloudmanager">LogOption</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/Metric.html#io.adobe.cloudmanager">Metric</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/Metric.Comparator.html#io.adobe.cloudmanager">Metric.Comparator</a></th>
+<td class="colLast">
+<div class="block">The comparator to use for the metric.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/Metric.Severity.html#io.adobe.cloudmanager">Metric.Severity</a></th>
+<td class="colLast">
+<div class="block">Represents the severity of the metric.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/Pipeline.html#io.adobe.cloudmanager">Pipeline</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/Pipeline.Status.html#io.adobe.cloudmanager">Pipeline.Status</a></th>
+<td class="colLast">
+<div class="block">Pipeline status values</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/PipelineExecution.html#io.adobe.cloudmanager">PipelineExecution</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/PipelineExecution.Status.html#io.adobe.cloudmanager">PipelineExecution.Status</a></th>
+<td class="colLast">
+<div class="block">Pipeline Execution status values</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/PipelineExecutionStepState.html#io.adobe.cloudmanager">PipelineExecutionStepState</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/PipelineExecutionStepState.Status.html#io.adobe.cloudmanager">PipelineExecutionStepState.Status</a></th>
+<td class="colLast">
+<div class="block">Pipeline Execution Step status values</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="class-use/PipelineUpdate.html#io.adobe.cloudmanager">PipelineUpdate</a></th>
 <td class="colLast">
 <div class="block">Used to make updates to a Pipeline definition.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/Program.html#io.adobe.cloudmanager">Program</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/StepAction.html#io.adobe.cloudmanager">StepAction</a></th>
+<td class="colLast">
+<div class="block">Possible values of the Step State's Action proprerty.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/Variable.html#io.adobe.cloudmanager">Variable</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.impl">
+<li class="blockList"><a id="io.adobe.cloudmanager.event">
 <!--   -->
 </a>
 <table class="useSummary">
-<caption><span>Classes in <a href="package-summary.html">io.adobe.cloudmanager</a> used by <a href="impl/package-summary.html">io.adobe.cloudmanager.impl</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="package-summary.html">io.adobe.cloudmanager</a> used by <a href="event/package-summary.html">io.adobe.cloudmanager.event</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="class-use/AdobeClientCredentials.html#io.adobe.cloudmanager.impl">AdobeClientCredentials</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="class-use/CloudManagerApi.html#io.adobe.cloudmanager.impl">CloudManagerApi</a></th>
-<td class="colLast">
-<div class="block">API for interacting with Cloud Manager AdobeIO endpoints.</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="class-use/CloudManagerApiException.html#io.adobe.cloudmanager.impl">CloudManagerApiException</a></th>
+<th class="colFirst" scope="row"><a href="class-use/CloudManagerApiException.html#io.adobe.cloudmanager.event">CloudManagerApiException</a></th>
 <td class="colLast">
 <div class="block">Represents exception states that may occur during interactions with the AdobeIO API.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="class-use/IdentityManagementApi.html#io.adobe.cloudmanager.impl">IdentityManagementApi</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="class-use/IdentityManagementApiException.html#io.adobe.cloudmanager.impl">IdentityManagementApiException</a></th>
-<td class="colLast">
-<div class="block">Represents exception state that may occur when authenticating to Adobe IMS.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="class-use/PipelineUpdate.html#io.adobe.cloudmanager.impl">PipelineUpdate</a></th>
-<td class="colLast">
-<div class="block">Used to make updates to a Pipeline definition.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.model">
-<!--   -->
-</a>
-<table class="useSummary">
-<caption><span>Classes in <a href="package-summary.html">io.adobe.cloudmanager</a> used by <a href="model/package-summary.html">io.adobe.cloudmanager.model</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Class</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="class-use/CloudManagerApi.html#io.adobe.cloudmanager.model">CloudManagerApi</a></th>
-<td class="colLast">
-<div class="block">API for interacting with Cloud Manager AdobeIO endpoints.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="class-use/CloudManagerApiException.html#io.adobe.cloudmanager.model">CloudManagerApiException</a></th>
-<td class="colLast">
-<div class="block">Represents exception states that may occur during interactions with the AdobeIO API.</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="class-use/PipelineUpdate.html#io.adobe.cloudmanager.model">PipelineUpdate</a></th>
-<td class="colLast">
-<div class="block">Used to make updates to a Pipeline definition.</div>
 </td>
 </tr>
 </tbody>
@@ -283,7 +304,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020 Adobe Inc.. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 Adobe Inc.. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

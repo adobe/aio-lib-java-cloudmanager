@@ -13,7 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="jquery/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -151,7 +151,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <table class="constantsSummary">
-<caption><span>io.adobe.cloudmanager.impl.<a href="io/adobe/cloudmanager/impl/ConfiguredApiClient.html" title="class in io.adobe.cloudmanager.impl">ConfiguredApiClient</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>io.adobe.cloudmanager.event.<a href="io/adobe/cloudmanager/event/CloudManagerEvent.html" title="class in io.adobe.cloudmanager.event">CloudManagerEvent</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Constant Field</th>
@@ -159,46 +159,46 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a id="io.adobe.cloudmanager.impl.ConfiguredApiClient.HEADER_REASON">
+<td class="colFirst"><a id="io.adobe.cloudmanager.event.CloudManagerEvent.ENDED_EVENT_TYPE">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/impl/ConfiguredApiClient.html#HEADER_REASON">HEADER_REASON</a></code></th>
-<td class="colLast"><code>"x-cmapi-reason"</code></td>
-</tr>
-</tbody>
-</table>
-</li>
-</ul>
-<ul class="blockList">
-<li class="blockList">
-<table class="constantsSummary">
-<caption><span>io.adobe.cloudmanager.model.<a href="io/adobe/cloudmanager/model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Constant Field</th>
-<th class="colLast" scope="col">Value</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><a id="io.adobe.cloudmanager.model.PipelineExecution.ACTION_APPROVAL">
-<!--   -->
-</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/model/PipelineExecution.html#ACTION_APPROVAL">ACTION_APPROVAL</a></code></th>
-<td class="colLast"><code>"approval"</code></td>
+<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/event/CloudManagerEvent.html#ENDED_EVENT_TYPE">ENDED_EVENT_TYPE</a></code></th>
+<td class="colLast"><code>"https://ns.adobe.com/experience/cloudmanager/event/ended"</code></td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a id="io.adobe.cloudmanager.model.PipelineExecution.ACTION_DEPLOY">
+<td class="colFirst"><a id="io.adobe.cloudmanager.event.CloudManagerEvent.PIPELINE_EXECUTION_TYPE">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/model/PipelineExecution.html#ACTION_DEPLOY">ACTION_DEPLOY</a></code></th>
-<td class="colLast"><code>"deploy"</code></td>
+<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/event/CloudManagerEvent.html#PIPELINE_EXECUTION_TYPE">PIPELINE_EXECUTION_TYPE</a></code></th>
+<td class="colLast"><code>"https://ns.adobe.com/experience/cloudmanager/pipeline-execution"</code></td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a id="io.adobe.cloudmanager.model.PipelineExecution.ACTION_SCHEDULE">
+<td class="colFirst"><a id="io.adobe.cloudmanager.event.CloudManagerEvent.PIPELINE_STEP_STATE_TYPE">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/model/PipelineExecution.html#ACTION_SCHEDULE">ACTION_SCHEDULE</a></code></th>
-<td class="colLast"><code>"schedule"</code></td>
+<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/event/CloudManagerEvent.html#PIPELINE_STEP_STATE_TYPE">PIPELINE_STEP_STATE_TYPE</a></code></th>
+<td class="colLast"><code>"https://ns.adobe.com/experience/cloudmanager/execution-step-state"</code></td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a id="io.adobe.cloudmanager.event.CloudManagerEvent.SIGNATURE_HEADER">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/event/CloudManagerEvent.html#SIGNATURE_HEADER">SIGNATURE_HEADER</a></code></th>
+<td class="colLast"><code>"X-Adobe-Signature"</code></td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a id="io.adobe.cloudmanager.event.CloudManagerEvent.STARTED_EVENT_TYPE">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/event/CloudManagerEvent.html#STARTED_EVENT_TYPE">STARTED_EVENT_TYPE</a></code></th>
+<td class="colLast"><code>"https://ns.adobe.com/experience/cloudmanager/event/started"</code></td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a id="io.adobe.cloudmanager.event.CloudManagerEvent.WAITING_EVENT_TYPE">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><a href="io/adobe/cloudmanager/event/CloudManagerEvent.html#WAITING_EVENT_TYPE">WAITING_EVENT_TYPE</a></code></th>
+<td class="colLast"><code>"https://ns.adobe.com/experience/cloudmanager/event/waiting"</code></td>
 </tr>
 </tbody>
 </table>
@@ -252,7 +252,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020 Adobe Inc.. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 Adobe Inc.. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

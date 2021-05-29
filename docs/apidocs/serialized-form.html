@@ -13,7 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="jquery/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -109,6 +109,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
+<li class="blockList">
+<h4>cause</h4>
+<pre>io.adobe.cloudmanager.generated.invoker.ApiException cause</pre>
+</li>
 <li class="blockListLast">
 <h4>message</h4>
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> message</pre>
@@ -122,53 +126,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Class <a href="io/adobe/cloudmanager/IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">io.adobe.cloudmanager.IdentityManagementApiException</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a> implements Serializable</h3>
 </li>
-</ul>
-</section>
-</li>
-<li class="blockList">
-<section role="region">
-<h2 title="Package">Package&nbsp;io.adobe.cloudmanager.jwt.swagger.invoker</h2>
-<ul class="blockList">
-<li class="blockList"><a id="io.adobe.cloudmanager.jwt.swagger.invoker.ApiException">
+<li class="blockList"><a id="io.adobe.cloudmanager.Variable">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/jwt/swagger/invoker/ApiException.html" title="class in io.adobe.cloudmanager.jwt.swagger.invoker">io.adobe.cloudmanager.jwt.swagger.invoker.ApiException</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>code</h4>
-<pre>int code</pre>
-</li>
-<li class="blockList">
-<h4>responseBody</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> responseBody</pre>
-</li>
-<li class="blockListLast">
-<h4>responseHeaders</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&gt; responseHeaders</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.jwt.swagger.invoker.RFC3339DateFormat">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/jwt/swagger/invoker/RFC3339DateFormat.html" title="class in io.adobe.cloudmanager.jwt.swagger.invoker">io.adobe.cloudmanager.jwt.swagger.invoker.RFC3339DateFormat</a> extends com.fasterxml.jackson.databind.util.ISO8601DateFormat implements Serializable</h3>
-</li>
-</ul>
-</section>
-</li>
-<li class="blockList">
-<section role="region">
-<h2 title="Package">Package&nbsp;io.adobe.cloudmanager.jwt.swagger.model</h2>
-<ul class="blockList">
-<li class="blockList"><a id="io.adobe.cloudmanager.jwt.swagger.model.Body">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/jwt/swagger/model/Body.html" title="class in io.adobe.cloudmanager.jwt.swagger.model">io.adobe.cloudmanager.jwt.swagger.model.Body</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/Variable.html" title="class in io.adobe.cloudmanager">io.adobe.cloudmanager.Variable</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -177,45 +138,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
-<li class="blockList">
-<h4>clientId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> clientId</pre>
-</li>
-<li class="blockList">
-<h4>clientSecret</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> clientSecret</pre>
-</li>
 <li class="blockListLast">
-<h4>jwtToken</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> jwtToken</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.jwt.swagger.model.Token">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/jwt/swagger/model/Token.html" title="class in io.adobe.cloudmanager.jwt.swagger.model">io.adobe.cloudmanager.jwt.swagger.model.Token</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>accessToken</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> accessToken</pre>
-</li>
-<li class="blockList">
-<h4>expiresIn</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a> expiresIn</pre>
-</li>
-<li class="blockListLast">
-<h4>tokenType</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> tokenType</pre>
+<h4>delegate</h4>
+<pre>io.adobe.cloudmanager.generated.model.Variable delegate</pre>
 </li>
 </ul>
 </li>
@@ -226,163 +151,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <section role="region">
-<h2 title="Package">Package&nbsp;io.adobe.cloudmanager.model</h2>
+<h2 title="Package">Package&nbsp;io.adobe.cloudmanager.event</h2>
 <ul class="blockList">
-<li class="blockList"><a id="io.adobe.cloudmanager.model.EmbeddedProgram">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.Organization">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.model">io.adobe.cloudmanager.model.ProgramImpl</a> extends <a href="io/adobe/cloudmanager/swagger/model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.swagger.model">EmbeddedProgram</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>client</h4>
-<pre><a href="io/adobe/cloudmanager/CloudManagerApi.html" title="interface in io.adobe.cloudmanager">CloudManagerApi</a> client</pre>
-</li>
-<li class="blockListLast">
-<h4>delegate</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.swagger.model">EmbeddedProgram</a> delegate</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.model.Environment">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/model/Environment.html" title="class in io.adobe.cloudmanager.model">io.adobe.cloudmanager.model.Environment</a> extends <a href="io/adobe/cloudmanager/swagger/model/Environment.html" title="class in io.adobe.cloudmanager.swagger.model">Environment</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>client</h4>
-<pre><a href="io/adobe/cloudmanager/CloudManagerApi.html" title="interface in io.adobe.cloudmanager">CloudManagerApi</a> client</pre>
-</li>
-<li class="blockListLast">
-<h4>delegate</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Environment.html" title="class in io.adobe.cloudmanager.swagger.model">Environment</a> delegate</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.model.EnvironmentLog">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.model">io.adobe.cloudmanager.model.EnvironmentLog</a> extends <a href="io/adobe/cloudmanager/swagger/model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentLog</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>delegate</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentLog</a> delegate</pre>
-</li>
-<li class="blockList">
-<h4>index</h4>
-<pre>int index</pre>
-</li>
-<li class="blockList">
-<h4>path</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> path</pre>
-</li>
-<li class="blockListLast">
-<h4>url</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> url</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.model.Pipeline">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/model/Pipeline.html" title="class in io.adobe.cloudmanager.model">io.adobe.cloudmanager.model.PipelineImpl</a> extends <a href="io/adobe/cloudmanager/swagger/model/Pipeline.html" title="class in io.adobe.cloudmanager.swagger.model">Pipeline</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>client</h4>
-<pre><a href="io/adobe/cloudmanager/CloudManagerApi.html" title="interface in io.adobe.cloudmanager">CloudManagerApi</a> client</pre>
-</li>
-<li class="blockListLast">
-<h4>delegate</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Pipeline.html" title="class in io.adobe.cloudmanager.swagger.model">Pipeline</a> delegate</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.model.PipelineExecution">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">io.adobe.cloudmanager.model.PipelineExecution</a> extends <a href="io/adobe/cloudmanager/swagger/model/PipelineExecution.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecution</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>client</h4>
-<pre><a href="io/adobe/cloudmanager/CloudManagerApi.html" title="interface in io.adobe.cloudmanager">CloudManagerApi</a> client</pre>
-</li>
-<li class="blockListLast">
-<h4>delegate</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecution.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecution</a> delegate</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.model.PipelineExecutionStepState">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">io.adobe.cloudmanager.model.PipelineExecutionStepState</a> extends <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionStepState</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>client</h4>
-<pre><a href="io/adobe/cloudmanager/CloudManagerApi.html" title="interface in io.adobe.cloudmanager">CloudManagerApi</a> client</pre>
-</li>
-<li class="blockListLast">
-<h4>delegate</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionStepState</a> delegate</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.model.Variable">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/model/Variable.html" title="class in io.adobe.cloudmanager.model">io.adobe.cloudmanager.model.Variable</a> extends <a href="io/adobe/cloudmanager/swagger/model/Variable.html" title="class in io.adobe.cloudmanager.swagger.model">Variable</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>delegate</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Variable.html" title="class in io.adobe.cloudmanager.swagger.model">Variable</a> delegate</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</section>
-</li>
-<li class="blockList">
-<section role="region">
-<h2 title="Package">Package&nbsp;io.adobe.cloudmanager.swagger.events</h2>
-<ul class="blockList">
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.Organization">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/Organization.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.Organization</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/Organization.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.Organization</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -403,10 +177,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecution">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecution">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecution.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecution</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecution.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecution</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -427,10 +201,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionEndEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionEndEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionEndEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionEndEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionEndEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionEndEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -441,7 +215,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>event</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionEndEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecutionEndEventEvent</a> event</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecutionEndEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionEndEventEvent</a> event</pre>
 </li>
 <li class="blockListLast">
 <h4>eventId</h4>
@@ -451,10 +225,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionEndEventEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionEndEventEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionEndEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionEndEventEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionEndEventEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionEndEventEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -473,28 +247,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <h4>activitystreamsobject</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecution.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecution</a> activitystreamsobject</pre>
-</li>
-<li class="blockList">
-<h4>activitystreamsobjectType</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> activitystreamsobjectType</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecution.html" title="class in io.adobe.cloudmanager.event">PipelineExecution</a> activitystreamsobject</pre>
 </li>
 <li class="blockList">
 <h4>activitystreamspublished</h4>
-<pre>org.joda.time.DateTime activitystreamspublished</pre>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/OffsetDateTime.html?is-external=true" title="class or interface in java.time" class="externalLink">OffsetDateTime</a> activitystreamspublished</pre>
+</li>
+<li class="blockList">
+<h4>activitystreamsto</h4>
+<pre><a href="io/adobe/cloudmanager/event/Organization.html" title="class in io.adobe.cloudmanager.event">Organization</a> activitystreamsto</pre>
 </li>
 <li class="blockListLast">
-<h4>activitystreamsto</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/Organization.html" title="class in io.adobe.cloudmanager.swagger.events">Organization</a> activitystreamsto</pre>
+<h4>xdmEventEnvelopeobjectType</h4>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> xdmEventEnvelopeobjectType</pre>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionStartEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionStartEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStartEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionStartEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionStartEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionStartEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -505,7 +279,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>event</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStartEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecutionStartEventEvent</a> event</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecutionStartEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStartEventEvent</a> event</pre>
 </li>
 <li class="blockListLast">
 <h4>eventId</h4>
@@ -515,10 +289,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionStartEventEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionStartEventEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStartEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionStartEventEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionStartEventEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionStartEventEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -537,32 +311,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <h4>activitystreamsactor</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/User.html" title="class in io.adobe.cloudmanager.swagger.events">User</a> activitystreamsactor</pre>
+<pre><a href="io/adobe/cloudmanager/event/User.html" title="class in io.adobe.cloudmanager.event">User</a> activitystreamsactor</pre>
 </li>
 <li class="blockList">
 <h4>activitystreamsobject</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecution.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecution</a> activitystreamsobject</pre>
-</li>
-<li class="blockList">
-<h4>activitystreamsobjectType</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> activitystreamsobjectType</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecution.html" title="class in io.adobe.cloudmanager.event">PipelineExecution</a> activitystreamsobject</pre>
 </li>
 <li class="blockList">
 <h4>activitystreamspublished</h4>
-<pre>org.joda.time.DateTime activitystreamspublished</pre>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/OffsetDateTime.html?is-external=true" title="class or interface in java.time" class="externalLink">OffsetDateTime</a> activitystreamspublished</pre>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>activitystreamsto</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/Organization.html" title="class in io.adobe.cloudmanager.swagger.events">Organization</a> activitystreamsto</pre>
+<pre><a href="io/adobe/cloudmanager/event/Organization.html" title="class in io.adobe.cloudmanager.event">Organization</a> activitystreamsto</pre>
+</li>
+<li class="blockListLast">
+<h4>xdmEventEnvelopeobjectType</h4>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> xdmEventEnvelopeobjectType</pre>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionStepEndEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepEndEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionStepEndEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionStepEndEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -573,7 +347,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>event</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecutionStepStartEventEvent</a> event</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepStartEventEvent</a> event</pre>
 </li>
 <li class="blockListLast">
 <h4>eventId</h4>
@@ -583,10 +357,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionStepStartEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepStartEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionStepStartEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionStepStartEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -597,7 +371,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>event</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecutionStepStartEventEvent</a> event</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepStartEventEvent</a> event</pre>
 </li>
 <li class="blockListLast">
 <h4>eventId</h4>
@@ -607,10 +381,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionStepStartEventEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionStepStartEventEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionStepStartEventEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionStepStartEventEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -629,28 +403,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <h4>activitystreamsobject</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecutionStepState</a> activitystreamsobject</pre>
-</li>
-<li class="blockList">
-<h4>activitystreamsobjectType</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> activitystreamsobjectType</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepState</a> activitystreamsobject</pre>
 </li>
 <li class="blockList">
 <h4>activitystreamspublished</h4>
-<pre>org.joda.time.DateTime activitystreamspublished</pre>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/OffsetDateTime.html?is-external=true" title="class or interface in java.time" class="externalLink">OffsetDateTime</a> activitystreamspublished</pre>
+</li>
+<li class="blockList">
+<h4>activitystreamsto</h4>
+<pre><a href="io/adobe/cloudmanager/event/Organization.html" title="class in io.adobe.cloudmanager.event">Organization</a> activitystreamsto</pre>
 </li>
 <li class="blockListLast">
-<h4>activitystreamsto</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/Organization.html" title="class in io.adobe.cloudmanager.swagger.events">Organization</a> activitystreamsto</pre>
+<h4>xdmEventEnvelopeobjectType</h4>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> xdmEventEnvelopeobjectType</pre>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionStepState">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionStepState">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionStepState</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionStepState</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -671,10 +445,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.PipelineExecutionStepWaitingEvent">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepWaitingEvent.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.PipelineExecutionStepWaitingEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/PipelineExecutionStepWaitingEvent.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -685,7 +459,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>event</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/events/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.swagger.events">PipelineExecutionStepStartEventEvent</a> event</pre>
+<pre><a href="io/adobe/cloudmanager/event/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepStartEventEvent</a> event</pre>
 </li>
 <li class="blockListLast">
 <h4>eventId</h4>
@@ -695,10 +469,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.events.User">
+<li class="blockList"><a id="io.adobe.cloudmanager.event.User">
 <!--   -->
 </a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/events/User.html" title="class in io.adobe.cloudmanager.swagger.events">io.adobe.cloudmanager.swagger.events.User</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
+<h3>Class <a href="io/adobe/cloudmanager/event/User.html" title="class in io.adobe.cloudmanager.event">io.adobe.cloudmanager.event.User</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1L</dd>
@@ -714,1645 +488,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockListLast">
 <h4>xdmImsUserid</h4>
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> xdmImsUserid</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</section>
-</li>
-<li class="blockList">
-<section role="region">
-<h2 title="Package">Package&nbsp;io.adobe.cloudmanager.swagger.invoker</h2>
-<ul class="blockList">
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.invoker.ApiException">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/invoker/ApiException.html" title="class in io.adobe.cloudmanager.swagger.invoker">io.adobe.cloudmanager.swagger.invoker.ApiException</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>code</h4>
-<pre>int code</pre>
-</li>
-<li class="blockList">
-<h4>responseBody</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> responseBody</pre>
-</li>
-<li class="blockListLast">
-<h4>responseHeaders</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&gt; responseHeaders</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.invoker.RFC3339DateFormat">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/invoker/RFC3339DateFormat.html" title="class in io.adobe.cloudmanager.swagger.invoker">io.adobe.cloudmanager.swagger.invoker.RFC3339DateFormat</a> extends com.fasterxml.jackson.databind.util.ISO8601DateFormat implements Serializable</h3>
-</li>
-</ul>
-</section>
-</li>
-<li class="blockList">
-<section role="region">
-<h2 title="Package">Package&nbsp;io.adobe.cloudmanager.swagger.model</h2>
-<ul class="blockList">
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.BadRequestError">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/BadRequestError.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.BadRequestError</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>invalidParams</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/InvalidParameter.html" title="class in io.adobe.cloudmanager.swagger.model">InvalidParameter</a>&gt; invalidParams</pre>
-</li>
-<li class="blockList">
-<h4>missingParams</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/MissingParameter.html" title="class in io.adobe.cloudmanager.swagger.model">MissingParameter</a>&gt; missingParams</pre>
-</li>
-<li class="blockList">
-<h4>status</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> status</pre>
-</li>
-<li class="blockList">
-<h4>title</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> title</pre>
-</li>
-<li class="blockListLast">
-<h4>type</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> type</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.BranchList">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/BranchList.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.BranchList</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/BranchListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">BranchListEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/ProgramListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">ProgramListLinks</a> _links</pre>
-</li>
-<li class="blockListLast">
-<h4>_totalNumberOfItems</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> _totalNumberOfItems</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.BranchListEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/BranchListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.BranchListEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>branches</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/RepositoryBranch.html" title="class in io.adobe.cloudmanager.swagger.model">RepositoryBranch</a>&gt; branches</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EmbeddedProgram">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EmbeddedProgram</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EmbeddedProgramLinks.html" title="class in io.adobe.cloudmanager.swagger.model">EmbeddedProgramLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>enabled</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a> enabled</pre>
-</li>
-<li class="blockList">
-<h4>id</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> id</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockListLast">
-<h4>tenantId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> tenantId</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EmbeddedProgramLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EmbeddedProgramLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EmbeddedProgramLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.Environment">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/Environment.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.Environment</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EnvironmentLinks.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>availableLogOptions</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/LogOptionRepresentation.html" title="class in io.adobe.cloudmanager.swagger.model">LogOptionRepresentation</a>&gt; availableLogOptions</pre>
-</li>
-<li class="blockList">
-<h4>description</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> description</pre>
-</li>
-<li class="blockList">
-<h4>id</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> id</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockList">
-<h4>programId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> programId</pre>
-</li>
-<li class="blockListLast">
-<h4>type</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Environment.TypeEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">Environment.TypeEnum</a> type</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelauthor</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelauthor</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudreldeveloperConsole</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudreldeveloperConsole</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrellogs</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrellogs</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipeline</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipeline</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpublish</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpublish</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelvariables</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelvariables</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentList">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentList.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentList</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EnvironmentListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentListEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/ProgramListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">ProgramListLinks</a> _links</pre>
-</li>
-<li class="blockListLast">
-<h4>_totalNumberOfItems</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> _totalNumberOfItems</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentListEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentListEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>environments</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/Environment.html" title="class in io.adobe.cloudmanager.swagger.model">Environment</a>&gt; environments</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentLog">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentLog</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EnvironmentLogLinks.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentLogLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>date</h4>
-<pre>org.joda.time.LocalDate date</pre>
-</li>
-<li class="blockList">
-<h4>environmentId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a> environmentId</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockList">
-<h4>programId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a> programId</pre>
-</li>
-<li class="blockListLast">
-<h4>service</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> service</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentLogLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentLogLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentLogLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrellogsdownload</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrellogsdownload</pre>
-</li>
-<li class="blockListLast">
-<h4>httpnsAdobeComadobecloudrellogstail</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrellogstail</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentLogs">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentLogs.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentLogs</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EnvironmentLogsEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentLogsEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/EnvironmentLogsLinks.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentLogsLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>days</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> days</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt; name</pre>
-</li>
-<li class="blockListLast">
-<h4>service</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt; service</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentLogsEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentLogsEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentLogsEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>downloads</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.swagger.model">EnvironmentLog</a>&gt; downloads</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.EnvironmentLogsLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/EnvironmentLogsLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.EnvironmentLogsLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.HalLink">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.HalLink</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>deprecation</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> deprecation</pre>
-</li>
-<li class="blockList">
-<h4>href</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> href</pre>
-</li>
-<li class="blockList">
-<h4>hreflang</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> hreflang</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockList">
-<h4>profile</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> profile</pre>
-</li>
-<li class="blockList">
-<h4>templated</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a> templated</pre>
-</li>
-<li class="blockList">
-<h4>title</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> title</pre>
-</li>
-<li class="blockListLast">
-<h4>type</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> type</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.InvalidParameter">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/InvalidParameter.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.InvalidParameter</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockListLast">
-<h4>reason</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> reason</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.LogOptionRepresentation">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/LogOptionRepresentation.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.LogOptionRepresentation</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockListLast">
-<h4>service</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> service</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.Metric">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/Metric.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.Metric</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>actualValue</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> actualValue</pre>
-</li>
-<li class="blockList">
-<h4>comparator</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Metric.ComparatorEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">Metric.ComparatorEnum</a> comparator</pre>
-</li>
-<li class="blockList">
-<h4>expectedValue</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> expectedValue</pre>
-</li>
-<li class="blockList">
-<h4>id</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> id</pre>
-</li>
-<li class="blockList">
-<h4>kpi</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> kpi</pre>
-</li>
-<li class="blockList">
-<h4>override</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a> override</pre>
-</li>
-<li class="blockList">
-<h4>passed</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a> passed</pre>
-</li>
-<li class="blockListLast">
-<h4>severity</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Metric.SeverityEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">Metric.SeverityEnum</a> severity</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.MissingParameter">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/MissingParameter.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.MissingParameter</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockListLast">
-<h4>type</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> type</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.Pipeline">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/Pipeline.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.Pipeline</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineLinks.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>createdAt</h4>
-<pre>org.joda.time.DateTime createdAt</pre>
-</li>
-<li class="blockList">
-<h4>id</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> id</pre>
-</li>
-<li class="blockList">
-<h4>lastFinishedAt</h4>
-<pre>org.joda.time.DateTime lastFinishedAt</pre>
-</li>
-<li class="blockList">
-<h4>lastStartedAt</h4>
-<pre>org.joda.time.DateTime lastStartedAt</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockList">
-<h4>phases</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/PipelinePhase.html" title="class in io.adobe.cloudmanager.swagger.model">PipelinePhase</a>&gt; phases</pre>
-</li>
-<li class="blockList">
-<h4>programId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> programId</pre>
-</li>
-<li class="blockList">
-<h4>status</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Pipeline.StatusEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">Pipeline.StatusEnum</a> status</pre>
-</li>
-<li class="blockList">
-<h4>trigger</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Pipeline.TriggerEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">Pipeline.TriggerEnum</a> trigger</pre>
-</li>
-<li class="blockListLast">
-<h4>updatedAt</h4>
-<pre>org.joda.time.DateTime updatedAt</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecution">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecution.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecution</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionLinks.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>artifactsVersion</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> artifactsVersion</pre>
-</li>
-<li class="blockList">
-<h4>createdAt</h4>
-<pre>org.joda.time.DateTime createdAt</pre>
-</li>
-<li class="blockList">
-<h4>finishedAt</h4>
-<pre>org.joda.time.DateTime finishedAt</pre>
-</li>
-<li class="blockList">
-<h4>id</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> id</pre>
-</li>
-<li class="blockList">
-<h4>pipelineId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> pipelineId</pre>
-</li>
-<li class="blockList">
-<h4>programId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> programId</pre>
-</li>
-<li class="blockList">
-<h4>status</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecution.StatusEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">PipelineExecution.StatusEnum</a> status</pre>
-</li>
-<li class="blockList">
-<h4>trigger</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecution.TriggerEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">PipelineExecution.TriggerEnum</a> trigger</pre>
-</li>
-<li class="blockList">
-<h4>updatedAt</h4>
-<pre>org.joda.time.DateTime updatedAt</pre>
-</li>
-<li class="blockListLast">
-<h4>user</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> user</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecutionEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecutionEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>stepStates</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionStepState</a>&gt; stepStates</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecutionLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecutionLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipeline</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipeline</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecutionListRepresentation">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionListRepresentation.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecutionListRepresentation</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionListRepresentationEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionListRepresentationEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionListRepresentationLinks.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionListRepresentationLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>_page</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/RequestedPageDetails.html" title="class in io.adobe.cloudmanager.swagger.model">RequestedPageDetails</a> _page</pre>
-</li>
-<li class="blockListLast">
-<h4>_totalNumberOfItems</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> _totalNumberOfItems</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecutionListRepresentationEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionListRepresentationEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecutionListRepresentationEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>executions</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/PipelineExecution.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecution</a>&gt; executions</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecutionListRepresentationLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionListRepresentationLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecutionListRepresentationLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>next</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> next</pre>
-</li>
-<li class="blockList">
-<h4>page</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> page</pre>
-</li>
-<li class="blockList">
-<h4>prev</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> prev</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecutionStepState</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionStepStateLinks.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineExecutionStepStateLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>action</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> action</pre>
-</li>
-<li class="blockList">
-<h4>branch</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> branch</pre>
-</li>
-<li class="blockList">
-<h4>details</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt; details</pre>
-</li>
-<li class="blockList">
-<h4>environment</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> environment</pre>
-</li>
-<li class="blockList">
-<h4>environmentId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> environmentId</pre>
-</li>
-<li class="blockList">
-<h4>environmentType</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> environmentType</pre>
-</li>
-<li class="blockList">
-<h4>finishedAt</h4>
-<pre>org.joda.time.DateTime finishedAt</pre>
-</li>
-<li class="blockList">
-<h4>id</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> id</pre>
-</li>
-<li class="blockList">
-<h4>phaseId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> phaseId</pre>
-</li>
-<li class="blockList">
-<h4>repository</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> repository</pre>
-</li>
-<li class="blockList">
-<h4>startedAt</h4>
-<pre>org.joda.time.DateTime startedAt</pre>
-</li>
-<li class="blockList">
-<h4>status</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionStepState.StatusEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">PipelineExecutionStepState.StatusEnum</a> status</pre>
-</li>
-<li class="blockListLast">
-<h4>stepId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> stepId</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineExecutionStepStateLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineExecutionStepStateLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineExecutionStepStateLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelexecution</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelexecution</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipeline</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipeline</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipelineadvance</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipelineadvance</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipelinecancel</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipelinecancel</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipelinelogs</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipelinelogs</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipelinemetrics</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipelinemetrics</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelexecution</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelexecution</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelexecutionid</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelexecutionid</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelexecutions</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelexecutions</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelrollbackLastSuccessfulExecution</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelrollbackLastSuccessfulExecution</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelvariables</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelvariables</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineList">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineList.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineList</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelineListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineListEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/ProgramListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">ProgramListLinks</a> _links</pre>
-</li>
-<li class="blockListLast">
-<h4>_totalNumberOfItems</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> _totalNumberOfItems</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineListEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineListEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>pipelines</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/Pipeline.html" title="class in io.adobe.cloudmanager.swagger.model">Pipeline</a>&gt; pipelines</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelinePhase">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelinePhase.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelinePhase</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>branch</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> branch</pre>
-</li>
-<li class="blockList">
-<h4>environmentId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> environmentId</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockList">
-<h4>repositoryId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> repositoryId</pre>
-</li>
-<li class="blockListLast">
-<h4>type</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/PipelinePhase.TypeEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">PipelinePhase.TypeEnum</a> type</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.PipelineStepMetrics">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/PipelineStepMetrics.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.PipelineStepMetrics</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>metrics</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/Metric.html" title="class in io.adobe.cloudmanager.swagger.model">Metric</a>&gt; metrics</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.Program">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/Program.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.Program</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/ProgramLinks.html" title="class in io.adobe.cloudmanager.swagger.model">ProgramLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>enabled</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a> enabled</pre>
-</li>
-<li class="blockList">
-<h4>id</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> id</pre>
-</li>
-<li class="blockList">
-<h4>imsOrgId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> imsOrgId</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockListLast">
-<h4>tenantId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> tenantId</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.ProgramLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/ProgramLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.ProgramLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelenvironments</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelenvironments</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipelines</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipelines</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelrepositories</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelrepositories</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.ProgramList">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/ProgramList.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.ProgramList</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/ProgramListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">ProgramListEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/ProgramListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">ProgramListLinks</a> _links</pre>
-</li>
-<li class="blockListLast">
-<h4>_totalNumberOfItems</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> _totalNumberOfItems</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.ProgramListEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/ProgramListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.ProgramListEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>programs</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.swagger.model">EmbeddedProgram</a>&gt; programs</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.ProgramListLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/ProgramListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.ProgramListLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>next</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> next</pre>
-</li>
-<li class="blockList">
-<h4>prev</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> prev</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.Redirect">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/Redirect.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.Redirect</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>redirect</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> redirect</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.Repository">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/Repository.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.Repository</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/RepositoryLinks.html" title="class in io.adobe.cloudmanager.swagger.model">RepositoryLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>description</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> description</pre>
-</li>
-<li class="blockListLast">
-<h4>repo</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> repo</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.RepositoryBranch">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/RepositoryBranch.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.RepositoryBranch</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/RepositoryBranchLinks.html" title="class in io.adobe.cloudmanager.swagger.model">RepositoryBranchLinks</a> _links</pre>
-</li>
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockList">
-<h4>programId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> programId</pre>
-</li>
-<li class="blockListLast">
-<h4>repositoryId</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a> repositoryId</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.RepositoryBranchLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/RepositoryBranchLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.RepositoryBranchLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockListLast">
-<h4>httpnsAdobeComadobecloudrelrepository</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelrepository</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.RepositoryLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/RepositoryLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.RepositoryLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelbranches</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelbranches</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.RepositoryList">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/RepositoryList.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.RepositoryList</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/RepositoryListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">RepositoryListEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/ProgramListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">ProgramListLinks</a> _links</pre>
-</li>
-<li class="blockListLast">
-<h4>_totalNumberOfItems</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> _totalNumberOfItems</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.RepositoryListEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/RepositoryListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.RepositoryListEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>repositories</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/Repository.html" title="class in io.adobe.cloudmanager.swagger.model">Repository</a>&gt; repositories</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.RequestedPageDetails">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/RequestedPageDetails.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.RequestedPageDetails</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>limit</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> limit</pre>
-</li>
-<li class="blockList">
-<h4>next</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> next</pre>
-</li>
-<li class="blockList">
-<h4>orderBy</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> orderBy</pre>
-</li>
-<li class="blockList">
-<h4>prev</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> prev</pre>
-</li>
-<li class="blockList">
-<h4>property</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt; property</pre>
-</li>
-<li class="blockList">
-<h4>start</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> start</pre>
-</li>
-<li class="blockListLast">
-<h4>type</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> type</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.Variable">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/Variable.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.Variable</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>name</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> name</pre>
-</li>
-<li class="blockList">
-<h4>type</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/Variable.TypeEnum.html" title="enum in io.adobe.cloudmanager.swagger.model">Variable.TypeEnum</a> type</pre>
-</li>
-<li class="blockListLast">
-<h4>value</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> value</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.VariableList">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/VariableList.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.VariableList</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>_embedded</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/VariableListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">VariableListEmbedded</a> _embedded</pre>
-</li>
-<li class="blockList">
-<h4>_links</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/VariableListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">VariableListLinks</a> _links</pre>
-</li>
-<li class="blockListLast">
-<h4>_totalNumberOfItems</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a> _totalNumberOfItems</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.VariableListEmbedded">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/VariableListEmbedded.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.VariableListEmbedded</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>variables</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="io/adobe/cloudmanager/swagger/model/Variable.html" title="class in io.adobe.cloudmanager.swagger.model">Variable</a>&gt; variables</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a id="io.adobe.cloudmanager.swagger.model.VariableListLinks">
-<!--   -->
-</a>
-<h3>Class <a href="io/adobe/cloudmanager/swagger/model/VariableListLinks.html" title="class in io.adobe.cloudmanager.swagger.model">io.adobe.cloudmanager.swagger.model.VariableListLinks</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>1L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelenvironment</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelenvironment</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelpipeline</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelpipeline</pre>
-</li>
-<li class="blockList">
-<h4>httpnsAdobeComadobecloudrelprogram</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> httpnsAdobeComadobecloudrelprogram</pre>
-</li>
-<li class="blockListLast">
-<h4>self</h4>
-<pre><a href="io/adobe/cloudmanager/swagger/model/HalLink.html" title="class in io.adobe.cloudmanager.swagger.model">HalLink</a> self</pre>
 </li>
 </ul>
 </li>
@@ -2409,7 +544,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020 Adobe Inc.. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 Adobe Inc.. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

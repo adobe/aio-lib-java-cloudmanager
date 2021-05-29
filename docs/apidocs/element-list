@@ -1,13 +1,2 @@
 io.adobe.cloudmanager
-io.adobe.cloudmanager.impl
-io.adobe.cloudmanager.jwt.swagger.api
-io.adobe.cloudmanager.jwt.swagger.invoker
-io.adobe.cloudmanager.jwt.swagger.invoker.auth
-io.adobe.cloudmanager.jwt.swagger.model
-io.adobe.cloudmanager.model
-io.adobe.cloudmanager.swagger.api
-io.adobe.cloudmanager.swagger.events
-io.adobe.cloudmanager.swagger.invoker
-io.adobe.cloudmanager.swagger.invoker.auth
-io.adobe.cloudmanager.swagger.model
-io.adobe.cloudmanager.util
+io.adobe.cloudmanager.event

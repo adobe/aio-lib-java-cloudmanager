@@ -13,7 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../jquery/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -110,11 +110,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager.impl">io.adobe.cloudmanager.impl</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager.model">io.adobe.cloudmanager.model</a></th>
+<th class="colFirst" scope="row"><a href="#io.adobe.cloudmanager.event">io.adobe.cloudmanager.event</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -137,661 +133,197 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#advanceCurrentExecution(java.lang.String,java.lang.String)">advanceCurrentExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">
-<div class="block">Advances the current execution of the specified pipeline, if in an appropriate state.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#advanceExecution(io.adobe.cloudmanager.model.PipelineExecution)">advanceExecution</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">
-<div class="block">Advances the execution of the specified pipeline execution, if in an appropriate state.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#advanceExecution(java.lang.String,java.lang.String,java.lang.String)">advanceExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">
-<div class="block">Advances the execution of the specified pipeline execution, if in an appropriate state.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#cancelCurrentExecution(java.lang.String,java.lang.String)">cancelCurrentExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">
-<div class="block">Cancels the current execution of the specified pipeline, if any execution exists.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#cancelExecution(io.adobe.cloudmanager.model.PipelineExecution)">cancelExecution</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">
-<div class="block">Cancels the execution of the specified pipeline execution, if in an appropriate state.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#cancelExecution(java.lang.String,java.lang.String,java.lang.String)">cancelExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">
-<div class="block">Cancels the execution of the specified pipeline execution, if in an appropriate state.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteEnvironment(io.adobe.cloudmanager.model.Environment)">deleteEnvironment</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment)</code></th>
-<td class="colLast">
-<div class="block">Delete the specified environment.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteEnvironment(java.lang.String,java.lang.String)">deleteEnvironment</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId)</code></th>
-<td class="colLast">
-<div class="block">Delete the environment in the specified program.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deletePipeline(io.adobe.cloudmanager.model.Pipeline)">deletePipeline</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline)</code></th>
-<td class="colLast">
-<div class="block">Delete the specified pipeline.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deletePipeline(java.lang.String,java.lang.String)">deletePipeline</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">
-<div class="block">Delete the specified pipeline.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteProgram(io.adobe.cloudmanager.model.EmbeddedProgram)">deleteProgram</a></span>&#8203;(<a href="../model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.model">EmbeddedProgram</a>&nbsp;program)</code></th>
-<td class="colLast">
-<div class="block">Delete the specified program.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteProgram(java.lang.String)">deleteProgram</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
-<td class="colLast">
-<div class="block">Delete the specified program.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.model">EnvironmentLog</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadLogs(io.adobe.cloudmanager.model.Environment,java.lang.String,java.lang.String,int,java.io.File)">downloadLogs</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;service,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;logName,
-            int&nbsp;days,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;dir)</code></th>
-<td class="colLast">
-<div class="block">Downloads the logs for the specified environment.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.model">EnvironmentLog</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadLogs(java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,java.io.File)">downloadLogs</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;service,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;logName,
-            int&nbsp;days,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;dir)</code></th>
-<td class="colLast">
-<div class="block">Downloads the logs for the specified environment.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getCurrentExecution(java.lang.String,java.lang.String)">getCurrentExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">
-<div class="block">Returns the current execution of the specified pipeline.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getCurrentStep(io.adobe.cloudmanager.model.PipelineExecution)">getCurrentStep</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">
-<div class="block">Gets the current step for the execution.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getEnvironmentVariables(io.adobe.cloudmanager.model.Environment)">getEnvironmentVariables</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment)</code></th>
-<td class="colLast">
-<div class="block">Lists all variables associated with the specified environment</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getEnvironmentVariables(java.lang.String,java.lang.String)">getEnvironmentVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId)</code></th>
-<td class="colLast">
-<div class="block">Lists all variables associated with the specified environment</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecution(io.adobe.cloudmanager.model.Pipeline,java.lang.String)">getExecution</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">
-<div class="block">Returns the specified execution of the pipeline.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecution(java.lang.String,java.lang.String,java.lang.String)">getExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">
-<div class="block">Returns the specified execution of the pipeline.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLog(io.adobe.cloudmanager.model.PipelineExecutionStepState,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">
-<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLog(io.adobe.cloudmanager.model.PipelineExecutionStepState,java.lang.String,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">
-<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLog(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">
-<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLog(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">
-<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepState(io.adobe.cloudmanager.model.PipelineExecution,java.lang.String)">getExecutionStepState</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution,
-                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action)</code></th>
-<td class="colLast">
-<div class="block">Returns the specified action step for the pipeline execution</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getPipelineVariables(io.adobe.cloudmanager.model.Pipeline)">getPipelineVariables</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline)</code></th>
-<td class="colLast">
-<div class="block">Lists all variables associated with the specified pipeline</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getPipelineVariables(java.lang.String,java.lang.String)">getPipelineVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">
-<div class="block">Lists all variables associated with the specified pipeline</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../swagger/model/PipelineStepMetrics.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineStepMetrics</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getQualityGateResults(io.adobe.cloudmanager.model.PipelineExecutionStepState)">getQualityGateResults</a></span>&#8203;(<a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a>&nbsp;step)</code></th>
-<td class="colLast">
-<div class="block">Retrieves the metrics for the specified execution step, if any.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getWaitingStep(io.adobe.cloudmanager.model.PipelineExecution)">getWaitingStep</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">
-<div class="block">Gets the waiting step for the execution.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listEnvironments(java.lang.String)">listEnvironments</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
-<td class="colLast">
-<div class="block">Lists all environments in the specified program.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPipelines(java.lang.String)">listPipelines</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
-<td class="colLast">
-<div class="block">Lists all pipelines within the specified program.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPipelines(java.lang.String,java.util.function.Predicate)">listPipelines</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&gt;&nbsp;predicate)</code></th>
-<td class="colLast">
-<div class="block">Lists all pipelines in the program, that meed the predicate clause.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.model">EmbeddedProgram</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPrograms()">listPrograms</a></span>()</code></th>
-<td class="colLast">
-<div class="block">List all programs in the organization</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setEnvironmentVariables(io.adobe.cloudmanager.model.Environment,io.adobe.cloudmanager.model.Variable...)">setEnvironmentVariables</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment,
-                       <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">
-<div class="block">Sets the specified variables in the environment.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setEnvironmentVariables(java.lang.String,java.lang.String,io.adobe.cloudmanager.model.Variable...)">setEnvironmentVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId,
-                       <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">
-<div class="block">Sets the specified variables in the environment.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setPipelineVariables(io.adobe.cloudmanager.model.Pipeline,io.adobe.cloudmanager.model.Variable...)">setPipelineVariables</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline,
-                    <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">
-<div class="block">Sets the specified variables in the pipeline</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setPipelineVariables(java.lang.String,java.lang.String,io.adobe.cloudmanager.model.Variable...)">setPipelineVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                    <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">
-<div class="block">Sets the specified variables in the pipeline</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#startExecution(io.adobe.cloudmanager.model.Pipeline)">startExecution</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline)</code></th>
-<td class="colLast">
-<div class="block">Starts the specified pipeline</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#startExecution(java.lang.String,java.lang.String)">startExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">
-<div class="block">Starts the specified pipeline.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#updatePipeline(io.adobe.cloudmanager.model.Pipeline,io.adobe.cloudmanager.PipelineUpdate)">updatePipeline</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline,
-              <a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;updates)</code></th>
-<td class="colLast">
-<div class="block">Changes details about a pipeline.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#updatePipeline(java.lang.String,java.lang.String,io.adobe.cloudmanager.PipelineUpdate)">updatePipeline</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-              <a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;updates)</code></th>
-<td class="colLast">
-<div class="block">Changes details about a pipeline.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="io.adobe.cloudmanager.impl">
-<!--   -->
-</a>
-<h3>Uses of <a href="../CloudManagerApiException.html" title="class in io.adobe.cloudmanager">CloudManagerApiException</a> in <a href="../impl/package-summary.html">io.adobe.cloudmanager.impl</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../impl/package-summary.html">io.adobe.cloudmanager.impl</a> that throw <a href="../CloudManagerApiException.html" title="class in io.adobe.cloudmanager">CloudManagerApiException</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#advanceCurrentExecution(java.lang.String,java.lang.String)">advanceCurrentExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#advanceExecution(io.adobe.cloudmanager.model.PipelineExecution)">advanceExecution</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#advanceExecution(java.lang.String,java.lang.String,java.lang.String)">advanceExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#cancelCurrentExecution(java.lang.String,java.lang.String)">cancelCurrentExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#cancelExecution(io.adobe.cloudmanager.model.PipelineExecution)">cancelExecution</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#cancelExecution(java.lang.String,java.lang.String,java.lang.String)">cancelExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#deleteEnvironment(io.adobe.cloudmanager.model.Environment)">deleteEnvironment</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#deleteEnvironment(java.lang.String,java.lang.String)">deleteEnvironment</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#deletePipeline(io.adobe.cloudmanager.model.Pipeline)">deletePipeline</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#deletePipeline(java.lang.String,java.lang.String)">deletePipeline</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#deleteProgram(io.adobe.cloudmanager.model.EmbeddedProgram)">deleteProgram</a></span>&#8203;(<a href="../model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.model">EmbeddedProgram</a>&nbsp;program)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#deleteProgram(java.lang.String)">deleteProgram</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.model">EnvironmentLog</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#downloadLogs(io.adobe.cloudmanager.model.Environment,java.lang.String,java.lang.String,int,java.io.File)">downloadLogs</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;service,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-            int&nbsp;days,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;dir)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.model">EnvironmentLog</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#downloadLogs(java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,java.io.File)">downloadLogs</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;service,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-            int&nbsp;days,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;dir)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getCurrentExecution(java.lang.String,java.lang.String)">getCurrentExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getCurrentStep(io.adobe.cloudmanager.model.PipelineExecution)">getCurrentStep</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getEnvironmentVariables(io.adobe.cloudmanager.model.Environment)">getEnvironmentVariables</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getEnvironmentVariables(java.lang.String,java.lang.String)">getEnvironmentVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getExecution(io.adobe.cloudmanager.model.Pipeline,java.lang.String)">getExecution</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getExecution(java.lang.String,java.lang.String,java.lang.String)">getExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getExecutionStepLog(io.adobe.cloudmanager.model.PipelineExecutionStepState,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getExecutionStepLog(io.adobe.cloudmanager.model.PipelineExecutionStepState,java.lang.String,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getExecutionStepLog(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getExecutionStepLog(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.io.OutputStream)">getExecutionStepLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getExecutionStepState(io.adobe.cloudmanager.model.PipelineExecution,java.lang.String)">getExecutionStepState</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution,
-                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getPipelineVariables(io.adobe.cloudmanager.model.Pipeline)">getPipelineVariables</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getPipelineVariables(java.lang.String,java.lang.String)">getPipelineVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../swagger/model/PipelineStepMetrics.html" title="class in io.adobe.cloudmanager.swagger.model">PipelineStepMetrics</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getQualityGateResults(io.adobe.cloudmanager.model.PipelineExecutionStepState)">getQualityGateResults</a></span>&#8203;(<a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a>&nbsp;step)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.model">PipelineExecutionStepState</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#getWaitingStep(io.adobe.cloudmanager.model.PipelineExecution)">getWaitingStep</a></span>&#8203;(<a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a>&nbsp;execution)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#listEnvironments(java.lang.String)">listEnvironments</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#listPipelines(java.lang.String)">listPipelines</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#listPipelines(java.lang.String,java.util.function.Predicate)">listPipelines</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&gt;&nbsp;predicate)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/EmbeddedProgram.html" title="class in io.adobe.cloudmanager.model">EmbeddedProgram</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#listPrograms()">listPrograms</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#setEnvironmentVariables(io.adobe.cloudmanager.model.Environment,io.adobe.cloudmanager.model.Variable...)">setEnvironmentVariables</a></span>&#8203;(<a href="../model/Environment.html" title="class in io.adobe.cloudmanager.model">Environment</a>&nbsp;environment,
-                       <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#setEnvironmentVariables(java.lang.String,java.lang.String,io.adobe.cloudmanager.model.Variable...)">setEnvironmentVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId,
-                       <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#setPipelineVariables(io.adobe.cloudmanager.model.Pipeline,io.adobe.cloudmanager.model.Variable...)">setPipelineVariables</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline,
-                    <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#setPipelineVariables(java.lang.String,java.lang.String,io.adobe.cloudmanager.model.Variable...)">setPipelineVariables</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-                    <a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#startExecution(io.adobe.cloudmanager.model.Pipeline)">startExecution</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;pipeline)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#startExecution(java.lang.String,java.lang.String)">startExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#updatePipeline(io.adobe.cloudmanager.model.Pipeline,io.adobe.cloudmanager.PipelineUpdate)">updatePipeline</a></span>&#8203;(<a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a>&nbsp;original,
-              <a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;updates)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApiImpl.</span><code><span class="memberNameLink"><a href="../impl/CloudManagerApiImpl.html#updatePipeline(java.lang.String,java.lang.String,io.adobe.cloudmanager.PipelineUpdate)">updatePipeline</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
-              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
-              <a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;updates)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="io.adobe.cloudmanager.model">
-<!--   -->
-</a>
-<h3>Uses of <a href="../CloudManagerApiException.html" title="class in io.adobe.cloudmanager">CloudManagerApiException</a> in <a href="../model/package-summary.html">io.adobe.cloudmanager.model</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../model/package-summary.html">io.adobe.cloudmanager.model</a> that throw <a href="../CloudManagerApiException.html" title="class in io.adobe.cloudmanager">CloudManagerApiException</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../model/PipelineExecution.html#advance()">advance</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../PipelineExecution.html#advance()">advance</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Advances this execution if in a valid state.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../model/PipelineExecution.html#cancel()">cancel</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#advanceCurrentExecution(java.lang.String,java.lang.String)">advanceCurrentExecution</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                       @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
+<td class="colLast">
+<div class="block">Advances the current execution of the specified pipeline.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#advanceExecution(io.adobe.cloudmanager.PipelineExecution)">advanceExecution</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution)</code></th>
+<td class="colLast">
+<div class="block">Advances the execution of the specified pipeline execution, if in an appropriate state.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#advanceExecution(java.lang.String,java.lang.String,java.lang.String)">advanceExecution</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+                @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
+<td class="colLast">
+<div class="block">Advances the execution of the specified pipeline execution, if in an appropriate state.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../PipelineExecution.html#cancel()">cancel</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Cancel this execution, if in a valid state.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#cancelCurrentExecution(java.lang.String,java.lang.String)">cancelCurrentExecution</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                      @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
+<td class="colLast">
+<div class="block">Cancels the current execution of the specified pipeline.</div>
+</td>
+</tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">EmbeddedProgram.</span><code><span class="memberNameLink"><a href="../model/EmbeddedProgram.html#delete()">delete</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#cancelExecution(io.adobe.cloudmanager.PipelineExecution)">cancelExecution</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution)</code></th>
+<td class="colLast">
+<div class="block">Cancels the execution of the specified pipeline execution, if in an appropriate state.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../model/Environment.html#delete()">delete</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#cancelExecution(java.lang.String,java.lang.String,java.lang.String)">cancelExecution</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+               @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+               @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
+<td class="colLast">
+<div class="block">Cancels the execution of the specified pipeline execution, if in an appropriate state.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../Environment.html#delete()">delete</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Delete this program.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../model/Pipeline.html#delete()">delete</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../Pipeline.html#delete()">delete</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Delete this pipeline.</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Program.</span><code><span class="memberNameLink"><a href="../Program.html#delete()">delete</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Delete this program.</div>
+</td>
+</tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/EnvironmentLog.html" title="class in io.adobe.cloudmanager.model">EnvironmentLog</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../model/Environment.html#downloadLogs(java.lang.String,java.lang.String,int,java.io.File)">downloadLogs</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;service,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteEnvironment(io.adobe.cloudmanager.Environment)">deleteEnvironment</a></span>&#8203;(@NotNull <a href="../Environment.html" title="interface in io.adobe.cloudmanager">Environment</a>&nbsp;environment)</code></th>
+<td class="colLast">
+<div class="block">Delete the specified environment.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteEnvironment(java.lang.String,java.lang.String)">deleteEnvironment</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                 @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId)</code></th>
+<td class="colLast">
+<div class="block">Delete the environment in the specified program.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deletePipeline(io.adobe.cloudmanager.Pipeline)">deletePipeline</a></span>&#8203;(@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&nbsp;pipeline)</code></th>
+<td class="colLast">
+<div class="block">Delete the specified pipeline.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deletePipeline(java.lang.String,java.lang.String)">deletePipeline</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
+<td class="colLast">
+<div class="block">Delete the specified pipeline.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteProgram(io.adobe.cloudmanager.Program)">deleteProgram</a></span>&#8203;(@NotNull <a href="../Program.html" title="interface in io.adobe.cloudmanager">Program</a>&nbsp;program)</code></th>
+<td class="colLast">
+<div class="block">Delete the specified program.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#deleteProgram(java.lang.String)">deleteProgram</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
+<td class="colLast">
+<div class="block">Delete the specified program.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadExecutionStepLog(io.adobe.cloudmanager.PipelineExecution,java.lang.String,java.io.OutputStream)">downloadExecutionStepLog</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
+<td class="colLast">
+<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadExecutionStepLog(io.adobe.cloudmanager.PipelineExecution,java.lang.String,java.lang.String,java.io.OutputStream)">downloadExecutionStepLog</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;filename,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
+<td class="colLast">
+<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadExecutionStepLog(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.io.OutputStream)">downloadExecutionStepLog</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
+<td class="colLast">
+<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadExecutionStepLog(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.io.OutputStream)">downloadExecutionStepLog</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
+<td class="colLast">
+<div class="block">Streams the specified Execution Step log to the provided output stream.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../EnvironmentLog.html" title="interface in io.adobe.cloudmanager">EnvironmentLog</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadLogs(io.adobe.cloudmanager.Environment,io.adobe.cloudmanager.LogOption,int,java.io.File)">downloadLogs</a></span>&#8203;(@NotNull <a href="../Environment.html" title="interface in io.adobe.cloudmanager">Environment</a>&nbsp;environment,
+            @NotNull <a href="../LogOption.html" title="interface in io.adobe.cloudmanager">LogOption</a>&nbsp;logOption,
+            int&nbsp;days,
+            @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;dir)</code></th>
+<td class="colLast">
+<div class="block">Downloads the logs for the specified environment.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../EnvironmentLog.html" title="interface in io.adobe.cloudmanager">EnvironmentLog</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#downloadLogs(java.lang.String,java.lang.String,io.adobe.cloudmanager.LogOption,int,java.io.File)">downloadLogs</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+            @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId,
+            @NotNull <a href="../LogOption.html" title="interface in io.adobe.cloudmanager">LogOption</a>&nbsp;logOption,
+            int&nbsp;days,
+            @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;dir)</code></th>
+<td class="colLast">
+<div class="block">Downloads the logs for the specified environment.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../EnvironmentLog.html" title="interface in io.adobe.cloudmanager">EnvironmentLog</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../Environment.html#downloadLogs(io.adobe.cloudmanager.LogOption,int,java.io.File)">downloadLogs</a></span>&#8203;(<a href="../LogOption.html" title="interface in io.adobe.cloudmanager">LogOption</a>&nbsp;logOption,
             int&nbsp;days,
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;dir)</code></th>
 <td class="colLast">
@@ -800,101 +332,404 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../model/PipelineExecution.html#getAdvanceBody()">getAdvanceBody</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Build the necessary request body to advance this execution.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../model/PipelineExecution.html#getAdvanceLink()">getAdvanceLink</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../PipelineExecution.html#getAdvanceLink()">getAdvanceLink</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the url to advance this pipeline.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../model/PipelineExecution.html#getCancelBody()">getCancelBody</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../PipelineExecution.html#getCancelLink()">getCancelLink</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Build the necessary request body to cancel this execution.</div>
+<div class="block">Get the url to cancel this pipeline.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getCurrentExecution(java.lang.String,java.lang.String)">getCurrentExecution</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                   @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
+<td class="colLast">
+<div class="block">Returns an optional current execution of the specified pipeline.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecution.</span><code><span class="memberNameLink"><a href="../model/PipelineExecution.html#getCancelLink()">getCancelLink</a></span>()</code></th>
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecutionStepState.html" title="interface in io.adobe.cloudmanager">PipelineExecutionStepState</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getCurrentStep(io.adobe.cloudmanager.PipelineExecution)">getCurrentStep</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution)</code></th>
 <td class="colLast">
-<div class="block">Get the url to cacnel this pipeline.</div>
+<div class="block">Gets the current step for the execution.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../model/Environment.html#getDeveloperConsoleUrl()">getDeveloperConsoleUrl</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../Environment.html#getDeveloperConsoleUrl()">getDeveloperConsoleUrl</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieve the Developer Console URL for this Environment.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../model/Pipeline.html#getExecution(java.lang.String)">getExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecution(io.adobe.cloudmanager.event.PipelineExecutionEndEvent)">getExecution</a></span>&#8203;(@NotNull <a href="../event/PipelineExecutionEndEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionEndEvent</a>&nbsp;event)</code></th>
+<td class="colLast">
+<div class="block">Returns the Pipeline Execution associated with the AdobeIO Execution End event</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecution(io.adobe.cloudmanager.event.PipelineExecutionStartEvent)">getExecution</a></span>&#8203;(@NotNull <a href="../event/PipelineExecutionStartEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStartEvent</a>&nbsp;event)</code></th>
+<td class="colLast">
+<div class="block">Returns the Pipeline Execution associated with the AdobeIO Execution Start event</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecution(io.adobe.cloudmanager.Pipeline,java.lang.String)">getExecution</a></span>&#8203;(@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&nbsp;pipeline,
+            @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
+<td class="colLast">
+<div class="block">Returns the specified execution of the pipeline.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecution(java.lang.String,java.lang.String,java.lang.String)">getExecution</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+            @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+            @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
+<td class="colLast">
+<div class="block">Returns the specified execution of the pipeline.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../Pipeline.html#getExecution(java.lang.String)">getExecution</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
 <td class="colLast">
 <div class="block">Returns the specified execution.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecutionStepState.</span><code><span class="memberNameLink"><a href="../model/PipelineExecutionStepState.html#getLog(java.io.OutputStream)">getLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
+<td class="colFirst"><code><a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecutionStepState.</span><code><span class="memberNameLink"><a href="../PipelineExecutionStepState.html#getExecution()">getExecution</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Streams the default log, if any, for this step to the specified output stream.</div>
+<div class="block">Return the execution associated with this step state.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLogDownloadUrl(io.adobe.cloudmanager.PipelineExecution,java.lang.String)">getExecutionStepLogDownloadUrl</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action)</code></th>
+<td class="colLast">
+<div class="block">Returns the fully qualified URL to the log file for download.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLogDownloadUrl(io.adobe.cloudmanager.PipelineExecution,java.lang.String,java.lang.String)">getExecutionStepLogDownloadUrl</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<td class="colLast">
+<div class="block">Returns the fully qualified URL to the log file for download.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLogDownloadUrl(java.lang.String,java.lang.String,java.lang.String,java.lang.String)">getExecutionStepLogDownloadUrl</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action)</code></th>
+<td class="colLast">
+<div class="block">Returns the fully qualified URL to the log file for download.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepLogDownloadUrl(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)">getExecutionStepLogDownloadUrl</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action,
+                              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<td class="colLast">
+<div class="block">Returns the fully qualified URL to the log file for download.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecutionStepState.html" title="interface in io.adobe.cloudmanager">PipelineExecutionStepState</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepState(io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent)">getExecutionStepState</a></span>&#8203;(@NotNull <a href="../event/PipelineExecutionStepEndEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepEndEvent</a>&nbsp;event)</code></th>
+<td class="colLast">
+<div class="block">Gets the step state for based on the provided event.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecutionStepState.html" title="interface in io.adobe.cloudmanager">PipelineExecutionStepState</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepState(io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent)">getExecutionStepState</a></span>&#8203;(@NotNull <a href="../event/PipelineExecutionStepStartEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepStartEvent</a>&nbsp;event)</code></th>
+<td class="colLast">
+<div class="block">Gets the step state for based on the provided event.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecutionStepState.html" title="interface in io.adobe.cloudmanager">PipelineExecutionStepState</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepState(io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent)">getExecutionStepState</a></span>&#8203;(@NotNull <a href="../event/PipelineExecutionStepWaitingEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepWaitingEvent</a>&nbsp;event)</code></th>
+<td class="colLast">
+<div class="block">Gets the step state for based on the provided event.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecutionStepState.html" title="interface in io.adobe.cloudmanager">PipelineExecutionStepState</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getExecutionStepState(io.adobe.cloudmanager.PipelineExecution,java.lang.String)">getExecutionStepState</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution,
+                     @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action)</code></th>
+<td class="colLast">
+<div class="block">Returns the specified action step for the pipeline execution</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecutionStepState.</span><code><span class="memberNameLink"><a href="../model/PipelineExecutionStepState.html#getLog(java.lang.String,java.io.OutputStream)">getLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecutionStepState.</span><code><span class="memberNameLink"><a href="../PipelineExecutionStepState.html#getLog(java.io.OutputStream)">getLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
+<td class="colLast">
+<div class="block">Streams the default log, if any, for this step to the specified output stream.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineExecutionStepState.</span><code><span class="memberNameLink"><a href="../PipelineExecutionStepState.html#getLog(java.lang.String,java.io.OutputStream)">getLog</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;outputStream)</code></th>
 <td class="colLast">
 <div class="block">Streams the specified log, if any, for this step to the specified output stream.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../Metric.html" title="interface in io.adobe.cloudmanager">Metric</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getQualityGateResults(io.adobe.cloudmanager.PipelineExecution,java.lang.String)">getQualityGateResults</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution,
+                     @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;action)</code></th>
+<td class="colLast">
+<div class="block">Retrieves the metrics for the specified execution and step, if any.</div>
+</td>
+</tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../model/Environment.html#getVariables()">getVariables</a></span>()</code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../Environment.html#getVariables()">getVariables</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Lists the variables configured in this environment.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../model/Pipeline.html#getVariables()">getVariables</a></span>()</code></th>
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecutionStepState.html" title="interface in io.adobe.cloudmanager">PipelineExecutionStepState</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#getWaitingStep(io.adobe.cloudmanager.PipelineExecution)">getWaitingStep</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution)</code></th>
+<td class="colLast">
+<div class="block">Gets the waiting step for the execution.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#isExecutionRunning(io.adobe.cloudmanager.PipelineExecution)">isExecutionRunning</a></span>&#8203;(@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a>&nbsp;execution)</code></th>
+<td class="colLast">
+<div class="block">Indicates if the specified pipeline execution is running.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#isExecutionRunning(java.lang.String,java.lang.String,java.lang.String)">isExecutionRunning</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                  @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+                  @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;executionId)</code></th>
+<td class="colLast">
+<div class="block">Indicates if the specified pipeline execution is running.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../Environment.html" title="interface in io.adobe.cloudmanager">Environment</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listEnvironments(java.lang.String)">listEnvironments</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
+<td class="colLast">
+<div class="block">Lists all environments in the specified program.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listEnvironmentVariables(io.adobe.cloudmanager.Environment)">listEnvironmentVariables</a></span>&#8203;(@NotNull <a href="../Environment.html" title="interface in io.adobe.cloudmanager">Environment</a>&nbsp;environment)</code></th>
+<td class="colLast">
+<div class="block">Lists all variables associated with the specified environment</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listEnvironmentVariables(java.lang.String,java.lang.String)">listEnvironmentVariables</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                        @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId)</code></th>
+<td class="colLast">
+<div class="block">Lists all variables associated with the specified environment</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPipelines(java.lang.String)">listPipelines</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId)</code></th>
+<td class="colLast">
+<div class="block">Lists all pipelines within the specified program.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPipelines(java.lang.String,java.util.function.Predicate)">listPipelines</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+             @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&gt;&nbsp;predicate)</code></th>
+<td class="colLast">
+<div class="block">Lists all pipelines in the program that meet the predicate clause.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPipelineVariables(io.adobe.cloudmanager.Pipeline)">listPipelineVariables</a></span>&#8203;(@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&nbsp;pipeline)</code></th>
+<td class="colLast">
+<div class="block">Lists all variables associated with the specified pipeline</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPipelineVariables(java.lang.String,java.lang.String)">listPipelineVariables</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                     @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
+<td class="colLast">
+<div class="block">Lists all variables associated with the specified pipeline</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../Program.html" title="interface in io.adobe.cloudmanager">Program</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#listPrograms()">listPrograms</a></span>()</code></th>
+<td class="colLast">
+<div class="block">List all programs in the organization</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../Pipeline.html#listVariables()">listVariables</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieve the variables associated with this pipeline.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setEnvironmentVariables(io.adobe.cloudmanager.Environment,io.adobe.cloudmanager.Variable...)">setEnvironmentVariables</a></span>&#8203;(@NotNull <a href="../Environment.html" title="interface in io.adobe.cloudmanager">Environment</a>&nbsp;environment,
+                       <a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>...&nbsp;variables)</code></th>
+<td class="colLast">
+<div class="block">Sets the specified variables in the environment.</div>
+</td>
+</tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../model/Environment.html#setVariables(io.adobe.cloudmanager.model.Variable...)">setVariables</a></span>&#8203;(<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setEnvironmentVariables(java.lang.String,java.lang.String,io.adobe.cloudmanager.Variable...)">setEnvironmentVariables</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                       @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;environmentId,
+                       <a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>...&nbsp;variables)</code></th>
+<td class="colLast">
+<div class="block">Sets the specified variables in the environment.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setPipelineVariables(io.adobe.cloudmanager.Pipeline,io.adobe.cloudmanager.Variable...)">setPipelineVariables</a></span>&#8203;(@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&nbsp;pipeline,
+                    <a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>...&nbsp;variables)</code></th>
+<td class="colLast">
+<div class="block">Sets the specified variables in the pipeline</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#setPipelineVariables(java.lang.String,java.lang.String,io.adobe.cloudmanager.Variable...)">setPipelineVariables</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+                    @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+                    <a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>...&nbsp;variables)</code></th>
+<td class="colLast">
+<div class="block">Sets the specified variables in the pipeline</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Environment.</span><code><span class="memberNameLink"><a href="../Environment.html#setVariables(io.adobe.cloudmanager.Variable...)">setVariables</a></span>&#8203;(<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>...&nbsp;variables)</code></th>
 <td class="colLast">
 <div class="block">Sets the specified variables on this environment.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../model/Pipeline.html#setVariables(io.adobe.cloudmanager.model.Variable...)">setVariables</a></span>&#8203;(<a href="../model/Variable.html" title="class in io.adobe.cloudmanager.model">Variable</a>...&nbsp;variables)</code></th>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../Pipeline.html#setVariables(io.adobe.cloudmanager.Variable...)">setVariables</a></span>&#8203;(<a href="../Variable.html" title="class in io.adobe.cloudmanager">Variable</a>...&nbsp;variables)</code></th>
 <td class="colLast">
 <div class="block">Sets the specified variables on this pipeline.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#startExecution(io.adobe.cloudmanager.Pipeline)">startExecution</a></span>&#8203;(@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&nbsp;pipeline)</code></th>
+<td class="colLast">
+<div class="block">Starts the specified pipeline.</div>
+</td>
+</tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../model/PipelineExecution.html" title="class in io.adobe.cloudmanager.model">PipelineExecution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../model/Pipeline.html#startExecution()">startExecution</a></span>()</code></th>
+<td class="colFirst"><code>@NotNull <a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#startExecution(java.lang.String,java.lang.String)">startExecution</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId)</code></th>
+<td class="colLast">
+<div class="block">Starts the specified pipeline.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../Pipeline.html#startExecution()">startExecution</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Starts this pipeline.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../model/Pipeline.html" title="class in io.adobe.cloudmanager.model">Pipeline</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../model/Pipeline.html#update(io.adobe.cloudmanager.PipelineUpdate)">update</a></span>&#8203;(<a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;update)</code></th>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Pipeline.</span><code><span class="memberNameLink"><a href="../Pipeline.html#update(io.adobe.cloudmanager.PipelineUpdate)">update</a></span>&#8203;(<a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;update)</code></th>
 <td class="colLast">
 <div class="block">Updates this pipeline with the specified changes.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#updatePipeline(io.adobe.cloudmanager.Pipeline,io.adobe.cloudmanager.PipelineUpdate)">updatePipeline</a></span>&#8203;(@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a>&nbsp;pipeline,
+              @NotNull <a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;updates)</code></th>
+<td class="colLast">
+<div class="block">Changes details about a pipeline.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>@NotNull <a href="../Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerApi.</span><code><span class="memberNameLink"><a href="../CloudManagerApi.html#updatePipeline(java.lang.String,java.lang.String,io.adobe.cloudmanager.PipelineUpdate)">updatePipeline</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;programId,
+              @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;pipelineId,
+              @NotNull <a href="../PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a>&nbsp;updates)</code></th>
+<td class="colLast">
+<div class="block">Changes details about a pipeline.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="io.adobe.cloudmanager.event">
+<!--   -->
+</a>
+<h3>Uses of <a href="../CloudManagerApiException.html" title="class in io.adobe.cloudmanager">CloudManagerApiException</a> in <a href="../event/package-summary.html">io.adobe.cloudmanager.event</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../event/package-summary.html">io.adobe.cloudmanager.event</a> that throw <a href="../CloudManagerApiException.html" title="class in io.adobe.cloudmanager">CloudManagerApiException</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../event/CloudManagerEvent.EventType.html" title="enum in io.adobe.cloudmanager.event">CloudManagerEvent.EventType</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerEvent.EventType.</span><code><span class="memberNameLink"><a href="../event/CloudManagerEvent.EventType.html#from(java.lang.String)">from</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</code></th>
+<td class="colLast">
+<div class="block">Attempts to determine which event type from the provided JSON String.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerEvent.</span><code><span class="memberNameLink"><a href="../event/CloudManagerEvent.html#isValidSignature(java.lang.String,java.lang.String,java.lang.String)">isValidSignature</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;eventBody,
+                @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;signature,
+                @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;clientSecret)</code></th>
+<td class="colLast">
+<div class="block">Validates an event against a signature.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static &lt;T&gt;&nbsp;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">CloudManagerEvent.</span><code><span class="memberNameLink"><a href="../event/CloudManagerEvent.html#parseEvent(java.lang.String,java.lang.Class)">parseEvent</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source,
+          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</code></th>
+<td class="colLast">
+<div class="block">Attempts to convert the provided string source into the specified event type T.</div>
 </td>
 </tr>
 </tbody>
@@ -951,7 +786,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020 Adobe Inc.. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 Adobe Inc.. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

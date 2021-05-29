@@ -13,7 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../jquery/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,8 +26,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var data = {"i0":6,"i1":1,"i2":1,"i3":6};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -122,10 +122,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
-<dl>
-<dt>All Known Implementing Classes:</dt>
-<dd><code><a href="impl/IdentityManagementApiImpl.html" title="class in io.adobe.cloudmanager.impl">IdentityManagementApiImpl</a></code></dd>
-</dl>
 <hr>
 <pre>public interface <span class="typeNameLabel">IdentityManagementApi</span></pre>
 </li>
@@ -180,17 +176,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#authenticate(io.adobe.cloudmanager.AdobeClientCredentials)">authenticate</a></span>&#8203;(<a href="AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org)</code></th>
 <td class="colLast">
 <div class="block">Authenticates to Adobe IMS and returns an Auth Token.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static @NotNull <a href="IdentityManagementApi.html" title="interface in io.adobe.cloudmanager">IdentityManagementApi</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#create()">create</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Create a new API instance</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static @NotNull <a href="IdentityManagementApi.html" title="interface in io.adobe.cloudmanager">IdentityManagementApi</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#create(java.lang.String)">create</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;baseUrl)</code></th>
+<td class="colLast">
+<div class="block">Create a new API instance, with the specified baseUrl</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isValid(io.adobe.cloudmanager.AdobeClientCredentials,java.lang.String)">isValid</a></span>&#8203;(<a href="AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org,
+       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;accessToken)</code></th>
+<td class="colLast">
+<div class="block">Checks if the provided token is still valid for the Org context.</div>
 </td>
 </tr>
 </table>
@@ -272,20 +290,74 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="create()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>create</h4>
+<pre class="methodSignature">@NotNull
+static&nbsp;@NotNull <a href="IdentityManagementApi.html" title="interface in io.adobe.cloudmanager">IdentityManagementApi</a>&nbsp;create()</pre>
+<div class="block">Create a new API instance</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an IdentityManagementApi</dd>
+</dl>
+</li>
+</ul>
+<a id="create(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>create</h4>
+<pre class="methodSignature">@NotNull
+static&nbsp;@NotNull <a href="IdentityManagementApi.html" title="interface in io.adobe.cloudmanager">IdentityManagementApi</a>&nbsp;create&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;baseUrl)</pre>
+<div class="block">Create a new API instance, with the specified baseUrl</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>baseUrl</code> - the base url for the API</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an IdentityManagementApi</dd>
+</dl>
+</li>
+</ul>
 <a id="authenticate(io.adobe.cloudmanager.AdobeClientCredentials)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>authenticate</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;authenticate&#8203;(<a href="AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org)
-             throws <a href="IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a></pre>
+<pre class="methodSignature">@NotNull
+@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;authenticate&#8203;(<a href="AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org)
+                      throws <a href="IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a></pre>
 <div class="block">Authenticates to Adobe IMS and returns an Auth Token.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>org</code> - the Adobe IMS org context to authenticate against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the authenticated bearer token</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a></code> - when any error occurs</dd>
+</dl>
+</li>
+</ul>
+<a id="isValid(io.adobe.cloudmanager.AdobeClientCredentials,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>isValid</h4>
+<pre class="methodSignature">boolean&nbsp;isValid&#8203;(<a href="AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a>&nbsp;org,
+                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;accessToken)
+         throws <a href="IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a></pre>
+<div class="block">Checks if the provided token is still valid for the Org context.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>org</code> - The Adobe Client org details</dd>
+<dd><code>accessToken</code> - the access token to check</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>state of access token</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a></code> - when any error occurs</dd>
 </dl>
@@ -360,7 +432,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020 Adobe Inc.. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 Adobe Inc.. All rights reserved.</small></p>
 </footer>
 </body>
 </html>
