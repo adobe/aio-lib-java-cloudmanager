@@ -1,12 +1,8 @@
 #
 
-## [Unreleased](https://github.com/adobe/aio-lib-java-cloudmanager/tree/HEAD)
+## [aio-lib-cloudmanager-0.5.1](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.5.1) (2021-05-29)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.5.0...HEAD)
-
-###
-
-- Central release fix. [\#37](https://github.com/adobe/aio-lib-java-cloudmanager/pull/37) ([bstopp](https://github.com/bstopp))
+[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.5.0...aio-lib-cloudmanager-0.5.1)
 
 ## [aio-lib-cloudmanager-0.5.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.5.0) (2021-05-29)
 
@@ -26,6 +22,7 @@
 
 ###
 
+- Central release fix. [\#37](https://github.com/adobe/aio-lib-java-cloudmanager/pull/37) ([bstopp](https://github.com/bstopp))
 - Adding workflow updates and docs on them. [\#36](https://github.com/adobe/aio-lib-java-cloudmanager/pull/36) ([bstopp](https://github.com/bstopp))
 - API Updates for usability and stability [\#35](https://github.com/adobe/aio-lib-java-cloudmanager/pull/35) ([bstopp](https://github.com/bstopp))
 - More Automation [\#34](https://github.com/adobe/aio-lib-java-cloudmanager/pull/34) ([bstopp](https://github.com/bstopp))
