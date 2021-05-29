@@ -1,5 +1,13 @@
 #
 
+## [Unreleased](https://github.com/adobe/aio-lib-java-cloudmanager/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.5.0...HEAD)
+
+###
+
+- Central release fix. [\#37](https://github.com/adobe/aio-lib-java-cloudmanager/pull/37) ([bstopp](https://github.com/bstopp))
+
 ## [aio-lib-cloudmanager-0.5.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.5.0) (2021-05-29)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.4.0...aio-lib-cloudmanager-0.5.0)
