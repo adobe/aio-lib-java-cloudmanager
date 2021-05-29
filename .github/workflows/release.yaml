@@ -146,14 +146,14 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build Java8 Artifact
-        run: mvn clean package -P java8
+        run: mvn clean package -P release,java8
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
-        run: mvn deploy -P release,attach-javadoc,attach-source -DautoReleaseAfterClose=true
+        run: mvn deploy -P release,attach-javadoc,attach-source,attach-java8 -DautoReleaseAfterClose=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}

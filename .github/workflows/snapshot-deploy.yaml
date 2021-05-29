@@ -49,7 +49,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
-        run: mvn deploy -P release,attach-javadoc,attach-source
+        run: mvn clean deploy -P release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}

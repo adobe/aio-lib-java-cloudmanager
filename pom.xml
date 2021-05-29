@@ -377,32 +377,43 @@
             </build>
         </profile>
         <profile>
-            <id>generate-site-javadoc</id>
+            <id>attach-java8</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
                         <configuration>
-                            <directory>docs/apidocs</directory>
+                            <artifacts>
+                                <artifact>
+                                    <file>target/${project.artifactId}-${project.version}-java8.jar</file>
+                                    <type>jar</type>
+                                    <classifier>java8</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>target/${project.artifactId}-${project.version}-java8.jar.asc</file>
+                                    <type>asc</type>
+                                </artifact>
+                                <artifact>
+                                    <file>target/${project.artifactId}-${project.version}-java8.jar.md5</file>
+                                    <type>md5</type>
+                                </artifact>
+                                <artifact>
+                                    <file>target/${project.artifactId}-${project.version}-java8.jar.sha1</file>
+                                    <type>sha1</type>
+                                </artifact>
+                            </artifacts>
                         </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>attach-javadocs</id>
+                                <id>add-java8</id>
+                                <phase>verify</phase>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>attach-artifact</goal>
                                 </goals>
-                                <configuration>
-                                    <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -435,37 +446,36 @@
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>generate-site-javadoc</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.1.0</version>
                         <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar</file>
-                                    <type>jar</type>
-                                    <classifier>java8</classifier>
-                                </artifact>
-                                <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar.asc</file>
-                                    <type>asc</type>
-                                </artifact>
-                                <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar.md5</file>
-                                    <type>md5</type>
-                                </artifact>
-                                <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar.sha1</file>
-                                    <type>sha1</type>
-                                </artifact>
-                            </artifacts>
+                            <directory>docs/apidocs</directory>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>add-java8</id>
-                                <phase>verify</phase>
+                                <id>attach-javadocs</id>
                                 <goals>
-                                    <goal>attach-artifact</goal>
+                                    <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
