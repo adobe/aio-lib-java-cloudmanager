@@ -69,6 +69,7 @@
 - Make AdobeClientCredentials serializable [\#13](https://github.com/adobe/aio-lib-java-cloudmanager/pull/13) ([kwin](https://github.com/kwin))
 - Support PEM PKCS\#8 private keys [\#12](https://github.com/adobe/aio-lib-java-cloudmanager/pull/12) ([kwin](https://github.com/kwin))
 - Updating how JavaDocs are built. [\#7](https://github.com/adobe/aio-lib-java-cloudmanager/pull/7) ([bstopp](https://github.com/bstopp))
+- Updates to prepare for first release. [\#5](https://github.com/adobe/aio-lib-java-cloudmanager/pull/5) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-cloudmanager-0.2.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.2.0) (2020-11-16)
 
@@ -84,7 +85,6 @@
 
 ###
 
-- Updates to prepare for first release. [\#5](https://github.com/adobe/aio-lib-java-cloudmanager/pull/5) ([bstopp](https://github.com/bstopp))
 - Use OSO Secret Names. [\#4](https://github.com/adobe/aio-lib-java-cloudmanager/pull/4) ([bstopp](https://github.com/bstopp))
 - Add more Documentation [\#3](https://github.com/adobe/aio-lib-java-cloudmanager/pull/3) ([bstopp](https://github.com/bstopp))
 - Adding CodeCoverage & Documentation [\#2](https://github.com/adobe/aio-lib-java-cloudmanager/pull/2) ([bstopp](https://github.com/bstopp))
