@@ -151,7 +151,6 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
-        continue-on-error: true
         run: mvn deploy -P release,attach-javadoc,attach-source,attach-java8 -DautoReleaseAfterClose=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
