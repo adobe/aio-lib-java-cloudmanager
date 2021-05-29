@@ -39,10 +39,6 @@
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.3.0...aio-lib-cloudmanager-0.4.0)
 
-###
-
-- Audience Format is wrong [\#19](https://github.com/adobe/aio-lib-java-cloudmanager/pull/19) ([bstopp](https://github.com/bstopp))
-
 ## [aio-lib-cloudmanager-0.3.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.3.0) (2020-11-25)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.2.0...aio-lib-cloudmanager-0.3.0)
@@ -55,6 +51,7 @@
 
 ###
 
+- Audience Format is wrong [\#19](https://github.com/adobe/aio-lib-java-cloudmanager/pull/19) ([bstopp](https://github.com/bstopp))
 - Identity Management empty constructor [\#17](https://github.com/adobe/aio-lib-java-cloudmanager/pull/17) ([bstopp](https://github.com/bstopp))
 - Clarify example code to get a token [\#15](https://github.com/adobe/aio-lib-java-cloudmanager/pull/15) ([kwin](https://github.com/kwin))
 - Documentation updates [\#14](https://github.com/adobe/aio-lib-java-cloudmanager/pull/14) ([bstopp](https://github.com/bstopp))
