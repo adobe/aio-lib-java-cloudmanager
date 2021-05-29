@@ -146,7 +146,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Publish to Apache Maven Central
-        run: mvn clean deploy -P release,attach-javadoc,attach-source -DskipStagingRepositoryClose=true
+        run: mvn clean deploy -P release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
