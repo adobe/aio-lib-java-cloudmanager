@@ -34,6 +34,10 @@ jobs:
       - name: Build JavaDocs
         run: mvn -U clean verify -Pgenerate-site-javadoc
 
+      - name: Check JavaDoc Updated
+        id: check-javadoc
+        run: 'git status | grep "nothing to commit"'
+
       - name: Commit JavaDocs
         run: |
           git config user.name "GitHub Actions"
@@ -42,3 +46,6 @@ jobs:
           git commit -m 'Updating JavaDocs.'
           git push
 
+      - name: Exit Clean
+        if: ${{ steps.check-changelog.conclusion == 'failure' }}
+        run: echo "No updates to Changelog"
