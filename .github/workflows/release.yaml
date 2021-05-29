@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Work around for https://github.com/heinrichreimer/action-github-changelog-generator/issues/21
-          ref: action-tests-${{ needs.tag.outputs.version }}
+          ref: aio-lib-cloudmanager-${{ needs.tag.outputs.version }}
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -104,7 +104,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: action-tests-${{ needs.tag.outputs.version }}
+          tag_name: aio-lib-cloudmanager-${{ needs.tag.outputs.version }}
           files: |
             ./target/aio-lib-cloudmanager-*.jar
 
