@@ -32,6 +32,38 @@ Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING
 
 Please run the and include the output from the `generate-javadoc` Maven profile for any Pull Requests, to keep the documentation up-to-date. 
 
+### GitHub Actions
+
+#### Tag & Release
+
+This is the only action that requires a user to activate manually.
+
+Releasing a version of the library can be done by activating the [Tag & Release](./actions/workflows/release.yaml) action. 
+
+The version is optional, if unspecified it will use whatever Maven determines is the next release.
+
+#### Snapshot Deploy
+
+Activated on every commit to the `main` branch.
+
+Automatically deploy a SNAPSHOT of the current build to Maven Central's snapshot repository.
+
+#### Build & Verify
+
+Activated on every pull request to the `main` branch.
+
+Automatically run a build and tests for the project.
+
+#### Update Changelog
+
+Activated on every commit to the `main` branch.
+
+This will automatically update the [Changelog](./CHANGELOG.md) from Pull Requests or Issues, and commit it back to the `main` branch. 
+
+#### Update JavaDoc
+
+Activated after every successful [Tag & Release](#tag--release) run. This will run the Maven profile for generating the Project JavaDocs and commit them back to the `main` branch. This will keep them always up-to-date with the latest release.  
+
 ### Licensing
 
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.

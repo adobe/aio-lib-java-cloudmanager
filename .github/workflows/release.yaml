@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Tag/Version
+        description: Version
         required: false
 
 jobs:
-  tag-release:
+  tag:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
@@ -45,14 +45,15 @@ jobs:
         run: echo "::set-output name=version::$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aio-lib-cloudmanager-//g')"
 
   github-release:
-    needs: tag-release
+    needs: tag
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
+          fetch-depth: 0 # Work around for https://github.com/heinrichreimer/action-github-changelog-generator/issues/21
+          ref: action-tests-${{ needs.tag.outputs.version }}
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -68,77 +69,54 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Maven Verify
-        run: mvn -U clean verify
+        run: mvn -U clean verify && mvn verify -P java8
+
+      - name: Generate Release Changelog
+        id: generate-release-changelog
+        uses: heinrichreimer/github-changelog-generator-action@v2.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issues: true
+          issuesWoLabels: true
+          pullRequests: true
+          prWoLabels: true
+          author: true
+          compareLink: true
+          onlyLastTag: true
+          stripHeaders: true
+          stripGeneratorNotice: true
 
       - name: Create Release
-        id: create_release
+        id: create-release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
-          release_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
-          body: |
-            See [Changelog](/CHANGELOG.md) for details.
+          tag_name: aio-lib-cloudmanager-${{ needs.tag.outputs.version }}
+          release_name: aio-lib-cloudmanager-${{ needs.tag.outputs.version }}
+          body: ${{ steps.generate-release-changelog.outputs.changelog }}
           draft: false
           prerelease: false
 
-      - name: Upload Jar
-        id: upload-release-jar
-        uses: actions/upload-release-asset@v1
+      - name: Upload Release Artifacts
+        id: upload-release-artifacts
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
-          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}.jar
-          asset_content_type: application/java-archive
-
-      - name: Upload JavaDoc Jar
-        id: upload-release-javadoc
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
-          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-javadoc.jar
-          asset_content_type: application/java-archive
-
-      - name: Upload Sources Jar
-        id: upload-release-sources
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
-          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-sources.jar
-          asset_content_type: application/java-archive
-
-      - name: Maven Verify
-        run: mvn -U clean verify -P java8
-
-      - name: Upload Java8 Jar
-        id: upload-java8-release-jar
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-java8.jar
-          asset_name: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}-java8.jar
-          asset_content_type: application/java-archive
+          tag_name: action-tests-${{ needs.tag.outputs.version }}
+          files: |
+            ./target/aio-lib-cloudmanager-*.jar
 
   maven-central-deploy:
-    needs: tag-release
+    needs: tag
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: aio-lib-cloudmanager-${{ needs.tag-release.outputs.version }}
+          ref: aio-lib-cloudmanager-${{ needs.tag.outputs.version }}
 
       # See https://github.com/actions/setup-java#publishing-using-apache-maven
       - name: Setup JDK
@@ -174,31 +152,9 @@ jobs:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Publish to Apache Maven Central
+      - name: Publish Java8 to Apache Maven Central
         run: mvn clean deploy -P release,java8 -DautoReleaseAfterClose=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-  changelog:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Generate Changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.2
-        with:
-          issues: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit Changelog
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email noreply@github.com
-          git add CHANGELOG.md
-          git commit -m 'Update Changelog.'
-          git push
