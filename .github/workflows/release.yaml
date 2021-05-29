@@ -76,8 +76,6 @@ jobs:
         uses: heinrichreimer/github-changelog-generator-action@v2.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          issues: true
-          issuesWoLabels: true
           pullRequests: true
           prWoLabels: true
           author: true
@@ -153,6 +151,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
+        continue-on-error: true
         run: mvn deploy -P release,attach-javadoc,attach-source,attach-java8 -DautoReleaseAfterClose=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.adobe.cloudmanager</groupId>
@@ -391,18 +392,6 @@
                                     <file>target/${project.artifactId}-${project.version}-java8.jar</file>
                                     <type>jar</type>
                                     <classifier>java8</classifier>
-                                </artifact>
-                                <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar.asc</file>
-                                    <type>asc</type>
-                                </artifact>
-                                <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar.md5</file>
-                                    <type>md5</type>
-                                </artifact>
-                                <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar.sha1</file>
-                                    <type>sha1</type>
                                 </artifact>
                             </artifacts>
                         </configuration>
