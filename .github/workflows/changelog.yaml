@@ -40,19 +40,11 @@ jobs:
           stripGeneratorNotice: true
           verbose: true
 
-      - name: Check Changelog Updated
-        id: check-changelog
-        run: 'git status | grep "nothing to commit"'
-
       - name: Commit Changelog
+        continue-on-error: true
         run: |
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
           git add CHANGELOG.md
           git commit -m 'Update Changelog.'
           git push
-
-      - name: Exit Clean
-        if: ${{ steps.check-changelog.conclusion == 'failure' }}
-        run: echo "No updates to Changelog"
-

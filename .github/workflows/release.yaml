@@ -10,7 +10,7 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ithub.ref == 'refs/heads/main'
 
     outputs:
       version: ${{ steps.store-version.outputs.version }}
@@ -145,7 +145,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Publish Java8 to Apache Maven Central
+      - name: Build Java8 Artifact
         run: mvn clean package -P java8
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
