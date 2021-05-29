@@ -4,7 +4,7 @@
 
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.5.1</version>
+    <version>0.5.2-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
     <description>Library for accessing AdobeIO Cloud Manager endpoints.</description>
@@ -27,7 +27,7 @@
         <connection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</connection>
         <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</developerConnection>
         <url>https://github.com/adobe/aio-lib-java-cloudmanager/tree/main</url>
-        <tag>aio-lib-cloudmanager-0.5.1</tag>
+        <tag>aio-lib-cloudmanager-0.5.0</tag>
     </scm>
 
     <issueManagement>
