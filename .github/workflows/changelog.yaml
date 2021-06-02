@@ -30,6 +30,8 @@ jobs:
           issuesLabel: '### 📁 Other issues'
           prLabel: '### 📁 Other pull requests'
           addSections: '{"documentation":{"prefix":"### 📖 Documentation","labels":["documentation"]},"tests":{"prefix":"### ✅ Testing","labels":["tests"]}}'
+          issues: true
+          issuesWoLabels: true
           pullRequests: true
           prWoLabels: true
           author: true
@@ -37,9 +39,9 @@ jobs:
           compareLink: true
           stripGeneratorNotice: true
           verbose: true
+          excludeTagsRegex: "aio-lib-cloudmanager-0.5.*"
 
       - name: Commit Changelog
-        continue-on-error: true
         run: |
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
