@@ -16,7 +16,7 @@ Example:
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.5.6-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -27,7 +27,7 @@ The default library is Java11, to use the Java8 library, use the classifier.
 <dependency>
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>0.5.6-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <classifier>java8</classifier>
 </dependency>
 ```
