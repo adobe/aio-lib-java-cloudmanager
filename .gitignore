@@ -63,3 +63,5 @@ reports/
 
 *.log
 *.log.gz
+
+dist
