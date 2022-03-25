@@ -1,25 +1,27 @@
 name: Update Changelog
 
-concurrency: ci-${{ github.ref }}
+concurrency: ci-aio-lib-java-cloudmanager
+
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
   workflow_run:
-    workflows: ["Tag & Release"]
-    branches: [main]
+    workflows: ["Update Docs"]
     types:
       - completed
 
 jobs:
   changelog:
     runs-on: ubuntu-latest
+    if: github.repository == 'adobe/aio-lib-java-cloudmanager' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Generate Changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.2
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           headerLabel: "# 📑 Changelog"
@@ -30,8 +32,8 @@ jobs:
           issuesLabel: '### 📁 Other issues'
           prLabel: '### 📁 Other pull requests'
           addSections: '{"documentation":{"prefix":"### 📖 Documentation","labels":["documentation"]},"tests":{"prefix":"### ✅ Testing","labels":["tests"]}}'
-          issues: true
-          issuesWoLabels: true
+          issues: false
+          issuesWoLabels: false
           pullRequests: true
           prWoLabels: true
           author: true
