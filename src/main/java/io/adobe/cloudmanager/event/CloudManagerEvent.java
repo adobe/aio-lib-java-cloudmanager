@@ -27,11 +27,11 @@ import java.util.Arrays;
 import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.generated.invoker.JSON;
+import lombok.NonNull;
 
 public class CloudManagerEvent {
 
@@ -61,7 +61,7 @@ public class CloudManagerEvent {
    * @throws CloudManagerApiException if an error occurs during parsing
    * @throws IllegalArgumentException if passed and unknown event type.
    */
-  @NotNull
+  @NonNull
   public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException, IllegalArgumentException {
 
     if (EventType.from(type) == null ) {
@@ -84,7 +84,7 @@ public class CloudManagerEvent {
    * @throws CloudManagerApiException when an error occurs during processing
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html#!AdobeDocs/cloudmanager-api-docs/master/tutorial/2-webhook-signature-validation.md">Webhook Signature Validation</a>
    */
-  public static boolean isValidSignature(@NotNull String eventBody, @NotNull String signature, @NotNull String clientSecret) throws CloudManagerApiException {
+  public static boolean isValidSignature(@NonNull String eventBody, @NonNull String signature, @NonNull String clientSecret) throws CloudManagerApiException {
     try {
       Mac mac = Mac.getInstance(HMAC_ALG);
       mac.init(new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), HMAC_ALG));

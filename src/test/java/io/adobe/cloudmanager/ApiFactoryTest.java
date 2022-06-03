@@ -27,23 +27,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ApiFactoryTest {
 
   @Test
-  public void testIdentityManagementFactory() {
-    assertNotNull(IdentityManagementApi.create());
-  }
-
-  @Test
-  public void testIdentityManagementFactoryBaseUrl() {
-    assertNotNull(IdentityManagementApi.create(null));
-  }
-
-  @Test
   public void testCloudManagerFactory() {
-    assertNotNull(CloudManagerApi.create(null, null, null));
-
+    assertNotNull(CloudManagerApi.create("", "", ""));
   }
 
   @Test
   public void testCloudManagerFactoryBaseUrl() {
-    assertNotNull(CloudManagerApi.create(null, null, null, null));
+    assertNotNull(CloudManagerApi.create("", "", "", ""));
   }
 }

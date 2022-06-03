@@ -4,7 +4,7 @@
 
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
     <description>Library for accessing AdobeIO Cloud Manager endpoints.</description>
@@ -27,7 +27,7 @@
         <connection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</connection>
         <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-cloudmanager.git</developerConnection>
         <url>https://github.com/adobe/aio-lib-java-cloudmanager/tree/main</url>
-        <tag>aio-lib-cloudmanager-0.5.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
@@ -66,13 +66,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <ims.api>${project.basedir}/src/main/resources/swagger/ims.yaml</ims.api>
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
 
         <jjwt.version>0.11.2</jjwt.version>
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
 
+        <aio.lib.version>0.0.44</aio.lib.version>
+        
         <swagger.codegen.version>3.0.22</swagger.codegen.version>
 
         <!-- START Generated Properties -->
@@ -90,28 +91,6 @@
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>generate-swagger-ims</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${ims.api}</inputSpec>
-                            <modelPackage>${project.groupId}.ims.generated.model</modelPackage>
-                            <apiPackage>${project.groupId}.ims.generated.api</apiPackage>
-                            <invokerPackage>${project.groupId}.ims.generated.invoker</invokerPackage>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>generate-swagger-cm-api</id>
                         <phase>generate-sources</phase>
@@ -565,11 +544,15 @@
             <version>${jackson-version}</version>
         </dependency>
         <!-- END Generated Dependencies -->
-
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
+            <groupId>com.adobe.aio</groupId>
+            <artifactId>aio-lib-java-core</artifactId>
+            <version>${aio.lib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.aio</groupId>
+            <artifactId>aio-lib-java-ims</artifactId>
+            <version>${aio.lib.version}</version>
         </dependency>
 
         <dependency>
