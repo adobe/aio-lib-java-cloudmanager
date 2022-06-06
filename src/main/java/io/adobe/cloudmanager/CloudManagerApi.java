@@ -22,18 +22,20 @@ package io.adobe.cloudmanager;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.event.PipelineExecutionEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
-
 import lombok.NonNull;
 
 /**
@@ -44,29 +46,50 @@ import lombok.NonNull;
  * @since 1.0
  */
 public interface CloudManagerApi {
+  String BASE_URL = "https://cloudmanager.adobe.io";
+  String META_SCOPE = "https://ims-na1.adobelogin.com/s/ent_cloudmgr_sdk";
 
   /**
-   * Create a new API instance
-   *
-   * @param orgId       the org id
-   * @param apiKey      the Api Key
-   * @param accessToken the access token
+   * Creates a new CloudManagerApi instance using the specified Workspace.
+   * 
+   * The workspace will be used for authentication and thus must pass a {@link Workspace#validateJwtCredentialConfig()}
+   * 
+   * @param workspace the AIO Workspace Context.
    * @return an api instance
    */
+  @NonNull
+  static CloudManagerApi create(@NonNull Workspace workspace) {
+    try {
+      return create(workspace, new URL(BASE_URL));
+    } catch (MalformedURLException ex) {
+      // How did this happen?
+      throw new IllegalStateException(ex.getMessage());
+    }
+  }
+
+  /**
+   * Creates a new CloudManagerApi instance using the specified Workspace and API base URL.
+   *
+   * The workspace will be used for authentication and thus must pass a {@link Workspace#validateJwtCredentialConfig()}
+   * 
+   * This can be used to override the default Cloud Manager API endpoint.
+   * 
+   * @param workspace  the AIO Workspace Context.
+   * @param url the base URL for Cloud Manager's API
+   * @return an api instance
+   */
+  @NonNull
+  static CloudManagerApi create(@NonNull Workspace workspace, @NonNull URL url) {
+    workspace.getMetascopes().add(META_SCOPE);
+    workspace.validateJwtCredentialConfig();
+    return new CloudManagerApiImpl(workspace, url);
+  }
+
   @NonNull
   static CloudManagerApi create(@NonNull String orgId, @NonNull String apiKey, @NonNull String accessToken) {
     return new CloudManagerApiImpl(orgId, apiKey, accessToken, null);
   }
 
-  /**
-   * Create a new API instance, with the specified baseUrl
-   *
-   * @param orgId       the org id
-   * @param apiKey      the Api Key
-   * @param accessToken the access token
-   * @param baseUrl     the base url for the API
-   * @return an api instance
-   */
   @NonNull
   static CloudManagerApi create(@NonNull String orgId, @NonNull String apiKey, @NonNull String accessToken, @NonNull String baseUrl) {
     return new CloudManagerApiImpl(orgId, apiKey, accessToken, baseUrl);

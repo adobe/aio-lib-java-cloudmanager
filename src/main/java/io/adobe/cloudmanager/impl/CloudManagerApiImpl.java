@@ -44,6 +44,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 
+import com.adobe.aio.ims.ImsService;
+import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
@@ -77,12 +79,21 @@ import io.adobe.cloudmanager.generated.model.VariableList;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
 public class CloudManagerApiImpl implements CloudManagerApi {
+  
+  private ImsService imsService;
+  private Workspace workspace;
+  private URL baseUrl;
 
   private final ApiClient apiClient = new ConfiguredApiClient();
-  private final String orgId;
-  private final String apiKey;
-  private final String accessToken;
-  private final String baseUrl;
+  private  String orgId;
+  private  String apiKey;
+  private  String accessToken;
+  
+  public CloudManagerApiImpl(Workspace workspace, URL baseUrl) {
+    this.imsService = ImsService.builder().workspace(workspace).build();
+    this.workspace = workspace;
+    this.baseUrl = baseUrl;
+  }
 
   public CloudManagerApiImpl(String orgId, String apiKey, String accessToken) {
     this(orgId, apiKey, accessToken, null);
@@ -95,12 +106,15 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     if (baseUrl == null) {
       baseUrl = apiClient.getBasePath();
     }
-
     baseUrl = StringUtils.removeEnd(baseUrl, "/");
     apiClient.setBasePath(baseUrl);
-    this.baseUrl = baseUrl;
+    try {
+      this.baseUrl = new URL(baseUrl);
+    } catch (MalformedURLException e) {
+      // Do Nothing - this is gonna be removed.
+    }
   }
-
+  
   private static String processTemplate(String path, Map<String, String> values) {
     return new StringSubstitutor(values, "{", StringSubstitutor.DEFAULT_VAR_END).replace(path);
   }
@@ -111,7 +125,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       programList = get("/api/programs", new GenericType<ProgramList>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.LIST_PROGRAMS, baseUrl, "/api/programs", e);
+      throw new CloudManagerApiException(ErrorType.LIST_PROGRAMS, baseUrl.toString(), "/api/programs", e);
     }
     return programList.getEmbedded() == null ?
         Collections.emptyList() :
@@ -133,7 +147,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       delete(href);
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.DELETE_PROGRAM, baseUrl, href, e);
+      throw new CloudManagerApiException(ErrorType.DELETE_PROGRAM, baseUrl.toString(), href, e);
     }
   }
 
@@ -158,7 +172,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       delete(pipeline.getSelfLink());
     } catch (ApiException e) {
-      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.DELETE_PIPELINE, baseUrl, pipeline.getSelfLink(), e);
+      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.DELETE_PIPELINE, baseUrl.toString(), pipeline.getSelfLink(), e);
     }
   }
 
@@ -188,7 +202,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       io.adobe.cloudmanager.generated.model.Pipeline result = patch(pipelinePath, toUpdate, new GenericType<io.adobe.cloudmanager.generated.model.Pipeline>() {});
       return new PipelineImpl(result, this);
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.UPDATE_PIPELINE, baseUrl, pipelinePath, e);
+      throw new CloudManagerApiException(ErrorType.UPDATE_PIPELINE, baseUrl.toString(), pipelinePath, e);
     }
   }
 
@@ -203,7 +217,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       if (Response.Status.NOT_FOUND.getStatusCode() == e.getCode()) {
         return Optional.empty();
       }
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
+      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl.toString(), executionHref, e);
     }
   }
 
@@ -224,7 +238,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       if (412 == e.getCode()) {
         throw new CloudManagerApiException(ErrorType.PIPELINE_START_RUNNING);
       }
-      throw new CloudManagerApiException(ErrorType.PIPELINE_START, baseUrl, executionHref, e);
+      throw new CloudManagerApiException(ErrorType.PIPELINE_START, baseUrl.toString(), executionHref, e);
     }
     return new PipelineExecutionImpl(execution, this);
   }
@@ -245,7 +259,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       io.adobe.cloudmanager.generated.model.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
       return new PipelineExecutionImpl(execution, this);
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
+      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl.toString(), executionHref, e);
     }
   }
 
@@ -341,7 +355,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       put(href, execution.getAdvanceBody());
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.ADVANCE_EXECUTION, baseUrl, href, e);
+      throw new CloudManagerApiException(ErrorType.ADVANCE_EXECUTION, baseUrl.toString(), href, e);
     }
   }
 
@@ -365,7 +379,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       put(href, execution.getCancelBody());
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.CANCEL_EXECUTION, baseUrl, href, e);
+      throw new CloudManagerApiException(ErrorType.CANCEL_EXECUTION, baseUrl.toString(), href, e);
     }
   }
 
@@ -435,7 +449,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       PipelineStepMetrics psm = get(href, new GenericType<PipelineStepMetrics>() {});
       return psm.getMetrics().stream().map(MetricImpl::new).collect(Collectors.toList());
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_METRICS, baseUrl, href, e);
+      throw new CloudManagerApiException(ErrorType.GET_METRICS, baseUrl.toString(), href, e);
     }
   }
 
@@ -457,7 +471,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       delete(environmentPath);
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.DELETE_ENVIRONMENT, baseUrl, environmentPath, e);
+      throw new CloudManagerApiException(ErrorType.DELETE_ENVIRONMENT, baseUrl.toString(), environmentPath, e);
     }
   }
 
@@ -569,10 +583,10 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       url = get(link.getHref(), params, new GenericType<Redirect>() {}).getRedirect();
       if (StringUtils.isBlank(url)) {
-        throw new CloudManagerApiException(ErrorType.NO_LOG_REDIRECT, String.format("%s%s", baseUrl, link.getHref()), url);
+        throw new CloudManagerApiException(ErrorType.NO_LOG_REDIRECT, String.format("%s%s", baseUrl.toString(), link.getHref()), url);
       }
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_LOGS, baseUrl, link.getHref(), e);
+      throw new CloudManagerApiException(ErrorType.GET_LOGS, baseUrl.toString(), link.getHref(), e);
     }
     return url;
   }
@@ -600,7 +614,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       return get(program.getSelfLink(), new GenericType<io.adobe.cloudmanager.generated.model.Program>() {});
     } catch (ApiException e) {
 
-      throw new CloudManagerApiException(ErrorType.GET_PROGRAM, baseUrl, program.getSelfLink(), e);
+      throw new CloudManagerApiException(ErrorType.GET_PROGRAM, baseUrl.toString(), program.getSelfLink(), e);
     }
   }
 
@@ -611,7 +625,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       pipelineList = get(pipelinesHref, new GenericType<PipelineList>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.LIST_PIPELINES, baseUrl, pipelinesHref, e);
+      throw new CloudManagerApiException(ErrorType.LIST_PIPELINES, baseUrl.toString(), pipelinesHref, e);
     }
 
     if (pipelineList == null ||
@@ -645,7 +659,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     } catch (MalformedURLException e) {
       throw new CloudManagerApiException(ErrorType.PROCESS_EVENT, e.getLocalizedMessage());
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_STEP_STATE, baseUrl, path, e);
+      throw new CloudManagerApiException(ErrorType.GET_STEP_STATE, baseUrl.toString(), path, e);
     }
   }
 
@@ -658,7 +672,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       io.adobe.cloudmanager.generated.model.PipelineExecution execution = get(link.getHref(), new GenericType<io.adobe.cloudmanager.generated.model.PipelineExecution>() {});
       return new PipelineExecutionImpl(execution, this);
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, link.getHref(), e);
+      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl.toString(), link.getHref(), e);
     }
   }
 
@@ -672,7 +686,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     } catch (MalformedURLException e) {
       throw new CloudManagerApiException(ErrorType.PROCESS_EVENT, e.getLocalizedMessage());
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, path, e);
+      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl.toString(), path, e);
     }
 
   }
@@ -692,7 +706,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       environmentList = get(environmentsHref, new GenericType<EnvironmentList>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.RETRIEVE_ENVIRONMENTS, baseUrl, environmentsHref, e);
+      throw new CloudManagerApiException(ErrorType.RETRIEVE_ENVIRONMENTS, baseUrl.toString(), environmentsHref, e);
     }
     if (environmentList == null ||
         environmentList.getEmbedded() == null ||
@@ -714,7 +728,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       list = get(variableLink.getHref(), new GenericType<VariableList>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_VARIABLES, baseUrl, variableLink.getHref(), e);
+      throw new CloudManagerApiException(ErrorType.GET_VARIABLES, baseUrl.toString(), variableLink.getHref(), e);
     }
     if (list.getTotalNumberOfItems().equals(0)) {
       return Collections.emptySet();
@@ -727,7 +741,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       list = patch(variableLInk.getHref(), variables, new GenericType<VariableList>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.SET_VARIABLES, baseUrl, variableLInk.getHref(), e);
+      throw new CloudManagerApiException(ErrorType.SET_VARIABLES, baseUrl.toString(), variableLInk.getHref(), e);
     }
     if (list.getTotalNumberOfItems().equals(0)) {
       return Collections.emptySet();
@@ -739,7 +753,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     try {
       return get(path, new GenericType<EnvironmentLogs>() {});
     } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_LOGS, baseUrl, path, e);
+      throw new CloudManagerApiException(ErrorType.GET_LOGS, baseUrl.toString(), path, e);
     }
   }
 

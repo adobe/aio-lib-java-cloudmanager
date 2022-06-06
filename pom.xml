@@ -69,10 +69,11 @@
         <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
 
+        <aio.lib.version>0.0.44</aio.lib.version>
+
+
         <jjwt.version>0.11.2</jjwt.version>
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
-
-        <aio.lib.version>0.0.44</aio.lib.version>
         
         <swagger.codegen.version>3.0.22</swagger.codegen.version>
 
@@ -601,7 +602,6 @@
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-junit-jupiter</artifactId>

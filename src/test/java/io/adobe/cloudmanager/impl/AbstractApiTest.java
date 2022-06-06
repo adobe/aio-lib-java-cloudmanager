@@ -20,7 +20,6 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-
 import io.adobe.cloudmanager.CloudManagerApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +37,6 @@ public abstract class AbstractApiTest {
   public void beforeEach(MockServerClient client) {
     this.client = client;
     this.baseUrl = String.format("http://localhost:%s", client.getPort());
-    underTest = CloudManagerApi.create("success", "test-apikey", "test-token", baseUrl + "/");
+    underTest = CloudManagerApi.create("success", "test-apikey", "test-token", baseUrl);
   }
 }

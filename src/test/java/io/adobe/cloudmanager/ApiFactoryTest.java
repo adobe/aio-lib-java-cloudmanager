@@ -20,19 +20,55 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.net.URL;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.util.HashSet;
+
+import com.adobe.aio.workspace.Workspace;
+import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ApiFactoryTest {
 
+  private static final String DUMMY = "DUMMY";
+  private static PrivateKey privateKey;
+  static {
+    try {
+      KeyPairGenerator kpGen = KeyPairGenerator.getInstance("RSA");
+      kpGen.initialize(2048);
+      KeyPair keyPair = kpGen.generateKeyPair();
+      privateKey = keyPair.getPrivate();
+      
+    } catch (NoSuchAlgorithmException e) {
+    }
+  }
   @Test
   public void testCloudManagerFactory() {
-    assertNotNull(CloudManagerApi.create("", "", ""));
+
+    Workspace workspace = Workspace.builder()
+        .apiKey(DUMMY)
+        .clientSecret(DUMMY)
+        .imsOrgId(DUMMY)
+        .technicalAccountId(DUMMY)
+        .privateKey(privateKey)
+        .build();
+    assertNotNull(CloudManagerApi.create(workspace));
   }
 
   @Test
-  public void testCloudManagerFactoryBaseUrl() {
-    assertNotNull(CloudManagerApi.create("", "", "", ""));
+  public void testCloudManagerFactoryBaseUrl() throws Exception {
+    Workspace workspace = Workspace.builder()
+        .apiKey(DUMMY)
+        .clientSecret(DUMMY)
+        .imsOrgId(DUMMY)
+        .technicalAccountId(DUMMY)
+        .privateKey(privateKey)
+        .build();
+    assertNotNull(CloudManagerApi.create(workspace, new URL(CloudManagerApi.BASE_URL)));
   }
 }
