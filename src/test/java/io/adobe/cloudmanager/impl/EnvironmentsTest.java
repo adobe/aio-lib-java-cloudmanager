@@ -47,7 +47,7 @@ import org.mockserver.model.MediaType;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 
-class EnvironmentsTest extends AbstractApiTest {
+public class EnvironmentsTest extends AbstractApiTest {
 
   private static byte[] zipBytes = null;
 

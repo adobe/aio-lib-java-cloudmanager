@@ -44,8 +44,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 
-import com.adobe.aio.ims.ImsService;
-import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
@@ -79,22 +77,13 @@ import io.adobe.cloudmanager.generated.model.VariableList;
 import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
 public class CloudManagerApiImpl implements CloudManagerApi {
-  
-  private ImsService imsService;
-  private Workspace workspace;
-  private URL baseUrl;
 
   private final ApiClient apiClient = new ConfiguredApiClient();
-  private  String orgId;
-  private  String apiKey;
-  private  String accessToken;
+  private final String orgId;
+  private final String apiKey;
+  private final String accessToken;
+  private final String baseUrl;
   
-  public CloudManagerApiImpl(Workspace workspace, URL baseUrl) {
-    this.imsService = ImsService.builder().workspace(workspace).build();
-    this.workspace = workspace;
-    this.baseUrl = baseUrl;
-  }
-
   public CloudManagerApiImpl(String orgId, String apiKey, String accessToken) {
     this(orgId, apiKey, accessToken, null);
   }
@@ -108,11 +97,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     }
     baseUrl = StringUtils.removeEnd(baseUrl, "/");
     apiClient.setBasePath(baseUrl);
-    try {
-      this.baseUrl = new URL(baseUrl);
-    } catch (MalformedURLException e) {
-      // Do Nothing - this is gonna be removed.
-    }
+    this.baseUrl = baseUrl;
   }
   
   private static String processTemplate(String path, Map<String, String> values) {

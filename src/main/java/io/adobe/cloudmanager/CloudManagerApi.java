@@ -46,44 +46,6 @@ import lombok.NonNull;
  * @since 1.0
  */
 public interface CloudManagerApi {
-  String BASE_URL = "https://cloudmanager.adobe.io";
-  String META_SCOPE = "https://ims-na1.adobelogin.com/s/ent_cloudmgr_sdk";
-
-  /**
-   * Creates a new CloudManagerApi instance using the specified Workspace.
-   * 
-   * The workspace will be used for authentication and thus must pass a {@link Workspace#validateJwtCredentialConfig()}
-   * 
-   * @param workspace the AIO Workspace Context.
-   * @return an api instance
-   */
-  @NonNull
-  static CloudManagerApi create(@NonNull Workspace workspace) {
-    try {
-      return create(workspace, new URL(BASE_URL));
-    } catch (MalformedURLException ex) {
-      // How did this happen?
-      throw new IllegalStateException(ex.getMessage());
-    }
-  }
-
-  /**
-   * Creates a new CloudManagerApi instance using the specified Workspace and API base URL.
-   *
-   * The workspace will be used for authentication and thus must pass a {@link Workspace#validateJwtCredentialConfig()}
-   * 
-   * This can be used to override the default Cloud Manager API endpoint.
-   * 
-   * @param workspace  the AIO Workspace Context.
-   * @param url the base URL for Cloud Manager's API
-   * @return an api instance
-   */
-  @NonNull
-  static CloudManagerApi create(@NonNull Workspace workspace, @NonNull URL url) {
-    workspace.getMetascopes().add(META_SCOPE);
-    workspace.validateJwtCredentialConfig();
-    return new CloudManagerApiImpl(workspace, url);
-  }
 
   @NonNull
   static CloudManagerApi create(@NonNull String orgId, @NonNull String apiKey, @NonNull String accessToken) {

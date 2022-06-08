@@ -1,10 +1,10 @@
-package io.adobe.cloudmanager.impl;
+package com.adobe.aio.cloudmanager.feign;
 
 /*-
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2022 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,9 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
+import io.adobe.cloudmanager.impl.EnvironmentsTest;
+import io.adobe.cloudmanager.impl.ExecutionsTest;
+import io.adobe.cloudmanager.impl.PipelinesTest;
 import org.mockserver.logging.MockServerLogger;
 import org.mockserver.mock.Expectation;
 import org.mockserver.serialization.ExpectationSerializer;
@@ -37,10 +40,8 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
 
   @Override
   public Expectation[] initializeExpectations() {
-
     final List<Expectation> expectations = new ArrayList<>();
     ExpectationSerializer serializer = new ExpectationSerializer(new MockServerLogger(CloudManagerExpectationInitializer.class));
-
     List<String> files = new ArrayList<>();
     files.add("general-program-setup.json");
     files.addAll(ProgramsTest.getTestExpectationFiles());
@@ -56,7 +57,7 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
       } catch (IOException e) {
         e.printStackTrace(); // Do anything more?
       }
-
+    
     });
     return expectations.toArray(new Expectation[]{});
   }

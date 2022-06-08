@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager;
+package com.adobe.aio.cloudmanager;
 
 /*-
  * #%L
@@ -25,12 +25,9 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.util.HashSet;
 
 import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ApiFactoryTest {

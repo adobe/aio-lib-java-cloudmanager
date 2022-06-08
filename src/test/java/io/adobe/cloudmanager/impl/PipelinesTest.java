@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 
-class PipelinesTest extends AbstractApiTest {
+public class PipelinesTest extends AbstractApiTest {
 
   private String pipeline1Branch = "yellow";
   private String pipeline1RepositoryId = "1";
