@@ -29,16 +29,14 @@ import com.adobe.aio.workspace.Workspace;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
-
 import static org.mockito.Mockito.*;
 
 @ExtendWith({MockServerExtension.class, MockitoExtension.class})
-public class AbstractApiImplTest {
+public class AbstractApiClientTest {
   protected MockServerClient client;
   protected String baseUrl;
   protected CloudManagerApi underTest;
@@ -48,12 +46,11 @@ public class AbstractApiImplTest {
   @Mock
   private JWTAuthInterceptor.Builder jwtBuilder;
   @Mock
-  private JWTAuthInterceptor interceptor; 
-  
-  
+  private JWTAuthInterceptor interceptor;
+
   @BeforeEach
   public void beforeEach(MockServerClient client) throws MalformedURLException {
-    
+
     try (MockedStatic<JWTAuthInterceptor> mocked = mockStatic(JWTAuthInterceptor.class)) {
       mocked.when(JWTAuthInterceptor::builder).thenReturn(jwtBuilder);
       when(jwtBuilder.workspace(workspace)).thenReturn(jwtBuilder);
@@ -68,4 +65,5 @@ public class AbstractApiImplTest {
     }
     verify(workspace).validateJwtCredentialConfig();
   }
+
 }

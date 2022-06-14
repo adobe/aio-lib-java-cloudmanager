@@ -1,0 +1,26 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/program/1"
+    },
+    "httpResponse": {
+      "body": {
+        "id": "1",
+        "name": "test1",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/1"
+          },
+          "http://ns.adobe.com/adobecloud/rel/pipelines": {
+            "href": "/api/program/1/pipelines"
+          },
+          "http://ns.adobe.com/adobecloud/rel/environments": {
+            "href": "/api/program/1/environments"
+          }
+        }
+      }
+    }
+  }
+]

@@ -9,9 +9,9 @@ package com.adobe.aio.cloudmanager.feign;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,14 +26,12 @@ import java.util.Collection;
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import com.adobe.aio.cloudmanager.Program;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockserver.junit.jupiter.MockServerExtension;
+import org.mockserver.model.ClearType;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.*;
 
-@ExtendWith(MockServerExtension.class)
-public class ProgramsTest extends AbstractApiImplTest {
+public class ProgramsTest extends AbstractApiClientTest {
 
   public static Collection<String> getTestExpectationFiles() {
     return Arrays.asList(
@@ -42,6 +40,8 @@ public class ProgramsTest extends AbstractApiImplTest {
         "programs/forbidden-code-only.json",
         "programs/forbidden-message-only.json",
         "programs/empty-response.json",
+        "programs/list-success.json",
+        "programs/get-success.json",
         "programs/delete-fails.json",
         "programs/delete-success.json"
     );
@@ -49,7 +49,7 @@ public class ProgramsTest extends AbstractApiImplTest {
 
   @Test
   void listPrograms_failure404() {
-    when(workspace.getImsOrgId()).thenReturn("not-found");
+    when(workspace.getImsOrgId()).thenReturn("list-not-found");
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
@@ -94,16 +94,30 @@ public class ProgramsTest extends AbstractApiImplTest {
   }
 
   @Test
-  void deleteProgram_failure() {
+  void getProgram_failure404() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getProgram("99"), "Exception thrown for 404");
+    assertEquals(String.format("Cannot retrieve program: %s/api/program/99 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+  }
+
+  @Test
+  void getProgram_success() throws CloudManagerApiException {
+    Program program = underTest.getProgram("1");
+    assertNotNull(program, "Program retrieval success.");
+  }
+  
+  @Test
+  void deleteProgram_failure400() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteProgram("2"), "Exception was thrown");
     assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request)", baseUrl), exception.getMessage(), "Correct exception message");
     client.verify(request().withMethod("DELETE").withPath("/api/program/2"));
+    client.clear(request().withPath("/api/program/2"), ClearType.LOG);
   }
 
   @Test
   void deleteProgram_success() throws CloudManagerApiException {
     underTest.deleteProgram("3");
     client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
+    client.clear(request().withPath("/api/program/3"), ClearType.LOG);
   }
 
   @Test

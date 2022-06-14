@@ -16,7 +16,7 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/api/program/2/pipelines"
+      "path": "/api/program/7/pipelines"
     },
     "httpResponse": {
       "body": {
@@ -28,7 +28,7 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/api/program/7/pipelines"
+      "path": "/api/program/8/pipelines"
     },
     "httpResponse": {
       "body": {

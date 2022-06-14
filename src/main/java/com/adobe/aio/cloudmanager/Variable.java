@@ -1,10 +1,10 @@
-package com.adobe.aio.cloudmanager.feign;
+package com.adobe.aio.cloudmanager;
 
 /*-
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2022 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,30 +20,27 @@ package com.adobe.aio.cloudmanager.feign;
  * #L%
  */
 
-import com.adobe.aio.cloudmanager.CloudManagerApiException;
-import com.adobe.aio.cloudmanager.Program;
+import java.io.Serializable;
+
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
-@EqualsAndHashCode(callSuper = true)
-public class ProgramImpl extends com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram implements Program {
+@EqualsAndHashCode
+public class Variable implements Serializable {
+
   private static final long serialVersionUID = 1L;
 
-  @Delegate
-  private final com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram delegate;
+  public Variable() {
+    this.delegate = new com.adobe.aio.cloudmanager.generated.model.Variable();
+  }
 
-  @ToString.Exclude
-  @EqualsAndHashCode.Exclude
-  private final CloudManagerApiImpl client;
-  
-  public ProgramImpl(com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram delegate, CloudManagerApiImpl client) {
+  public Variable(com.adobe.aio.cloudmanager.generated.model.Variable delegate) {
     this.delegate = delegate;
-    this.client = client;
   }
 
-  public void delete() throws CloudManagerApiException {
-    client.deleteProgram(this);
-  }
+  @Delegate
+  private final com.adobe.aio.cloudmanager.generated.model.Variable delegate;
+
 }

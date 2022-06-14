@@ -1,4 +1,4 @@
-package com.adobe.aio.cloudmanager.feign;
+package com.adobe.aio.cloudmanager.feign.exception;
 
 /*-
  * #%L
@@ -46,6 +46,7 @@ public abstract class CloudManagerExceptionDecoder implements ErrorDecoder {
     phrases.put(400, "Bad Request");
     phrases.put(403, "Forbidden");
     phrases.put(404, "Not Found");
+    phrases.put(405, "Method Not Allowed");
   }
 
   private static ProblemPayload getProblemBody(Response response, String body) {

@@ -1,4 +1,4 @@
-package com.adobe.aio.cloudmanager.feign;
+package com.adobe.aio.cloudmanager;
 
 /*-
  * #%L
@@ -20,16 +20,5 @@ package com.adobe.aio.cloudmanager.feign;
  * #L%
  */
 
-import com.adobe.aio.cloudmanager.CloudManagerApiException;
-import feign.Param;
-import feign.RequestLine;
-import io.adobe.cloudmanager.generated.model.ProgramList;
-
-public interface ProgramApiImpl {
-  
-  @RequestLine("GET /api/programs")
-  ProgramList listPrograms() throws CloudManagerApiException;
-  
-  @RequestLine("DELETE /api/program/{programId}")
-  void deleteProgram(@Param("programId") String programId) throws CloudManagerApiException;
+public interface Repository {
 }

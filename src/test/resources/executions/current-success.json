@@ -21,7 +21,7 @@
                 "stepId": "8491",
                 "phaseId": "4595",
                 "executionId": "1",
-                "pipelineId": "2",
+                "pipelineId": "3",
                 "programId": "4",
                 "action": "validate",
                 "startedAt": "2019-07-08T22:44:32.267+0000",
@@ -120,144 +120,6 @@
           "updatedAt": "2019-05-23T13:56:43.811+0000"
         }
       }
-    }
-  },
-  {
-    "httpRequest": {
-      "method": "GET",
-      "path": "/api/program/4/pipeline/2/execution/1"
-    },
-    "httpResponse": {
-      "body": {
-        "type": "JSON",
-        "json": {
-          "_embedded": {
-            "stepStates": [
-              {
-                "_links": {
-                  "self": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4595/step/8491",
-                    "templated": false
-                  }
-                },
-                "id": "53082",
-                "stepId": "8491",
-                "phaseId": "4595",
-                "executionId": "1",
-                "pipelineId": "2",
-                "programId": "4",
-                "action": "validate",
-                "startedAt": "2019-07-08T22:44:32.267+0000",
-                "finishedAt": "2019-07-08T22:44:35.320+0000",
-                "updatedAt": "2019-07-08T22:44:35.383+0000",
-                "status": "FINISHED"
-              },
-              {
-                "_links": {
-                  "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/8492/cancel",
-                    "templated": false
-                  },
-                  "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/8492/logs",
-                    "templated": false
-                  },
-                  "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/8492/metrics",
-                    "templated": false
-                  },
-                  "self": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/8492",
-                    "templated": false
-                  }
-                },
-                "id": "53083",
-                "stepId": "8492",
-                "phaseId": "4596",
-                "executionId": "1",
-                "pipelineId": "2",
-                "programId": "4",
-                "action": "build",
-                "repository": "weretail",
-                "branch": "master",
-                "startedAt": "2019-07-08T22:44:36.814+0000",
-                "updatedAt": "2019-07-08T22:44:36.877+0000",
-                "status": "FINISHED"
-              },
-              {
-                "_links": {
-                  "self": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/8493",
-                    "templated": false
-                  }
-                },
-                "id": "53084",
-                "stepId": "8493",
-                "phaseId": "4596",
-                "executionId": "1",
-                "pipelineId": "2",
-                "programId": "4",
-                "action": "codeQuality",
-                "repository": "weretail",
-                "branch": "master",
-                "updatedAt": "2019-07-08T22:44:25.618+0000",
-                "status": "FINISHED"
-              },
-              {
-                "_links": {
-                  "http://ns.adobe.com/adobecloud/rel/pipeline/advance": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/advance",
-                    "templated": false
-                  },
-                  "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/cancel",
-                    "templated": false
-                  },
-                  "self": {
-                    "href": "/api/program/4/pipeline/2/execution/1/phase/4596/step/15490",
-                    "templated": false
-                  }
-                },
-                "id": "53042",
-                "stepId": "15490",
-                "phaseId": "4596",
-                "executionId": "1",
-                "pipelineId": "2",
-                "programId": "4",
-                "action": "approval",
-                "startedAt": "2019-07-09T00:55:00.842+0000",
-                "updatedAt": "2019-07-09T00:55:00.909+0000",
-                "details": {},
-                "status": "WAITING"
-              }
-            ]
-          },
-          "id": "1",
-          "programId": "4",
-          "pipelineId": "2",
-          "artifactsVersion": "2019.523.134947.0000006554",
-          "trigger": "MANUAL",
-          "user": "3E8367615C0A78710A495EEF@AdobeID",
-          "status": "RUNNING",
-          "createdAt": "2019-05-23T13:49:47.688+0000",
-          "updatedAt": "2019-05-23T13:56:43.811+0000"
-        }
-      }
-    }
-  },
-  {
-    "httpRequest": {
-      "method": "PUT",
-      "path": "/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/cancel",
-      "body": {
-        "type": "JSON",
-        "json": {
-          "approved": false
-        }
-      }
-    },
-    "httpResponse": {
-      "statusCode": 202
     }
   },
   {
@@ -268,6 +130,21 @@
         "type": "JSON",
         "json": {
           "approved": true
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 202
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "PUT",
+      "path": "/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/cancel",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "approved": false
         }
       }
     },

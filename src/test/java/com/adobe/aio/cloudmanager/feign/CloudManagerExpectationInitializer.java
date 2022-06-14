@@ -29,8 +29,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import io.adobe.cloudmanager.impl.EnvironmentsTest;
-import io.adobe.cloudmanager.impl.ExecutionsTest;
-import io.adobe.cloudmanager.impl.PipelinesTest;
 import org.mockserver.logging.MockServerLogger;
 import org.mockserver.mock.Expectation;
 import org.mockserver.serialization.ExpectationSerializer;
@@ -43,11 +41,11 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
     final List<Expectation> expectations = new ArrayList<>();
     ExpectationSerializer serializer = new ExpectationSerializer(new MockServerLogger(CloudManagerExpectationInitializer.class));
     List<String> files = new ArrayList<>();
-    files.add("general-program-setup.json");
+//    files.add("general-program-setup.json");
     files.addAll(ProgramsTest.getTestExpectationFiles());
-    files.addAll(EnvironmentsTest.getTestExpectationFiles());
     files.addAll(PipelinesTest.getTestExpectationFiles());
-    files.addAll(ExecutionsTest.getTestExpectationFiles());
+    files.addAll(PipelineExecutionsTest.getTestExpectationFiles());
+    files.addAll(EnvironmentsTest.getTestExpectationFiles());
 
     files.stream().forEach(s -> {
       try {
