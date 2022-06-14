@@ -130,6 +130,11 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
+  public void listBranches(@NonNull Repository repository) throws CloudManagerApiException {
+    throw new IllegalStateException("Not Implemented");
+  }
+
+  @Override
   public @NonNull Collection<Pipeline> listPipelines(@NonNull String programId) throws CloudManagerApiException {
     return listPipelines(programId, p -> true);
   }
@@ -439,6 +444,11 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     String href = stepState.getLinks().getHttpnsAdobeComadobecloudrelpipelinemetrics().getHref();
     PipelineStepMetrics psm =  executionsApi.getStepMetrics(href);
     return psm.getMetrics().stream().map(MetricImpl::new).collect(Collectors.toList());
+  }
+
+  @Override
+  public @NonNull Collection<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException {
+    throw new IllegalStateException("Not Implemented.");
   }
 
   @NonNull

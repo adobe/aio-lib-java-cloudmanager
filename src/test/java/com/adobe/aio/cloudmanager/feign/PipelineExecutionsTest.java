@@ -27,6 +27,7 @@ import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
+import com.adobe.aio.cloudmanager.Metric;
 import com.adobe.aio.cloudmanager.Pipeline;
 import com.adobe.aio.cloudmanager.PipelineExecution;
 import com.adobe.aio.cloudmanager.PipelineExecutionStepState;
@@ -653,6 +654,36 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getQualityGateResults(execution, "codeQuality"), "Exception thrown");
     assertEquals(String.format("Cannot get metrics: %s/api/program/4/pipeline/7/execution/9/phase/8565/step/15484/metrics (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
+
+
+  @Test
+  void PipelineExecution_Status() {
+    assertEquals(PipelineExecution.Status.fromValue("FAILED"), PipelineExecution.Status.FAILED);
+    assertNull(PipelineExecution.Status.fromValue("foo"));
+    assertEquals(PipelineExecution.Status.FAILED.getValue(), PipelineExecution.Status.FAILED.toString());
+  }
+
+  @Test
+  void PipelineExecutionStepState_Status() {
+    assertEquals(PipelineExecutionStepState.Status.fromValue("FAILED"), PipelineExecutionStepState.Status.FAILED);
+    assertNull(PipelineExecutionStepState.Status.fromValue("foo"));
+    assertEquals(PipelineExecutionStepState.Status.FAILED.getValue(), PipelineExecutionStepState.Status.FAILED.toString());
+  }
+
+  @Test
+  void Metric_Sev() {
+    assertEquals(Metric.Severity.fromValue("informational"), Metric.Severity.INFORMATIONAL);
+    assertNull(Metric.Severity.fromValue("foo"));
+    assertEquals(Metric.Severity.INFORMATIONAL.getValue(), Metric.Severity.INFORMATIONAL.toString());
+  }
+
+  @Test
+  void Metric_Comp() {
+    assertEquals(Metric.Comparator.fromValue("NEQ"), Metric.Comparator.NEQ);
+    assertNull(Metric.Comparator.fromValue("foo"));
+    assertEquals(Metric.Comparator.NEQ.getValue(), Metric.Comparator.NEQ.toString());
+  }
+
 
   private void setupDownloadUrl() {
     client.when(

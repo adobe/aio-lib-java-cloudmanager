@@ -174,6 +174,8 @@ public interface CloudManagerApi {
   @NonNull
   Repository getRepository(@NonNull Program program, @NonNull String repositoryId) throws CloudManagerApiException;
 
+  void listBranches(@NonNull Repository repository) throws CloudManagerApiException;
+  
   /**
    * Lists all pipelines within the specified program.
    *
@@ -595,7 +597,6 @@ public interface CloudManagerApi {
    */
   void downloadExecutionStepLog(@NonNull PipelineExecution execution, @NonNull String action, @NonNull String filename, @NonNull OutputStream outputStream) throws CloudManagerApiException;
 
-
   /**
    * Retrieves the metrics for the specified execution and step, if any.
    *
@@ -607,5 +608,9 @@ public interface CloudManagerApi {
    */
   @NonNull
   Collection<Metric> getQualityGateResults(@NonNull PipelineExecution execution, @NonNull String action) throws CloudManagerApiException;
+
+  @NonNull
+  Collection<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException;
+
 
 }
