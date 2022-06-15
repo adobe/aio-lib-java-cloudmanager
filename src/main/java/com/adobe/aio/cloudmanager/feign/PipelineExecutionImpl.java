@@ -42,7 +42,7 @@ import lombok.experimental.Delegate;
  * Extension to the Swagger generated Pipeline. Provides convenience methods for frequently used APIs
  */
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class PipelineExecutionImpl extends com.adobe.aio.cloudmanager.generated.model.PipelineExecution implements PipelineExecution {
 
   private static final long serialVersionUID = 1L;

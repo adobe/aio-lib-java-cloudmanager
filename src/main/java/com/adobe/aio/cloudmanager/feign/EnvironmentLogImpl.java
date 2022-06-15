@@ -4,7 +4,7 @@ package com.adobe.aio.cloudmanager.feign;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2022 Adobe Inc.
+ * Copyright (C) 2020 - 2021 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,30 +20,26 @@ package com.adobe.aio.cloudmanager.feign;
  * #L%
  */
 
-import com.adobe.aio.cloudmanager.CloudManagerApiException;
-import com.adobe.aio.cloudmanager.Program;
+import com.adobe.aio.cloudmanager.EnvironmentLog;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class ProgramImpl extends com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram implements Program {
+public class EnvironmentLogImpl extends com.adobe.aio.cloudmanager.generated.model.EnvironmentLog implements EnvironmentLog {
+
   private static final long serialVersionUID = 1L;
 
+  public EnvironmentLogImpl(com.adobe.aio.cloudmanager.generated.model.EnvironmentLog log) {
+    this.delegate = log;
+  }
+
   @Delegate
-  private final com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram delegate;
-
-  @ToString.Exclude
-  @EqualsAndHashCode.Exclude
-  private final CloudManagerApiImpl client;
-  
-  public ProgramImpl(com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram delegate, CloudManagerApiImpl client) {
-    this.delegate = delegate;
-    this.client = client;
-  }
-
-  public void delete() throws CloudManagerApiException {
-    client.deleteProgram(this);
-  }
+  com.adobe.aio.cloudmanager.generated.model.EnvironmentLog delegate;
+  @Getter @Setter int index;
+  @Getter @Setter String path;
+  @Getter @Setter String url;
 }

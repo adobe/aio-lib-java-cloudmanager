@@ -20,12 +20,14 @@ package com.adobe.aio.cloudmanager;
  * #L%
  */
 
+import java.io.File;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import com.adobe.aio.cloudmanager.event.PipelineExecutionEndEvent;
@@ -34,9 +36,11 @@ import com.adobe.aio.cloudmanager.event.PipelineExecutionStepEndEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepStartEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepWaitingEvent;
 import com.adobe.aio.cloudmanager.feign.CloudManagerApiImpl;
+import com.adobe.aio.cloudmanager.feign.client.EnvironmentApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineExecutionApiClient;
 import com.adobe.aio.cloudmanager.feign.client.ProgramApiClient;
+import com.adobe.aio.cloudmanager.feign.exception.EnvironmentExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExecutionExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.ProgramExceptionDecoder;
@@ -55,6 +59,7 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
+import Variable;
 import lombok.NonNull;
 
 public interface CloudManagerApi {
@@ -120,7 +125,8 @@ public interface CloudManagerApi {
     ProgramApiClient programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(ProgramApiClient.class, url.toString());
     PipelineApiClient pipelineApi = builder.errorDecoder(new PipelineExceptionDecoder()).target(PipelineApiClient.class, url.toString());
     PipelineExecutionApiClient executionsApi = builder.errorDecoder(new PipelineExecutionExceptionDecoder()).target(PipelineExecutionApiClient.class, url.toString());
-    return new CloudManagerApiImpl(programApi, pipelineApi, executionsApi);
+    EnvironmentApiClient environmentApi = builder.errorDecoder(new EnvironmentExceptionDecoder()).target(EnvironmentApiClient.class, url.toString());
+    return new CloudManagerApiImpl(programApi, pipelineApi, executionsApi, environmentApi);
   }
 
   /**
@@ -175,7 +181,7 @@ public interface CloudManagerApi {
   Repository getRepository(@NonNull Program program, @NonNull String repositoryId) throws CloudManagerApiException;
 
   void listBranches(@NonNull Repository repository) throws CloudManagerApiException;
-  
+
   /**
    * Lists all pipelines within the specified program.
    *
@@ -429,7 +435,7 @@ public interface CloudManagerApi {
    */
   @NonNull
   PipelineExecutionStepState getWaitingStep(@NonNull PipelineExecution execution) throws CloudManagerApiException;
-  
+
   /**
    * Advances the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
    *
@@ -469,7 +475,7 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/cancelPipelineExecutionStep">Cancel Pipeline API</a>
    */
   void cancelCurrentExecution(@NonNull String programId, @NonNull String pipelineId) throws CloudManagerApiException;
-  
+
   /**
    * Cancels the execution of the specified pipeline execution, if in an appropriate state.
    *
@@ -489,17 +495,17 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/cancelPipelineExecutionStep">Cancel Pipeline API</a>
    */
   void cancelExecution(@NonNull PipelineExecution execution) throws CloudManagerApiException;
-  
+
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
-   * @param programId    the program id of the pipeline context
-   * @param pipelineId   the pipeline id for the execution context
-   * @param executionId  the execution id for the logs
-   * @param action       the execution step action for the log
+   * @param programId   the program id of the pipeline context
+   * @param pipelineId  the pipeline id for the execution context
+   * @param executionId the execution id for the logs
+   * @param action      the execution step action for the log
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs.
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
    */
   @NonNull
   String getExecutionStepLogDownloadUrl(@NonNull String programId, @NonNull String pipelineId, @NonNull String executionId, @NonNull String action) throws CloudManagerApiException;
@@ -507,27 +513,26 @@ public interface CloudManagerApi {
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
-   * @param programId    the program id of the pipeline context
-   * @param pipelineId   the pipeline id for the execution context
-   * @param executionId  the execution id for the logs
-   * @param action       the execution step action for the log
-   * @param name         custom log file name
+   * @param programId   the program id of the pipeline context
+   * @param pipelineId  the pipeline id for the execution context
+   * @param executionId the execution id for the logs
+   * @param action      the execution step action for the log
+   * @param name        custom log file name
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs.
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
    */
   @NonNull
   String getExecutionStepLogDownloadUrl(@NonNull String programId, @NonNull String pipelineId, @NonNull String executionId, @NonNull String action, @NonNull String name) throws CloudManagerApiException;
 
-
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
-   * @param execution    the execution for the log
-   * @param action       the execution step action for the log
+   * @param execution the execution for the log
+   * @param action    the execution step action for the log
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs.
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
    */
   @NonNull
   String getExecutionStepLogDownloadUrl(@NonNull PipelineExecution execution, @NonNull String action) throws CloudManagerApiException;
@@ -535,12 +540,12 @@ public interface CloudManagerApi {
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
-   * @param execution    the execution for the log
-   * @param action       the execution step action for the log
-   * @param name         custom log file name
+   * @param execution the execution for the log
+   * @param action    the execution step action for the log
+   * @param name      custom log file name
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs.
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Adobe Cloud Manager API</a>
    */
   @NonNull
   String getExecutionStepLogDownloadUrl(@NonNull PipelineExecution execution, @NonNull String action, @NonNull String name) throws CloudManagerApiException;
@@ -567,7 +572,7 @@ public interface CloudManagerApi {
    * @param pipelineId   the pipeline id for the execution context
    * @param executionId  the execution id for the logs
    * @param action       the execution step action for the log
-   * @param filename         custom log file name
+   * @param filename     custom log file name
    * @param outputStream output stream to write to
    * @throws CloudManagerApiException when any error occurs.
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Pipeline_Execution/getStepLogs">Get Execution Logs API</a>
@@ -612,5 +617,108 @@ public interface CloudManagerApi {
   @NonNull
   Collection<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException;
 
+  /**
+   * Lists all environments in the specified program.
+   *
+   * @param programId the program id
+   * @return list of environments in the program
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/getEnvironments">List Environments API</a>
+   */
+  Collection<Environment> listEnvironments(@NonNull String programId) throws CloudManagerApiException;
+
+  /**
+   * Lists all environments in the specified program, by their type.
+   *
+   * @param programId the program id
+   * @param type      the type of environments to retrieve
+   * @return list of environments in the program
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/getEnvironments">List Environments API</a>
+   */
+  Collection<Environment> listEnvironments(@NonNull String programId, Environment.Type type) throws CloudManagerApiException;
+
+  void createEnvironment(@NonNull String programId, Environment.Type type) throws CloudManagerApiException;
+
+  /**
+   * @param programId
+   * @param prediate
+   * @return
+   * @throws CloudManagerApiException
+   */
+  @NonNull
+  Environment getEnvironment(@NonNull String programId, Predicate<Environment> prediate) throws CloudManagerApiException;
+
+  /**
+   * Delete the environment in the specified program.
+   *
+   * @param programId     the program id of the environment context
+   * @param environmentId the environment to delete
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/deleteEnvironment">Delete Environment API</a>
+   */
+  void deleteEnvironment(@NonNull String programId, @NonNull String environmentId) throws CloudManagerApiException;
+
+  /**
+   * Delete the specified environment.
+   *
+   * @param environment the environment to delete
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/deleteEnvironment">Delete Environment API</a>
+   */
+  void deleteEnvironment(@NonNull Environment environment) throws CloudManagerApiException;
+  
+  /**
+   * Downloads the logs for the specified environment.
+   *
+   * @param programId     the program id context for the environment
+   * @param environmentId the environment id
+   * @param logOption     the log file reference
+   * @param days          how many days of log files to retrieve
+   * @param dir           the directory in which to save the files
+   * @return a list of EnvironmentLogs with details about the downloaded files
+   * @throws CloudManagerApiException when any error occurs.
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
+   */
+  @NonNull
+  Collection<EnvironmentLog> downloadEnvironmentLogs(@NonNull String programId, @NonNull String environmentId, @NonNull LogOption logOption, int days, @NonNull File dir) throws CloudManagerApiException;
+
+  /**
+   * Downloads the logs for the specified environment.
+   *
+   * @param environment the environment context
+   * @param logOption   the log file reference
+   * @param days        how many days of log files to retrieve
+   * @param dir         the directory in which to save the files
+   * @return a list of EnvironmentLogs with details about the downloaded files
+   * @throws CloudManagerApiException when any error occurs.
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Environments/downloadLogs">Download Environment Logs API</a>
+   */
+  @NonNull
+  Collection<EnvironmentLog> downloadEnvironmentLogs(@NonNull Environment environment, @NonNull LogOption logOption, int days, @NonNull File dir) throws CloudManagerApiException;
+
+  /**
+   * Lists all variables associated with the specified environment
+   *
+   * @param programId     the program id of the environment
+   * @param environmentId the environment id
+   * @return list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getEnvironmentVariables">List User Environment Variables API</a>
+   */
+  @NonNull
+  Set<Variable> listEnvironmentVariables(@NonNull String programId, @NonNull String environmentId) throws CloudManagerApiException;
+
+
+  /**
+   * Lists all variables associated with the specified environment
+   *
+   * @param environment the environment
+   * @return list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getEnvironmentVariables">List User Environment Variables API</a>
+   */
+  @NonNull
+  Set<Variable> listEnvironmentVariables(@NonNull Environment environment) throws CloudManagerApiException;
 
 }

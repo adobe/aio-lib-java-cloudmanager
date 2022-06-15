@@ -1,0 +1,55 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/program/2/environment/1/logs?service=author&type=aemerror&days=1"
+    },
+    "http://ns.adobe.com/adobecloud/rel/program": {
+      "href": "/api/program/2",
+      "templated": false
+    },
+    "http://ns.adobe.com/adobecloud/rel/environment": {
+      "href": "/api/program/2/environment/1",
+      "templated": false
+    }
+  },
+  "service": [
+    "author"
+  ],
+  "name": [
+    "aemerror"
+  ],
+  "days": 1,
+  "_embedded": {
+    "downloads": [
+      {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/logs/download": {
+            "href": "/api/program/2/environment/1/logs/download?service=author&name=aemerror&date=2019-09-8",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/logs/tail": {
+            "href": "https://filestore/logs/author_aemerror_2019-09-8.log"
+          }
+        },
+        "service": "author",
+        "name": "aemerror",
+        "date": "2019-09-08",
+        "programId": "2",
+        "environmentId": "1"
+      },
+      {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/logs/download": {
+            "href": "/api/program/2/environment/1/logs/download?service=author&name=aemerror&date=2019-09-7",
+            "templated": false
+          }
+        },
+        "service": "author",
+        "name": "aemerror",
+        "date": "2019-09-07",
+        "programId": "2",
+        "environmentId": "1"
+      }
+    ]
+  }
+}

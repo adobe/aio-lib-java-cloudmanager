@@ -32,7 +32,7 @@ import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class PipelineImpl extends com.adobe.aio.cloudmanager.generated.model.Pipeline implements Pipeline {
 
   private static final long serialVersionUID = 1L;

@@ -20,14 +20,21 @@ package com.adobe.aio.cloudmanager.feign;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.IOUtils;
 
 import com.adobe.aio.cloudmanager.CloudManagerApi;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,8 +44,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith({MockServerExtension.class, MockitoExtension.class})
 public class AbstractApiClientTest {
-  protected MockServerClient client;
-  protected String baseUrl;
+  
+  protected static MockServerClient client;
+  protected static String baseUrl;
   protected CloudManagerApi underTest;
 
   @Mock(strictness = Mock.Strictness.LENIENT)
@@ -48,16 +56,21 @@ public class AbstractApiClientTest {
   @Mock
   private JWTAuthInterceptor interceptor;
 
+  @BeforeAll
+  public static void beforeAll(MockServerClient mockServerClient) throws MalformedURLException {
+    client = mockServerClient;
+    baseUrl = String.format("http://localhost:%s", client.getPort());
+  }
+  
   @BeforeEach
-  public void beforeEach(MockServerClient client) throws MalformedURLException {
+  public void beforeEach() throws MalformedURLException {
 
     try (MockedStatic<JWTAuthInterceptor> mocked = mockStatic(JWTAuthInterceptor.class)) {
       mocked.when(JWTAuthInterceptor::builder).thenReturn(jwtBuilder);
       when(jwtBuilder.workspace(workspace)).thenReturn(jwtBuilder);
       when(jwtBuilder.build()).thenReturn(interceptor);
 
-      this.client = client;
-      this.baseUrl = String.format("http://localhost:%s", client.getPort());
+      
       when(workspace.getImsOrgId()).thenReturn("success");
       when(workspace.getApiKey()).thenReturn("test-apikey");
 
@@ -66,4 +79,11 @@ public class AbstractApiClientTest {
     verify(workspace).validateJwtCredentialConfig();
   }
 
+  protected static String loadBodyJson(String filePath) {
+    try (InputStream is = AbstractApiClientTest.class.getClassLoader().getResourceAsStream(filePath)) {
+      return IOUtils.toString(is, Charset.defaultCharset());
+    } catch (IOException e) {
+      throw new TestInstantiationException(e.getMessage());
+    }
+  }
 }

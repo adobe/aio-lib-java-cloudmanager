@@ -34,11 +34,13 @@ import lombok.experimental.Delegate;
  * Extension to the Swagger generated Pipeline. Provides convenience methods for frequently used APIs
  */
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class PipelineExecutionStepStateImpl extends com.adobe.aio.cloudmanager.generated.model.PipelineExecutionStepState implements PipelineExecutionStepState {
 
   private static final long serialVersionUID = 1L;
 
+  protected static final String FILENAME_PARAM = "file";
+  
   @Delegate
   private final com.adobe.aio.cloudmanager.generated.model.PipelineExecutionStepState delegate;
   @ToString.Exclude
