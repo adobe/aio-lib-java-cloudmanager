@@ -74,19 +74,19 @@ public class PipelineExecutionExceptionDecoder extends CloudManagerExceptionDeco
   }
 
   public enum ErrorType {
-    GET_EXECUTION("Cannot get execution: %s"),
-    PIPELINE_START("Cannot create execution: %s"),
+    GET_EXECUTION("Cannot get execution: %s."),
+    PIPELINE_START("Cannot create execution: %s."),
     PIPELINE_START_RUNNING("Cannot create execution. Pipeline already running."),
     FIND_STEP_STATE("Cannot find step state for action %s on execution %s."),
     FIND_EXECUTION_LINK("Cannot find execution link for the current step (%s)."),
-    GET_STEP_STATE("Cannot get step state: %s"),
+    GET_STEP_STATE("Cannot get step state: %s."),
     FIND_CURRENT_STEP("Cannot find a current step for pipeline %s."),
     FIND_WAITING_STEP("Cannot find a waiting step for pipeline %s."),
-    ADVANCE_EXECUTION("Cannot advance execution: %s"),
-    CANCEL_EXECUTION("Cannot cancel execution: %s"),
-    GET_LOGS("Cannot get logs: %s"),
+    ADVANCE_EXECUTION("Cannot advance execution: %s."),
+    CANCEL_EXECUTION("Cannot cancel execution: %s."),
+    GET_LOGS("Cannot get logs: %s."),
     GET_METRICS("Cannot get metrics: %s."),
-    UNKNOWN("Pipeline Execution API Error: %s");
+    UNKNOWN("Pipeline Execution API Error: %s.");
 
     private final String message;
 

@@ -75,11 +75,11 @@ public class PipelineImpl extends com.adobe.aio.cloudmanager.generated.model.Pip
 
   @Override
   public Set<Variable> listVariables() throws CloudManagerApiException {
-    return null; // client.listPipelineVariables(this);
+    return client.listPipelineVariables(this);
   }
 
   @Override
   public Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
-    return null; //client.setPipelineVariables(this, variables);
+    return client.setPipelineVariables(this, variables);
   }
 }

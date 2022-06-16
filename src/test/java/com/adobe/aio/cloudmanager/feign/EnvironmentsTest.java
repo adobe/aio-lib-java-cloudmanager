@@ -1,5 +1,25 @@
 package com.adobe.aio.cloudmanager.feign;
 
+/*-
+ * #%L
+ * Adobe Cloud Manager Client Library
+ * %%
+ * Copyright (C) 2020 - 2022 Adobe Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,25 +39,27 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.model.ClearType;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
+import static org.mockserver.model.JsonBody.*;
 
-public class EnvironmentTest extends AbstractApiClientTest {
+public class EnvironmentsTest extends AbstractApiClientTest {
 
-  private static String allJson;
-  private static String devJson;
-  
+  private static JsonBody allJson;
+  private static JsonBody devJson;
+
   @BeforeAll
-  protected static void beforeAll() throws IOException {
-    allJson = loadBodyJson("environments/environment-list-full.json");
-    devJson = loadBodyJson("environments/environment-list-dev.json");
-    
+  protected static void beforeAll() {
+    allJson = loadBodyJson("environments/list-full.json");
+    devJson = loadBodyJson("environments/list-dev.json");
+
   }
-  
+
   @Test
   void listEnvironments_failure404() {
     HttpRequest request = request().withMethod("GET").withPath("/api/program/1/environments");
@@ -64,7 +86,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
     client.when(request).respond(
         response()
             .withStatusCode(OK_200.code())
-            .withBody("{ \"_embedded\": { \"environments\": [] } }")
+            .withBody(json("{ \"_embedded\": { \"environments\": [] } }"))
     );
     Collection<Environment> environments = underTest.listEnvironments("1");
     assertTrue(environments.isEmpty(), "Empty body returns zero length list");
@@ -106,7 +128,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
     assertEquals("1", environment.getId(), "Id was correct");
     client.clear(get, ClearType.ALL);
   }
-  
+
   @Test
   void deleteEnvironment_failure404() {
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
@@ -114,11 +136,11 @@ public class EnvironmentTest extends AbstractApiClientTest {
     HttpRequest delete = request().withMethod("DELETE").withPath("/api/program/2/environment/2");
     client.when(delete).respond(response().withStatusCode(NOT_FOUND_404.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteEnvironment("2", "2"), "Exception thrown");
-    assertEquals(String.format("Cannot delete environment: %s/api/program/2/environment/2 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct.");
+    assertEquals(String.format("Cannot delete environment: %s/api/program/2/environment/2 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
     client.clear(get, ClearType.ALL);
     client.clear(delete, ClearType.ALL);
   }
-  
+
   @Test
   void deleteEnvironment_success() throws CloudManagerApiException {
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
@@ -144,7 +166,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
     client.clear(get, ClearType.ALL);
     client.clear(delete, ClearType.ALL);
   }
-  
+
   @Test
   void getDeveloperConsoleUrl_missing() throws Exception {
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
@@ -155,7 +177,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
     assertEquals("Environment 3 does not appear to support Developer Console.", exception.getMessage(), "Exception message is correct");
     client.clear(get, ClearType.ALL);
   }
-  
+
   @Test
   void getDeveloperConsoleUrl_success() throws Exception {
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
@@ -174,7 +196,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
 
     Environment environment = underTest.getEnvironment("2", new Environment.IdPredicate("3"));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadEnvironmentLogs(environment, new LogOptionImpl(new LogOptionRepresentation().service("author").name("notfound")), 1, new File(".")), "Exception thrown for invalid url");
-    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs?service=author&name=notfound&days=1 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs?service=author&name=notfound&days=1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
 
     client.clear(get, ClearType.ALL);
   }
@@ -184,7 +206,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
     client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(allJson));
 
-    String errors = loadBodyJson("environments/list-logs-error.json");
+    JsonBody errors = loadBodyJson("environments/list-logs-error.json");
     HttpRequest listLogs = request()
         .withMethod("GET")
         .withPath("/api/program/2/environment/3/logs")
@@ -194,7 +216,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
     client.when(listLogs).respond(response().withStatusCode(OK_200.code()).withBody(errors));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadEnvironmentLogs("2", "3", new LogOptionImpl(new LogOptionRepresentation().service("author").name("invalidurl")), 1, new File(".")), "Exception thrown for invalid url");
-    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs/download?service=author&name=invalidurl&date=2019-09-08 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot get logs: %s/api/program/2/environment/3/logs/download?service=author&name=invalidurl&date=2019-09-08 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
 
     client.clear(get, ClearType.ALL);
     client.clear(listLogs, ClearType.ALL);
@@ -205,7 +227,7 @@ public class EnvironmentTest extends AbstractApiClientTest {
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
     client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(allJson));
 
-    String body = loadBodyJson("environments/list-logs-error.json");
+    JsonBody body = loadBodyJson("environments/list-logs-error.json");
     HttpRequest listLogs = request()
         .withMethod("GET")
         .withPath("/api/program/2/environment/3/logs")
@@ -224,22 +246,22 @@ public class EnvironmentTest extends AbstractApiClientTest {
         respond(response()
             .withStatusCode(OK_200.code())
             .withHeader("Content-Type", MediaType.APPLICATION_JSON.toString())
-            .withBody("{ \"redirect\": \"git://logs/author_aemerror_2019-09-8.log.gz\" }"));
+            .withBody(json("{ \"redirect\": \"git://logs/author_aemerror_2019-09-8.log.gz\" }")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadEnvironmentLogs("2", "3", new LogOptionImpl(new LogOptionRepresentation().service("author").name("invalidurl")), 1, new File(".")), "Exception thrown for invalid url");
-    assertEquals(String.format("Log %s did not contain a redirect. Was: %s.", "/api/program/2/environment/3/logs/download?service=author&name=invalidurl&date=2019-09-08", "unknown protocol: git"), exception.getMessage(), "Message was correct");
+    assertEquals("Log [/api/program/2/environment/3/logs/download?service=author&name=invalidurl&date=2019-09-08] did not contain a redirect. Was: unknown protocol: git.", exception.getMessage(), "Message was correct");
 
     client.clear(get, ClearType.ALL);
     client.clear(listLogs, ClearType.ALL);
     client.clear(redirect, ClearType.ALL);
   }
-  
+
   @Test
   void downloadLogs_noLogs() throws CloudManagerApiException {
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
     client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(allJson));
 
-    String body = loadBodyJson("environments/list-logs-emptylist.json");
+    JsonBody body = loadBodyJson("environments/list-logs-emptylist.json");
     HttpRequest listLogs = request()
         .withMethod("GET")
         .withPath("/api/program/2/environment/2/logs")
@@ -247,20 +269,20 @@ public class EnvironmentTest extends AbstractApiClientTest {
         .withQueryStringParameter("name", "aemerror")
         .withQueryStringParameter("days", "1");
     client.when(listLogs).respond(response().withStatusCode(OK_200.code()).withBody(body));
-    
+
     Collection<EnvironmentLog> logs = underTest.downloadEnvironmentLogs("2", "2", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, new File("."));
     assertTrue(logs.isEmpty(), "List was empty.");
     client.clear(get, ClearType.ALL);
     client.clear(listLogs, ClearType.ALL);
   }
-  
+
   @Test
   void downloadLogs_success() throws CloudManagerApiException, IOException {
-    byte[] zipBytes = IOUtils.toByteArray(EnvironmentTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
+    byte[] zipBytes = IOUtils.toByteArray(EnvironmentsTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
     HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
     client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(allJson));
 
-    String body = loadBodyJson("environments/list-logs-success.json");
+    JsonBody body = loadBodyJson("environments/list-logs-success.json");
     HttpRequest listLogs = request()
         .withMethod("GET")
         .withPath("/api/program/2/environment/1/logs")
@@ -268,11 +290,11 @@ public class EnvironmentTest extends AbstractApiClientTest {
         .withQueryStringParameter("name", "aemerror")
         .withQueryStringParameter("days", "1");
     client.when(listLogs).respond(response().withStatusCode(OK_200.code()).withBody(body));
-    
+
     HttpRequest redirect1 = request().withMethod("GET")
         .withPath("/api/program/2/environment/1/logs/download")
         .withQueryStringParameter("date", "2019-09-08");
-    
+
     client.when(redirect1).respond(
         HttpResponse.response()
             .withStatusCode(OK_200.code())
@@ -290,10 +312,10 @@ public class EnvironmentTest extends AbstractApiClientTest {
             .withHeader("Content-Type", MediaType.APPLICATION_JSON.toString())
             .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-07.log.gz\" }", baseUrl))
     );
-    
+
     HttpRequest download1 = request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-08.log.gz");
     client.when(download1).respond(HttpResponse.response().withStatusCode(OK_200.code()).withBody(zipBytes));
-    
+
     HttpRequest download2 = request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-07.log.gz");
     client.when(download2).respond(HttpResponse.response().withStatusCode(OK_200.code()).withBody(zipBytes));
 
@@ -312,4 +334,66 @@ public class EnvironmentTest extends AbstractApiClientTest {
     client.clear(download1, ClearType.ALL);
     client.clear(download2, ClearType.ALL);
   }
+
+  @Test
+  void downloadLogs_viaEnvironment_success() throws CloudManagerApiException, IOException {
+    byte[] zipBytes = IOUtils.toByteArray(EnvironmentsTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
+    HttpRequest get = request().withMethod("GET").withPath("/api/program/2/environments");
+    client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(allJson));
+
+    JsonBody body = loadBodyJson("environments/list-logs-success.json");
+    HttpRequest listLogs = request()
+        .withMethod("GET")
+        .withPath("/api/program/2/environment/1/logs")
+        .withQueryStringParameter("service", "author")
+        .withQueryStringParameter("name", "aemerror")
+        .withQueryStringParameter("days", "1");
+    client.when(listLogs).respond(response().withStatusCode(OK_200.code()).withBody(body));
+
+    HttpRequest redirect1 = request().withMethod("GET")
+        .withPath("/api/program/2/environment/1/logs/download")
+        .withQueryStringParameter("date", "2019-09-08");
+
+    client.when(redirect1).respond(
+        HttpResponse.response()
+            .withStatusCode(OK_200.code())
+            .withHeader("Content-Type", MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-08.log.gz\" }", baseUrl))
+    );
+
+    HttpRequest redirect2 = request().withMethod("GET")
+        .withPath("/api/program/2/environment/1/logs/download")
+        .withQueryStringParameter("date", "2019-09-07");
+
+    client.when(redirect2).respond(
+        HttpResponse.response()
+            .withStatusCode(OK_200.code())
+            .withHeader("Content-Type", MediaType.APPLICATION_JSON.toString())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_aemerror_2019-09-07.log.gz\" }", baseUrl))
+    );
+
+    HttpRequest download1 = request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-08.log.gz");
+    client.when(download1).respond(HttpResponse.response().withStatusCode(OK_200.code()).withBody(zipBytes));
+
+    HttpRequest download2 = request().withMethod("GET").withPath("/logs/author_aemerror_2019-09-07.log.gz");
+    client.when(download2).respond(HttpResponse.response().withStatusCode(OK_200.code()).withBody(zipBytes));
+
+    File outputDir = Files.createTempDirectory("log-output").toFile();
+
+    Environment environment = underTest.getEnvironment("2", new Environment.IdPredicate("1"));
+    List<EnvironmentLog> logs = new ArrayList<>(environment.downloadLogs(new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, outputDir));
+    assertEquals(2, logs.size(), "Correct Object response");
+    assertEquals(outputDir + "/1-author-aemerror-2019-09-08.log.gz", logs.get(0).getPath(), "Log file exists.");
+    assertTrue(FileUtils.sizeOf(new File(outputDir + "/1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
+    assertEquals(outputDir + "/1-author-aemerror-2019-09-07.log.gz", logs.get(1).getPath(), "Log file exists.");
+    assertTrue(FileUtils.sizeOf(new File(outputDir + "/1-author-aemerror-2019-09-07.log.gz")) > 0, "File is not empty.");
+
+    client.clear(get, ClearType.ALL);
+    client.clear(listLogs, ClearType.ALL);
+    client.clear(redirect1, ClearType.ALL);
+    client.clear(redirect2, ClearType.ALL);
+    client.clear(download1, ClearType.ALL);
+    client.clear(download2, ClearType.ALL);
+  }
+  
 }

@@ -40,10 +40,12 @@ import com.adobe.aio.cloudmanager.feign.client.EnvironmentApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineExecutionApiClient;
 import com.adobe.aio.cloudmanager.feign.client.ProgramApiClient;
+import com.adobe.aio.cloudmanager.feign.client.VariableApiClient;
 import com.adobe.aio.cloudmanager.feign.exception.EnvironmentExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExecutionExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.ProgramExceptionDecoder;
+import com.adobe.aio.cloudmanager.feign.exception.VariableExceptionDecoder;
 import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
@@ -59,7 +61,6 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
-import Variable;
 import lombok.NonNull;
 
 public interface CloudManagerApi {
@@ -122,11 +123,13 @@ public interface CloudManagerApi {
         .logger(new Slf4jLogger())
         .logLevel(Logger.Level.FULL);
 
-    ProgramApiClient programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(ProgramApiClient.class, url.toString());
-    PipelineApiClient pipelineApi = builder.errorDecoder(new PipelineExceptionDecoder()).target(PipelineApiClient.class, url.toString());
-    PipelineExecutionApiClient executionsApi = builder.errorDecoder(new PipelineExecutionExceptionDecoder()).target(PipelineExecutionApiClient.class, url.toString());
-    EnvironmentApiClient environmentApi = builder.errorDecoder(new EnvironmentExceptionDecoder()).target(EnvironmentApiClient.class, url.toString());
-    return new CloudManagerApiImpl(programApi, pipelineApi, executionsApi, environmentApi);
+    String baseUrl = url.toString();
+    ProgramApiClient programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(ProgramApiClient.class, baseUrl);
+    PipelineApiClient pipelineApi = builder.errorDecoder(new PipelineExceptionDecoder()).target(PipelineApiClient.class, baseUrl);
+    PipelineExecutionApiClient executionsApi = builder.errorDecoder(new PipelineExecutionExceptionDecoder()).target(PipelineExecutionApiClient.class, baseUrl);
+    EnvironmentApiClient environmentApi = builder.errorDecoder(new EnvironmentExceptionDecoder()).target(EnvironmentApiClient.class, baseUrl);
+    VariableApiClient variableApi = builder.errorDecoder(new VariableExceptionDecoder()).target(VariableApiClient.class, baseUrl);
+    return new CloudManagerApiImpl(programApi, pipelineApi, executionsApi, environmentApi, variableApi);
   }
 
   /**
@@ -720,5 +723,79 @@ public interface CloudManagerApi {
    */
   @NonNull
   Set<Variable> listEnvironmentVariables(@NonNull Environment environment) throws CloudManagerApiException;
+
+
+  /**
+   * Sets the specified variables in the environment.
+   *
+   * @param programId     the program id of the environment
+   * @param environmentId the environment id
+   * @param variables     the variables to set
+   * @return updated list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchEnvironmentVariables">Patch User Environment Variables</a>
+   */
+  @NonNull
+  Set<Variable> setEnvironmentVariables(@NonNull String programId, @NonNull String environmentId, Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Sets the specified variables in the environment.
+   *
+   * @param environment the environment context
+   * @param variables   the variables to set
+   * @return updated list of variables in the environment
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchEnvironmentVariables">Patch User Environment Variables</a>
+   */
+  @NonNull
+  Set<Variable> setEnvironmentVariables(@NonNull Environment environment, Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Lists all variables associated with the specified pipeline
+   *
+   * @param programId  the program id of the pipeline
+   * @param pipelineId the pipeline id
+   * @return list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
+   */
+  @NonNull
+  Set<Variable> listPipelineVariables(@NonNull String programId, @NonNull String pipelineId) throws CloudManagerApiException;
+
+  /**
+   * Lists all variables associated with the specified pipeline
+   *
+   * @param pipeline the pipeline context
+   * @return list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
+   */
+  @NonNull
+  Set<Variable> listPipelineVariables(@NonNull Pipeline pipeline) throws CloudManagerApiException;
+
+  /**
+   * Sets the specified variables in the pipeline
+   *
+   * @param programId  the program context for the pipeline
+   * @param pipelineId the pipeline id
+   * @param variables  the variables to set
+   * @return updated list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchPipelineVariables">Patch User Pipeline Variables</a>
+   */
+  @NonNull
+  Set<Variable> setPipelineVariables(@NonNull String programId, @NonNull String pipelineId, Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Sets the specified variables in the pipeline
+   *
+   * @param pipeline  the pipeline context
+   * @param variables the variables to set
+   * @return updated list of variables in the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/patchPipelineVariables">Patch User Pipeline Variables</a>
+   */
+  @NonNull
+  Set<Variable> setPipelineVariables(@NonNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
 
 }

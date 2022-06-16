@@ -110,7 +110,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   @Test
   void startExecution_failure404() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("3", "3"), "Exception thrown");
-    assertEquals(String.format("Cannot create execution: %s/api/program/3/pipeline/3/execution (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot create execution: %s/api/program/3/pipeline/3/execution (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -136,7 +136,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   @Test
   void getExecution_failure404() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution("4", "3", "10"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -155,7 +155,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
         )
     );
     CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found)", baseUrl), e.getMessage(), "Message was correct.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found).", baseUrl), e.getMessage(), "Message was correct.");
   }
 
   @Test
@@ -179,7 +179,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
         )
     );
     CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found)", baseUrl), e.getMessage(), "Message was correct.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found).", baseUrl), e.getMessage(), "Message was correct.");
   }
 
   @Test
@@ -274,7 +274,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
       }
     };
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(execution, "build"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -317,7 +317,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
         )
     );
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(event), "Exception thrown");
-    assertEquals(String.format("Cannot get step state: %s/api/program/4/pipeline/10/execution/1/phase/4596/step/8491 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot get step state: %s/api/program/4/pipeline/10/execution/1/phase/4596/step/8491 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -413,7 +413,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   void advanceExecution_failure404() throws CloudManagerApiException {
     PipelineExecution execution = underTest.getExecution("4", "7", "9");
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.advanceExecution(execution), "Exception thrown");
-    assertEquals(String.format("Cannot advance execution: %s/api/program/4/pipeline/7/execution/9/phase/8567/step/15490/advance (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot advance execution: %s/api/program/4/pipeline/7/execution/9/phase/8567/step/15490/advance (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -474,7 +474,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution(execution), "Exception Thrown");
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel").withContentType(MediaType.APPLICATION_JSON));
     client.clear(request().withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel"), ClearType.LOG);
-    assertEquals(String.format("Cannot cancel execution: %s/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel (403 Forbidden)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot cancel execution: %s/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -485,7 +485,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution(execution), "Exception Thrown");
     client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel").withContentType(MediaType.APPLICATION_JSON));
     client.clear(request().withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel"), ClearType.LOG);
-    assertEquals(String.format("Cannot cancel execution: %s/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot cancel execution: %s/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -573,7 +573,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     );
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl("4", "3", "4", "build"), "Exception Thrown");
     client.clear(request().withMethod("GET").withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs"), ClearType.ALL);
-    assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs (403 Forbidden)", baseUrl), exception.getMessage(), "Message was correct.");
+    assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct.");
   }
   
   @Test
@@ -587,7 +587,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     );
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl("4", "3", "4", "build"), "Exception Thrown");
     client.clear(request().withMethod("GET").withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs"), ClearType.ALL);
-    assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct.");
+    assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
   }
   
   @Test

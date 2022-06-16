@@ -40,16 +40,16 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
+import org.mockserver.model.JsonBody;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({MockServerExtension.class, MockitoExtension.class})
 public class AbstractApiClientTest {
-  
   protected static MockServerClient client;
   protected static String baseUrl;
   protected CloudManagerApi underTest;
 
-  @Mock(strictness = Mock.Strictness.LENIENT)
+  @Mock 
   protected Workspace workspace;
   @Mock
   private JWTAuthInterceptor.Builder jwtBuilder;
@@ -69,19 +69,14 @@ public class AbstractApiClientTest {
       mocked.when(JWTAuthInterceptor::builder).thenReturn(jwtBuilder);
       when(jwtBuilder.workspace(workspace)).thenReturn(jwtBuilder);
       when(jwtBuilder.build()).thenReturn(interceptor);
-
-      
-      when(workspace.getImsOrgId()).thenReturn("success");
-      when(workspace.getApiKey()).thenReturn("test-apikey");
-
       underTest = CloudManagerApi.create(workspace, new URL(baseUrl));
     }
     verify(workspace).validateJwtCredentialConfig();
   }
 
-  protected static String loadBodyJson(String filePath) {
+  protected static JsonBody loadBodyJson(String filePath) {
     try (InputStream is = AbstractApiClientTest.class.getClassLoader().getResourceAsStream(filePath)) {
-      return IOUtils.toString(is, Charset.defaultCharset());
+      return JsonBody.json(IOUtils.toString(is, Charset.defaultCharset()));
     } catch (IOException e) {
       throw new TestInstantiationException(e.getMessage());
     }

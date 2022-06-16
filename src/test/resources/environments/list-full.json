@@ -19,7 +19,7 @@
           }
         },
         "id": "1",
-        "programId": "2",
+        "programId": "1",
         "name": "TestProgram_prod",
         "description": "description for TestProgram_prod",
         "type": "prod",
@@ -74,7 +74,7 @@
           }
         },
         "id": "2",
-        "programId": "2",
+        "programId": "1",
         "name": "TestProgram_stage",
         "description": "description for TestProgram_stage",
         "type": "stage",
@@ -102,7 +102,7 @@
           }
         },
         "id": "3",
-        "programId": "2",
+        "programId": "1",
         "name": "TestProgram_dev",
         "description": "description for TestProgram_dev",
         "type": "dev"
@@ -118,7 +118,7 @@
           }
         },
         "id": "4",
-        "programId": "2",
+        "programId": "1",
         "name": "TestProgram_dev2",
         "description": "description for TestProgram_dev2",
         "type": "dev"

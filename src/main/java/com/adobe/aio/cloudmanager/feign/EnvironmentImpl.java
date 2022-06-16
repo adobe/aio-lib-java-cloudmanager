@@ -71,16 +71,16 @@ public class EnvironmentImpl extends com.adobe.aio.cloudmanager.generated.model.
     }
   }
 
-  public Set<Variable> getVariables() throws CloudManagerApiException {
-    return null; //client.listEnvironmentVariables(this);
+  public Set<Variable> listVariables() throws CloudManagerApiException {
+    return client.listEnvironmentVariables(this);
   }
 
   public Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
-    return null; //client.setEnvironmentVariables(this, variables);
+    return client.setEnvironmentVariables(this, variables);
   }
 
   @Override
   public Collection<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException {
-    return null; // client.downloadLogs(this, logOption, days, dir);
+    return client.downloadEnvironmentLogs(this, logOption, days, dir);
   }
 }

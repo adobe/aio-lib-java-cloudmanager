@@ -1,0 +1,32 @@
+{
+  "_links": {
+    "http://ns.adobe.com/adobecloud/rel/environment": {
+      "href": "/api/program/1/environment/1",
+      "templated": false
+    },
+    "http://ns.adobe.com/adobecloud/rel/program": {
+      "href": "/api/program/1",
+      "templated": false
+    },
+    "self": {
+      "href": "/api/program/1/environment/1/variables",
+      "templated": false
+    }
+  },
+  "_embedded": {
+    "variables": [
+      {
+        "name": "foo",
+        "type": "string",
+        "value": "bar"
+      },
+      {
+        "name": "foo2",
+        "type": "string",
+        "value": "bar2"
+      }
+    ]
+  },
+  "_totalNumberOfItems": 2
+}
+

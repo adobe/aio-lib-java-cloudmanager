@@ -51,10 +51,10 @@ public class ProgramExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   public enum ErrorType {
-    LIST_PROGRAMS("Cannot retrieve programs: %s"),
-    GET_PROGRAM("Cannot retrieve program: %s"),
-    DELETE_PROGRAM("Cannot delete program: %s"),
-    UNKNOWN("Program API Error: %s");
+    LIST_PROGRAMS("Cannot retrieve programs: %s."),
+    GET_PROGRAM("Cannot retrieve program: %s."),
+    DELETE_PROGRAM("Cannot delete program: %s."),
+    UNKNOWN("Program API Error: %s.");
     private final String message;
 
     ErrorType(String message) {

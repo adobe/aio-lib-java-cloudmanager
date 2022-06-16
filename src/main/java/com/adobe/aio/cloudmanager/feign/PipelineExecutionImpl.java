@@ -51,7 +51,7 @@ public class PipelineExecutionImpl extends com.adobe.aio.cloudmanager.generated.
   public static final String ACTION_SCHEDULE = "schedule";
   public static final String ACTION_DEPLOY = "deploy";
 
-  private static final String GENERATE_BODY = "Unable to generate request body: %s";
+  private static final String GENERATE_BODY = "Unable to generate request body: %s.";
   
   @Delegate
   private final com.adobe.aio.cloudmanager.generated.model.PipelineExecution delegate;

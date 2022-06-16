@@ -89,7 +89,7 @@ public interface Environment {
    * @return the list of variables
    * @throws CloudManagerApiException when any error occurs.
    */
-  Set<Variable> getVariables() throws CloudManagerApiException;
+  Set<Variable> listVariables() throws CloudManagerApiException;
 
   /**
    * Sets the specified variables on this environment.

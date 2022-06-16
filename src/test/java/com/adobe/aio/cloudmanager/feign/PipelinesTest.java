@@ -139,25 +139,25 @@ public class PipelinesTest extends AbstractApiClientTest {
   @Test
   void listPipelines_failure404() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("1"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve pipelines: %s/api/program/1/pipelines (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot retrieve pipelines: %s/api/program/1/pipelines (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void listPipelines_successEmptyBody() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("6"), "Exception thrown for empty body");
-    assertEquals(String.format("Could not find pipelines for program %s", "6"), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Could not find pipelines for program %s.", "6"), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void listPipelines_successEmptyEmbedded() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("7"), "Exception thrown for no embedded");
-    assertEquals(String.format("Could not find pipelines for program %s", "7"), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Could not find pipelines for program %s", "7."), exception.getMessage(), "Message was correct");
   }
 
   @Test
   void listPipelines_successEmptyPipelines() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelines("8"), "Exception thrown for empty pipeline list");
-    assertEquals(String.format("Could not find pipelines for program %s", "8"), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Could not find pipelines for program %s", "8."), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -169,7 +169,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   @Test
   void deletePipeline_failure400() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deletePipeline("3", "4"), "Exception thrown");
-    assertEquals(String.format("Cannot delete pipeline: %s/api/program/3/pipeline/4 (400 Bad Request)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot delete pipeline: %s/api/program/3/pipeline/4 (400 Bad Request).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -192,13 +192,13 @@ public class PipelinesTest extends AbstractApiClientTest {
   @Test
   void updatePipeline_failure404() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.updatePipeline("3", "3", PipelineUpdate.builder().build()), "Exception thrown");
-    assertEquals(String.format("Cannot retrieve pipeline: %s/api/program/3/pipeline/3 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot retrieve pipeline: %s/api/program/3/pipeline/3 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
   
   @Test
   void updatePipeline_failure() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.updatePipeline("3", "4", PipelineUpdate.builder().build()), "Exception thrown");
-    assertEquals(String.format("Cannot update pipeline: %s/api/program/3/pipeline/4 (405 Method Not Allowed)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot update pipeline: %s/api/program/3/pipeline/4 (405 Method Not Allowed).", baseUrl), exception.getMessage(), "Message was correct");
     client.verify(request().withMethod("PATCH").withPath("/api/program/3/pipeline/4").withContentType(MediaType.APPLICATION_JSON));
     client.clear(request().withPath("/api/program/3/pipeline/4"), ClearType.LOG);
   }

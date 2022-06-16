@@ -64,6 +64,7 @@ import com.adobe.aio.cloudmanager.feign.client.EnvironmentApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineExecutionApiClient;
 import com.adobe.aio.cloudmanager.feign.client.ProgramApiClient;
+import com.adobe.aio.cloudmanager.feign.client.VariableApiClient;
 import com.adobe.aio.cloudmanager.feign.exception.EnvironmentExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExecutionExceptionDecoder;
@@ -77,27 +78,31 @@ import com.adobe.aio.cloudmanager.generated.model.PipelinePhase;
 import com.adobe.aio.cloudmanager.generated.model.PipelineStepMetrics;
 import com.adobe.aio.cloudmanager.generated.model.ProgramList;
 import com.adobe.aio.cloudmanager.generated.model.Redirect;
+import com.adobe.aio.cloudmanager.generated.model.VariableList;
 import lombok.NonNull;
 
 public class CloudManagerApiImpl implements CloudManagerApi {
 
   private static final int NOT_FOUND = 404;
-  private static final String NO_LOG_REDIRECT_ERROR = "Log %s did not contain a redirect. Was: %s.";
+  private static final String NO_LOG_REDIRECT_ERROR = "Log [%s] did not contain a redirect. Was: %s.";
 
   private final ProgramApiClient programApi;
   private final PipelineApiClient pipelineApi;
   private final PipelineExecutionApiClient executionsApi;
   private final EnvironmentApiClient environmentApi;
+  private final VariableApiClient variableApi;
 
   public CloudManagerApiImpl(
       ProgramApiClient programApi,
       PipelineApiClient pipelineApi,
       PipelineExecutionApiClient executionApi,
-      EnvironmentApiClient environmentApi) {
+      EnvironmentApiClient environmentApi,
+      VariableApiClient variableApi) {
     this.programApi = programApi;
     this.pipelineApi = pipelineApi;
     this.executionsApi = executionApi;
     this.environmentApi = environmentApi;
+    this.variableApi = variableApi;
   }
 
   @Override
@@ -443,7 +448,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public @NonNull Set<Variable> listEnvironmentVariables(@NonNull String programId, @NonNull String environmentId) throws CloudManagerApiException {
-    return null;
+    return transform(variableApi.listEnvironment(programId, environmentId));
   }
 
   @Override
@@ -451,6 +456,36 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     return listEnvironmentVariables(environment.getProgramId(), environment.getId());
   }
 
+  @Override
+  public @NonNull Set<Variable> setEnvironmentVariables(@NonNull String programId, @NonNull String environmentId, Variable... variables) throws CloudManagerApiException {
+    return transform(variableApi.setEnvironment(programId, environmentId, variables));
+  }
+
+  @Override
+  public @NonNull Set<Variable> setEnvironmentVariables(@NonNull Environment environment, Variable... variables) throws CloudManagerApiException {
+    return setEnvironmentVariables(environment.getProgramId(), environment.getId(), variables);
+  }
+
+  @Override
+  public @NonNull Set<Variable> listPipelineVariables(@NonNull String programId, @NonNull String pipelineId) throws CloudManagerApiException {
+    return transform(variableApi.listPipeline(programId, pipelineId));
+  }
+
+  @Override
+  public @NonNull Set<Variable> listPipelineVariables(@NonNull Pipeline pipeline) throws CloudManagerApiException {
+    return listPipelineVariables(pipeline.getProgramId(), pipeline.getId());
+  }
+
+  @Override
+  public @NonNull Set<Variable> setPipelineVariables(@NonNull String programId, @NonNull String pipelineId, Variable... variables) throws CloudManagerApiException {
+    return transform(variableApi.setPipeline(programId, pipelineId, variables));
+  }
+
+  @Override
+  public @NonNull Set<Variable> setPipelineVariables(@NonNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException {
+    return setPipelineVariables(pipeline.getProgramId(), pipeline.getId(), variables);
+  }
+  
   protected @NonNull PipelineExecution getExecution(@NonNull PipelineExecutionStepStateImpl step) throws CloudManagerApiException {
     HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelexecution();
     if (link == null) {
@@ -565,7 +600,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       String path = new URL(url).getPath();
       return new PipelineExecutionImpl(executionsApi.get(path), this);
     } catch (MalformedURLException e) {
-      throw new CloudManagerApiException(String.format("Unable to process event: %s", e.getLocalizedMessage()));
+      throw new CloudManagerApiException(String.format("Unable to process event: %s.", e.getLocalizedMessage()));
     }
   }
 
@@ -575,7 +610,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       String path = new URL(url).getPath();
       return new PipelineExecutionStepStateImpl(executionsApi.getStepState(path), this);
     } catch (MalformedURLException e) {
-      throw new CloudManagerApiException(String.format("Unable to process event: %s", e.getLocalizedMessage()));
+      throw new CloudManagerApiException(String.format("Unable to process event: %s.", e.getLocalizedMessage()));
     }
   }
 
@@ -607,5 +642,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     } catch (IOException e) {
       throw new CloudManagerApiException(String.format("Could not download %s to %s (%s).", log.getUrl(), log.getPath(), e.getLocalizedMessage()));
     }
+  }
+
+  private Set<Variable> transform(VariableList variables) {
+    if (variables.getTotalNumberOfItems().equals(0)) {
+      return Collections.emptySet();
+    }
+    return variables.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toSet());
   }
 }

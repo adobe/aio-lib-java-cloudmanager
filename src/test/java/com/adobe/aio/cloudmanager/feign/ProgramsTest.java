@@ -52,7 +52,7 @@ public class ProgramsTest extends AbstractApiClientTest {
     when(workspace.getImsOrgId()).thenReturn("list-not-found");
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -60,7 +60,7 @@ public class ProgramsTest extends AbstractApiClientTest {
     when(workspace.getImsOrgId()).thenReturn("forbidden");
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 403");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message (Code: 1234)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message (Code: 1234).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -68,7 +68,7 @@ public class ProgramsTest extends AbstractApiClientTest {
     when(workspace.getImsOrgId()).thenReturn("forbidden-messageonly");
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 403");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message.", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -76,7 +76,7 @@ public class ProgramsTest extends AbstractApiClientTest {
     when(workspace.getImsOrgId()).thenReturn("forbidden-codeonly");
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 403");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -96,7 +96,7 @@ public class ProgramsTest extends AbstractApiClientTest {
   @Test
   void getProgram_failure404() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getProgram("99"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve program: %s/api/program/99 (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot retrieve program: %s/api/program/99 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
@@ -108,7 +108,7 @@ public class ProgramsTest extends AbstractApiClientTest {
   @Test
   void deleteProgram_failure400() {
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteProgram("2"), "Exception was thrown");
-    assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request)", baseUrl), exception.getMessage(), "Correct exception message");
+    assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request).", baseUrl), exception.getMessage(), "Correct exception message");
     client.verify(request().withMethod("DELETE").withPath("/api/program/2"));
     client.clear(request().withPath("/api/program/2"), ClearType.LOG);
   }

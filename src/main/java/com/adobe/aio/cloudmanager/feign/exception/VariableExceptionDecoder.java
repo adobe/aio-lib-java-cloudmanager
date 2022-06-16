@@ -23,27 +23,21 @@ package com.adobe.aio.cloudmanager.feign.exception;
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import feign.Response;
 
-public class PipelineExceptionDecoder extends CloudManagerExceptionDecoder {
-  
+public class VariableExceptionDecoder extends CloudManagerExceptionDecoder {
+
   @Override
   public Exception decode(String methodKey, Response response) {
     final int status = response.status();
     ErrorType type;
     switch (methodKey) {
-      case "PipelineApiClient#list(String)": {
-        type = ErrorType.LIST_PIPELINES;
+      case "VariableApiClient#listEnvironment(String,String)":
+      case "VariableApiClient#listPipeline(String,String)": {
+        type = ErrorType.GET_VARIABLES;
         break;
       }
-      case "PipelineApiClient#get(String,String)": {
-        type = ErrorType.GET_PIPELINE;
-        break;
-      }
-      case "PipelineApiClient#delete(String,String)":{
-        type = ErrorType.DELETE_PIPELINE;
-        break;
-      }
-      case "PipelineApiClient#update(String,String,Pipeline)": {
-        type = ErrorType.UPDATE_PIPELINE;
+      case "VariableApiClient#setEnvironment(String,String,Variable[])":
+      case "VariableApiClient#setPipeline(String,String,Variable[])": {
+        type = ErrorType.SET_VARIABLES;
         break;
       }
       default: {
@@ -54,13 +48,10 @@ public class PipelineExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   public enum ErrorType {
-    LIST_PIPELINES("Cannot retrieve pipelines: %s."),
-    FIND_PIPELINES("Could not find pipelines for program %s."),
-    GET_PIPELINE("Cannot retrieve pipeline: %s."),
-    DELETE_PIPELINE("Cannot delete pipeline: %s."),
-    UPDATE_PIPELINE("Cannot update pipeline: %s."),
-    NO_BUILD_PHASE("Pipeline %s does not appear to have a build phase."),
-    UNKNOWN("Pipeline API Error: %s.");
+    GET_VARIABLES("Cannot get variables: %s."),
+    SET_VARIABLES("Cannot set variables: %s."),
+    UNKNOWN("Variable API Error: %s.");
+
     private final String message;
 
     ErrorType(String message) {
