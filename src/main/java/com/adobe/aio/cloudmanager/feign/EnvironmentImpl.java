@@ -30,23 +30,23 @@ import com.adobe.aio.cloudmanager.Environment;
 import com.adobe.aio.cloudmanager.EnvironmentLog;
 import com.adobe.aio.cloudmanager.LogOption;
 import com.adobe.aio.cloudmanager.Variable;
-import com.adobe.aio.cloudmanager.generated.model.HalLink;
+import com.adobe.aio.cloudmanager.impl.model.HalLink;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class EnvironmentImpl extends com.adobe.aio.cloudmanager.generated.model.Environment implements Environment {
+public class EnvironmentImpl extends com.adobe.aio.cloudmanager.impl.model.Environment implements Environment {
   private static final long serialVersionUID = 1L;
 
   @Delegate
-  private final com.adobe.aio.cloudmanager.generated.model.Environment delegate;
+  private final com.adobe.aio.cloudmanager.impl.model.Environment delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApiImpl client;
 
-  public EnvironmentImpl(com.adobe.aio.cloudmanager.generated.model.Environment delegate, CloudManagerApiImpl client) {
+  public EnvironmentImpl(com.adobe.aio.cloudmanager.impl.model.Environment delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }

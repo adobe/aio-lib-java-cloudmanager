@@ -108,7 +108,7 @@ public interface PipelineExecutionStepState {
     CANCELLED("CANCELLED"),
     FAILED("FAILED");
 
-    private String value;
+    private final String value;
 
     Status(String value) {
       this.value = value;

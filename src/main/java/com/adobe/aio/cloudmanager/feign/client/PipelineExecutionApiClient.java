@@ -23,10 +23,10 @@ package com.adobe.aio.cloudmanager.feign.client;
 import java.util.Map;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
-import com.adobe.aio.cloudmanager.generated.model.PipelineExecution;
-import com.adobe.aio.cloudmanager.generated.model.PipelineExecutionStepState;
-import com.adobe.aio.cloudmanager.generated.model.PipelineStepMetrics;
-import com.adobe.aio.cloudmanager.generated.model.Redirect;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecution;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepState;
+import com.adobe.aio.cloudmanager.impl.model.PipelineStepMetrics;
+import com.adobe.aio.cloudmanager.impl.model.Redirect;
 import feign.Body;
 import feign.Headers;
 import feign.Param;

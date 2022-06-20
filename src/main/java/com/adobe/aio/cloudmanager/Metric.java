@@ -72,7 +72,7 @@ public interface Metric {
     IMPORTANT("important"),
     INFORMATIONAL("informational");
 
-    private String value;
+    private final String value;
 
     Severity(String value) {
       this.value = value;
@@ -104,7 +104,7 @@ public interface Metric {
     EQ("EQ"),
     NEQ("NEQ");
 
-    private String value;
+    private final String value;
 
     Comparator(String value) {
       this.value = value;

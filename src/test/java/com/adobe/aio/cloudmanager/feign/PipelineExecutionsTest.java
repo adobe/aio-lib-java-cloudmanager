@@ -21,16 +21,14 @@ package com.adobe.aio.cloudmanager.feign;
  */
 
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import javax.ws.rs.core.HttpHeaders;
+import java.util.UUID;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import com.adobe.aio.cloudmanager.Metric;
 import com.adobe.aio.cloudmanager.Pipeline;
 import com.adobe.aio.cloudmanager.PipelineExecution;
 import com.adobe.aio.cloudmanager.PipelineExecutionStepState;
+import com.adobe.aio.cloudmanager.StepAction;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionEndEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionEndEventEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStartEvent;
@@ -39,622 +37,1120 @@ import com.adobe.aio.cloudmanager.event.PipelineExecutionStepEndEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepStartEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepStartEventEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepWaitingEvent;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockserver.model.ClearType;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.model.HttpStatusCode;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.*;
+import static org.mockserver.model.HttpResponse.*;
+import static org.mockserver.model.HttpStatusCode.*;
+import static org.mockserver.model.JsonBody.*;
 
 public class PipelineExecutionsTest extends AbstractApiClientTest {
-  public static List<String> getTestExpectationFiles() {
-    return Arrays.asList(
-        "executions/pipelines.json",
-        "executions/current-success.json",
-        "executions/start-execution-notfound.json",
-        "executions/start-execution-running.json",
-        "executions/start-execution-success.json",
-        "executions/get-successes.json",
-        "executions/is-running-checks.json",
-        "executions/step-state.json",
-        "executions/current-no-steps.json",
-        "executions/current-no-active-step.json",
-        "executions/specific-not-found.json",
-        "executions/specific-code-quality.json",
-        "executions/specific-approval-waiting.json",
-        "executions/specific-advance-running.json",
-        "executions/specific-cancel.json",
-        "executions/specific-cancel-codeQuality-invalid.json",
-        "executions/specific-cancel-deploy-waiting.json",
-        "executions/specific-cancel-deploy-invalid.json"
-    );
-  }
 
-  @BeforeEach
-  public void setupLogsForExecutions() {
-    
-    client.when(
-        request().withMethod("GET").withPath("/logs/special.txt")
-    ).respond(
-        HttpResponse.response()
-            .withStatusCode(HttpStatusCode.OK_200.code())
-            .withBody("some log line\nsome other log line\n")
-    );
-
-    client.when(
-        request().withMethod("GET").withPath("/logs/somethingspecial.txt")
-    ).respond(
-        HttpResponse.response()
-            .withStatusCode(HttpStatusCode.OK_200.code())
-            .withBody("some log line\nsome other log line\n")
-    );
-  }
+  private static final JsonBody GET_BODY = loadBodyJson("executions/get.json");
+  private static final JsonBody GET_WAITING_BODY = loadBodyJson("executions/approval-waiting.json");
+  private static final JsonBody GET_CODE_QUALITY_BODY = loadBodyJson("executions/codeQuality.json");
 
   @Test
   void getCurrentExecution_failure404() throws CloudManagerApiException {
-    assertFalse(underTest.getCurrentExecution("4", "1").isPresent());
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    assertFalse(underTest.getCurrentExecution("1", "1").isPresent());
+    client.verify(get, VerificationTimes.exactly(1));
+
+    client.clear(get);
   }
 
   @Test
   void getCurrentExecution_success() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getCurrentExecution("4", "2").get();
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(list).respond(response().withBody(PipelinesTest.LIST_BODY));
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withBody(GET_BODY));
+    
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
+    PipelineExecution execution = underTest.getCurrentExecution(pipeline).get();
     assertEquals("1", execution.getId(), "Execution Id matches");
-    assertEquals("2", execution.getPipelineId(), "Pipeline Id matches");
-    assertEquals("4", execution.getProgramId(), "Program Id matches");
+    assertEquals("1", execution.getPipelineId(), "Pipeline Id matches");
+    assertEquals("1", execution.getProgramId(), "Program Id matches");
+
+    client.clear(get);
   }
 
   @Test
   void startExecution_failure404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("3", "3"), "Exception thrown");
-    assertEquals(String.format("Cannot create execution: %s/api/program/3/pipeline/3/execution (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(put).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("1", "1"), "Exception thrown");
+    assertEquals(String.format("Cannot create execution: %s/api/program/1/pipeline/1/execution (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+
+    client.clear(put);
   }
 
   @Test
   void startExecution_failure412_running() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("3", "2"), "Exception thrown");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(put).respond(response().withStatusCode(PRECONDITION_FAILED_412.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.startExecution("1", "1"), "Exception thrown");
     assertEquals("Cannot create execution. Pipeline already running.", exception.getMessage(), "Message was correct");
+
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(put);
   }
 
   @Test
   void startExecution_success() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.startExecution("3", "1");
-    assertEquals("/api/program/3/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(put).respond(response().withStatusCode(CREATED_201.code()).withBody(loadBodyJson("executions/start.json")));
+
+    PipelineExecution execution = underTest.startExecution("1", "1");
+    assertEquals("/api/program/1/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
+
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(put);
   }
 
   @Test
   void startExecution_via_pipeline() throws Exception {
-    Collection<Pipeline> pipelines = underTest.listPipelines("3");
-    Pipeline pipeline = pipelines.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withPath("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(get).respond(response().withBody(PipelinesTest.LIST_BODY));
+
+    HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(put).respond(response().withStatusCode(CREATED_201.code()).withBody(loadBodyJson("executions/start.json")));
+
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
     PipelineExecution execution = pipeline.startExecution();
-    assertEquals("/api/program/3/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
+    assertEquals("/api/program/1/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
+
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void getExecution_failure404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution("4", "3", "10"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution("1", "1", "1"), "Exception thrown.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/1/pipeline/1/execution/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecution_success() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     assertEquals("1", execution.getId(), "Execution Id matches");
-    assertEquals("3", execution.getPipelineId(), "Pipeline Id matches");
-    assertEquals("4", execution.getProgramId(), "Program Id matches");
+    assertEquals("1", execution.getPipelineId(), "Pipeline Id matches");
+    assertEquals("1", execution.getProgramId(), "Program Id matches");
+
+    client.clear(get);
   }
 
+
   @Test
-  void getExecution_startEvent_failure404() {
+  void getExecution_invalidUrl() throws CloudManagerApiException {
+    
     PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
         new PipelineExecutionStartEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/4/execution/10")
+            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("git://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1")
         )
     );
-    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found).", baseUrl), e.getMessage(), "Message was correct.");
+    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown.");
+    assertEquals("Cannot get execution: unknown protocol: git.", e.getMessage(), "Message was correct.");
+  }
+  @Test
+  void getExecution_startEvent_failure404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
+        new PipelineExecutionStartEventEvent().activitystreamsobject(
+            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1")
+        )
+    );
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/1/pipeline/1/execution/1 (404 Not Found).", baseUrl), e.getMessage(), "Message was correct.");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecution_startEvent() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
     PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
         new PipelineExecutionStartEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/4/execution/1")
+            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1")
         )
     );
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
     PipelineExecution execution = underTest.getExecution(event);
     assertEquals("1", execution.getId());
-    assertEquals("4", execution.getPipelineId());
-    assertEquals("4", execution.getProgramId());
+    assertEquals("1", execution.getPipelineId());
+    assertEquals("1", execution.getProgramId());
+
+    client.clear(get);
   }
 
   @Test
   void getExecution_endEvent_failure404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
     PipelineExecutionEndEvent event = new PipelineExecutionEndEvent().event(
         new PipelineExecutionEndEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/4/execution/10")
+            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1")
         )
     );
-    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/4/execution/10 (404 Not Found).", baseUrl), e.getMessage(), "Message was correct.");
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/1/pipeline/1/execution/1 (404 Not Found).", baseUrl), e.getMessage(), "Message was correct.");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecution_endEvent() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
     PipelineExecutionEndEvent event = new PipelineExecutionEndEvent().event(
         new PipelineExecutionEndEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/4/execution/1")
+            new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1")
         )
     );
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
     PipelineExecution execution = underTest.getExecution(event);
     assertEquals("1", execution.getId());
-    assertEquals("4", execution.getPipelineId());
-    assertEquals("4", execution.getProgramId());
+    assertEquals("1", execution.getPipelineId());
+    assertEquals("1", execution.getProgramId());
+
+    client.clear(get);
   }
 
   @Test
   void getExecution_via_pipeline() throws CloudManagerApiException {
-    Pipeline pipeline = underTest.listPipelines("4", p -> p.getId().equals("3")).stream().findFirst().orElse(null);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(list).respond(response().withBody(PipelinesTest.LIST_BODY));
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
     PipelineExecution execution = pipeline.getExecution("1");
     assertEquals("1", execution.getId(), "Execution Id matches");
-    assertEquals("3", execution.getPipelineId(), "Pipeline Id matches");
-    assertEquals("4", execution.getProgramId(), "Program Id matches");
+    assertEquals("1", execution.getPipelineId(), "Pipeline Id matches");
+    assertEquals("1", execution.getProgramId(), "Program Id matches");
+
+    client.verify(list, VerificationTimes.exactly(1));
+    client.clear(list);
+    client.clear(get);
   }
 
   @Test
   void isExecutionRunning_notStarted() throws CloudManagerApiException {
-    assertTrue(underTest.isExecutionRunning("4", "7", "10"));
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/not-started.json")));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
+    assertTrue(underTest.isExecutionRunning(execution));
+    client.verify(get, VerificationTimes.exactly(2));
+    client.clear(get);
   }
 
   @Test
   void isExecutionRunning_running() throws CloudManagerApiException {
-    assertTrue(underTest.isExecutionRunning("4", "7", "11"));
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/running.json")));
+
+    assertTrue(underTest.isExecutionRunning("1", "1", "1"));
+
+    client.clear(get);
   }
 
   @Test
   void isExecutionRunning_cancelling() throws CloudManagerApiException {
-    assertTrue(underTest.isExecutionRunning("4", "7", "12"));
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/cancelling.json")));
+
+    assertTrue(underTest.isExecutionRunning("1", "1", "1"));
+
+    client.clear(get);
   }
 
   @Test
-  void isExecutionRunning_canceled() throws CloudManagerApiException {
-    assertFalse(underTest.isExecutionRunning("4", "7", "13"));
+  void isExecutionRunning_cancelled() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/cancelled.json")));
+
+    assertFalse(underTest.isExecutionRunning("1", "1", "1"));
+
+    client.clear(get);
   }
 
   @Test
   void isExecutionRunning_finished() throws CloudManagerApiException {
-    assertFalse(underTest.isExecutionRunning("4", "7", "14"));
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/finished.json")));
+
+    assertFalse(underTest.isExecutionRunning("1", "1", "1"));
+
+    client.clear(get);
   }
 
   @Test
   void isExecutionRunning_error() throws CloudManagerApiException {
-    assertFalse(underTest.isExecutionRunning("4", "7", "15"));
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/error.json")));
+
+    assertFalse(underTest.isExecutionRunning("1", "1", "1"));
+
+    client.clear(get);
   }
 
   @Test
   void isExecutionRunning_failed() throws CloudManagerApiException {
-    assertFalse(underTest.isExecutionRunning("4", "7", "16"));
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/failed.json")));
+
+    assertFalse(underTest.isExecutionRunning("1", "1", "1"));
+    client.clear(get);
   }
 
   @Test
-  void getExecutionStepState_failure404() {
+  void getExecutionStepState_failure404() throws CloudManagerApiException {
 
-    PipelineExecution execution = new PipelineExecution() {
-      @Override
-      public String getId() {
-        return "10";
-      }
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withBody(GET_BODY));
+    PipelineExecution execution = underTest.getCurrentExecution("1", "1").get();
+    client.clear(get);
+    get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
 
-      @Override
-      public String getProgramId() {
-        return "4";
-      }
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(execution, "build"), "Exception thrown.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/1/pipeline/1/execution/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
 
-      @Override
-      public String getPipelineId() {
-        return "3";
-      }
-
-      @Override
-      public Status getStatusState() {
-        return null;
-      }
-
-      @Override
-      public void advance() throws CloudManagerApiException {
-
-      }
-
-      @Override
-      public void cancel() throws CloudManagerApiException {
-
-      }
-    };
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(execution, "build"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot get execution: %s/api/program/4/pipeline/3/execution/10 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecutionStepState_failure_nostep() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/no-steps.json")));
 
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(execution, "deploy"), "Exception thrown for missing step");
-    assertEquals("Cannot find step state for action deploy on execution 1.", exception.getMessage(), "Message was correct");
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(execution, "deploy"), "Exception thrown.");
+    assertEquals("Cannot find step state for action 'deploy' on execution 1.", exception.getMessage(), "Message was correct");
+
+    client.clear(get);
   }
 
   @Test
   void getExecutionStepState_success() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest getExecution = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(getExecution).respond(response().withBody(GET_BODY));
+
+    HttpRequest getStep = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2");
+    client.when(getStep).respond(response().withBody(loadBodyJson("executions/step-waiting.json")));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     assertNotNull(underTest.getExecutionStepState(execution, "codeQuality"));
+
+    client.clear(getExecution);
+    client.clear(getStep);
   }
 
   @Test
   void getExecution_via_stepState_nolink() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "codeQuality");
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> stepState.getExecution(), "Error thrown");
-    assertEquals("Cannot find execution link for the current step (/api/program/4/pipeline/3/execution/1/phase/4596/step/8493).", exception.getMessage(), "Message was correct");
+    assertEquals("Cannot find execution link for the current step (/api/program/1/pipeline/1/execution/1/phase/2/step/2).", exception.getMessage(), "Message was correct");
+
+    client.clear(get);
   }
 
   @Test
   void getExecution_via_stepState() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
+    client.clear(get);
+    client.when(get).respond(response().withBody(GET_BODY));
+
     PipelineExecution found = stepState.getExecution();
     assertEquals(execution.getProgramId(), found.getProgramId());
     assertEquals(execution.getPipelineId(), found.getPipelineId());
     assertEquals(execution.getId(), found.getId());
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecutionStepState_event_failure404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
     PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/10/execution/1/phase/4596/step/8491")
+            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1/phase/1/step/1")
         )
     );
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(event), "Exception thrown");
-    assertEquals(String.format("Cannot get step state: %s/api/program/4/pipeline/10/execution/1/phase/4596/step/8491 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot get step state: %s/api/program/1/pipeline/1/execution/1/phase/1/step/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecutionStepState_startEvent() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
     PipelineExecutionStepStartEvent event = new PipelineExecutionStepStartEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/3/execution/4/phase/4596/step/8491")
+            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1/phase/2/step/1")
         )
     );
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/step-running.json")));
+
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
     assertEquals(PipelineExecutionStepState.Status.RUNNING, stepState.getStatusState());
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecutionStepState_waitingEvent() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
     PipelineExecutionStepWaitingEvent event = new PipelineExecutionStepWaitingEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/3/execution/4/phase/4596/step/8492")
+            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1/phase/2/step/2")
         )
     );
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/step-waiting.json")));
+
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
     assertEquals(PipelineExecutionStepState.Status.WAITING, stepState.getStatusState());
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getExecutionStepState_endEvent() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
     PipelineExecutionStepEndEvent event = new PipelineExecutionStepEndEvent().event(
         new PipelineExecutionStepStartEventEvent().activitystreamsobject(
-            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/4/pipeline/3/execution/4/phase/4596/step/8493")
+            new com.adobe.aio.cloudmanager.event.PipelineExecutionStepState()._atId("https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1/phase/2/step/1")
         )
     );
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/step-finished.json")));
+
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
     assertEquals(PipelineExecutionStepState.Status.FINISHED, stepState.getStatusState());
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
+  }
+
+  @Test
+  void getCurrentStep_failure_noEmbedded() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withBody(GET_BODY));
+    PipelineExecution execution = underTest.getCurrentExecution("1", "1").get();
+    client.clear(get);
+    get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/no-embedded.json")));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getCurrentStep(execution), "Exception thrown.");
+    assertEquals("Cannot find a current step for pipeline 1.", exception.getMessage(), "Message was correct");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getCurrentStep_failure_nostep() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getCurrentExecution("4", "4").get();
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getCurrentStep(execution), "Exception thrown.");
-    assertEquals("Cannot find a current step for pipeline 4.", exception.getMessage(), "Message was correct");
-  }
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/no-steps.json")));
+    PipelineExecution execution = underTest.getCurrentExecution("1", "1").get();
+    client.clear(get);
+    get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/no-steps.json")));
 
-  @Test
-  void getCurrentStep_failure_noactive() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getCurrentExecution("4", "5").get();
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getCurrentStep(execution), "Exception thrown.");
-    assertEquals("Cannot find a current step for pipeline 5.", exception.getMessage(), "Message was correct");
+    assertEquals("Cannot find a current step for pipeline 1.", exception.getMessage(), "Message was correct");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getCurrentStep_success() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
-    PipelineExecutionStepState stepState = underTest.getCurrentStep(execution);
-    assertEquals("build", stepState.getAction(), "Correct step action.");
-  }
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
+    client.clear(get);
 
-  @Test
-  void getWaitingStep_failure_nostep() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getCurrentExecution("4", "4").get();
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getWaitingStep(execution), "Exception thrown.");
-    assertEquals("Cannot find a waiting step for pipeline 4.", exception.getMessage(), "Message was correct");
+    get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    PipelineExecutionStepState stepState = underTest.getCurrentStep(execution);
+    assertEquals(StepAction.build.toString(), stepState.getAction(), "Correct step action.");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getWaitingStep_failure_noactive() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getCurrentExecution("4", "5").get();
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
+    client.clear(get);
+    get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/no-active.json")));
+
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getWaitingStep(execution), "Exception thrown.");
-    assertEquals("Cannot find a waiting step for pipeline 5.", exception.getMessage(), "Message was correct");
+    assertEquals("Cannot find a waiting step for pipeline 1.", exception.getMessage(), "Message was correct");
+
+    client.clear(get);
   }
 
   @Test
   void getWaitingStep_success() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_WAITING_BODY));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     PipelineExecutionStepState stepState = underTest.getWaitingStep(execution);
     assertEquals("approval", stepState.getAction(), "Correct step action.");
+    client.verify(get, VerificationTimes.exactly(2));
+    client.clear(get);
   }
 
   @Test
   void advanceCurrentExecution_failure404() throws CloudManagerApiException {
-    underTest.advanceCurrentExecution("4", "10");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/10/execution/.*"), VerificationTimes.exactly(0));
-    client.clear(request().withPath("/api/program/4/pipeline/10/execution/.*"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/.*");
+
+    underTest.advanceCurrentExecution("1", "1");
+    client.verify(get, VerificationTimes.exactly(1));
+    client.verify(put, VerificationTimes.exactly(0));
+    client.clear(get);
   }
 
   @Test
   void advanceCurrentExecution_success() throws CloudManagerApiException {
-    underTest.advanceCurrentExecution("4", "2");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/advance"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withBody(GET_WAITING_BODY));
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/3/step/4/advance")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"approved\": true }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+    underTest.advanceCurrentExecution("1", "1");
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void advanceExecution_failure404() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "7", "9");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_WAITING_BODY));
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/3/step/4/advance")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"approved\": true }"));
+    client.when(put).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.advanceExecution(execution), "Exception thrown");
-    assertEquals(String.format("Cannot advance execution: %s/api/program/4/pipeline/7/execution/9/phase/8567/step/15490/advance (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot advance execution: %s/api/program/1/pipeline/1/execution/1/phase/3/step/4/advance (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void advanceExecution_buildRunning() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.advanceExecution("4", "3", "7"), "Exception thrown");
-    assertEquals("Cannot find a waiting step for pipeline 3.", exception.getMessage(), "Message was correct");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.advanceExecution("1", "1", "1"), "Exception thrown");
+    assertEquals("Cannot find a waiting step for pipeline 1.", exception.getMessage(), "Message was correct");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void advanceExecution_codeQualityWaiting() throws CloudManagerApiException {
-    underTest.advanceExecution("4", "3", "2");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/advance").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/advance"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest metrics = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
+    client.when(metrics).respond(response().withBody(loadBodyJson("executions/metrics.json")));
+
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/advance")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(loadBodyJson("executions/put-metrics-override.json"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
+    underTest.advanceExecution(execution);
+
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(metrics);
+    client.clear(put);
   }
 
   @Test
   void advanceExecution_codeQualityWaiting_via_execution() throws Exception {
-    PipelineExecution execution = underTest.getExecution("4", "3", "2");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest metrics = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
+    client.when(metrics).respond(response().withBody(loadBodyJson("executions/metrics.json")));
+
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/advance")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(loadBodyJson("executions/put-metrics-override.json"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     execution.advance();
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/advance").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/advance"), ClearType.LOG);
+
+    client.verify(get, VerificationTimes.exactly(2));
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(metrics);
+    client.clear(put);
   }
 
   @Test
   void advanceExecution_approvalWaiting() throws CloudManagerApiException {
-    underTest.advanceExecution("4", "3", "4");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/advance"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_WAITING_BODY));
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/3/step/4/advance")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"approved\": true }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    underTest.advanceExecution("1", "1", "1");
+
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void advanceExecution_approvalWaiting_via_execution() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_WAITING_BODY));
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/3/step/4/advance")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"approved\": true }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     execution.advance();
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/advance").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/advance"), ClearType.LOG);
+
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelCurrentExecution_failure404() throws CloudManagerApiException {
-    underTest.cancelCurrentExecution("4", "10");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/10/execution/.*"), VerificationTimes.exactly(0));
-    client.clear(request().withPath("/api/program/4/pipeline/10/execution/.*"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/.*");
+    underTest.cancelCurrentExecution("1", "1");
+    client.verify(get, VerificationTimes.exactly(1));
+    client.verify(put, VerificationTimes.exactly(0));
+    client.clear(get);
   }
 
   @Test
   void cancelCurrentExecution_buildRunning() throws CloudManagerApiException {
-    underTest.cancelCurrentExecution("4", "2");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/cancel").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/2/execution/1/phase/4596/step/15490/cancel"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withBody(GET_BODY));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"cancel\": true }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    underTest.cancelCurrentExecution("1", "1");
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelExecution_failure403() throws CloudManagerApiException {
-    when(workspace.getImsOrgId()).thenReturn("forbidden");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"cancel\": true }"));
+    client.when(put).respond(response().withStatusCode(FORBIDDEN_403.code()));
 
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution(execution), "Exception Thrown");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel"), ClearType.LOG);
-    assertEquals(String.format("Cannot cancel execution: %s/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot cancel execution: %s/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelExecution_failure404() throws CloudManagerApiException {
-    when(workspace.getImsOrgId()).thenReturn("not-found");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"cancel\": true }"));
+    client.when(put).respond(response().withStatusCode(NOT_FOUND_404.code()));
 
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution(execution), "Exception Thrown");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel"), ClearType.LOG);
-    assertEquals(String.format("Cannot cancel execution: %s/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot cancel execution: %s/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelExecution_buildRunning() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"cancel\": true }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     underTest.cancelExecution(execution);
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel"), ClearType.LOG);
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelExecution_via_execution() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "1");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"cancel\": true }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     execution.cancel();
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/1/phase/4596/step/8492/cancel"), ClearType.LOG);
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelExecution_codeQualityWaiting() throws CloudManagerApiException {
-    underTest.cancelExecution("4", "3", "2");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/cancel").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/cancel"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/cancel")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"override\": false }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    underTest.cancelExecution("1", "1", "1");
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelExecution_codeQualityWaiting_errorState() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution("4", "3", "3"), "Exception thrown");
-    assertEquals("Cannot find a cancel link for the current step (codeQuality). Step may not be cancellable.", exception.getMessage(), "Message was correct");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/running.json")));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution("1", "1", "1"), "Exception thrown");
+    assertEquals("Cannot find a cancel link for the current step (build). Step may not be cancellable.", exception.getMessage(), "Message was correct");
+
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void cancelExecution_approvalWaiting() throws CloudManagerApiException {
-    underTest.cancelExecution("4", "3", "4");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/cancel").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/4/phase/8567/step/15490/cancel"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_WAITING_BODY));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/3/step/4/cancel")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"approved\": false }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+    underTest.cancelExecution("1", "1", "1");
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void cancelExecution_deployWaiting() throws CloudManagerApiException {
-    underTest.cancelExecution("4", "3", "5");
-    client.verify(request().withMethod("PUT").withPath("/api/program/4/pipeline/3/execution/5/phase/8567/step/15492/advance").withContentType(MediaType.APPLICATION_JSON));
-    client.clear(request().withPath("/api/program/4/pipeline/3/execution/5/phase/8567/step/15492/advance"), ClearType.LOG);
-  }
-
-  @Test
-  void cancelExecution_deployWaiting_errorState() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution("4", "3", "6"), "Exception thrown");
-    assertEquals("Cannot find a cancel link for the current step (deploy). Step may not be cancellable.", exception.getMessage(), "Message was correct");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("executions/deploy-waiting.json")));
+    HttpRequest put = request().withBody("PUT")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/4/step/2/advance")
+        .withContentType(MediaType.APPLICATION_JSON)
+        .withBody(json("{ \"resume\": false }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+    underTest.cancelExecution("1", "1", "1");
+    client.verify(put, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(put);
   }
 
   @Test
   void getExecutionStepLogDownloadUrl_nolink() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl(execution, "validate"), "Exception Thrown");
-    assertEquals("Could not find logs link for action 'validate'.", exception.getMessage(), "Message was correct.");    
+    assertEquals("Could not find logs link for action 'validate'.", exception.getMessage(), "Message was correct.");
+    client.clear(get);
   }
-  
+
   @Test
   void getExecutionStepLogDownloadUrl_nullRedirect() {
-    client.when(
-        request().withMethod("GET")
-            .withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs")
-    ).respond(
-        HttpResponse.response()
-            .withStatusCode(HttpStatusCode.OK_200.code())
-            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-            .withBody(String.format("{}", baseUrl))
-    );
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/logs");
+    client.when(redirect).respond(response().withStatusCode(OK_200.code()).withBody(json("{}")));
 
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl("4", "3", "2", "codeQuality"), "Exception thrown");
-    assertEquals("Log [/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs] did not contain a redirect. Was: null.", exception.getMessage(), "Message was correct.");
-    client.clear(request().withMethod("GET")
-        .withPath("/api/program/4/pipeline/3/execution/2/phase/4596/step/8493/logs"), ClearType.ALL);
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl("1", "1", "1", "codeQuality"), "Exception thrown");
+    assertEquals("Log [/api/program/1/pipeline/1/execution/1/phase/2/step/2/logs] did not contain a redirect. Was: null.", exception.getMessage(), "Message was correct.");
+    client.clear(get);
+    client.clear(redirect);
   }
-  
+
   @Test
   void getExecutionStepLogDownloadUrl_failure403() {
-    client.when(
-        request().withMethod("GET")
-            .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
-    ).respond(
-        HttpResponse.response()
-            .withStatusCode(HttpStatusCode.FORBIDDEN_403.code())
-    );
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl("4", "3", "4", "build"), "Exception Thrown");
-    client.clear(request().withMethod("GET").withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs"), ClearType.ALL);
-    assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct.");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
+    client.when(redirect).respond(response().withStatusCode(FORBIDDEN_403.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl("1", "1", "1", "build"), "Exception thrown");
+    assertEquals(String.format("Cannot get logs: %s/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.clear(get);
+    client.clear(redirect);
   }
-  
-  @Test
-  void getExecutionStepLogDownloadUrl_failure404() {
-    client.when(
-        request().withMethod("GET")
-            .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
-    ).respond(
-        HttpResponse.response()
-            .withStatusCode(HttpStatusCode.NOT_FOUND_404.code())
-    );
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepLogDownloadUrl("4", "3", "4", "build"), "Exception Thrown");
-    client.clear(request().withMethod("GET").withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs"), ClearType.ALL);
-    assertEquals(String.format("Cannot get logs: %s/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
-  }
-  
+
   @Test
   void getExecutionStepLogDownloadUrl_success() throws CloudManagerApiException {
-    setupDownloadUrl();
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = setupDownloadUrl(sessionId);
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     assertEquals(String.format("%s/logs/special.txt", baseUrl), underTest.getExecutionStepLogDownloadUrl(execution, "build"));
-    clearDownloadUrl();
+    client.clear(get);
+    client.clear(redirect);
   }
 
   @Test
   void getExecutionStepLogDownloadUrl_success_alternateFile() throws CloudManagerApiException {
-    setupDownloadUrlSpecial();
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = setupDownloadUrlSpecial(sessionId);
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     assertEquals(String.format("%s/logs/somethingspecial.txt", baseUrl), underTest.getExecutionStepLogDownloadUrl(execution, "build", "somethingspecial"));
-    clearDownloadUrlSpecial();
+    client.clear(get);
+    client.clear(redirect);
   }
-  
+
   @Test
   void downloadExecutionStepLog_success() throws CloudManagerApiException {
-    setupDownloadUrl();
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = setupDownloadUrl(sessionId);
+    HttpRequest download = setupFileContent("special");
+
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     underTest.downloadExecutionStepLog(execution, "build", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
-    clearDownloadUrl();
+    client.clear(get);
+    client.clear(redirect);
+    client.clear(download);
   }
 
   @Test
   void downloadExecutionStepLog_success_alternateFile() throws CloudManagerApiException {
-    setupDownloadUrlSpecial();
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = setupDownloadUrlSpecial(sessionId);
+    HttpRequest download = setupFileContent("somethingspecial");
+
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     underTest.downloadExecutionStepLog(execution, "build", "somethingspecial", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
-    clearDownloadUrlSpecial();
+    client.clear(get);
+    client.clear(redirect);
+    client.clear(download);
   }
-
 
   @Test
   void downloadExecutionStepLog_via_stepState() throws CloudManagerApiException {
-    setupDownloadUrl();
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = setupDownloadUrl(sessionId);
+    HttpRequest download = setupFileContent("special");
+    
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
     stepState.getLog(bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
-    clearDownloadUrl();
+    client.clear(get);
+    client.clear(redirect);
+    client.clear(download);
   }
+
   @Test
   void downloadExecutionStepLog_via_stepState_named() throws CloudManagerApiException {
-    setupDownloadUrlSpecial();
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest redirect = setupDownloadUrlSpecial(sessionId);
+    HttpRequest download = setupFileContent("somethingspecial");
+
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    PipelineExecution execution = underTest.getExecution("4", "3", "4");
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
     stepState.getLog("somethingspecial", bos);
     assertEquals("some log line\nsome other log line\n", bos.toString());
-    clearDownloadUrlSpecial();
-  }
-  
-  @Test
-  void getStepMetrics_failure404() throws CloudManagerApiException {
-    PipelineExecution execution = underTest.getExecution("4", "7", "9");
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getQualityGateResults(execution, "codeQuality"), "Exception thrown");
-    assertEquals(String.format("Cannot get metrics: %s/api/program/4/pipeline/7/execution/9/phase/8565/step/15484/metrics (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(get);
+    client.clear(redirect);
+    client.clear(download);
   }
 
+  @Test
+  void getStepMetrics_noLink() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getQualityGateResults(execution, "codeQuality"), "Exception thrown");
+    assertEquals(String.format("Could not find metric link for action (codeQuality) on pipeline 1", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(get);
+  }
+
+  @Test
+  void getStepMetrics_failure404() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
+    HttpRequest metrics = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
+    client.when(metrics).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    PipelineExecution execution = underTest.getExecution("1", "1", "1");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getQualityGateResults(execution, "codeQuality"), "Exception thrown");
+    assertEquals(String.format("Cannot get metrics: %s/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(get);
+  }
 
   @Test
   void PipelineExecution_Status() {
@@ -684,40 +1180,37 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     assertEquals(Metric.Comparator.NEQ.getValue(), Metric.Comparator.NEQ.toString());
   }
 
-
-  private void setupDownloadUrl() {
-    client.when(
-        request().withMethod("GET")
-            .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
-    ).respond(
-        HttpResponse.response()
-            .withStatusCode(HttpStatusCode.OK_200.code())
-            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+  private HttpRequest setupDownloadUrl(String sessionId) {
+    HttpRequest redirect = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
+    client.when(redirect).respond(
+        response()
+            .withStatusCode(OK_200.code())
             .withBody(String.format("{ \"redirect\": \"%s/logs/special.txt\" }", baseUrl))
     );
-  }
-  private void clearDownloadUrl() {
-    client.clear(request().withMethod("GET")
-        .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs"), ClearType.ALL);
+    return redirect;
   }
 
-  private void setupDownloadUrlSpecial() {
-    client.when(
-        request()
-            .withMethod("GET")
-            .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
-            .withQueryStringParameter("file", "somethingspecial")
-    ).respond(
-        HttpResponse.response()
-            .withStatusCode(HttpStatusCode.OK_200.code())
-            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+  private HttpRequest setupDownloadUrlSpecial(String sessionId) {
+    HttpRequest redirect = request()
+        .withMethod("GET")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs")
+        .withQueryStringParameter("file", "somethingspecial");
+    client.when(redirect).respond(
+        response()
+            .withStatusCode(OK_200.code())
             .withBody(String.format("{ \"redirect\": \"%s/logs/somethingspecial.txt\" }", baseUrl))
     );
+    return redirect;
   }
-  private void clearDownloadUrlSpecial() {
-    client.clear(request()
-        .withMethod("GET")
-        .withPath("/api/program/4/pipeline/3/execution/4/phase/4596/step/8491/logs")
-        .withQueryStringParameter("file", "somethingspecial"), ClearType.ALL);
+
+  private HttpRequest setupFileContent(String filename) {
+    HttpRequest download = request().withMethod("GET").withPath(String.format("/logs/%s.txt", filename));
+    client.when(download).respond(
+        response()
+            .withStatusCode(OK_200.code())
+            .withBody("some log line\nsome other log line\n")
+    );
+    return download;
   }
 }

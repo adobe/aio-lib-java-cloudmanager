@@ -28,12 +28,12 @@ import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class MetricImpl extends com.adobe.aio.cloudmanager.generated.model.Metric implements Metric {
+public class MetricImpl extends com.adobe.aio.cloudmanager.impl.model.Metric implements Metric {
 
   @Delegate
-  private final com.adobe.aio.cloudmanager.generated.model.Metric delegate;
+  private final com.adobe.aio.cloudmanager.impl.model.Metric delegate;
 
-  public MetricImpl(com.adobe.aio.cloudmanager.generated.model.Metric delegate) {
+  public MetricImpl(com.adobe.aio.cloudmanager.impl.model.Metric delegate) {
     this.delegate = delegate;
   }
 

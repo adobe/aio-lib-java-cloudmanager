@@ -29,8 +29,8 @@ import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import com.adobe.aio.cloudmanager.Metric;
 import com.adobe.aio.cloudmanager.PipelineExecution;
 import com.adobe.aio.cloudmanager.StepAction;
-import com.adobe.aio.cloudmanager.generated.model.HalLink;
-import com.adobe.aio.cloudmanager.generated.model.PipelineExecutionStepState;
+import com.adobe.aio.cloudmanager.impl.model.HalLink;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepState;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import lombok.EqualsAndHashCode;
@@ -43,7 +43,7 @@ import lombok.experimental.Delegate;
  */
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class PipelineExecutionImpl extends com.adobe.aio.cloudmanager.generated.model.PipelineExecution implements PipelineExecution {
+public class PipelineExecutionImpl extends com.adobe.aio.cloudmanager.impl.model.PipelineExecution implements PipelineExecution {
 
   private static final long serialVersionUID = 1L;
 
@@ -54,13 +54,13 @@ public class PipelineExecutionImpl extends com.adobe.aio.cloudmanager.generated.
   private static final String GENERATE_BODY = "Unable to generate request body: %s.";
   
   @Delegate
-  private final com.adobe.aio.cloudmanager.generated.model.PipelineExecution delegate;
+  private final com.adobe.aio.cloudmanager.impl.model.PipelineExecution delegate;
 
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApiImpl client;
   
-  public PipelineExecutionImpl(com.adobe.aio.cloudmanager.generated.model.PipelineExecution delegate, CloudManagerApiImpl client) {
+  public PipelineExecutionImpl(com.adobe.aio.cloudmanager.impl.model.PipelineExecution delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }
@@ -129,10 +129,10 @@ public class PipelineExecutionImpl extends com.adobe.aio.cloudmanager.generated.
       gen.writeStartObject();
       if (ACTION_APPROVAL.equals(step.getAction())) {
         gen.writeBooleanField("approved", false);
-      } else if (com.adobe.aio.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+      } else if (com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
           !ACTION_SCHEDULE.equals(step.getAction()) && !ACTION_DEPLOY.equals(step.getAction())) {
         gen.writeBooleanField("override", false);
-      } else if (com.adobe.aio.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+      } else if (com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
           ACTION_DEPLOY.equals(step.getAction())) {
         gen.writeBooleanField("resume", false);
       } else {

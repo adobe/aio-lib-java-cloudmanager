@@ -23,9 +23,9 @@ package com.adobe.aio.cloudmanager.feign.client;
 import java.util.Map;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
-import com.adobe.aio.cloudmanager.generated.model.EnvironmentList;
-import com.adobe.aio.cloudmanager.generated.model.EnvironmentLogs;
-import com.adobe.aio.cloudmanager.generated.model.Redirect;
+import com.adobe.aio.cloudmanager.impl.model.EnvironmentList;
+import com.adobe.aio.cloudmanager.impl.model.EnvironmentLogs;
+import com.adobe.aio.cloudmanager.impl.model.Redirect;
 import feign.Headers;
 import feign.Param;
 import feign.QueryMap;

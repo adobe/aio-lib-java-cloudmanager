@@ -29,16 +29,16 @@ import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class EnvironmentLogImpl extends com.adobe.aio.cloudmanager.generated.model.EnvironmentLog implements EnvironmentLog {
+public class EnvironmentLogImpl extends com.adobe.aio.cloudmanager.impl.model.EnvironmentLog implements EnvironmentLog {
 
   private static final long serialVersionUID = 1L;
 
-  public EnvironmentLogImpl(com.adobe.aio.cloudmanager.generated.model.EnvironmentLog log) {
+  public EnvironmentLogImpl(com.adobe.aio.cloudmanager.impl.model.EnvironmentLog log) {
     this.delegate = log;
   }
 
   @Delegate
-  com.adobe.aio.cloudmanager.generated.model.EnvironmentLog delegate;
+  com.adobe.aio.cloudmanager.impl.model.EnvironmentLog delegate;
   @Getter @Setter int index;
   @Getter @Setter String path;
   @Getter @Setter String url;

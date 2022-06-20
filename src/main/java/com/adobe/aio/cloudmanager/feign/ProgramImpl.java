@@ -28,17 +28,17 @@ import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class ProgramImpl extends com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram implements Program {
+public class ProgramImpl extends com.adobe.aio.cloudmanager.impl.model.EmbeddedProgram implements Program {
   private static final long serialVersionUID = 1L;
 
   @Delegate
-  private final com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram delegate;
+  private final com.adobe.aio.cloudmanager.impl.model.EmbeddedProgram delegate;
 
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApiImpl client;
   
-  public ProgramImpl(com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram delegate, CloudManagerApiImpl client) {
+  public ProgramImpl(com.adobe.aio.cloudmanager.impl.model.EmbeddedProgram delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }

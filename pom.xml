@@ -91,56 +91,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.swagger.codegen.v3</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-swagger-cm-api</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${cm.api}</inputSpec>
-                            <modelPackage>${project.groupId}.generated.model</modelPackage>
-                            <apiPackage>${project.groupId}.generated.api</apiPackage>
-                            <invokerPackage>${project.groupId}.generated.invoker</invokerPackage>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generate-swagger-cm-api-old</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${cm.api}</inputSpec>
-                            <modelPackage>io.adobe.cloudmanager.generated.model</modelPackage>
-                            <apiPackage>io.adobe.cloudmanager.generated.api</apiPackage>
-                            <invokerPackage>io.adobe.cloudmanager.generated.invoker</invokerPackage>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -203,8 +153,8 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        io/adobe/cloudmanager/**/generated/**/*.class,
-                        io/adobe/cloudmanager/event/*.class
+                        com/adobe/aio/cloudmanager/event/*.class,
+                        com/adobe/aio/cloudmanager/impl/model/*.class
                     </excludes>
                 </configuration>
                 <executions>
@@ -473,7 +423,7 @@
             </build>
         </profile>
         <profile>
-            <id>generate-event-model</id>
+            <id>generate-api-models</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -493,6 +443,31 @@
                                 <configuration>
                                     <inputSpec>${cm.events}</inputSpec>
                                     <modelPackage>${project.groupId}.event</modelPackage>
+                                    <output>${project.basedir}</output>
+                                    <generateApis>false</generateApis>
+                                    <generateModelTests>false</generateModelTests>
+                                    <generateSupportingFiles>false</generateSupportingFiles>
+                                    <generateApiDocumentation>false</generateApiDocumentation>
+                                    <generateModelDocumentation>false</generateModelDocumentation>
+                                    <!-- override the default library to retrofit2 -->
+                                    <language>java</language>
+                                    <configOptions>
+                                        <serializableModel>true</serializableModel>
+                                        <dateLibrary>java8</dateLibrary>
+                                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                    </configOptions>
+                                    <library>jersey2</library>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>generate-swagger-cm-model</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpec>${cm.api}</inputSpec>
+                                    <modelPackage>${project.groupId}.impl.model</modelPackage>
                                     <output>${project.basedir}</output>
                                     <generateApis>false</generateApis>
                                     <generateModelTests>false</generateModelTests>

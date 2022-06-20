@@ -32,14 +32,11 @@ package com.adobe.aio.cloudmanager.event;
  * #L%
  */
 
-import java.util.Objects;
-import java.util.Arrays;
-import com.adobe.aio.cloudmanager.event.PipelineExecutionStepStartEventEvent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 /**
  * PipelineExecutionStepStartEvent
  */

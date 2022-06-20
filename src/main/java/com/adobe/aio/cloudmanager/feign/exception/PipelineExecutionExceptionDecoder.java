@@ -77,7 +77,7 @@ public class PipelineExecutionExceptionDecoder extends CloudManagerExceptionDeco
     GET_EXECUTION("Cannot get execution: %s."),
     PIPELINE_START("Cannot create execution: %s."),
     PIPELINE_START_RUNNING("Cannot create execution. Pipeline already running."),
-    FIND_STEP_STATE("Cannot find step state for action %s on execution %s."),
+    FIND_STEP_STATE("Cannot find step state for action '%s' on execution %s."),
     FIND_EXECUTION_LINK("Cannot find execution link for the current step (%s)."),
     GET_STEP_STATE("Cannot get step state: %s."),
     FIND_CURRENT_STEP("Cannot find a current step for pipeline %s."),

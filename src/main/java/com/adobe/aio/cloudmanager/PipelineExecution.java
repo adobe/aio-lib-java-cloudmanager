@@ -78,7 +78,7 @@ public interface PipelineExecution {
     ERROR("ERROR"),
     FAILED("FAILED");
 
-    private String value;
+    private final String value;
 
     Status(String value) {
       this.value = value;

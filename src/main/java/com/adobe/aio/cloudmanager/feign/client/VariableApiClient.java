@@ -22,7 +22,7 @@ package com.adobe.aio.cloudmanager.feign.client;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import com.adobe.aio.cloudmanager.Variable;
-import com.adobe.aio.cloudmanager.generated.model.VariableList;
+import com.adobe.aio.cloudmanager.impl.model.VariableList;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;

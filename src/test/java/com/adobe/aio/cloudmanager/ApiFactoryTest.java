@@ -54,7 +54,7 @@ public class ApiFactoryTest {
         .technicalAccountId(DUMMY)
         .privateKey(privateKey)
         .build();
-    assertNotNull(CloudManagerApi.create(workspace));
+    assertNotNull(CloudManagerApiFactory.create(workspace));
   }
 
   @Test
@@ -66,6 +66,6 @@ public class ApiFactoryTest {
         .technicalAccountId(DUMMY)
         .privateKey(privateKey)
         .build();
-    assertNotNull(CloudManagerApi.create(workspace, new URL(CloudManagerApi.BASE_URL)));
+    assertNotNull(CloudManagerApiFactory.create(workspace, new URL(CloudManagerApi.BASE_URL)));
   }
 }

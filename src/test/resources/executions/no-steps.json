@@ -1,0 +1,12 @@
+{
+  "_embedded": {},
+  "id": "1",
+  "programId": "1",
+  "pipelineId": "1",
+  "trigger": "MANUAL",
+  "user": "AB1234567C8D90123E466EAB@AdobeID",
+  "status": "FINISHED",
+  "createdAt": "2019-05-23T13:49:47.688+0000",
+  "updatedAt": "2019-05-23T13:56:43.811+0000"
+}
+   

@@ -1,0 +1,89 @@
+{
+  "_embedded": {
+    "stepStates": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+            "templated": false
+          }
+        },
+        "id": "1",
+        "stepId": "1",
+        "phaseId": "1",
+        "executionId": "1",
+        "pipelineId": "1",
+        "programId": "1",
+        "action": "validate",
+        "startedAt": "2019-07-08T22:44:32.267+0000",
+        "finishedAt": "2019-07-08T22:44:35.320+0000",
+        "updatedAt": "2019-07-08T22:44:35.383+0000",
+        "status": "FINISHED"
+      },
+      {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/execution": {
+            "href": "/api/program/1/pipeline/1/execution/1",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+            "templated": false
+          },
+          "self": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+            "templated": false
+          }
+        },
+        "id": "2",
+        "stepId": "1",
+        "phaseId": "2",
+        "executionId": "1",
+        "pipelineId": "1",
+        "programId": "1",
+        "action": "build",
+        "repository": "weretail",
+        "branch": "master",
+        "startedAt": "2019-07-08T22:44:36.814+0000",
+        "updatedAt": "2019-07-08T22:44:36.877+0000",
+        "status": "ERROR"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+            "templated": false
+          }
+        },
+        "id": "3",
+        "stepId": "2",
+        "phaseId": "2",
+        "executionId": "1",
+        "pipelineId": "1",
+        "programId": "1",
+        "action": "codeQuality",
+        "repository": "weretail",
+        "branch": "master",
+        "updatedAt": "2019-07-08T22:44:25.618+0000",
+        "status": "NOT_STARTED"
+      }
+    ]
+  },
+  "id": "1",
+  "programId": "1",
+  "pipelineId": "1",
+  "trigger": "MANUAL",
+  "user": "AB1234567C8D90123E466EAB@AdobeID",
+  "status": "ERROR",
+  "createdAt": "2019-05-23T13:49:47.688+0000",
+  "updatedAt": "2019-05-23T13:56:43.811+0000"
+}
+    

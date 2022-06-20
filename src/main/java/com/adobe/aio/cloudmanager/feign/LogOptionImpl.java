@@ -21,7 +21,7 @@ package com.adobe.aio.cloudmanager.feign;
  */
 
 import com.adobe.aio.cloudmanager.LogOption;
-import com.adobe.aio.cloudmanager.generated.model.LogOptionRepresentation;
+import com.adobe.aio.cloudmanager.impl.model.LogOptionRepresentation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;

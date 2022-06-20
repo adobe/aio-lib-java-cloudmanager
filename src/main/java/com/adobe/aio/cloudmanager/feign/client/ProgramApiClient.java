@@ -21,8 +21,8 @@ package com.adobe.aio.cloudmanager.feign.client;
  */
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
-import com.adobe.aio.cloudmanager.generated.model.EmbeddedProgram;
-import com.adobe.aio.cloudmanager.generated.model.ProgramList;
+import com.adobe.aio.cloudmanager.impl.model.EmbeddedProgram;
+import com.adobe.aio.cloudmanager.impl.model.ProgramList;
 import feign.Param;
 import feign.RequestLine;
 

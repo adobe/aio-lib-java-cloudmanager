@@ -4,15 +4,15 @@
       {
         "_links": {
           "self": {
-            "href": "/api/program/2/environment/1",
+            "href": "/api/program/1/environment/1",
             "templated": false
           },
           "http://ns.adobe.com/adobecloud/rel/logs": {
-            "href": "/api/program/2/environment/1/logs?service={service}&name={name}&days={days}",
+            "href": "/api/program/1/environment/1/logs?service={service}&name={name}&days={days}",
             "templated": true
           },
           "http://ns.adobe.com/adobecloud/rel/variables": {
-            "href": "/api/program/2/environment/1/variables"
+            "href": "/api/program/1/environment/1/variables"
           },
           "http://ns.adobe.com/adobecloud/rel/developerConsole": {
             "href": "https://github.com/adobe/aio-cli-plugin-cloudmanager"
@@ -65,11 +65,11 @@
       {
         "_links": {
           "self": {
-            "href": "/api/program/2/environment/2",
+            "href": "/api/program/1/environment/2",
             "templated": false
           },
           "http://ns.adobe.com/adobecloud/rel/logs": {
-            "href": "/api/program/2/environment/2/logs?service={service}&name={name}&days={days}",
+            "href": "/api/program/1/environment/2/logs?service={service}&name={name}&days={days}",
             "templated": true
           }
         },
@@ -90,14 +90,14 @@
       {
         "_links": {
           "self": {
-            "href": "/api/program/2/environment/3",
+            "href": "/api/program/1/environment/3",
             "templated": false
           },
           "http://ns.adobe.com/adobecloud/rel/variables": {
-            "href": "/api/program/2/environment/3/variables"
+            "href": "/api/program/1/environment/3/variables"
           },
           "http://ns.adobe.com/adobecloud/rel/logs": {
-            "href": "/api/program/2/environment/3/logs?service={service}&name={name}&days={days}",
+            "href": "/api/program/1/environment/3/logs?service={service}&name={name}&days={days}",
             "templated": true
           }
         },
@@ -110,11 +110,11 @@
       {
         "_links": {
           "self": {
-            "href": "/api/program/2/environment/4",
+            "href": "/api/program/1/environment/4",
             "templated": false
           },
           "http://ns.adobe.com/adobecloud/rel/variables": {
-            "href": "/api/program/2/environment/4/variables"
+            "href": "/api/program/1/environment/4/variables"
           }
         },
         "id": "4",

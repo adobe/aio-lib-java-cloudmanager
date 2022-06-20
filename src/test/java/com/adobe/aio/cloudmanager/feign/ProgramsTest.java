@@ -20,111 +20,161 @@ package com.adobe.aio.cloudmanager.feign;
  * #L%
  */
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.UUID;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import com.adobe.aio.cloudmanager.Program;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.ClearType;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.*;
+import static org.mockserver.model.HttpResponse.*;
+import static org.mockserver.model.HttpStatusCode.*;
+import static org.mockserver.model.JsonBody.*;
 
 public class ProgramsTest extends AbstractApiClientTest {
 
-  public static Collection<String> getTestExpectationFiles() {
-    return Arrays.asList(
-        "programs/not-found.json",
-        "programs/forbidden.json",
-        "programs/forbidden-code-only.json",
-        "programs/forbidden-message-only.json",
-        "programs/empty-response.json",
-        "programs/list-success.json",
-        "programs/get-success.json",
-        "programs/delete-fails.json",
-        "programs/delete-success.json"
-    );
-  }
-
   @Test
   void listPrograms_failure404() {
-    when(workspace.getImsOrgId()).thenReturn("list-not-found");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
 
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 404");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(list, VerificationTimes.exactly(1));
+    client.clear(list);
   }
 
   @Test
   void listPrograms_failure403() {
-    when(workspace.getImsOrgId()).thenReturn("forbidden");
-
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 403");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()).withBody(json("{ \"error_code\":\"1234\", \"message\":\"some message\" }")));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message (Code: 1234).", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(list);
   }
 
   @Test
   void listPrograms_failure403_errorMessageOnly() {
-    when(workspace.getImsOrgId()).thenReturn("forbidden-messageonly");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()).withBody(json("{ \"message\":\"some message\" }")));
 
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 403");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message.", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(list);
   }
 
   @Test
   void listPrograms_failure403_errorCodeOnly() {
-    when(workspace.getImsOrgId()).thenReturn("forbidden-codeonly");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()).withBody(json("{ \"error_code\":\"1234\" }")));
 
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown for 403");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct");
+    client.clear(list);
   }
 
   @Test
   void listPrograms_successEmpty() throws CloudManagerApiException {
-    when(workspace.getImsOrgId()).thenReturn("empty");
-
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    client.when(list).respond(response().withContentType(MediaType.APPLICATION_JSON).withBody("{}"));
     Collection<Program> programs = underTest.listPrograms();
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");
+    client.clear(list);
   }
 
   @Test
   void listPrograms_success() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    client.when(list).respond(response().withBody(loadBodyJson("programs/list.json")));
+
     Collection<Program> programs = underTest.listPrograms();
     assertEquals(7, programs.size(), "Correct length of program list");
+    client.clear(list);
   }
 
   @Test
   void getProgram_failure404() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getProgram("99"), "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve program: %s/api/program/99 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/program/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getProgram("1"), "Exception thrown.");
+    assertEquals(String.format("Cannot retrieve program: %s/api/program/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(get, VerificationTimes.exactly(1));
+    client.clear(get);
   }
 
   @Test
   void getProgram_success() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/program/1");
+    client.when(get).respond(response());
     Program program = underTest.getProgram("1");
     assertNotNull(program, "Program retrieval success.");
+    client.clear(get);
   }
   
   @Test
   void deleteProgram_failure400() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteProgram("2"), "Exception was thrown");
-    assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request).", baseUrl), exception.getMessage(), "Correct exception message");
-    client.verify(request().withMethod("DELETE").withPath("/api/program/2"));
-    client.clear(request().withPath("/api/program/2"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1");
+    client.when(delete).respond(response().withStatusCode(BAD_REQUEST_400.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteProgram("1"), "Exception was thrown");
+    assertEquals(String.format("Cannot delete program: %s/api/program/1 (400 Bad Request).", baseUrl), exception.getMessage(), "Correct exception message");
+    client.verify(delete, VerificationTimes.exactly(1));
+    client.clear(delete, ClearType.LOG);
   }
 
   @Test
   void deleteProgram_success() throws CloudManagerApiException {
-    underTest.deleteProgram("3");
-    client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
-    client.clear(request().withPath("/api/program/3"), ClearType.LOG);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1");
+    client.when(delete).respond(response().withStatusCode(ACCEPTED_202.code()));
+    
+    underTest.deleteProgram("1");
+    client.verify(delete, VerificationTimes.exactly(1));
+    client.clear(delete, ClearType.LOG);
   }
 
   @Test
   void deleteProgram_viaProgram() throws Exception {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    client.when(list).respond(response().withBody(loadBodyJson("programs/list.json")));
+
+    HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1");
+    client.when(delete).respond(response().withStatusCode(ACCEPTED_202.code()));
+
     Collection<Program> programs = underTest.listPrograms();
-    Program program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
+    Program program = programs.stream().filter(p -> p.getId().equals("1")).findFirst().orElseThrow(Exception::new);
     program.delete();
-    client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
+    client.verify(delete, VerificationTimes.exactly(1));
+    client.clear(list);
+    client.clear(delete);
   }
 }

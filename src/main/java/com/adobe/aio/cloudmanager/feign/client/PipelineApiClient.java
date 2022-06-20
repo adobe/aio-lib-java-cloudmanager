@@ -21,8 +21,8 @@ package com.adobe.aio.cloudmanager.feign.client;
  */
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
-import com.adobe.aio.cloudmanager.generated.model.Pipeline;
-import com.adobe.aio.cloudmanager.generated.model.PipelineList;
+import com.adobe.aio.cloudmanager.impl.model.Pipeline;
+import com.adobe.aio.cloudmanager.impl.model.PipelineList;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;

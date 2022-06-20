@@ -29,6 +29,7 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 
 import com.adobe.aio.cloudmanager.CloudManagerApi;
+import com.adobe.aio.cloudmanager.CloudManagerApiFactory;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import org.junit.jupiter.api.BeforeAll;
@@ -69,7 +70,7 @@ public class AbstractApiClientTest {
       mocked.when(JWTAuthInterceptor::builder).thenReturn(jwtBuilder);
       when(jwtBuilder.workspace(workspace)).thenReturn(jwtBuilder);
       when(jwtBuilder.build()).thenReturn(interceptor);
-      underTest = CloudManagerApi.create(workspace, new URL(baseUrl));
+      underTest = CloudManagerApiFactory.create(workspace, new URL(baseUrl));
     }
     verify(workspace).validateJwtCredentialConfig();
   }
