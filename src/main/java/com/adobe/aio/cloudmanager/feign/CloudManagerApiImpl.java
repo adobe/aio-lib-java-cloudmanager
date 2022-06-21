@@ -68,6 +68,8 @@ import com.adobe.aio.cloudmanager.feign.client.VariableApiClient;
 import com.adobe.aio.cloudmanager.feign.exception.EnvironmentExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExecutionExceptionDecoder;
+import com.adobe.aio.cloudmanager.feign.exception.ProgramExceptionDecoder;
+import com.adobe.aio.cloudmanager.feign.exception.VariableExceptionDecoder;
 import com.adobe.aio.cloudmanager.impl.model.EmbeddedProgram;
 import com.adobe.aio.cloudmanager.impl.model.EnvironmentList;
 import com.adobe.aio.cloudmanager.impl.model.EnvironmentLogs;
@@ -79,6 +81,7 @@ import com.adobe.aio.cloudmanager.impl.model.PipelineStepMetrics;
 import com.adobe.aio.cloudmanager.impl.model.ProgramList;
 import com.adobe.aio.cloudmanager.impl.model.Redirect;
 import com.adobe.aio.cloudmanager.impl.model.VariableList;
+import feign.Feign;
 import lombok.NonNull;
 
 public class CloudManagerApiImpl implements CloudManagerApi {
@@ -91,20 +94,15 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   private final PipelineExecutionApiClient executionsApi;
   private final EnvironmentApiClient environmentApi;
   private final VariableApiClient variableApi;
-
-  public CloudManagerApiImpl(
-      ProgramApiClient programApi,
-      PipelineApiClient pipelineApi,
-      PipelineExecutionApiClient executionApi,
-      EnvironmentApiClient environmentApi,
-      VariableApiClient variableApi) {
-    this.programApi = programApi;
-    this.pipelineApi = pipelineApi;
-    this.executionsApi = executionApi;
-    this.environmentApi = environmentApi;
-    this.variableApi = variableApi;
+  
+  public CloudManagerApiImpl(Feign.Builder builder, String baseUrl) {
+    programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(ProgramApiClient.class, baseUrl);
+    pipelineApi = builder.errorDecoder(new PipelineExceptionDecoder()).target(PipelineApiClient.class, baseUrl);
+    executionsApi = builder.errorDecoder(new PipelineExecutionExceptionDecoder()).target(PipelineExecutionApiClient.class, baseUrl);
+    environmentApi = builder.errorDecoder(new EnvironmentExceptionDecoder()).target(EnvironmentApiClient.class, baseUrl);
+    variableApi = builder.errorDecoder(new VariableExceptionDecoder()).target(VariableApiClient.class, baseUrl);
   }
-
+  
   @Override
   public @NonNull Collection<Program> listPrograms() throws CloudManagerApiException {
     ProgramList programList = programApi.list();
@@ -127,6 +125,15 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   @Override
   public void deleteProgram(@NonNull Program program) throws CloudManagerApiException {
     deleteProgram(program.getId());
+  }
+
+  @Override
+  public Collection<Program> listPrograms(String tenantId) throws CloudManagerApiException {
+    ProgramList programList = programApi.list(tenantId);
+    return programList.getEmbedded() == null ?
+        Collections.emptyList() :
+        programList.getEmbedded().getPrograms().stream().map(p -> new ProgramImpl(p, this)).collect(Collectors.toList());
+
   }
 
   @Override

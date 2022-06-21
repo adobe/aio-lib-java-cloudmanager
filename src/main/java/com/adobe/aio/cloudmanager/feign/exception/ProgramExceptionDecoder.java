@@ -30,7 +30,8 @@ public class ProgramExceptionDecoder extends CloudManagerExceptionDecoder {
     final int status = response.status();
     ErrorType type;
     switch (methodKey) {
-      case "ProgramApiClient#list()": {
+      case "ProgramApiClient#list()":
+      case "ProgramApiClient#list(String)":{
         type = ErrorType.LIST_PROGRAMS;
         break;
       }

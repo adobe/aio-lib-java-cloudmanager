@@ -117,12 +117,7 @@ public class CloudManagerApiFactory {
         .logLevel(Logger.Level.FULL);
 
     String baseUrl = url.toString();
-    ProgramApiClient programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(ProgramApiClient.class, baseUrl);
-    PipelineApiClient pipelineApi = builder.errorDecoder(new PipelineExceptionDecoder()).target(PipelineApiClient.class, baseUrl);
-    PipelineExecutionApiClient executionsApi = builder.errorDecoder(new PipelineExecutionExceptionDecoder()).target(PipelineExecutionApiClient.class, baseUrl);
-    EnvironmentApiClient environmentApi = builder.errorDecoder(new EnvironmentExceptionDecoder()).target(EnvironmentApiClient.class, baseUrl);
-    VariableApiClient variableApi = builder.errorDecoder(new VariableExceptionDecoder()).target(VariableApiClient.class, baseUrl);
-    return new CloudManagerApiImpl(programApi, pipelineApi, executionsApi, environmentApi, variableApi);
+    return new CloudManagerApiImpl(builder, baseUrl);
   }
 
 }

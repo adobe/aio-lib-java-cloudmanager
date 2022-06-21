@@ -36,4 +36,8 @@ public interface ProgramApiClient {
   
   @RequestLine("DELETE /api/program/{programId}")
   void delete(@Param("programId") String programId) throws CloudManagerApiException;
+
+  @RequestLine("GET /api/tenant/{tenantId}/programs")
+  ProgramList list(@Param("tenantId") String tenantId) throws CloudManagerApiException;
+
 }
