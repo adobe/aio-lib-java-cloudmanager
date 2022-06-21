@@ -43,7 +43,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void list_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/programs");
     client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
@@ -56,7 +56,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void list_failure403() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/programs");
     client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()).withBody(json("{ \"error_code\":\"1234\", \"message\":\"some message\" }")));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
     assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message (Code: 1234).", baseUrl), exception.getMessage(), "Message was correct");
@@ -67,7 +67,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void list_failure403_errorMessageOnly() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/programs");
     client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()).withBody(json("{ \"message\":\"some message\" }")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
@@ -79,7 +79,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void list_failure403_errorCodeOnly() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/programs");
     client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()).withBody(json("{ \"error_code\":\"1234\" }")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, underTest::listPrograms, "Exception thrown.");
@@ -91,7 +91,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void list_successEmpty() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/programs");
     client.when(list).respond(response().withContentType(MediaType.APPLICATION_JSON).withBody("{}"));
     Collection<Program> programs = underTest.listPrograms();
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");
@@ -102,7 +102,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void list_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/programs");
     client.when(list).respond(response().withBody(loadBodyJson("program/list.json")));
 
     Collection<Program> programs = underTest.listPrograms();
@@ -114,7 +114,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void get_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/program/1");
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1");
     client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
     
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getProgram("1"), "Exception thrown.");
@@ -127,7 +127,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void get_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/program/1");
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1");
     client.when(get).respond(response().withBody(loadBodyJson("program/get.json")));
     Program program = underTest.getProgram("1");
     assertNotNull(program, "Program retrieval success.");
@@ -165,7 +165,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/programs");
     client.when(list).respond(response().withBody(loadBodyJson("program/list.json")));
 
     HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1");
@@ -196,7 +196,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void listByTenant_successEmpty() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/tenant/1/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/tenant/1/programs");
     client.when(list).respond(response().withContentType(MediaType.APPLICATION_JSON).withBody("{}"));
     Collection<Program> programs = underTest.listPrograms("1");
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");
@@ -207,7 +207,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
   void listByTenant_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/tenant/1/programs");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/tenant/1/programs");
     client.when(list).respond(response().withBody(loadBodyJson("program/list.json")));
 
     Collection<Program> programs = underTest.listPrograms("1");

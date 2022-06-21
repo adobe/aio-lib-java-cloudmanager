@@ -45,7 +45,7 @@ public class VariableApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables");
     client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listEnvironmentVariables("1", "1"), "Exception thrown.");
     assertEquals(String.format("Cannot get variables: %s/api/program/1/environment/1/variables (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
@@ -262,7 +262,7 @@ public class VariableApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
-    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables");
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables");
     client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPipelineVariables("1", "1"), "Exception thrown.");
     assertEquals(String.format("Cannot get variables: %s/api/program/1/pipeline/1/variables (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
