@@ -38,7 +38,7 @@ import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 import static org.mockserver.model.JsonBody.*;
 
-public class VariablesTest extends AbstractApiClientTest {
+public class VariableApiTest extends AbstractApiClientTest {
 
   @Test
   void listEnvironment_failure404() {
@@ -59,7 +59,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables");
-    client.when(list).respond(response().withBody(loadBodyJson("variables/list-environment-empty.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("variable/list-environment-empty.json")));
     Set<Variable> variables = underTest.listEnvironmentVariables("1", "1");
     assertTrue(variables.isEmpty(), "Empty body returns zero length list");
     client.clear(list);
@@ -71,7 +71,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables");
-    client.when(list).respond(response().withBody(loadBodyJson("variables/list-environment-success.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("variable/list-environment-success.json")));
     Set<Variable> variables = underTest.listEnvironmentVariables("1", "1");
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
@@ -92,10 +92,10 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environments");
-    client.when(get).respond(response().withBody(loadBodyJson("environments/list-full.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("environment/list-full.json")));
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables");
-    client.when(list).respond(response().withBody(loadBodyJson("variables/list-environment-success.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("variable/list-environment-success.json")));
     Environment environment = underTest.getEnvironment("1", new Environment.IdPredicate("1"));
 
     Set<Variable> variables = environment.listVariables();
@@ -137,7 +137,7 @@ public class VariablesTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody("[]");
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-environment-empty.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-environment-empty.json")));
     Set<Variable> variables = underTest.setEnvironmentVariables("1", "1");
     assertTrue(variables.isEmpty(), "Empty list returned");
     client.verify(set, VerificationTimes.exactly(1));
@@ -150,7 +150,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"foo2\", \"value\": \"bar2\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-environment-variables.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-environment-variables.json")));
 
     Variable v = new Variable();
     v.setName("foo");
@@ -176,7 +176,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody(json("[ { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" }, { \"name\": \"secretFoo2\", \"value\": \"secretBar2\", \"type\": \"secretString\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-environment-secrets.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-environment-secrets.json")));
 
     Variable v = new Variable();
     v.setName("secretFoo");
@@ -204,7 +204,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-environment-mixed.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-environment-mixed.json")));
 
     Variable v = new Variable();
     v.setName("foo");
@@ -230,11 +230,11 @@ public class VariablesTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environments");
-    client.when(get).respond(response().withBody(loadBodyJson("environments/list-full.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("environment/list-full.json")));
 
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-environment-mixed.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-environment-mixed.json")));
 
     Variable v = new Variable();
     v.setName("foo");
@@ -276,7 +276,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables");
-    client.when(list).respond(response().withBody(loadBodyJson("variables/list-pipeline-empty.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("variable/list-pipeline-empty.json")));
     Set<Variable> variables = underTest.listPipelineVariables("1", "1");
     assertTrue(variables.isEmpty(), "Empty body returns zero length list");
     client.clear(list);
@@ -288,7 +288,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables");
-    client.when(list).respond(response().withBody(loadBodyJson("variables/list-pipeline-success.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("variable/list-pipeline-success.json")));
     Set<Variable> variables = underTest.listPipelineVariables("1", "1");
     assertEquals(2, variables.size(), "Empty body returns zero length list");
     Variable v = new Variable();
@@ -312,7 +312,7 @@ public class VariablesTest extends AbstractApiClientTest {
     client.when(get).respond(response().withBody(PipelineApiTest.LIST_BODY));
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables");
-    client.when(list).respond(response().withBody(loadBodyJson("variables/list-pipeline-success.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("variable/list-pipeline-success.json")));
     Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
 
     Set<Variable> variables = pipeline.listVariables();
@@ -356,7 +356,7 @@ public class VariablesTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody("[]");
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-pipeline-empty.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-pipeline-empty.json")));
     Set<Variable> variables = underTest.setPipelineVariables("1", "1");
     assertTrue(variables.isEmpty(), "Empty list returned");
     client.verify(set, VerificationTimes.exactly(1));
@@ -369,7 +369,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"foo2\", \"value\": \"bar2\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-pipeline-variables.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-pipeline-variables.json")));
 
     Variable v = new Variable();
     v.setName("foo");
@@ -395,7 +395,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" }, { \"name\": \"secretFoo2\", \"value\": \"secretBar2\", \"type\": \"secretString\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-pipeline-secrets.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-pipeline-secrets.json")));
 
     Variable v = new Variable();
     v.setName("secretFoo");
@@ -423,7 +423,7 @@ public class VariablesTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-pipeline-mixed.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-pipeline-mixed.json")));
 
     Variable v = new Variable();
     v.setName("foo");
@@ -453,7 +453,7 @@ public class VariablesTest extends AbstractApiClientTest {
 
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
 
-    client.when(set).respond(response().withBody(loadBodyJson("variables/set-pipeline-mixed.json")));
+    client.when(set).respond(response().withBody(loadBodyJson("variable/set-pipeline-mixed.json")));
 
     Variable v = new Variable();
     v.setName("foo");

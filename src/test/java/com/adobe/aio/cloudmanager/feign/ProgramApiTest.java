@@ -103,7 +103,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
-    client.when(list).respond(response().withBody(loadBodyJson("programs/list.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("program/list.json")));
 
     Collection<Program> programs = underTest.listPrograms();
     assertEquals(7, programs.size(), "Correct length of program list");
@@ -165,7 +165,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/programs");
-    client.when(list).respond(response().withBody(loadBodyJson("programs/list.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("program/list.json")));
 
     HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1");
     client.when(delete).respond(response().withStatusCode(ACCEPTED_202.code()));
@@ -207,7 +207,7 @@ public class ProgramApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/tenant/1/programs");
-    client.when(list).respond(response().withBody(loadBodyJson("programs/list.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("program/list.json")));
 
     Collection<Program> programs = underTest.listPrograms("1");
     assertEquals(7, programs.size(), "Correct length of program list");

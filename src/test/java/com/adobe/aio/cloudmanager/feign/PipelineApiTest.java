@@ -50,8 +50,8 @@ import static org.mockserver.model.JsonBody.*;
 
 public class PipelineApiTest extends AbstractApiClientTest {
 
-  private static final JsonBody GET_BODY = loadBodyJson("pipelines/get.json");
-  public static final JsonBody LIST_BODY = loadBodyJson("pipelines/list.json");
+  private static final JsonBody GET_BODY = loadBodyJson("pipeline/get.json");
+  public static final JsonBody LIST_BODY = loadBodyJson("pipeline/list.json");
 
   private HttpResponse handleGoodPatch(HttpRequest request) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();

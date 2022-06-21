@@ -51,9 +51,9 @@ import static org.mockserver.model.JsonBody.*;
 
 public class PipelineExecutionApiTest extends AbstractApiClientTest {
 
-  private static final JsonBody GET_BODY = loadBodyJson("executions/get.json");
-  private static final JsonBody GET_WAITING_BODY = loadBodyJson("executions/approval-waiting.json");
-  private static final JsonBody GET_CODE_QUALITY_BODY = loadBodyJson("executions/codeQuality.json");
+  private static final JsonBody GET_BODY = loadBodyJson("execution/get.json");
+  private static final JsonBody GET_WAITING_BODY = loadBodyJson("execution/approval-waiting.json");
+  private static final JsonBody GET_CODE_QUALITY_BODY = loadBodyJson("execution/codeQuality.json");
 
   @Test
   void getCurrent_failure404() throws CloudManagerApiException {
@@ -121,7 +121,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
-    client.when(put).respond(response().withStatusCode(CREATED_201.code()).withBody(loadBodyJson("executions/start.json")));
+    client.when(put).respond(response().withStatusCode(CREATED_201.code()).withBody(loadBodyJson("execution/start.json")));
 
     PipelineExecution execution = underTest.startExecution("1", "1");
     assertEquals("/api/program/1/pipeline/1/execution/5000", ((PipelineExecutionImpl) execution).getLinks().getSelf().getHref(), "URL was correct");
@@ -139,7 +139,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     client.when(get).respond(response().withBody(PipelineApiTest.LIST_BODY));
 
     HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
-    client.when(put).respond(response().withStatusCode(CREATED_201.code()).withBody(loadBodyJson("executions/start.json")));
+    client.when(put).respond(response().withStatusCode(CREATED_201.code()).withBody(loadBodyJson("execution/start.json")));
 
     Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
     PipelineExecution execution = pipeline.startExecution();
@@ -298,7 +298,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/not-started.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/not-started.json")));
 
     PipelineExecution execution = underTest.getExecution("1", "1", "1");
     assertTrue(underTest.isExecutionRunning(execution));
@@ -312,7 +312,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/running.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/running.json")));
 
     assertTrue(underTest.isExecutionRunning("1", "1", "1"));
 
@@ -325,7 +325,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/cancelling.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/cancelling.json")));
 
     assertTrue(underTest.isExecutionRunning("1", "1", "1"));
 
@@ -338,7 +338,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/cancelled.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/cancelled.json")));
 
     assertFalse(underTest.isExecutionRunning("1", "1", "1"));
 
@@ -351,7 +351,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/finished.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/finished.json")));
 
     assertFalse(underTest.isExecutionRunning("1", "1", "1"));
 
@@ -364,7 +364,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/error.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/error.json")));
 
     assertFalse(underTest.isExecutionRunning("1", "1", "1"));
 
@@ -377,7 +377,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/failed.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/failed.json")));
 
     assertFalse(underTest.isExecutionRunning("1", "1", "1"));
     client.clear(get);
@@ -407,7 +407,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/no-steps.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/no-steps.json")));
 
     PipelineExecution execution = underTest.getExecution("1", "1", "1");
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getExecutionStepState(execution, "deploy"), "Exception thrown.");
@@ -424,7 +424,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     client.when(getExecution).respond(response().withBody(GET_BODY));
 
     HttpRequest getStep = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2");
-    client.when(getStep).respond(response().withBody(loadBodyJson("executions/step-waiting.json")));
+    client.when(getStep).respond(response().withBody(loadBodyJson("execution/step-waiting.json")));
 
     PipelineExecution execution = underTest.getExecution("1", "1", "1");
     assertNotNull(underTest.getExecutionStepState(execution, "codeQuality"));
@@ -500,7 +500,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
         )
     );
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/step-running.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/step-running.json")));
 
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
     assertEquals(PipelineExecutionStepState.Status.RUNNING, stepState.getStatusState());
@@ -520,7 +520,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
         )
     );
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/step-waiting.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/step-waiting.json")));
 
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
     assertEquals(PipelineExecutionStepState.Status.WAITING, stepState.getStatusState());
@@ -540,7 +540,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
         )
     );
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/step-finished.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/step-finished.json")));
 
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(event);
     assertEquals(PipelineExecutionStepState.Status.FINISHED, stepState.getStatusState());
@@ -558,7 +558,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     PipelineExecution execution = underTest.getCurrentExecution("1", "1").get();
     client.clear(get);
     get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/no-embedded.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/no-embedded.json")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getCurrentStep(execution), "Exception thrown.");
     assertEquals("Cannot find a current step for pipeline 1.", exception.getMessage(), "Message was correct");
@@ -572,11 +572,11 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/no-steps.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/no-steps.json")));
     PipelineExecution execution = underTest.getCurrentExecution("1", "1").get();
     client.clear(get);
     get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/no-steps.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/no-steps.json")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getCurrentStep(execution), "Exception thrown.");
     assertEquals("Cannot find a current step for pipeline 1.", exception.getMessage(), "Message was correct");
@@ -613,7 +613,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     PipelineExecution execution = underTest.getExecution("1", "1", "1");
     client.clear(get);
     get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/no-active.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/no-active.json")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getWaitingStep(execution), "Exception thrown.");
     assertEquals("Cannot find a waiting step for pipeline 1.", exception.getMessage(), "Message was correct");
@@ -712,14 +712,14 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
     HttpRequest metrics = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
-    client.when(metrics).respond(response().withBody(loadBodyJson("executions/metrics.json")));
+    client.when(metrics).respond(response().withBody(loadBodyJson("execution/metrics.json")));
 
     HttpRequest put = request()
         .withMethod("PUT")
         .withHeader("x-api-key", sessionId)
         .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/advance")
         .withContentType(MediaType.APPLICATION_JSON)
-        .withBody(loadBodyJson("executions/put-metrics-override.json"));
+        .withBody(loadBodyJson("execution/put-metrics-override.json"));
     client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
 
     PipelineExecution execution = underTest.getExecution("1", "1", "1");
@@ -738,14 +738,14 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
     HttpRequest metrics = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
-    client.when(metrics).respond(response().withBody(loadBodyJson("executions/metrics.json")));
+    client.when(metrics).respond(response().withBody(loadBodyJson("execution/metrics.json")));
 
     HttpRequest put = request()
         .withMethod("PUT")
         .withHeader("x-api-key", sessionId)
         .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/advance")
         .withContentType(MediaType.APPLICATION_JSON)
-        .withBody(loadBodyJson("executions/put-metrics-override.json"));
+        .withBody(loadBodyJson("execution/put-metrics-override.json"));
     client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
 
     PipelineExecution execution = underTest.getExecution("1", "1", "1");
@@ -937,7 +937,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/running.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/running.json")));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.cancelExecution("1", "1", "1"), "Exception thrown");
     assertEquals("Cannot find a cancel link for the current step (build). Step may not be cancellable.", exception.getMessage(), "Message was correct");
 
@@ -968,7 +968,7 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("executions/deploy-waiting.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("execution/deploy-waiting.json")));
     HttpRequest put = request().withBody("PUT")
         .withHeader("x-api-key", sessionId)
         .withPath("/api/program/1/pipeline/1/execution/1/phase/4/step/2/advance")

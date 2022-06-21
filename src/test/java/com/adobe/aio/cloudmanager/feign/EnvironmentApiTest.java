@@ -55,8 +55,8 @@ public class EnvironmentApiTest extends AbstractApiClientTest {
 
   @BeforeAll
   protected static void beforeAll() {
-    allJson = loadBodyJson("environments/list-full.json");
-    devJson = loadBodyJson("environments/list-dev.json");
+    allJson = loadBodyJson("environment/list-full.json");
+    devJson = loadBodyJson("environment/list-dev.json");
 
   }
 
@@ -263,7 +263,7 @@ public class EnvironmentApiTest extends AbstractApiClientTest {
         .withQueryStringParameter("service", "author")
         .withQueryStringParameter("name", "invalidurl")
         .withQueryStringParameter("days", "1");
-    client.when(listLogs).respond(response().withBody(loadBodyJson("environments/list-logs-error.json")));
+    client.when(listLogs).respond(response().withBody(loadBodyJson("environment/list-logs-error.json")));
 
     HttpRequest getLog = request()
         .withMethod("GET")
@@ -296,7 +296,7 @@ public class EnvironmentApiTest extends AbstractApiClientTest {
         .withQueryStringParameter("service", "author")
         .withQueryStringParameter("name", "invalidurl")
         .withQueryStringParameter("days", "1");
-    client.when(listLogs).respond(response().withBody(loadBodyJson("environments/list-logs-error.json")));
+    client.when(listLogs).respond(response().withBody(loadBodyJson("environment/list-logs-error.json")));
 
     HttpRequest redirect = request()
         .withMethod("GET")
@@ -333,7 +333,7 @@ public class EnvironmentApiTest extends AbstractApiClientTest {
         .withQueryStringParameter("service", "author")
         .withQueryStringParameter("name", "aemerror")
         .withQueryStringParameter("days", "1");
-    client.when(listLogs).respond(response().withBody(loadBodyJson("environments/list-logs-emptylist.json")));
+    client.when(listLogs).respond(response().withBody(loadBodyJson("environment/list-logs-emptylist.json")));
 
     Collection<EnvironmentLog> logs = underTest.downloadEnvironmentLogs("1", "1", new LogOptionImpl(new LogOptionRepresentation().service("author").name("aemerror")), 1, new File("."));
     assertTrue(logs.isEmpty(), "List was empty.");
@@ -357,7 +357,7 @@ public class EnvironmentApiTest extends AbstractApiClientTest {
         .withQueryStringParameter("service", "author")
         .withQueryStringParameter("name", "aemerror")
         .withQueryStringParameter("days", "1");
-    client.when(listLogs).respond(response().withBody( loadBodyJson("environments/list-logs-success.json")));
+    client.when(listLogs).respond(response().withBody( loadBodyJson("environment/list-logs-success.json")));
 
     HttpRequest redirect1 = request().withMethod("GET")
         .withHeader("x-api-key", sessionId)
@@ -412,7 +412,7 @@ public class EnvironmentApiTest extends AbstractApiClientTest {
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environments");
     client.when(get).respond(response().withBody(allJson));
 
-    JsonBody body = loadBodyJson("environments/list-logs-success.json");
+    JsonBody body = loadBodyJson("environment/list-logs-success.json");
     HttpRequest listLogs = request()
         .withMethod("GET")
         .withHeader("x-api-key", sessionId)
