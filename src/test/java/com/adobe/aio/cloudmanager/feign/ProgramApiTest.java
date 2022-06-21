@@ -128,9 +128,10 @@ public class ProgramApiTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withHeader("x-api-key", sessionId).withPath("/api/program/1");
-    client.when(get).respond(response());
+    client.when(get).respond(response().withBody(loadBodyJson("program/get.json")));
     Program program = underTest.getProgram("1");
     assertNotNull(program, "Program retrieval success.");
+    assertEquals("1", program.getId(), "Id was correct.");
     client.clear(get);
   }
   

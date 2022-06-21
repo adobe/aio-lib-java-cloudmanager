@@ -1,0 +1,116 @@
+{
+  "id": "1",
+  "name": "AcmeCorp Main Site",
+  "enabled": false,
+  "tenantId": "acmeCorp",
+  "imsOrgId": "6522A55453334E247F120101@AdobeOrg",
+  "status": "creating",
+  "type": "aem_cloud_service",
+  "capabilities": {
+    "sandbox": true
+  },
+  "createdAt": "2019-08-24T14:15:22Z",
+  "updatedAt": "2019-08-24T14:15:22Z",
+  "_links": {
+    "http://ns.adobe.com/adobecloud/rel/pipelines": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/environments": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/repositories": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/ipAllowlists": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/certificates": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/domainNames": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/tenant": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/networkInfrastructures": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "http://ns.adobe.com/adobecloud/rel/regions": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "self": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    }
+  }
+}
