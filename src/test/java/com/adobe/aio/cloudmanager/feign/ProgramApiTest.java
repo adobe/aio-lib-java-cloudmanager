@@ -37,7 +37,7 @@ import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 import static org.mockserver.model.JsonBody.*;
 
-public class ProgramsTest extends AbstractApiClientTest {
+public class ProgramApiTest extends AbstractApiClientTest {
 
   @Test
   void list_failure404() {

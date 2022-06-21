@@ -48,7 +48,7 @@ import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 import static org.mockserver.model.JsonBody.*;
 
-public class PipelinesTest extends AbstractApiClientTest {
+public class PipelineApiTest extends AbstractApiClientTest {
 
   private static final JsonBody GET_BODY = loadBodyJson("pipelines/get.json");
   public static final JsonBody LIST_BODY = loadBodyJson("pipelines/list.json");
@@ -123,7 +123,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelines_failure404() {
+  void list_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -138,7 +138,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelines_successEmptyBody() {
+  void list_successEmptyBody() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -153,7 +153,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelines_successEmptyEmbedded() {
+  void list_successEmptyEmbedded() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
@@ -167,7 +167,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelines_successEmptyPipelines() {
+  void list_successEmptyPipelines() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
@@ -181,7 +181,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelines_success() throws CloudManagerApiException {
+  void list_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
@@ -194,7 +194,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void deletePipeline_failure400() {
+  void delete_failure400() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1");
@@ -207,7 +207,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void deletePipeline_success() throws CloudManagerApiException {
+  void delete_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1");
@@ -219,7 +219,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void deletePipeline_viaPipeline() throws Exception {
+  void delete_via_pipeline() throws Exception {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -237,7 +237,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void updatePipeline_failure404() {
+  void update_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -252,7 +252,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void updatePipeline_failure() {
+  void update_failure() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -270,7 +270,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void updatePipeline_branchSuccess() throws CloudManagerApiException {
+  void update_branchSuccess() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     
@@ -300,7 +300,7 @@ public class PipelinesTest extends AbstractApiClientTest {
 
 
   @Test
-  void updatePipeline_repositoryIdSuccess() throws CloudManagerApiException {
+  void update_repositoryIdSuccess() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -329,7 +329,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void updatePipeline_repositoryAndBranchSuccess() throws CloudManagerApiException {
+  void update_repositoryAndBranchSuccess() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -359,7 +359,7 @@ public class PipelinesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void updatePipeline_via_pipeline() throws Exception {
+  void update_via_pipeline() throws Exception {
 
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);

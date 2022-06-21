@@ -41,7 +41,7 @@ import static org.mockserver.model.JsonBody.*;
 public class VariablesTest extends AbstractApiClientTest {
 
   @Test
-  void listEnvironmentVariables_failure404() {
+  void listEnvironment_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -54,7 +54,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironmentVariables_emptyList() throws CloudManagerApiException {
+  void listEnvironment_emptyList() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -66,7 +66,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironmentVariables_success() throws CloudManagerApiException {
+  void listEnvironment_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -87,7 +87,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironmentVariables_via_environment() throws CloudManagerApiException {
+  void listEnvironment_via_environment() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -115,7 +115,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setEnvironmentVariables_failure400() {
+  void setEnvironment_failure400() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -133,7 +133,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setEnvironmentVariables_successEmpty() throws CloudManagerApiException {
+  void setEnvironment_successEmpty() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody("[]");
@@ -145,7 +145,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setEnvironmentVariables_variablesOnly() throws CloudManagerApiException {
+  void setEnvironment_variablesOnly() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"foo2\", \"value\": \"bar2\" } ]"));
@@ -171,7 +171,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setEnvironmentVariables_secretsOnly() throws CloudManagerApiException {
+  void setEnvironment_secretsOnly() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody(json("[ { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" }, { \"name\": \"secretFoo2\", \"value\": \"secretBar2\", \"type\": \"secretString\" } ]"));
@@ -199,7 +199,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setEnvironmentVariables_mixed() throws CloudManagerApiException {
+  void setEnvironment_mixed() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/environment/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
@@ -226,7 +226,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setEnvironmentVariables_via_environment() throws CloudManagerApiException {
+  void setEnvironment_via_environment() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environments");
@@ -258,7 +258,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelineVariables_failure404() {
+  void listPipeline_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -271,7 +271,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelineVariables_emptyList() throws CloudManagerApiException {
+  void listPipeline_emptyList() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -283,7 +283,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelineVariables_success() throws CloudManagerApiException {
+  void listPipeline_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -304,12 +304,12 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listPipelineVariables_via_pipeline() throws CloudManagerApiException {
+  void listPipeline_via_pipeline() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
-    client.when(get).respond(response().withBody(PipelinesTest.LIST_BODY));
+    client.when(get).respond(response().withBody(PipelineApiTest.LIST_BODY));
 
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables");
     client.when(list).respond(response().withBody(loadBodyJson("variables/list-pipeline-success.json")));
@@ -332,7 +332,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setPipelineVariables_failure400() {
+  void setPipeline_failure400() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -352,7 +352,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setPipelineVariables_successEmpty() throws CloudManagerApiException {
+  void setPipeline_successEmpty() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody("[]");
@@ -364,7 +364,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setPipelineVariables_variablesOnly() throws CloudManagerApiException {
+  void setPipeline_variablesOnly() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"foo2\", \"value\": \"bar2\" } ]"));
@@ -390,7 +390,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setPipelineVariables_secretsOnly() throws CloudManagerApiException {
+  void setPipeline_secretsOnly() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" }, { \"name\": \"secretFoo2\", \"value\": \"secretBar2\", \"type\": \"secretString\" } ]"));
@@ -418,7 +418,7 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setPipelineVariables_mixed() throws CloudManagerApiException {
+  void setPipeline_mixed() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
@@ -445,11 +445,11 @@ public class VariablesTest extends AbstractApiClientTest {
   }
 
   @Test
-  void setPipelineVariables_via_pipeline() throws CloudManagerApiException {
+  void setPipeline_via_pipeline() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
-    client.when(get).respond(response().withBody(PipelinesTest.LIST_BODY));
+    client.when(get).respond(response().withBody(PipelineApiTest.LIST_BODY));
 
     HttpRequest set = request().withMethod("PATCH").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/variables").withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
 

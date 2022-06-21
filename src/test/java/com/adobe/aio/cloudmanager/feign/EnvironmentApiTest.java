@@ -48,7 +48,7 @@ import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 import static org.mockserver.model.JsonBody.*;
 
-public class EnvironmentsTest extends AbstractApiClientTest {
+public class EnvironmentApiTest extends AbstractApiClientTest {
 
   private static JsonBody allJson;
   private static JsonBody devJson;
@@ -61,7 +61,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironments_failure404() {
+  void list_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -74,7 +74,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironments_type_failure404() {
+  void list_type_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -87,7 +87,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironments_successEmpty() throws CloudManagerApiException {
+  void list_successEmpty() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -100,7 +100,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironments_success() throws CloudManagerApiException {
+  void list_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -112,7 +112,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void listEnvironments_success_type() throws CloudManagerApiException {
+  void list_success_type() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -124,7 +124,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getEnvironment_notfound() {
+  void get_notfound() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -148,7 +148,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void deleteEnvironment_failure404() {
+  void delete_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     
@@ -162,7 +162,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void deleteEnvironment_success() throws CloudManagerApiException {
+  void delete_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -180,7 +180,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void deleteEnvironment_via_environment_success() throws CloudManagerApiException {
+  void delete_via_environment_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -346,7 +346,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
-    byte[] zipBytes = IOUtils.toByteArray(EnvironmentsTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
+    byte[] zipBytes = IOUtils.toByteArray(EnvironmentApiTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environments");
     client.when(get).respond(response().withBody(allJson));
 
@@ -404,11 +404,11 @@ public class EnvironmentsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void downloadLogs_viaEnvironment_success() throws CloudManagerApiException, IOException {
+  void downloadLogs_via_environment_success() throws CloudManagerApiException, IOException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
-    byte[] zipBytes = IOUtils.toByteArray(EnvironmentsTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
+    byte[] zipBytes = IOUtils.toByteArray(EnvironmentApiTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/environments");
     client.when(get).respond(response().withBody(allJson));
 
@@ -430,7 +430,7 @@ public class EnvironmentsTest extends AbstractApiClientTest {
     client.when(redirect1).respond(
         response()
             .withContentType(MediaType.APPLICATION_JSON)
-            .withBody(String.format("{ \"redirect\": \"%s/logs/author_viaenvironment_2019-09-08.log.gz\" }", baseUrl))
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_via_2019-09-08.log.gz\" }", baseUrl))
     );
 
     HttpRequest redirect2 = request().withMethod("GET")
@@ -441,13 +441,13 @@ public class EnvironmentsTest extends AbstractApiClientTest {
     client.when(redirect2).respond(
         response()
             .withContentType(MediaType.APPLICATION_JSON)
-            .withBody(String.format("{ \"redirect\": \"%s/logs/author_viaenvironment_2019-09-07.log.gz\" }", baseUrl))
+            .withBody(String.format("{ \"redirect\": \"%s/logs/author_via_2019-09-07.log.gz\" }", baseUrl))
     );
 
-    HttpRequest download1 = request().withMethod("GET").withPath("/logs/author_viaenvironment_2019-09-08.log.gz");
+    HttpRequest download1 = request().withMethod("GET").withPath("/logs/author_via_2019-09-08.log.gz");
     client.when(download1).respond(response().withBody(zipBytes));
 
-    HttpRequest download2 = request().withMethod("GET").withPath("/logs/author_viaenvironment_2019-09-07.log.gz");
+    HttpRequest download2 = request().withMethod("GET").withPath("/logs/author_via_2019-09-07.log.gz");
     client.when(download2).respond(response().withBody(zipBytes));
 
     File outputDir = Files.createTempDirectory("log-output").toFile();

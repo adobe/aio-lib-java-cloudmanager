@@ -49,14 +49,14 @@ import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 import static org.mockserver.model.JsonBody.*;
 
-public class PipelineExecutionsTest extends AbstractApiClientTest {
+public class PipelineExecutionApiTest extends AbstractApiClientTest {
 
   private static final JsonBody GET_BODY = loadBodyJson("executions/get.json");
   private static final JsonBody GET_WAITING_BODY = loadBodyJson("executions/approval-waiting.json");
   private static final JsonBody GET_CODE_QUALITY_BODY = loadBodyJson("executions/codeQuality.json");
 
   @Test
-  void getCurrentExecution_failure404() throws CloudManagerApiException {
+  void getCurrent_failure404() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
@@ -69,14 +69,14 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getCurrentExecution_success() throws CloudManagerApiException {
+  void getCurrent_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
-    client.when(list).respond(response().withBody(PipelinesTest.LIST_BODY));
+    client.when(list).respond(response().withBody(PipelineApiTest.LIST_BODY));
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
     client.when(get).respond(response().withBody(GET_BODY));
-    
+
     Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
     PipelineExecution execution = underTest.getCurrentExecution(pipeline).get();
     assertEquals("1", execution.getId(), "Execution Id matches");
@@ -87,7 +87,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void startExecution_failure404() {
+  void start_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -101,7 +101,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void startExecution_failure412_running() {
+  void start_failure412_running() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -116,7 +116,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void startExecution_success() throws CloudManagerApiException {
+  void start_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -131,12 +131,12 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void startExecution_via_pipeline() throws Exception {
+  void start_via_pipeline() throws Exception {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withPath("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
-    client.when(get).respond(response().withBody(PipelinesTest.LIST_BODY));
+    client.when(get).respond(response().withBody(PipelineApiTest.LIST_BODY));
 
     HttpRequest put = request().withMethod("PUT").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
     client.when(put).respond(response().withStatusCode(CREATED_201.code()).withBody(loadBodyJson("executions/start.json")));
@@ -150,7 +150,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_failure404() {
+  void get_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -165,7 +165,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_success() throws CloudManagerApiException {
+  void get_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -180,10 +180,9 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     client.clear(get);
   }
 
-
   @Test
-  void getExecution_invalidUrl() throws CloudManagerApiException {
-    
+  void get_invalidUrl() {
+
     PipelineExecutionStartEvent event = new PipelineExecutionStartEvent().event(
         new PipelineExecutionStartEventEvent().activitystreamsobject(
             new com.adobe.aio.cloudmanager.event.PipelineExecution()._atId("git://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1")
@@ -192,8 +191,9 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
     CloudManagerApiException e = assertThrows(CloudManagerApiException.class, () -> underTest.getExecution(event), "Exception thrown.");
     assertEquals("Cannot get execution: unknown protocol: git.", e.getMessage(), "Message was correct.");
   }
+
   @Test
-  void getExecution_startEvent_failure404() {
+  void get_startEvent_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -213,7 +213,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_startEvent() throws CloudManagerApiException {
+  void get_startEvent() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -234,7 +234,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_endEvent_failure404() {
+  void get_endEvent_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     PipelineExecutionEndEvent event = new PipelineExecutionEndEvent().event(
@@ -253,7 +253,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_endEvent() throws CloudManagerApiException {
+  void get_endEvent() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     PipelineExecutionEndEvent event = new PipelineExecutionEndEvent().event(
@@ -273,11 +273,11 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_via_pipeline() throws CloudManagerApiException {
+  void get_via_pipeline() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
-    client.when(list).respond(response().withBody(PipelinesTest.LIST_BODY));
+    client.when(list).respond(response().withBody(PipelineApiTest.LIST_BODY));
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_BODY));
 
@@ -384,7 +384,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecutionStepState_failure404() throws CloudManagerApiException {
+  void getStepState_failure404() throws CloudManagerApiException {
 
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -403,7 +403,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecutionStepState_failure_nostep() throws CloudManagerApiException {
+  void getStepState_failure_nostep() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -417,7 +417,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecutionStepState_success() throws CloudManagerApiException {
+  void getStepState_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest getExecution = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -434,7 +434,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_via_stepState_nolink() throws CloudManagerApiException {
+  void get_via_stepState_nolink() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -449,7 +449,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecution_via_stepState() throws CloudManagerApiException {
+  void get_via_stepState() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -470,7 +470,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecutionStepState_event_failure404() {
+  void getStepState_event_failure404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -490,7 +490,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecutionStepState_startEvent() throws CloudManagerApiException {
+  void getStepState_startEvent() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -510,7 +510,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecutionStepState_waitingEvent() throws CloudManagerApiException {
+  void getStepState_waitingEvent() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -530,7 +530,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void getExecutionStepState_endEvent() throws CloudManagerApiException {
+  void getStepState_endEvent() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -636,7 +636,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceCurrentExecution_failure404() throws CloudManagerApiException {
+  void advanceCurrent_failure404() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
@@ -650,7 +650,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceCurrentExecution_success() throws CloudManagerApiException {
+  void advanceCurrent_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
@@ -669,7 +669,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceExecution_failure404() throws CloudManagerApiException {
+  void advance_failure404() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -692,7 +692,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceExecution_buildRunning() {
+  void advance_buildRunning() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -706,7 +706,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceExecution_codeQualityWaiting() throws CloudManagerApiException {
+  void advance_codeQualityWaiting() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -732,7 +732,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceExecution_codeQualityWaiting_via_execution() throws Exception {
+  void advance_codeQualityWaiting_via_execution() throws Exception {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -759,7 +759,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceExecution_approvalWaiting() throws CloudManagerApiException {
+  void advance_approvalWaiting() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -780,7 +780,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void advanceExecution_approvalWaiting_via_execution() throws CloudManagerApiException {
+  void advance_approvalWaiting_via_execution() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -802,7 +802,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelCurrentExecution_failure404() throws CloudManagerApiException {
+  void cancelCurrent_failure404() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
@@ -815,7 +815,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelCurrentExecution_buildRunning() throws CloudManagerApiException {
+  void cancelCurrent_buildRunning() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution");
@@ -834,7 +834,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_failure403() throws CloudManagerApiException {
+  void cancel_failure403() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -854,7 +854,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_failure404() throws CloudManagerApiException {
+  void cancel_failure404() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -874,7 +874,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_buildRunning() throws CloudManagerApiException {
+  void cancel_buildRunning() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -894,7 +894,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_via_execution() throws CloudManagerApiException {
+  void cancel_via_execution() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -914,7 +914,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_codeQualityWaiting() throws CloudManagerApiException {
+  void cancel_codeQualityWaiting() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -933,7 +933,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_codeQualityWaiting_errorState() {
+  void cancel_codeQualityWaiting_errorState() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -946,7 +946,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_approvalWaiting() throws CloudManagerApiException {
+  void cancel_approvalWaiting() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -964,7 +964,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void cancelExecution_deployWaiting() throws CloudManagerApiException {
+  void cancel_deployWaiting() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -1052,7 +1052,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void downloadExecutionStepLog_success() throws CloudManagerApiException {
+  void downloadStepLog_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -1070,7 +1070,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void downloadExecutionStepLog_success_alternateFile() throws CloudManagerApiException {
+  void downloadStepLog_success_alternateFile() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -1088,14 +1088,14 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void downloadExecutionStepLog_via_stepState() throws CloudManagerApiException {
+  void downloadStepLog_via_stepState() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
     HttpRequest redirect = setupDownloadUrl(sessionId);
     HttpRequest download = setupFileContent("special");
-    
+
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     PipelineExecution execution = underTest.getExecution("1", "1", "1");
     PipelineExecutionStepState stepState = underTest.getExecutionStepState(execution, "build");
@@ -1107,7 +1107,7 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void downloadExecutionStepLog_via_stepState_named() throws CloudManagerApiException {
+  void downloadStepLog_via_stepState_named() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -1153,14 +1153,14 @@ public class PipelineExecutionsTest extends AbstractApiClientTest {
   }
 
   @Test
-  void PipelineExecution_Status() {
+  void Pipeline_Status() {
     assertEquals(PipelineExecution.Status.fromValue("FAILED"), PipelineExecution.Status.FAILED);
     assertNull(PipelineExecution.Status.fromValue("foo"));
     assertEquals(PipelineExecution.Status.FAILED.getValue(), PipelineExecution.Status.FAILED.toString());
   }
 
   @Test
-  void PipelineExecutionStepState_Status() {
+  void PipelineStepState_Status() {
     assertEquals(PipelineExecutionStepState.Status.fromValue("FAILED"), PipelineExecutionStepState.Status.FAILED);
     assertNull(PipelineExecutionStepState.Status.fromValue("foo"));
     assertEquals(PipelineExecutionStepState.Status.FAILED.getValue(), PipelineExecutionStepState.Status.FAILED.toString());
