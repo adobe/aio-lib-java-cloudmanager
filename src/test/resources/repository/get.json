@@ -1,0 +1,27 @@
+{
+  "_links": {
+    "http://ns.adobe.com/adobecloud/rel/branches": {
+      "href": "/api/program/1/repository/1/branches",
+      "templated": false
+    },
+    "http://ns.adobe.com/adobecloud/rel/commits": {
+      "href": "/api/program/1/repository/1/commits",
+      "templated": false
+    },
+    "http://ns.adobe.com/adobecloud/rel/program": {
+      "href": "/api/program/1",
+      "templated": false
+    },
+    "self": {
+      "href": "/api/program/1/repository/1",
+      "templated": false
+    }
+  },
+  "repo": "Repo1",
+  "status": "ready",
+  "createdAt": "2021-10-18T13:43:33.873+0000",
+  "updatedAt": "2021-10-18T13:44:19.619+0000",
+  "repositoryUrl": "https://git.cloudmanager.adobe.com/example/Repo1/",
+  "id": "1",
+  "programId": "1"
+}

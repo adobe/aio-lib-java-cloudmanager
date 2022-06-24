@@ -1,0 +1,108 @@
+{
+  "_links": {
+    "next": {
+      "href": "/api/program/1/repositories?start=20&limit=20"
+    },
+    "page": {
+      "href": "/api/program/1/repositories"
+    },
+    "prev": {
+      "href": "/api/program/41/repositories?start=0&limit=20"
+    },
+    "self": {
+      "href": "/api/program/1/repositories",
+      "templated": false
+    }
+  },
+  "_embedded": {
+    "repositories": [
+      {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/branches": {
+            "href": "/api/program/1/repository/1/branches",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/commits": {
+            "href": "/api/program/1/repository/1/commits",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/program": {
+            "href": "/api/program/1",
+            "templated": false
+          },
+          "self": {
+            "href": "/api/program/1/repository/1",
+            "templated": false
+          }
+        },
+        "repo": "Repo1",
+        "status": "ready",
+        "createdAt": "2021-10-18T13:43:33.873+0000",
+        "updatedAt": "2021-10-18T13:44:19.619+0000",
+        "repositoryUrl": "https://git.cloudmanager.adobe.com/example/Repo1/",
+        "id": "1",
+        "programId": "1"
+      },
+      {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/branches": {
+            "href": "/api/program/1/repository/2/branches",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/commits": {
+            "href": "/api/program/1/repository/2/commits",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/program": {
+            "href": "/api/program/1",
+            "templated": false
+          },
+          "self": {
+            "href": "/api/program/1/repository/2",
+            "templated": false
+          }
+        },
+        "repo": "Repo1",
+        "status": "ready",
+        "createdAt": "2021-10-18T13:43:33.873+0000",
+        "updatedAt": "2021-10-18T13:44:19.619+0000",
+        "repositoryUrl": "https://git.cloudmanager.adobe.com/example/Repo2/",
+        "id": "2",
+        "programId": "1"
+      },
+      {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/branches": {
+            "href": "/api/program/1/repository/3/branches",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/commits": {
+            "href": "/api/program/1/repository/3/commits",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/program": {
+            "href": "/api/program/1",
+            "templated": false
+          },
+          "self": {
+            "href": "/api/program/1/repository/3",
+            "templated": false
+          }
+        },
+        "repo": "Repo1",
+        "status": "ready",
+        "createdAt": "2021-10-18T13:43:33.873+0000",
+        "updatedAt": "2021-10-18T13:44:19.619+0000",
+        "repositoryUrl": "https://git.cloudmanager.adobe.com/example/Repo3/",
+        "id": "3",
+        "programId": "1"
+      }
+    ]
+  },
+  "_totalNumberOfItems": 3,
+  "_page": {
+    "limit": 20,
+    "next": 20,
+    "prev": 0
+  }
+}

@@ -64,11 +64,13 @@ import com.adobe.aio.cloudmanager.feign.client.EnvironmentApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineApiClient;
 import com.adobe.aio.cloudmanager.feign.client.PipelineExecutionApiClient;
 import com.adobe.aio.cloudmanager.feign.client.ProgramApiClient;
+import com.adobe.aio.cloudmanager.feign.client.RepositoryApiClient;
 import com.adobe.aio.cloudmanager.feign.client.VariableApiClient;
 import com.adobe.aio.cloudmanager.feign.exception.EnvironmentExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.PipelineExecutionExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.ProgramExceptionDecoder;
+import com.adobe.aio.cloudmanager.feign.exception.RepositoryExceptionDecoder;
 import com.adobe.aio.cloudmanager.feign.exception.VariableExceptionDecoder;
 import com.adobe.aio.cloudmanager.impl.model.EmbeddedProgram;
 import com.adobe.aio.cloudmanager.impl.model.EnvironmentList;
@@ -80,6 +82,8 @@ import com.adobe.aio.cloudmanager.impl.model.PipelinePhase;
 import com.adobe.aio.cloudmanager.impl.model.PipelineStepMetrics;
 import com.adobe.aio.cloudmanager.impl.model.ProgramList;
 import com.adobe.aio.cloudmanager.impl.model.Redirect;
+import com.adobe.aio.cloudmanager.impl.model.RepositoryBranch;
+import com.adobe.aio.cloudmanager.impl.model.RepositoryList;
 import com.adobe.aio.cloudmanager.impl.model.VariableList;
 import feign.Feign;
 import lombok.NonNull;
@@ -90,6 +94,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   private static final String NO_LOG_REDIRECT_ERROR = "Log [%s] did not contain a redirect. Was: %s.";
 
   private final ProgramApiClient programApi;
+  private final RepositoryApiClient repositoryApi;
   private final PipelineApiClient pipelineApi;
   private final PipelineExecutionApiClient executionsApi;
   private final EnvironmentApiClient environmentApi;
@@ -97,6 +102,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   
   public CloudManagerApiImpl(Feign.Builder builder, String baseUrl) {
     programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(ProgramApiClient.class, baseUrl);
+    repositoryApi = builder.errorDecoder(new RepositoryExceptionDecoder()).target(RepositoryApiClient.class, baseUrl);
     pipelineApi = builder.errorDecoder(new PipelineExceptionDecoder()).target(PipelineApiClient.class, baseUrl);
     executionsApi = builder.errorDecoder(new PipelineExecutionExceptionDecoder()).target(PipelineExecutionApiClient.class, baseUrl);
     environmentApi = builder.errorDecoder(new EnvironmentExceptionDecoder()).target(EnvironmentApiClient.class, baseUrl);
@@ -138,27 +144,53 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public @NonNull Collection<Repository> listRepositories(@NonNull String programId) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented");
+    RepositoryList list = repositoryApi.list(programId);
+    return list.getEmbedded().getRepositories().stream().map(r -> new RepositoryImpl(r, this)).collect(Collectors.toList());
   }
 
   @Override
   public @NonNull Collection<Repository> listRepositories(@NonNull Program program) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented");
+    return listRepositories(program.getId());
+  }
+
+  @Override
+  public @NonNull Collection<Repository> listRepositories(@NonNull String programId, int limit) throws CloudManagerApiException {
+    return listRepositories(programId, 0, limit);
+  }
+
+  @Override
+  public @NonNull Collection<Repository> listRepositories(@NonNull Program program, int limit) throws CloudManagerApiException {
+    return listRepositories(program.getId(), limit);
+  }
+
+  @Override
+  public @NonNull Collection<Repository> listRepositories(@NonNull String programId, int start, int limit) throws CloudManagerApiException {
+    Map<String, Object> params = new HashMap<>();
+    params.put(Repository.START_PARAM, start);
+    params.put(Repository.LIMIT_PARAM, limit);
+    RepositoryList list = repositoryApi.list(programId, params);
+    return list.getEmbedded().getRepositories().stream().map(r -> new RepositoryImpl(r, this)).collect(Collectors.toList());
+  }
+
+  @Override
+  public @NonNull Collection<Repository> listRepositories(@NonNull Program program, int start, int limit) throws CloudManagerApiException {
+    return listRepositories(program.getId(), start, limit);
   }
 
   @Override
   public @NonNull Repository getRepository(@NonNull String programId, @NonNull String repositoryId) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented");
+    return new RepositoryImpl(repositoryApi.get(programId, repositoryId), this);
   }
 
   @Override
   public @NonNull Repository getRepository(@NonNull Program program, @NonNull String repositoryId) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented");
+    return getRepository(program.getId(), repositoryId);
   }
 
   @Override
-  public void listBranches(@NonNull Repository repository) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented");
+  public @NonNull Collection<String> listBranches(@NonNull Repository repository) throws CloudManagerApiException {
+    return repositoryApi.listBranches(repository.getProgramId(), repository.getId()).getEmbedded().getBranches().stream()
+        .map(RepositoryBranch::getName).collect(Collectors.toList());
   }
 
   @Override
@@ -193,12 +225,12 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   
   @Override
   public void invalidatePipelineCache(@NonNull String programId, @NonNull String pipelineId) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented");
+    pipelineApi.invalidateCache(programId, pipelineId);
   }
 
   @Override
   public void invalidatePipelineCache(@NonNull Pipeline pipeline) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented");
+    invalidatePipelineCache(pipeline.getProgramId(), pipeline.getId());
   }
 
   @Override

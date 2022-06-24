@@ -66,8 +66,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
-        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
+        <!-- Use this temporary file with Repository ID fix until CMGR-36102 is closed -->
+        <cm.api>${project.basedir}/src/main/resources/api.yaml</cm.api>
+<!--        <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml</cm.api>-->
+        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/events.yaml</cm.events>
 
         <aio.lib.version>0.0.44</aio.lib.version>
         <slf4j.version>1.7.30</slf4j.version>

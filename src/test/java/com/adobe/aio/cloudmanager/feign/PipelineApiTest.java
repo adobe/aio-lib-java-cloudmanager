@@ -360,7 +360,6 @@ public class PipelineApiTest extends AbstractApiClientTest {
 
   @Test
   void update_via_pipeline() throws Exception {
-
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -390,6 +389,37 @@ public class PipelineApiTest extends AbstractApiClientTest {
     client.clear(list);
     client.clear(get);
     client.clear(patch);
+  }
+
+  @Test
+  void invalidate_failure404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/cache");
+    client.when(delete).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.invalidatePipelineCache("1", "1"), "Exception thrown.");
+    assertEquals(String.format("Cannot invalidate pipeline cache: %s/api/program/1/pipeline/1/cache (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(delete, VerificationTimes.exactly(1));
+    client.clear(delete);
+  }
+
+  @Test
+  void invalidate_success() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(get).respond(response().withBody(loadBodyJson("pipeline/list.json")));
+
+    HttpRequest delete = request().withMethod("DELETE").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/cache");
+    client.when(delete).respond(response().withStatusCode(ACCEPTED_202.code()));
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
+    underTest.invalidatePipelineCache(pipeline);
+    client.verify(delete, VerificationTimes.exactly(1));
+    client.clear(get);
+    client.clear(delete);
+
   }
 
   @Test

@@ -9,9 +9,9 @@ package com.adobe.aio.cloudmanager.feign.exception;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,49 +23,39 @@ package com.adobe.aio.cloudmanager.feign.exception;
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import feign.Response;
 
-public class PipelineExceptionDecoder extends CloudManagerExceptionDecoder {
-  
+public class RepositoryExceptionDecoder extends CloudManagerExceptionDecoder {
+
   @Override
   public Exception decode(String methodKey, Response response) {
     final int status = response.status();
     ErrorType type;
     switch (methodKey) {
-      case "PipelineApiClient#list(String)": {
-        type = ErrorType.LIST_PIPELINES;
+      case "RepositoryApiClient#list(String)":
+      case "RepositoryApiClient#list(String,Map)":{
+        type = ErrorType.LIST_REPOSITORIES;
         break;
       }
-      case "PipelineApiClient#get(String,String)": {
-        type = ErrorType.GET_PIPELINE;
+      case "RepositoryApiClient#get(String,String)": {
+        type = ErrorType.GET_REPOSITORY;
         break;
       }
-      case "PipelineApiClient#delete(String,String)":{
-        type = ErrorType.DELETE_PIPELINE;
-        break;
-      }
-      case "PipelineApiClient#update(String,String,Pipeline)": {
-        type = ErrorType.UPDATE_PIPELINE;
-        break;
-      }
-      case "PipelineApiClient#invalidateCache(String,String)": {
-        type = ErrorType.INVALIDATE_CACHE;
+      case "RepositoryApiClient#listBranches(String,String)": {
+        type = ErrorType.LIST_BRANCHES;
         break;
       }
       default: {
         type = ErrorType.UNKNOWN;
       }
     }
+
     return new CloudManagerApiException(String.format(type.message, getError(response)), status);
   }
 
   public enum ErrorType {
-    LIST_PIPELINES("Cannot retrieve pipelines: %s."),
-    FIND_PIPELINES("Could not find pipelines for program %s."),
-    GET_PIPELINE("Cannot retrieve pipeline: %s."),
-    DELETE_PIPELINE("Cannot delete pipeline: %s."),
-    UPDATE_PIPELINE("Cannot update pipeline: %s."),
-    NO_BUILD_PHASE("Pipeline %s does not appear to have a build phase."),
-    INVALIDATE_CACHE("Cannot invalidate pipeline cache: %s."),
-    UNKNOWN("Pipeline API Error: %s.");
+    LIST_REPOSITORIES("Cannot retrieve repositories: %s."),
+    GET_REPOSITORY("Cannot retrieve repository: %s."),
+    LIST_BRANCHES("Cannot retrieve repository branches: %s."),
+    UNKNOWN("Repository API Error: %s.");
     private final String message;
 
     ErrorType(String message) {
@@ -75,5 +65,6 @@ public class PipelineExceptionDecoder extends CloudManagerExceptionDecoder {
     public String getMessage() {
       return message;
     }
+
   }
 }

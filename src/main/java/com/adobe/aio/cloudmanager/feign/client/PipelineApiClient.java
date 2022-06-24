@@ -41,5 +41,7 @@ public interface PipelineApiClient {
   @RequestLine("PATCH /api/program/{programId}/pipeline/{pipelineId}")
   @Headers("Content-Type: application/json")
   Pipeline update(@Param("programId") String programId, @Param("pipelineId") String pipelineId, Pipeline update) throws CloudManagerApiException;
-  
+
+  @RequestLine("DELETE /api/program/{programId}/pipeline/{pipelineId}/cache")
+  void invalidateCache(@Param("programId") String programId, @Param("pipelineId") String pipelineId) throws CloudManagerApiException;
 }

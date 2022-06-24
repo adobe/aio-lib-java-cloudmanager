@@ -87,16 +87,103 @@ public interface CloudManagerApi {
    */
   Collection<Program> listPrograms(String tenantId) throws CloudManagerApiException;
 
-  // TODO: Add Repository APIs
+  /**
+   * Lists all repositories for the specified program.
+   * 
+   * @param programId the program id
+   * @return list of repositories
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepositories">List Repositories API</a>
+   */
   @NonNull Collection<Repository> listRepositories(@NonNull String programId) throws CloudManagerApiException;
 
+  /**
+   * Lists all repositories for the specified program.
+   *
+   * @param program the program
+   * @return list of repositories
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepositories">List Repositories API</a>
+   */
   @NonNull Collection<Repository> listRepositories(@NonNull Program program) throws CloudManagerApiException;
 
+  /**
+   * Lists all repositories for the specified program, up to the defined limit.
+   *
+   * @param programId the program id
+   * @param limit the maximum number of repositories to retrieve
+   * @return list of repositories
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepositories">List Repositories API</a>
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NonNull Collection<Repository> listRepositories(@NonNull String programId, int limit) throws CloudManagerApiException;
+
+  /**
+   * Lists all repositories for the specified program, up to the defined limit.
+   *
+   * @param program the program
+   * @param limit the maximum number of repositories to retrieve
+   * @return list of repositories
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepositories">List Repositories API</a>
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NonNull Collection<Repository> listRepositories(@NonNull Program program, int limit) throws CloudManagerApiException;
+
+  /**
+   * Lists all repositories for the specified program, from the starting position, up to the defined limit. 
+   *
+   * @param programId the program id
+   * @param start the starting position in the list to retrieve
+   * @param limit the maximum number of repositories to retrieve
+   * @return list of repositories
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepositories">List Repositories API</a>
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NonNull Collection<Repository> listRepositories(@NonNull String programId, int start, int limit) throws CloudManagerApiException;
+
+  /**
+   * Lists all repositories for the specified program, from the starting position, up to the defined limit.
+   *
+   * @param program the program
+   * @param start the starting position in the list to retrieve
+   * @param limit the maximum number of repositories to retrieve
+   * @return list of repositories
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepository">List Repositories API</a>
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NonNull Collection<Repository> listRepositories(@NonNull Program program, int start, int limit) throws CloudManagerApiException;
+
+  /**
+   * Get a specific repository in the program.
+   * 
+   * @param programId the program id
+   * @param repositoryId the repository id
+   * @return the repository
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepositories">List Repositories API</a>
+   */
   @NonNull Repository getRepository(@NonNull String programId, @NonNull String repositoryId) throws CloudManagerApiException;
 
+  /**
+   * Get a specific repository in the program.
+   *
+   * @param program the program
+   * @param repositoryId the repository id
+   * @return the repository
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getRepositories">List Repositories API</a>
+   */
   @NonNull Repository getRepository(@NonNull Program program, @NonNull String repositoryId) throws CloudManagerApiException;
 
-  void listBranches(@NonNull Repository repository) throws CloudManagerApiException;
+  /**
+   * Lists all the branches associated with the repository.
+   * 
+   * @param repository the repository
+   * @return branches
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getBranches">List Branches API</a>
+   */
+  @NonNull Collection<String> listBranches(@NonNull Repository repository) throws CloudManagerApiException;
 
   /**
    * Lists all pipelines within the specified program.
