@@ -32,12 +32,16 @@ package com.adobe.aio.cloudmanager.event;
  * #L%
  */
 
-import java.io.Serializable;
-import java.time.OffsetDateTime;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.event.Organization;
+import com.adobe.aio.cloudmanager.event.PipelineExecutionStepState;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.OffsetDateTime;
+import java.io.Serializable;
 /**
  * PipelineExecutionStepStartEventEvent
  */
