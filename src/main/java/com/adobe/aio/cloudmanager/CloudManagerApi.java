@@ -248,9 +248,23 @@ public interface CloudManagerApi {
    */
   @NonNull Pipeline updatePipeline(@NonNull Pipeline pipeline, @NonNull PipelineUpdate updates) throws CloudManagerApiException;
 
-  // TODO: Finish these.
+  /**
+   * Invalidates the build cache (Maven) for the specified pipeline.
+   *
+   * @param programId  the program context for the pipeline
+   * @param pipelineId the id of the pipeline to invalidate
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/invalidateCache">Invalidate Pipeline Cache API</a>
+   */
   void invalidatePipelineCache(@NonNull String programId, @NonNull String pipelineId) throws CloudManagerApiException;
 
+  /**
+   * Invalidates the build cache (Maven) for the specified pipeline.
+   *
+   * @param pipeline the pipeline context
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/invalidateCache">Invalidate Pipeline Cache API</a>
+   */
   void invalidatePipelineCache(@NonNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
