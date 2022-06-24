@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,15 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.EnvironmentListLinks;
+import com.adobe.aio.cloudmanager.impl.model.IPAllowlistListEmbedded;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * IPAllowlistList
  */
@@ -51,7 +55,7 @@ public class IPAllowlistList implements Serializable{
   private IPAllowlistListEmbedded _embedded = null;
 
   @JsonProperty("_links")
-  private PipelineListLinks _links = null;
+  private EnvironmentListLinks _links = null;
 
   public IPAllowlistList _totalNumberOfItems(Integer _totalNumberOfItems) {
     this._totalNumberOfItems = _totalNumberOfItems;
@@ -59,10 +63,10 @@ public class IPAllowlistList implements Serializable{
   }
 
    /**
-   * Get _totalNumberOfItems
+   * The total number of embedded items
    * @return _totalNumberOfItems
   **/
-  @Schema(description = "")
+  @Schema(description = "The total number of embedded items")
   public Integer getTotalNumberOfItems() {
     return _totalNumberOfItems;
   }
@@ -89,7 +93,7 @@ public class IPAllowlistList implements Serializable{
     this._embedded = _embedded;
   }
 
-  public IPAllowlistList _links(PipelineListLinks _links) {
+  public IPAllowlistList _links(EnvironmentListLinks _links) {
     this._links = _links;
     return this;
   }
@@ -99,11 +103,11 @@ public class IPAllowlistList implements Serializable{
    * @return _links
   **/
   @Schema(description = "")
-  public PipelineListLinks getLinks() {
+  public EnvironmentListLinks getLinks() {
     return _links;
   }
 
-  public void setLinks(PipelineListLinks _links) {
+  public void setLinks(EnvironmentListLinks _links) {
     this._links = _links;
   }
 

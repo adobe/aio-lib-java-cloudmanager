@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,15 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.EmbeddedProgramLinks;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.OffsetDateTime;
+import java.io.Serializable;
 /**
  * A lightweight representation of a Program
  */
@@ -55,6 +59,50 @@ public class EmbeddedProgram implements Serializable{
 
   @JsonProperty("tenantId")
   private String tenantId = null;
+
+  /**
+   * Status of the program
+   */
+  public enum StatusEnum {
+    CREATING("creating"),
+    READY("ready"),
+    DELETING("deleting"),
+    DELETED("deleted"),
+    DELETED_FAILED("deleted_failed"),
+    FAILED("failed");
+
+    private String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("status")
+  private StatusEnum status = null;
+
+  @JsonProperty("createdAt")
+  private OffsetDateTime createdAt = null;
+
+  @JsonProperty("updatedAt")
+  private OffsetDateTime updatedAt = null;
 
   @JsonProperty("_links")
   private EmbeddedProgramLinks _links = null;
@@ -95,6 +143,60 @@ public class EmbeddedProgram implements Serializable{
     return tenantId;
   }
 
+  public EmbeddedProgram status(StatusEnum status) {
+    this.status = status;
+    return this;
+  }
+
+   /**
+   * Status of the program
+   * @return status
+  **/
+  @Schema(description = "Status of the program")
+  public StatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
+
+  public EmbeddedProgram createdAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+   /**
+   * Created time
+   * @return createdAt
+  **/
+  @Schema(description = "Created time")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public EmbeddedProgram updatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+    return this;
+  }
+
+   /**
+   * Date of last change
+   * @return updatedAt
+  **/
+  @Schema(description = "Date of last change")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   public EmbeddedProgram _links(EmbeddedProgramLinks _links) {
     this._links = _links;
     return this;
@@ -127,12 +229,15 @@ public class EmbeddedProgram implements Serializable{
         Objects.equals(this.name, embeddedProgram.name) &&
         Objects.equals(this.enabled, embeddedProgram.enabled) &&
         Objects.equals(this.tenantId, embeddedProgram.tenantId) &&
+        Objects.equals(this.status, embeddedProgram.status) &&
+        Objects.equals(this.createdAt, embeddedProgram.createdAt) &&
+        Objects.equals(this.updatedAt, embeddedProgram.updatedAt) &&
         Objects.equals(this._links, embeddedProgram._links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, enabled, tenantId, _links);
+    return Objects.hash(id, name, enabled, tenantId, status, createdAt, updatedAt, _links);
   }
 
 
@@ -145,6 +250,9 @@ public class EmbeddedProgram implements Serializable{
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
     sb.append("}");
     return sb.toString();

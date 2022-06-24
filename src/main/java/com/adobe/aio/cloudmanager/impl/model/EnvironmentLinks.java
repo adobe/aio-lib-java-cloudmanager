@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,14 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.HalLink;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * EnvironmentLinks
  */
@@ -67,6 +70,9 @@ public class EnvironmentLinks implements Serializable{
 
   @JsonProperty("http://ns.adobe.com/adobecloud/rel/variables")
   private HalLink httpnsAdobeComadobecloudrelvariables = null;
+
+  @JsonProperty("http://ns.adobe.com/adobecloud/rel/advancedNetworking")
+  private HalLink httpnsAdobeComadobecloudreladvancedNetworking = null;
 
   @JsonProperty("self")
   private HalLink self = null;
@@ -215,6 +221,24 @@ public class EnvironmentLinks implements Serializable{
     this.httpnsAdobeComadobecloudrelvariables = httpnsAdobeComadobecloudrelvariables;
   }
 
+  public EnvironmentLinks httpnsAdobeComadobecloudreladvancedNetworking(HalLink httpnsAdobeComadobecloudreladvancedNetworking) {
+    this.httpnsAdobeComadobecloudreladvancedNetworking = httpnsAdobeComadobecloudreladvancedNetworking;
+    return this;
+  }
+
+   /**
+   * Get httpnsAdobeComadobecloudreladvancedNetworking
+   * @return httpnsAdobeComadobecloudreladvancedNetworking
+  **/
+  @Schema(description = "")
+  public HalLink getHttpnsAdobeComadobecloudreladvancedNetworking() {
+    return httpnsAdobeComadobecloudreladvancedNetworking;
+  }
+
+  public void setHttpnsAdobeComadobecloudreladvancedNetworking(HalLink httpnsAdobeComadobecloudreladvancedNetworking) {
+    this.httpnsAdobeComadobecloudreladvancedNetworking = httpnsAdobeComadobecloudreladvancedNetworking;
+  }
+
   public EnvironmentLinks self(HalLink self) {
     this.self = self;
     return this;
@@ -251,12 +275,13 @@ public class EnvironmentLinks implements Serializable{
         Objects.equals(this.httpnsAdobeComadobecloudreldeveloperConsole, environmentLinks.httpnsAdobeComadobecloudreldeveloperConsole) &&
         Objects.equals(this.httpnsAdobeComadobecloudrellogs, environmentLinks.httpnsAdobeComadobecloudrellogs) &&
         Objects.equals(this.httpnsAdobeComadobecloudrelvariables, environmentLinks.httpnsAdobeComadobecloudrelvariables) &&
+        Objects.equals(this.httpnsAdobeComadobecloudreladvancedNetworking, environmentLinks.httpnsAdobeComadobecloudreladvancedNetworking) &&
         Objects.equals(this.self, environmentLinks.self);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(httpnsAdobeComadobecloudrelprogram, httpnsAdobeComadobecloudrelpipeline, httpnsAdobeComadobecloudrelauthor, httpnsAdobeComadobecloudrelpublish, httpnsAdobeComadobecloudrelpreview, httpnsAdobeComadobecloudreldeveloperConsole, httpnsAdobeComadobecloudrellogs, httpnsAdobeComadobecloudrelvariables, self);
+    return Objects.hash(httpnsAdobeComadobecloudrelprogram, httpnsAdobeComadobecloudrelpipeline, httpnsAdobeComadobecloudrelauthor, httpnsAdobeComadobecloudrelpublish, httpnsAdobeComadobecloudrelpreview, httpnsAdobeComadobecloudreldeveloperConsole, httpnsAdobeComadobecloudrellogs, httpnsAdobeComadobecloudrelvariables, httpnsAdobeComadobecloudreladvancedNetworking, self);
   }
 
 
@@ -273,6 +298,7 @@ public class EnvironmentLinks implements Serializable{
     sb.append("    httpnsAdobeComadobecloudreldeveloperConsole: ").append(toIndentedString(httpnsAdobeComadobecloudreldeveloperConsole)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrellogs: ").append(toIndentedString(httpnsAdobeComadobecloudrellogs)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrelvariables: ").append(toIndentedString(httpnsAdobeComadobecloudrelvariables)).append("\n");
+    sb.append("    httpnsAdobeComadobecloudreladvancedNetworking: ").append(toIndentedString(httpnsAdobeComadobecloudreladvancedNetworking)).append("\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("}");
     return sb.toString();

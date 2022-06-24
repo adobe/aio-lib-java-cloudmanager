@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,14 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.RepositoryLinks;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * A sourcecode repository
  */
@@ -44,6 +47,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class Repository implements Serializable{
   private static final long serialVersionUID = 1L;
+  @JsonProperty("id")
+  private String id = null;
+
   @JsonProperty("repo")
   private String repo = null;
 
@@ -53,8 +59,29 @@ public class Repository implements Serializable{
   @JsonProperty("repositoryUrl")
   private String repositoryUrl = null;
 
+  @JsonProperty("programId")
+  private String programId = null;
+
   @JsonProperty("_links")
   private RepositoryLinks _links = null;
+
+  public Repository id(String id) {
+    this.id = id;
+    return this;
+  }
+
+   /**
+   * Identifier of the repository
+   * @return id
+  **/
+  @Schema(example = "14", description = "Identifier of the repository")
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public Repository repo(String repo) {
     this.repo = repo;
@@ -110,6 +137,24 @@ public class Repository implements Serializable{
     this.repositoryUrl = repositoryUrl;
   }
 
+  public Repository programId(String programId) {
+    this.programId = programId;
+    return this;
+  }
+
+   /**
+   * Identifier of the program.
+   * @return programId
+  **/
+  @Schema(example = "22", description = "Identifier of the program.")
+  public String getProgramId() {
+    return programId;
+  }
+
+  public void setProgramId(String programId) {
+    this.programId = programId;
+  }
+
   public Repository _links(RepositoryLinks _links) {
     this._links = _links;
     return this;
@@ -138,15 +183,17 @@ public class Repository implements Serializable{
       return false;
     }
     Repository repository = (Repository) o;
-    return Objects.equals(this.repo, repository.repo) &&
+    return Objects.equals(this.id, repository.id) &&
+        Objects.equals(this.repo, repository.repo) &&
         Objects.equals(this.description, repository.description) &&
         Objects.equals(this.repositoryUrl, repository.repositoryUrl) &&
+        Objects.equals(this.programId, repository.programId) &&
         Objects.equals(this._links, repository._links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(repo, description, repositoryUrl, _links);
+    return Objects.hash(id, repo, description, repositoryUrl, programId, _links);
   }
 
 
@@ -155,9 +202,11 @@ public class Repository implements Serializable{
     StringBuilder sb = new StringBuilder();
     sb.append("class Repository {\n");
     
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    repo: ").append(toIndentedString(repo)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    repositoryUrl: ").append(toIndentedString(repositoryUrl)).append("\n");
+    sb.append("    programId: ").append(toIndentedString(programId)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
     sb.append("}");
     return sb.toString();

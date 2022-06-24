@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,14 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.HalLink;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * PipelineExecutionStepStateLinks
  */
@@ -55,6 +58,9 @@ public class PipelineExecutionStepStateLinks implements Serializable{
 
   @JsonProperty("http://ns.adobe.com/adobecloud/rel/pipeline/metrics")
   private HalLink httpnsAdobeComadobecloudrelpipelinemetrics = null;
+
+  @JsonProperty("http://ns.adobe.com/adobecloud/rel/pipeline/reExecute")
+  private HalLink httpnsAdobeComadobecloudrelpipelinereExecute = null;
 
   @JsonProperty("http://ns.adobe.com/adobecloud/rel/pipeline/advance")
   private HalLink httpnsAdobeComadobecloudrelpipelineadvance = null;
@@ -138,6 +144,24 @@ public class PipelineExecutionStepStateLinks implements Serializable{
 
   public void setHttpnsAdobeComadobecloudrelpipelinemetrics(HalLink httpnsAdobeComadobecloudrelpipelinemetrics) {
     this.httpnsAdobeComadobecloudrelpipelinemetrics = httpnsAdobeComadobecloudrelpipelinemetrics;
+  }
+
+  public PipelineExecutionStepStateLinks httpnsAdobeComadobecloudrelpipelinereExecute(HalLink httpnsAdobeComadobecloudrelpipelinereExecute) {
+    this.httpnsAdobeComadobecloudrelpipelinereExecute = httpnsAdobeComadobecloudrelpipelinereExecute;
+    return this;
+  }
+
+   /**
+   * Get httpnsAdobeComadobecloudrelpipelinereExecute
+   * @return httpnsAdobeComadobecloudrelpipelinereExecute
+  **/
+  @Schema(description = "")
+  public HalLink getHttpnsAdobeComadobecloudrelpipelinereExecute() {
+    return httpnsAdobeComadobecloudrelpipelinereExecute;
+  }
+
+  public void setHttpnsAdobeComadobecloudrelpipelinereExecute(HalLink httpnsAdobeComadobecloudrelpipelinereExecute) {
+    this.httpnsAdobeComadobecloudrelpipelinereExecute = httpnsAdobeComadobecloudrelpipelinereExecute;
   }
 
   public PipelineExecutionStepStateLinks httpnsAdobeComadobecloudrelpipelineadvance(HalLink httpnsAdobeComadobecloudrelpipelineadvance) {
@@ -226,6 +250,7 @@ public class PipelineExecutionStepStateLinks implements Serializable{
         Objects.equals(this.httpnsAdobeComadobecloudrelpipeline, pipelineExecutionStepStateLinks.httpnsAdobeComadobecloudrelpipeline) &&
         Objects.equals(this.httpnsAdobeComadobecloudrelpipelinelogs, pipelineExecutionStepStateLinks.httpnsAdobeComadobecloudrelpipelinelogs) &&
         Objects.equals(this.httpnsAdobeComadobecloudrelpipelinemetrics, pipelineExecutionStepStateLinks.httpnsAdobeComadobecloudrelpipelinemetrics) &&
+        Objects.equals(this.httpnsAdobeComadobecloudrelpipelinereExecute, pipelineExecutionStepStateLinks.httpnsAdobeComadobecloudrelpipelinereExecute) &&
         Objects.equals(this.httpnsAdobeComadobecloudrelpipelineadvance, pipelineExecutionStepStateLinks.httpnsAdobeComadobecloudrelpipelineadvance) &&
         Objects.equals(this.httpnsAdobeComadobecloudrelpipelinecancel, pipelineExecutionStepStateLinks.httpnsAdobeComadobecloudrelpipelinecancel) &&
         Objects.equals(this.httpnsAdobeComadobecloudrelprogram, pipelineExecutionStepStateLinks.httpnsAdobeComadobecloudrelprogram) &&
@@ -234,7 +259,7 @@ public class PipelineExecutionStepStateLinks implements Serializable{
 
   @Override
   public int hashCode() {
-    return Objects.hash(httpnsAdobeComadobecloudrelexecution, httpnsAdobeComadobecloudrelpipeline, httpnsAdobeComadobecloudrelpipelinelogs, httpnsAdobeComadobecloudrelpipelinemetrics, httpnsAdobeComadobecloudrelpipelineadvance, httpnsAdobeComadobecloudrelpipelinecancel, httpnsAdobeComadobecloudrelprogram, self);
+    return Objects.hash(httpnsAdobeComadobecloudrelexecution, httpnsAdobeComadobecloudrelpipeline, httpnsAdobeComadobecloudrelpipelinelogs, httpnsAdobeComadobecloudrelpipelinemetrics, httpnsAdobeComadobecloudrelpipelinereExecute, httpnsAdobeComadobecloudrelpipelineadvance, httpnsAdobeComadobecloudrelpipelinecancel, httpnsAdobeComadobecloudrelprogram, self);
   }
 
 
@@ -247,6 +272,7 @@ public class PipelineExecutionStepStateLinks implements Serializable{
     sb.append("    httpnsAdobeComadobecloudrelpipeline: ").append(toIndentedString(httpnsAdobeComadobecloudrelpipeline)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrelpipelinelogs: ").append(toIndentedString(httpnsAdobeComadobecloudrelpipelinelogs)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrelpipelinemetrics: ").append(toIndentedString(httpnsAdobeComadobecloudrelpipelinemetrics)).append("\n");
+    sb.append("    httpnsAdobeComadobecloudrelpipelinereExecute: ").append(toIndentedString(httpnsAdobeComadobecloudrelpipelinereExecute)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrelpipelineadvance: ").append(toIndentedString(httpnsAdobeComadobecloudrelpipelineadvance)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrelpipelinecancel: ").append(toIndentedString(httpnsAdobeComadobecloudrelpipelinecancel)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrelprogram: ").append(toIndentedString(httpnsAdobeComadobecloudrelprogram)).append("\n");

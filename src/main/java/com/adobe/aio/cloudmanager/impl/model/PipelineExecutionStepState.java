@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,16 +32,16 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepStateDetails;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepStateLinks;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.OffsetDateTime;
+import java.io.Serializable;
 /**
  * Describes the status of a particular pipeline execution step for display purposes
  */
@@ -82,8 +82,11 @@ public class PipelineExecutionStepState implements Serializable{
   @JsonProperty("finishedAt")
   private OffsetDateTime finishedAt = null;
 
+  @JsonProperty("commitId")
+  private String commitId = null;
+
   @JsonProperty("details")
-  private Map<String, Object> details = null;
+  private PipelineExecutionStepStateDetails details = null;
 
   /**
    * Action status
@@ -99,7 +102,7 @@ public class PipelineExecutionStepState implements Serializable{
     CANCELLED("CANCELLED"),
     FAILED("FAILED");
 
-    private final String value;
+    private String value;
 
     StatusEnum(String value) {
       this.value = value;
@@ -297,10 +300,10 @@ public class PipelineExecutionStepState implements Serializable{
   }
 
    /**
-   * Start time
+   * Timestamp at which the step state started running
    * @return startedAt
   **/
-  @Schema(description = "Start time")
+  @Schema(description = "Timestamp at which the step state started running")
   public OffsetDateTime getStartedAt() {
     return startedAt;
   }
@@ -315,10 +318,10 @@ public class PipelineExecutionStepState implements Serializable{
   }
 
    /**
-   * Date the execution reached a final state
+   * Timestamp at which the step completed
    * @return finishedAt
   **/
-  @Schema(description = "Date the execution reached a final state")
+  @Schema(description = "Timestamp at which the step completed")
   public OffsetDateTime getFinishedAt() {
     return finishedAt;
   }
@@ -327,29 +330,39 @@ public class PipelineExecutionStepState implements Serializable{
     this.finishedAt = finishedAt;
   }
 
-  public PipelineExecutionStepState details(Map<String, Object> details) {
-    this.details = details;
-    return this;
-  }
-
-  public PipelineExecutionStepState putDetailsItem(String key, Object detailsItem) {
-    if (this.details == null) {
-      this.details = new HashMap<>();
-    }
-    this.details.put(key, detailsItem);
+  public PipelineExecutionStepState commitId(String commitId) {
+    this.commitId = commitId;
     return this;
   }
 
    /**
-   * Information about step result
+   * Target commit id
+   * @return commitId
+  **/
+  @Schema(description = "Target commit id")
+  public String getCommitId() {
+    return commitId;
+  }
+
+  public void setCommitId(String commitId) {
+    this.commitId = commitId;
+  }
+
+  public PipelineExecutionStepState details(PipelineExecutionStepStateDetails details) {
+    this.details = details;
+    return this;
+  }
+
+   /**
+   * Get details
    * @return details
   **/
-  @Schema(example = "scheduled time", description = "Information about step result")
-  public Map<String, Object> getDetails() {
+  @Schema(description = "")
+  public PipelineExecutionStepStateDetails getDetails() {
     return details;
   }
 
-  public void setDetails(Map<String, Object> details) {
+  public void setDetails(PipelineExecutionStepStateDetails details) {
     this.details = details;
   }
 
@@ -410,6 +423,7 @@ public class PipelineExecutionStepState implements Serializable{
         Objects.equals(this.environmentType, pipelineExecutionStepState.environmentType) &&
         Objects.equals(this.startedAt, pipelineExecutionStepState.startedAt) &&
         Objects.equals(this.finishedAt, pipelineExecutionStepState.finishedAt) &&
+        Objects.equals(this.commitId, pipelineExecutionStepState.commitId) &&
         Objects.equals(this.details, pipelineExecutionStepState.details) &&
         Objects.equals(this.status, pipelineExecutionStepState.status) &&
         Objects.equals(this._links, pipelineExecutionStepState._links);
@@ -417,7 +431,7 @@ public class PipelineExecutionStepState implements Serializable{
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, stepId, phaseId, action, repository, branch, environment, environmentId, environmentType, startedAt, finishedAt, details, status, _links);
+    return Objects.hash(id, stepId, phaseId, action, repository, branch, environment, environmentId, environmentType, startedAt, finishedAt, commitId, details, status, _links);
   }
 
 
@@ -437,6 +451,7 @@ public class PipelineExecutionStepState implements Serializable{
     sb.append("    environmentType: ").append(toIndentedString(environmentType)).append("\n");
     sb.append("    startedAt: ").append(toIndentedString(startedAt)).append("\n");
     sb.append("    finishedAt: ").append(toIndentedString(finishedAt)).append("\n");
+    sb.append("    commitId: ").append(toIndentedString(commitId)).append("\n");
     sb.append("    details: ").append(toIndentedString(details)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");

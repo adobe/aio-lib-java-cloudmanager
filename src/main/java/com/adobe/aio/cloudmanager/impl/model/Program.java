@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,16 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.ProgramCapabilities;
+import com.adobe.aio.cloudmanager.impl.model.ProgramLinks;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.OffsetDateTime;
+import java.io.Serializable;
 /**
  * A representation of a Program
  */
@@ -58,6 +63,88 @@ public class Program implements Serializable{
 
   @JsonProperty("imsOrgId")
   private String imsOrgId = null;
+
+  /**
+   * Status of the program
+   */
+  public enum StatusEnum {
+    CREATING("creating"),
+    READY("ready"),
+    DELETING("deleting"),
+    DELETED("deleted"),
+    DELETED_FAILED("deleted_failed"),
+    FAILED("failed");
+
+    private String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("status")
+  private StatusEnum status = null;
+
+  /**
+   * The type of program
+   */
+  public enum TypeEnum {
+    AEM_MANAGED_SERVICES("aem_managed_services"),
+    AEM_CLOUD_SERVICE("aem_cloud_service"),
+    MEDIA_LIBRARY("media_library");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("type")
+  private TypeEnum type = null;
+
+  @JsonProperty("capabilities")
+  private ProgramCapabilities capabilities = null;
+
+  @JsonProperty("createdAt")
+  private OffsetDateTime createdAt = null;
+
+  @JsonProperty("updatedAt")
+  private OffsetDateTime updatedAt = null;
 
   @JsonProperty("_links")
   private ProgramLinks _links = null;
@@ -152,6 +239,96 @@ public class Program implements Serializable{
     this.imsOrgId = imsOrgId;
   }
 
+  public Program status(StatusEnum status) {
+    this.status = status;
+    return this;
+  }
+
+   /**
+   * Status of the program
+   * @return status
+  **/
+  @Schema(description = "Status of the program")
+  public StatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
+
+  public Program type(TypeEnum type) {
+    this.type = type;
+    return this;
+  }
+
+   /**
+   * The type of program
+   * @return type
+  **/
+  @Schema(example = "aem_cloud_service", required = true, description = "The type of program")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
+  public Program capabilities(ProgramCapabilities capabilities) {
+    this.capabilities = capabilities;
+    return this;
+  }
+
+   /**
+   * Get capabilities
+   * @return capabilities
+  **/
+  @Schema(description = "")
+  public ProgramCapabilities getCapabilities() {
+    return capabilities;
+  }
+
+  public void setCapabilities(ProgramCapabilities capabilities) {
+    this.capabilities = capabilities;
+  }
+
+  public Program createdAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+   /**
+   * Created time
+   * @return createdAt
+  **/
+  @Schema(description = "Created time")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Program updatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+    return this;
+  }
+
+   /**
+   * Date of last change
+   * @return updatedAt
+  **/
+  @Schema(description = "Date of last change")
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   public Program _links(ProgramLinks _links) {
     this._links = _links;
     return this;
@@ -185,12 +362,17 @@ public class Program implements Serializable{
         Objects.equals(this.enabled, program.enabled) &&
         Objects.equals(this.tenantId, program.tenantId) &&
         Objects.equals(this.imsOrgId, program.imsOrgId) &&
+        Objects.equals(this.status, program.status) &&
+        Objects.equals(this.type, program.type) &&
+        Objects.equals(this.capabilities, program.capabilities) &&
+        Objects.equals(this.createdAt, program.createdAt) &&
+        Objects.equals(this.updatedAt, program.updatedAt) &&
         Objects.equals(this._links, program._links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, enabled, tenantId, imsOrgId, _links);
+    return Objects.hash(id, name, enabled, tenantId, imsOrgId, status, type, capabilities, createdAt, updatedAt, _links);
   }
 
 
@@ -204,6 +386,11 @@ public class Program implements Serializable{
     sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    imsOrgId: ").append(toIndentedString(imsOrgId)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    capabilities: ").append(toIndentedString(capabilities)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
     sb.append("}");
     return sb.toString();

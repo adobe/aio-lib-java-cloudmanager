@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,16 +32,18 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
+import java.util.Objects;
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.PipelineLinks;
+import com.adobe.aio.cloudmanager.impl.model.PipelinePhase;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * A representation of a CI/CD Pipeline
  */
@@ -65,7 +67,7 @@ public class Pipeline implements Serializable{
     ON_COMMIT("ON_COMMIT"),
     MANUAL("MANUAL");
 
-    private final String value;
+    private String value;
 
     TriggerEnum(String value) {
       this.value = value;
@@ -100,7 +102,7 @@ public class Pipeline implements Serializable{
     BUSY("BUSY"),
     WAITING("WAITING");
 
-    private final String value;
+    private String value;
 
     StatusEnum(String value) {
       this.value = value;
@@ -141,6 +143,40 @@ public class Pipeline implements Serializable{
 
   @JsonProperty("phases")
   private List<PipelinePhase> phases = new ArrayList<>();
+
+  /**
+   * Pipeline type
+   */
+  public enum TypeEnum {
+    CI_CD("CI_CD"),
+    CODE_GENERATOR("CODE_GENERATOR");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("type")
+  private TypeEnum type = null;
 
   @JsonProperty("_links")
   private PipelineLinks _links = null;
@@ -294,6 +330,24 @@ public class Pipeline implements Serializable{
     this.phases = phases;
   }
 
+  public Pipeline type(TypeEnum type) {
+    this.type = type;
+    return this;
+  }
+
+   /**
+   * Pipeline type
+   * @return type
+  **/
+  @Schema(example = "CI_CD", description = "Pipeline type")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
   public Pipeline _links(PipelineLinks _links) {
     this._links = _links;
     return this;
@@ -332,12 +386,13 @@ public class Pipeline implements Serializable{
         Objects.equals(this.lastStartedAt, pipeline.lastStartedAt) &&
         Objects.equals(this.lastFinishedAt, pipeline.lastFinishedAt) &&
         Objects.equals(this.phases, pipeline.phases) &&
+        Objects.equals(this.type, pipeline.type) &&
         Objects.equals(this._links, pipeline._links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, programId, name, trigger, status, createdAt, updatedAt, lastStartedAt, lastFinishedAt, phases, _links);
+    return Objects.hash(id, programId, name, trigger, status, createdAt, updatedAt, lastStartedAt, lastFinishedAt, phases, type, _links);
   }
 
 
@@ -356,6 +411,7 @@ public class Pipeline implements Serializable{
     sb.append("    lastStartedAt: ").append(toIndentedString(lastStartedAt)).append("\n");
     sb.append("    lastFinishedAt: ").append(toIndentedString(lastFinishedAt)).append("\n");
     sb.append("    phases: ").append(toIndentedString(phases)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
     sb.append("}");
     return sb.toString();

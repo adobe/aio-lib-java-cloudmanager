@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,14 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.HalLink;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * ProgramLinks
  */
@@ -61,6 +64,15 @@ public class ProgramLinks implements Serializable{
 
   @JsonProperty("http://ns.adobe.com/adobecloud/rel/domainNames")
   private HalLink httpnsAdobeComadobecloudreldomainNames = null;
+
+  @JsonProperty("http://ns.adobe.com/adobecloud/rel/tenant")
+  private HalLink httpnsAdobeComadobecloudreltenant = null;
+
+  @JsonProperty("http://ns.adobe.com/adobecloud/rel/networkInfrastructures")
+  private HalLink httpnsAdobeComadobecloudrelnetworkInfrastructures = null;
+
+  @JsonProperty("http://ns.adobe.com/adobecloud/rel/regions")
+  private HalLink httpnsAdobeComadobecloudrelregions = null;
 
   @JsonProperty("self")
   private HalLink self = null;
@@ -173,6 +185,60 @@ public class ProgramLinks implements Serializable{
     this.httpnsAdobeComadobecloudreldomainNames = httpnsAdobeComadobecloudreldomainNames;
   }
 
+  public ProgramLinks httpnsAdobeComadobecloudreltenant(HalLink httpnsAdobeComadobecloudreltenant) {
+    this.httpnsAdobeComadobecloudreltenant = httpnsAdobeComadobecloudreltenant;
+    return this;
+  }
+
+   /**
+   * Get httpnsAdobeComadobecloudreltenant
+   * @return httpnsAdobeComadobecloudreltenant
+  **/
+  @Schema(description = "")
+  public HalLink getHttpnsAdobeComadobecloudreltenant() {
+    return httpnsAdobeComadobecloudreltenant;
+  }
+
+  public void setHttpnsAdobeComadobecloudreltenant(HalLink httpnsAdobeComadobecloudreltenant) {
+    this.httpnsAdobeComadobecloudreltenant = httpnsAdobeComadobecloudreltenant;
+  }
+
+  public ProgramLinks httpnsAdobeComadobecloudrelnetworkInfrastructures(HalLink httpnsAdobeComadobecloudrelnetworkInfrastructures) {
+    this.httpnsAdobeComadobecloudrelnetworkInfrastructures = httpnsAdobeComadobecloudrelnetworkInfrastructures;
+    return this;
+  }
+
+   /**
+   * Get httpnsAdobeComadobecloudrelnetworkInfrastructures
+   * @return httpnsAdobeComadobecloudrelnetworkInfrastructures
+  **/
+  @Schema(description = "")
+  public HalLink getHttpnsAdobeComadobecloudrelnetworkInfrastructures() {
+    return httpnsAdobeComadobecloudrelnetworkInfrastructures;
+  }
+
+  public void setHttpnsAdobeComadobecloudrelnetworkInfrastructures(HalLink httpnsAdobeComadobecloudrelnetworkInfrastructures) {
+    this.httpnsAdobeComadobecloudrelnetworkInfrastructures = httpnsAdobeComadobecloudrelnetworkInfrastructures;
+  }
+
+  public ProgramLinks httpnsAdobeComadobecloudrelregions(HalLink httpnsAdobeComadobecloudrelregions) {
+    this.httpnsAdobeComadobecloudrelregions = httpnsAdobeComadobecloudrelregions;
+    return this;
+  }
+
+   /**
+   * Get httpnsAdobeComadobecloudrelregions
+   * @return httpnsAdobeComadobecloudrelregions
+  **/
+  @Schema(description = "")
+  public HalLink getHttpnsAdobeComadobecloudrelregions() {
+    return httpnsAdobeComadobecloudrelregions;
+  }
+
+  public void setHttpnsAdobeComadobecloudrelregions(HalLink httpnsAdobeComadobecloudrelregions) {
+    this.httpnsAdobeComadobecloudrelregions = httpnsAdobeComadobecloudrelregions;
+  }
+
   public ProgramLinks self(HalLink self) {
     this.self = self;
     return this;
@@ -207,12 +273,15 @@ public class ProgramLinks implements Serializable{
         Objects.equals(this.httpnsAdobeComadobecloudrelipAllowlists, programLinks.httpnsAdobeComadobecloudrelipAllowlists) &&
         Objects.equals(this.httpnsAdobeComadobecloudrelcertificates, programLinks.httpnsAdobeComadobecloudrelcertificates) &&
         Objects.equals(this.httpnsAdobeComadobecloudreldomainNames, programLinks.httpnsAdobeComadobecloudreldomainNames) &&
+        Objects.equals(this.httpnsAdobeComadobecloudreltenant, programLinks.httpnsAdobeComadobecloudreltenant) &&
+        Objects.equals(this.httpnsAdobeComadobecloudrelnetworkInfrastructures, programLinks.httpnsAdobeComadobecloudrelnetworkInfrastructures) &&
+        Objects.equals(this.httpnsAdobeComadobecloudrelregions, programLinks.httpnsAdobeComadobecloudrelregions) &&
         Objects.equals(this.self, programLinks.self);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(httpnsAdobeComadobecloudrelpipelines, httpnsAdobeComadobecloudrelenvironments, httpnsAdobeComadobecloudrelrepositories, httpnsAdobeComadobecloudrelipAllowlists, httpnsAdobeComadobecloudrelcertificates, httpnsAdobeComadobecloudreldomainNames, self);
+    return Objects.hash(httpnsAdobeComadobecloudrelpipelines, httpnsAdobeComadobecloudrelenvironments, httpnsAdobeComadobecloudrelrepositories, httpnsAdobeComadobecloudrelipAllowlists, httpnsAdobeComadobecloudrelcertificates, httpnsAdobeComadobecloudreldomainNames, httpnsAdobeComadobecloudreltenant, httpnsAdobeComadobecloudrelnetworkInfrastructures, httpnsAdobeComadobecloudrelregions, self);
   }
 
 
@@ -227,6 +296,9 @@ public class ProgramLinks implements Serializable{
     sb.append("    httpnsAdobeComadobecloudrelipAllowlists: ").append(toIndentedString(httpnsAdobeComadobecloudrelipAllowlists)).append("\n");
     sb.append("    httpnsAdobeComadobecloudrelcertificates: ").append(toIndentedString(httpnsAdobeComadobecloudrelcertificates)).append("\n");
     sb.append("    httpnsAdobeComadobecloudreldomainNames: ").append(toIndentedString(httpnsAdobeComadobecloudreldomainNames)).append("\n");
+    sb.append("    httpnsAdobeComadobecloudreltenant: ").append(toIndentedString(httpnsAdobeComadobecloudreltenant)).append("\n");
+    sb.append("    httpnsAdobeComadobecloudrelnetworkInfrastructures: ").append(toIndentedString(httpnsAdobeComadobecloudrelnetworkInfrastructures)).append("\n");
+    sb.append("    httpnsAdobeComadobecloudrelregions: ").append(toIndentedString(httpnsAdobeComadobecloudrelregions)).append("\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("}");
     return sb.toString();

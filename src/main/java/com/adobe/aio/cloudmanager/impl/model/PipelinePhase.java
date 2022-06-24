@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,13 +32,16 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.PipelineStep;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.Serializable;
 /**
  * Describes a phase of a pipeline
  */
@@ -57,7 +60,7 @@ public class PipelinePhase implements Serializable{
     BUILD("BUILD"),
     DEPLOY("DEPLOY");
 
-    private final String value;
+    private String value;
 
     TypeEnum(String value) {
       this.value = value;
@@ -92,6 +95,44 @@ public class PipelinePhase implements Serializable{
 
   @JsonProperty("environmentId")
   private String environmentId = null;
+
+  /**
+   * Type of environment (for example stage or prod, readOnly &#x3D; true)
+   */
+  public enum EnvironmentTypeEnum {
+    DEV("dev"),
+    STAGE("stage"),
+    PROD("prod");
+
+    private String value;
+
+    EnvironmentTypeEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static EnvironmentTypeEnum fromValue(String text) {
+      for (EnvironmentTypeEnum b : EnvironmentTypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("environmentType")
+  private EnvironmentTypeEnum environmentType = null;
+
+  @JsonProperty("steps")
+  private List<PipelineStep> steps = null;
 
   public PipelinePhase name(String name) {
     this.name = name;
@@ -183,6 +224,50 @@ public class PipelinePhase implements Serializable{
     this.environmentId = environmentId;
   }
 
+  public PipelinePhase environmentType(EnvironmentTypeEnum environmentType) {
+    this.environmentType = environmentType;
+    return this;
+  }
+
+   /**
+   * Type of environment (for example stage or prod, readOnly &#x3D; true)
+   * @return environmentType
+  **/
+  @Schema(description = "Type of environment (for example stage or prod, readOnly = true)")
+  public EnvironmentTypeEnum getEnvironmentType() {
+    return environmentType;
+  }
+
+  public void setEnvironmentType(EnvironmentTypeEnum environmentType) {
+    this.environmentType = environmentType;
+  }
+
+  public PipelinePhase steps(List<PipelineStep> steps) {
+    this.steps = steps;
+    return this;
+  }
+
+  public PipelinePhase addStepsItem(PipelineStep stepsItem) {
+    if (this.steps == null) {
+      this.steps = new ArrayList<>();
+    }
+    this.steps.add(stepsItem);
+    return this;
+  }
+
+   /**
+   * Steps to be included in the phase in execution order. Might be added or not, depending on permissions or configuration
+   * @return steps
+  **/
+  @Schema(description = "Steps to be included in the phase in execution order. Might be added or not, depending on permissions or configuration")
+  public List<PipelineStep> getSteps() {
+    return steps;
+  }
+
+  public void setSteps(List<PipelineStep> steps) {
+    this.steps = steps;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -197,12 +282,14 @@ public class PipelinePhase implements Serializable{
         Objects.equals(this.type, pipelinePhase.type) &&
         Objects.equals(this.repositoryId, pipelinePhase.repositoryId) &&
         Objects.equals(this.branch, pipelinePhase.branch) &&
-        Objects.equals(this.environmentId, pipelinePhase.environmentId);
+        Objects.equals(this.environmentId, pipelinePhase.environmentId) &&
+        Objects.equals(this.environmentType, pipelinePhase.environmentType) &&
+        Objects.equals(this.steps, pipelinePhase.steps);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, type, repositoryId, branch, environmentId);
+    return Objects.hash(name, type, repositoryId, branch, environmentId, environmentType, steps);
   }
 
 
@@ -216,6 +303,8 @@ public class PipelinePhase implements Serializable{
     sb.append("    repositoryId: ").append(toIndentedString(repositoryId)).append("\n");
     sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    environmentId: ").append(toIndentedString(environmentId)).append("\n");
+    sb.append("    environmentType: ").append(toIndentedString(environmentType)).append("\n");
+    sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
     sb.append("}");
     return sb.toString();
   }

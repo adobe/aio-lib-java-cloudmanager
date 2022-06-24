@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,14 +32,16 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
-import java.time.OffsetDateTime;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionEmbedded;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionLinks;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.OffsetDateTime;
+import java.io.Serializable;
 /**
  * A representation of an execution of a CI/CD Pipeline.
  */
@@ -74,7 +76,7 @@ public class PipelineExecution implements Serializable{
     ERROR("ERROR"),
     FAILED("FAILED");
 
-    private final String value;
+    private String value;
 
     StatusEnum(String value) {
       this.value = value;
@@ -109,7 +111,7 @@ public class PipelineExecution implements Serializable{
     MANUAL("MANUAL"),
     PUSH_UPGRADES("PUSH_UPGRADES");
 
-    private final String value;
+    private String value;
 
     TriggerEnum(String value) {
       this.value = value;
@@ -136,6 +138,40 @@ public class PipelineExecution implements Serializable{
   }  @JsonProperty("trigger")
   private TriggerEnum trigger = null;
 
+  /**
+   * The mode in which the execution occurred. EMERGENCY mode will skip certain steps and is only available to select AMS customers
+   */
+  public enum PipelineExecutionModeEnum {
+    NORMAL("NORMAL"),
+    EMERGENCY("EMERGENCY");
+
+    private String value;
+
+    PipelineExecutionModeEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static PipelineExecutionModeEnum fromValue(String text) {
+      for (PipelineExecutionModeEnum b : PipelineExecutionModeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("pipelineExecutionMode")
+  private PipelineExecutionModeEnum pipelineExecutionMode = null;
+
   @JsonProperty("createdAt")
   private OffsetDateTime createdAt = null;
 
@@ -144,6 +180,40 @@ public class PipelineExecution implements Serializable{
 
   @JsonProperty("finishedAt")
   private OffsetDateTime finishedAt = null;
+
+  /**
+   * Pipeline type
+   */
+  public enum PipelineTypeEnum {
+    CI_CD("CI_CD"),
+    CODE_GENERATOR("CODE_GENERATOR");
+
+    private String value;
+
+    PipelineTypeEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static PipelineTypeEnum fromValue(String text) {
+      for (PipelineTypeEnum b : PipelineTypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("pipelineType")
+  private PipelineTypeEnum pipelineType = null;
 
   @JsonProperty("_embedded")
   private PipelineExecutionEmbedded _embedded = null;
@@ -259,16 +329,34 @@ public class PipelineExecution implements Serializable{
     this.trigger = trigger;
   }
 
+  public PipelineExecution pipelineExecutionMode(PipelineExecutionModeEnum pipelineExecutionMode) {
+    this.pipelineExecutionMode = pipelineExecutionMode;
+    return this;
+  }
+
+   /**
+   * The mode in which the execution occurred. EMERGENCY mode will skip certain steps and is only available to select AMS customers
+   * @return pipelineExecutionMode
+  **/
+  @Schema(description = "The mode in which the execution occurred. EMERGENCY mode will skip certain steps and is only available to select AMS customers")
+  public PipelineExecutionModeEnum getPipelineExecutionMode() {
+    return pipelineExecutionMode;
+  }
+
+  public void setPipelineExecutionMode(PipelineExecutionModeEnum pipelineExecutionMode) {
+    this.pipelineExecutionMode = pipelineExecutionMode;
+  }
+
   public PipelineExecution createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
 
    /**
-   * Start time
+   * Timestamp at which the execution was created
    * @return createdAt
   **/
-  @Schema(description = "Start time")
+  @Schema(description = "Timestamp at which the execution was created")
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -283,10 +371,10 @@ public class PipelineExecution implements Serializable{
   }
 
    /**
-   * Date of last status change
+   * Timestamp at which the status of the execution last changed
    * @return updatedAt
   **/
-  @Schema(description = "Date of last status change")
+  @Schema(description = "Timestamp at which the status of the execution last changed")
   public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
@@ -301,16 +389,34 @@ public class PipelineExecution implements Serializable{
   }
 
    /**
-   * Date the execution reached a final state
+   * Timestamp at which the execution completed
    * @return finishedAt
   **/
-  @Schema(description = "Date the execution reached a final state")
+  @Schema(description = "Timestamp at which the execution completed")
   public OffsetDateTime getFinishedAt() {
     return finishedAt;
   }
 
   public void setFinishedAt(OffsetDateTime finishedAt) {
     this.finishedAt = finishedAt;
+  }
+
+  public PipelineExecution pipelineType(PipelineTypeEnum pipelineType) {
+    this.pipelineType = pipelineType;
+    return this;
+  }
+
+   /**
+   * Pipeline type
+   * @return pipelineType
+  **/
+  @Schema(example = "CI_CD", description = "Pipeline type")
+  public PipelineTypeEnum getPipelineType() {
+    return pipelineType;
+  }
+
+  public void setPipelineType(PipelineTypeEnum pipelineType) {
+    this.pipelineType = pipelineType;
   }
 
   public PipelineExecution _embedded(PipelineExecutionEmbedded _embedded) {
@@ -366,16 +472,18 @@ public class PipelineExecution implements Serializable{
         Objects.equals(this.user, pipelineExecution.user) &&
         Objects.equals(this.status, pipelineExecution.status) &&
         Objects.equals(this.trigger, pipelineExecution.trigger) &&
+        Objects.equals(this.pipelineExecutionMode, pipelineExecution.pipelineExecutionMode) &&
         Objects.equals(this.createdAt, pipelineExecution.createdAt) &&
         Objects.equals(this.updatedAt, pipelineExecution.updatedAt) &&
         Objects.equals(this.finishedAt, pipelineExecution.finishedAt) &&
+        Objects.equals(this.pipelineType, pipelineExecution.pipelineType) &&
         Objects.equals(this._embedded, pipelineExecution._embedded) &&
         Objects.equals(this._links, pipelineExecution._links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, programId, pipelineId, artifactsVersion, user, status, trigger, createdAt, updatedAt, finishedAt, _embedded, _links);
+    return Objects.hash(id, programId, pipelineId, artifactsVersion, user, status, trigger, pipelineExecutionMode, createdAt, updatedAt, finishedAt, pipelineType, _embedded, _links);
   }
 
 
@@ -391,9 +499,11 @@ public class PipelineExecution implements Serializable{
     sb.append("    user: ").append(toIndentedString(user)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    trigger: ").append(toIndentedString(trigger)).append("\n");
+    sb.append("    pipelineExecutionMode: ").append(toIndentedString(pipelineExecutionMode)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    finishedAt: ").append(toIndentedString(finishedAt)).append("\n");
+    sb.append("    pipelineType: ").append(toIndentedString(pipelineType)).append("\n");
     sb.append("    _embedded: ").append(toIndentedString(_embedded)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
     sb.append("}");

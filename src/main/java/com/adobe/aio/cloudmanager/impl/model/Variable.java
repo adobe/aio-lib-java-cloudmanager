@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,13 +32,13 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * A named value than can be set on an Environment or Pipeline
  */
@@ -59,7 +59,7 @@ public class Variable implements Serializable{
     STRING("string"),
     SECRETSTRING("secretString");
 
-    private final String value;
+    private String value;
 
     TypeEnum(String value) {
       this.value = value;
@@ -101,7 +101,7 @@ public class Variable implements Serializable{
     FAILED("failed"),
     DELETED_FAILED("deleted_failed");
 
-    private final String value;
+    private String value;
 
     StatusEnum(String value) {
       this.value = value;
@@ -134,10 +134,10 @@ public class Variable implements Serializable{
   }
 
    /**
-   * Name of the variable. Of a-z, A-Z, _ and 0-9 Cannot begin with a number.
+   * Name of the variable. Can only consist of a-z, A-Z, _ and 0-9 and cannot begin with a number.
    * @return name
   **/
-  @Schema(example = "MY_VAR1", description = "Name of the variable. Of a-z, A-Z, _ and 0-9 Cannot begin with a number.")
+  @Schema(example = "MY_VAR1", description = "Name of the variable. Can only consist of a-z, A-Z, _ and 0-9 and cannot begin with a number.")
   public String getName() {
     return name;
   }

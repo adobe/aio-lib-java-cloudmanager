@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,13 +32,15 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
+import java.util.Objects;
+import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * Filtering and sorting page details
  */
@@ -52,6 +54,12 @@ public class RequestedPageDetails implements Serializable{
   @JsonProperty("limit")
   private Integer limit = null;
 
+  @JsonProperty("next")
+  private Integer next = null;
+
+  @JsonProperty("prev")
+  private Integer prev = null;
+
   @JsonProperty("orderBy")
   private String orderBy = null;
 
@@ -61,22 +69,16 @@ public class RequestedPageDetails implements Serializable{
   @JsonProperty("type")
   private String type = null;
 
-  @JsonProperty("next")
-  private Integer next = null;
-
-  @JsonProperty("prev")
-  private Integer prev = null;
-
   public RequestedPageDetails start(Integer start) {
     this.start = start;
     return this;
   }
 
    /**
-   * Get start
+   * The start index for the current page of results
    * @return start
   **/
-  @Schema(description = "")
+  @Schema(description = "The start index for the current page of results")
   public Integer getStart() {
     return start;
   }
@@ -91,16 +93,52 @@ public class RequestedPageDetails implements Serializable{
   }
 
    /**
-   * Get limit
+   * The item limit for the current page of results
    * @return limit
   **/
-  @Schema(description = "")
+  @Schema(description = "The item limit for the current page of results")
   public Integer getLimit() {
     return limit;
   }
 
   public void setLimit(Integer limit) {
     this.limit = limit;
+  }
+
+  public RequestedPageDetails next(Integer next) {
+    this.next = next;
+    return this;
+  }
+
+   /**
+   * The start index for the next page of results
+   * @return next
+  **/
+  @Schema(description = "The start index for the next page of results")
+  public Integer getNext() {
+    return next;
+  }
+
+  public void setNext(Integer next) {
+    this.next = next;
+  }
+
+  public RequestedPageDetails prev(Integer prev) {
+    this.prev = prev;
+    return this;
+  }
+
+   /**
+   * The start index for the previous page of results
+   * @return prev
+  **/
+  @Schema(description = "The start index for the previous page of results")
+  public Integer getPrev() {
+    return prev;
+  }
+
+  public void setPrev(Integer prev) {
+    this.prev = prev;
   }
 
   public RequestedPageDetails orderBy(String orderBy) {
@@ -165,42 +203,6 @@ public class RequestedPageDetails implements Serializable{
     this.type = type;
   }
 
-  public RequestedPageDetails next(Integer next) {
-    this.next = next;
-    return this;
-  }
-
-   /**
-   * Get next
-   * @return next
-  **/
-  @Schema(description = "")
-  public Integer getNext() {
-    return next;
-  }
-
-  public void setNext(Integer next) {
-    this.next = next;
-  }
-
-  public RequestedPageDetails prev(Integer prev) {
-    this.prev = prev;
-    return this;
-  }
-
-   /**
-   * Get prev
-   * @return prev
-  **/
-  @Schema(description = "")
-  public Integer getPrev() {
-    return prev;
-  }
-
-  public void setPrev(Integer prev) {
-    this.prev = prev;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -213,16 +215,16 @@ public class RequestedPageDetails implements Serializable{
     RequestedPageDetails requestedPageDetails = (RequestedPageDetails) o;
     return Objects.equals(this.start, requestedPageDetails.start) &&
         Objects.equals(this.limit, requestedPageDetails.limit) &&
+        Objects.equals(this.next, requestedPageDetails.next) &&
+        Objects.equals(this.prev, requestedPageDetails.prev) &&
         Objects.equals(this.orderBy, requestedPageDetails.orderBy) &&
         Objects.equals(this.property, requestedPageDetails.property) &&
-        Objects.equals(this.type, requestedPageDetails.type) &&
-        Objects.equals(this.next, requestedPageDetails.next) &&
-        Objects.equals(this.prev, requestedPageDetails.prev);
+        Objects.equals(this.type, requestedPageDetails.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(start, limit, orderBy, property, type, next, prev);
+    return Objects.hash(start, limit, next, prev, orderBy, property, type);
   }
 
 
@@ -233,11 +235,11 @@ public class RequestedPageDetails implements Serializable{
     
     sb.append("    start: ").append(toIndentedString(start)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
+    sb.append("    next: ").append(toIndentedString(next)).append("\n");
+    sb.append("    prev: ").append(toIndentedString(prev)).append("\n");
     sb.append("    orderBy: ").append(toIndentedString(orderBy)).append("\n");
     sb.append("    property: ").append(toIndentedString(property)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    next: ").append(toIndentedString(next)).append("\n");
-    sb.append("    prev: ").append(toIndentedString(prev)).append("\n");
     sb.append("}");
     return sb.toString();
   }

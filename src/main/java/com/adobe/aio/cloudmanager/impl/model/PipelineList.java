@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,16 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.PipelineListEmbedded;
+import com.adobe.aio.cloudmanager.impl.model.ProgramListLinks;
+import com.adobe.aio.cloudmanager.impl.model.RequestedPageDetails;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * PipelineList
  */
@@ -47,11 +52,14 @@ public class PipelineList implements Serializable{
   @JsonProperty("_totalNumberOfItems")
   private Integer _totalNumberOfItems = null;
 
+  @JsonProperty("_page")
+  private RequestedPageDetails _page = null;
+
   @JsonProperty("_embedded")
   private PipelineListEmbedded _embedded = null;
 
   @JsonProperty("_links")
-  private PipelineListLinks _links = null;
+  private ProgramListLinks _links = null;
 
   public PipelineList _totalNumberOfItems(Integer _totalNumberOfItems) {
     this._totalNumberOfItems = _totalNumberOfItems;
@@ -59,16 +67,34 @@ public class PipelineList implements Serializable{
   }
 
    /**
-   * Get _totalNumberOfItems
+   * The total number of embedded items
    * @return _totalNumberOfItems
   **/
-  @Schema(description = "")
+  @Schema(description = "The total number of embedded items")
   public Integer getTotalNumberOfItems() {
     return _totalNumberOfItems;
   }
 
   public void setTotalNumberOfItems(Integer _totalNumberOfItems) {
     this._totalNumberOfItems = _totalNumberOfItems;
+  }
+
+  public PipelineList _page(RequestedPageDetails _page) {
+    this._page = _page;
+    return this;
+  }
+
+   /**
+   * Get _page
+   * @return _page
+  **/
+  @Schema(description = "")
+  public RequestedPageDetails getPage() {
+    return _page;
+  }
+
+  public void setPage(RequestedPageDetails _page) {
+    this._page = _page;
   }
 
   public PipelineList _embedded(PipelineListEmbedded _embedded) {
@@ -89,7 +115,7 @@ public class PipelineList implements Serializable{
     this._embedded = _embedded;
   }
 
-  public PipelineList _links(PipelineListLinks _links) {
+  public PipelineList _links(ProgramListLinks _links) {
     this._links = _links;
     return this;
   }
@@ -99,11 +125,11 @@ public class PipelineList implements Serializable{
    * @return _links
   **/
   @Schema(description = "")
-  public PipelineListLinks getLinks() {
+  public ProgramListLinks getLinks() {
     return _links;
   }
 
-  public void setLinks(PipelineListLinks _links) {
+  public void setLinks(ProgramListLinks _links) {
     this._links = _links;
   }
 
@@ -118,13 +144,14 @@ public class PipelineList implements Serializable{
     }
     PipelineList pipelineList = (PipelineList) o;
     return Objects.equals(this._totalNumberOfItems, pipelineList._totalNumberOfItems) &&
+        Objects.equals(this._page, pipelineList._page) &&
         Objects.equals(this._embedded, pipelineList._embedded) &&
         Objects.equals(this._links, pipelineList._links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(_totalNumberOfItems, _embedded, _links);
+    return Objects.hash(_totalNumberOfItems, _page, _embedded, _links);
   }
 
 
@@ -134,6 +161,7 @@ public class PipelineList implements Serializable{
     sb.append("class PipelineList {\n");
     
     sb.append("    _totalNumberOfItems: ").append(toIndentedString(_totalNumberOfItems)).append("\n");
+    sb.append("    _page: ").append(toIndentedString(_page)).append("\n");
     sb.append("    _embedded: ").append(toIndentedString(_embedded)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
     sb.append("}");

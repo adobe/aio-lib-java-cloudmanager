@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,11 +32,14 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.Objects;
-
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.HalLink;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 /**
  * EmbeddedProgramLinks
  */
@@ -44,8 +47,29 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class EmbeddedProgramLinks implements Serializable{
   private static final long serialVersionUID = 1L;
+  @JsonProperty("http://ns.adobe.com/adobecloud/rel/tenant")
+  private HalLink httpnsAdobeComadobecloudreltenant = null;
+
   @JsonProperty("self")
   private HalLink self = null;
+
+  public EmbeddedProgramLinks httpnsAdobeComadobecloudreltenant(HalLink httpnsAdobeComadobecloudreltenant) {
+    this.httpnsAdobeComadobecloudreltenant = httpnsAdobeComadobecloudreltenant;
+    return this;
+  }
+
+   /**
+   * Get httpnsAdobeComadobecloudreltenant
+   * @return httpnsAdobeComadobecloudreltenant
+  **/
+  @Schema(description = "")
+  public HalLink getHttpnsAdobeComadobecloudreltenant() {
+    return httpnsAdobeComadobecloudreltenant;
+  }
+
+  public void setHttpnsAdobeComadobecloudreltenant(HalLink httpnsAdobeComadobecloudreltenant) {
+    this.httpnsAdobeComadobecloudreltenant = httpnsAdobeComadobecloudreltenant;
+  }
 
   public EmbeddedProgramLinks self(HalLink self) {
     this.self = self;
@@ -75,12 +99,13 @@ public class EmbeddedProgramLinks implements Serializable{
       return false;
     }
     EmbeddedProgramLinks embeddedProgramLinks = (EmbeddedProgramLinks) o;
-    return Objects.equals(this.self, embeddedProgramLinks.self);
+    return Objects.equals(this.httpnsAdobeComadobecloudreltenant, embeddedProgramLinks.httpnsAdobeComadobecloudreltenant) &&
+        Objects.equals(this.self, embeddedProgramLinks.self);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self);
+    return Objects.hash(httpnsAdobeComadobecloudreltenant, self);
   }
 
 
@@ -89,6 +114,7 @@ public class EmbeddedProgramLinks implements Serializable{
     StringBuilder sb = new StringBuilder();
     sb.append("class EmbeddedProgramLinks {\n");
     
+    sb.append("    httpnsAdobeComadobecloudreltenant: ").append(toIndentedString(httpnsAdobeComadobecloudreltenant)).append("\n");
     sb.append("    self: ").append(toIndentedString(self)).append("\n");
     sb.append("}");
     return sb.toString();

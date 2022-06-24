@@ -1,6 +1,6 @@
 /*
  * Cloud Manager API
- * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml.
+ * This API allows access to Cloud Manager programs, pipelines, and environments by an authorized technical account created through the Adobe I/O Console. The base url for this API is https://cloudmanager.adobe.io, e.g. to get the list of programs for an organization, you would make a GET request to https://cloudmanager.adobe.io/api/programs (with the correct set of headers as described below). This swagger file can be downloaded from https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/api.yaml.
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -32,15 +32,17 @@ package com.adobe.aio.cloudmanager.impl.model;
  * #L%
  */
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.Arrays;
+import com.adobe.aio.cloudmanager.impl.model.EnvironmentLinks;
+import com.adobe.aio.cloudmanager.impl.model.LogOptionRepresentation;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.Serializable;
 /**
  * A representation of an Environment known to Cloud Manager.
  */
@@ -68,7 +70,7 @@ public class Environment implements Serializable{
     STAGE("stage"),
     PROD("prod");
 
-    private final String value;
+    private String value;
 
     TypeEnum(String value) {
       this.value = value;
@@ -94,6 +96,51 @@ public class Environment implements Serializable{
 
   }  @JsonProperty("type")
   private TypeEnum type = null;
+
+  /**
+   * Status of the environment
+   */
+  public enum StatusEnum {
+    CREATING("creating"),
+    READY("ready"),
+    DELETING("deleting"),
+    DELETED("deleted"),
+    UPDATING("updating"),
+    FAILED("failed"),
+    DEPLOY_FAILED("deploy_failed"),
+    CREATED("created"),
+    RESTORING("restoring"),
+    RESTORE_FAILED("restore_failed");
+
+    private String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+  }  @JsonProperty("status")
+  private StatusEnum status = null;
+
+  @JsonProperty("region")
+  private String region = null;
 
   @JsonProperty("availableLogOptions")
   private List<LogOptionRepresentation> availableLogOptions = null;
@@ -191,6 +238,42 @@ public class Environment implements Serializable{
     this.type = type;
   }
 
+  public Environment status(StatusEnum status) {
+    this.status = status;
+    return this;
+  }
+
+   /**
+   * Status of the environment
+   * @return status
+  **/
+  @Schema(example = "creating", description = "Status of the environment")
+  public StatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
+
+  public Environment region(String region) {
+    this.region = region;
+    return this;
+  }
+
+   /**
+   * Region of the environment
+   * @return region
+  **/
+  @Schema(example = "va7", description = "Region of the environment")
+  public String getRegion() {
+    return region;
+  }
+
+  public void setRegion(String region) {
+    this.region = region;
+  }
+
   public Environment availableLogOptions(List<LogOptionRepresentation> availableLogOptions) {
     this.availableLogOptions = availableLogOptions;
     return this;
@@ -250,13 +333,15 @@ public class Environment implements Serializable{
         Objects.equals(this.name, environment.name) &&
         Objects.equals(this.description, environment.description) &&
         Objects.equals(this.type, environment.type) &&
+        Objects.equals(this.status, environment.status) &&
+        Objects.equals(this.region, environment.region) &&
         Objects.equals(this.availableLogOptions, environment.availableLogOptions) &&
         Objects.equals(this._links, environment._links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, programId, name, description, type, availableLogOptions, _links);
+    return Objects.hash(id, programId, name, description, type, status, region, availableLogOptions, _links);
   }
 
 
@@ -270,6 +355,8 @@ public class Environment implements Serializable{
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    region: ").append(toIndentedString(region)).append("\n");
     sb.append("    availableLogOptions: ").append(toIndentedString(availableLogOptions)).append("\n");
     sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
     sb.append("}");
