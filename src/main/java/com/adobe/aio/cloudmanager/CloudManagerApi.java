@@ -612,7 +612,7 @@ public interface CloudManagerApi {
   @NonNull Collection<Metric> getQualityGateResults(@NonNull PipelineExecution execution, @NonNull String action) throws CloudManagerApiException;
 
   /**
-   * Provides an iterator for traversing executions for the specified pipeline, newest to oldest.
+   * Provides an iterator for iterating executions for the specified pipeline, newest to oldest.
    *
    * @param pipeline the pipeline context
    * @return iterator of pipeline executions
@@ -622,7 +622,7 @@ public interface CloudManagerApi {
   @NonNull Iterator<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
-   *Provides an iterator for traversing executions for the specified pipeline, newest to oldest. Each fetch will use the specified limit.
+   *Provides an iterator for iterating executions for the specified pipeline, newest to oldest. Each fetch will use the specified limit.
    *
    * @param pipeline the pipeline context
    * @param limit the number of executions to retrieve per API call
@@ -652,9 +652,6 @@ public interface CloudManagerApi {
    * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getEnvironments">List Environments API</a>
    */
   Collection<Environment> listEnvironments(@NonNull String programId, Environment.Type type) throws CloudManagerApiException;
-
-  // TODO: Add this.
-  void createEnvironment(@NonNull String programId, Environment.Type type) throws CloudManagerApiException;
 
   /**
    * Retrieve an environment from the specified program based on the provided predicate.
