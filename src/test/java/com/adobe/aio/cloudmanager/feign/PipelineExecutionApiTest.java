@@ -21,6 +21,7 @@ package com.adobe.aio.cloudmanager.feign;
  */
 
 import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
 import java.util.UUID;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
@@ -37,6 +38,7 @@ import com.adobe.aio.cloudmanager.event.PipelineExecutionStepEndEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepStartEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepStartEventEvent;
 import com.adobe.aio.cloudmanager.event.PipelineExecutionStepWaitingEvent;
+import com.adobe.aio.cloudmanager.feign.client.PipelineExecutionApiClient;
 import org.junit.jupiter.api.Test;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.JsonBody;
@@ -1037,6 +1039,16 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     client.clear(redirect);
   }
 
+  private HttpRequest setupDownloadUrl(String sessionId) {
+    HttpRequest redirect = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
+    client.when(redirect).respond(
+        response()
+            .withStatusCode(OK_200.code())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/special.txt\" }", baseUrl))
+    );
+    return redirect;
+  }
+
   @Test
   void getExecutionStepLogDownloadUrl_success_alternateFile() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
@@ -1049,6 +1061,20 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     assertEquals(String.format("%s/logs/somethingspecial.txt", baseUrl), underTest.getExecutionStepLogDownloadUrl(execution, "build", "somethingspecial"));
     client.clear(get);
     client.clear(redirect);
+  }
+
+  private HttpRequest setupDownloadUrlSpecial(String sessionId) {
+    HttpRequest redirect = request()
+        .withMethod("GET")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs")
+        .withQueryStringParameter("file", "somethingspecial");
+    client.when(redirect).respond(
+        response()
+            .withStatusCode(OK_200.code())
+            .withBody(String.format("{ \"redirect\": \"%s/logs/somethingspecial.txt\" }", baseUrl))
+    );
+    return redirect;
   }
 
   @Test
@@ -1067,6 +1093,16 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     client.clear(get);
     client.clear(redirect);
     client.clear(download);
+  }
+
+  private HttpRequest setupFileContent(String filename) {
+    HttpRequest download = request().withMethod("GET").withPath(String.format("/logs/%s.txt", filename));
+    client.when(download).respond(
+        response()
+            .withStatusCode(OK_200.code())
+            .withBody("some log line\nsome other log line\n")
+    );
+    return download;
   }
 
   @Test
@@ -1153,6 +1189,127 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
   }
 
   @Test
+  void listExecutions_failure404() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest listPipelines = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(listPipelines).respond(response().withBody(loadBodyJson("pipeline/list.json")));
+
+    HttpRequest list = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/executions");
+    client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listExecutions(pipeline), "Exception thrown");
+    assertEquals(String.format("Cannot list executions: %s/api/program/1/pipeline/1/executions (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(list, VerificationTimes.exactly(1));
+    client.clear(listPipelines);
+    client.clear(list);
+  }
+
+  @Test
+  void listExecutions_success_emptyList() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest listPipelines = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(listPipelines).respond(response().withBody(loadBodyJson("pipeline/list.json")));
+
+    HttpRequest empty = request()
+        .withMethod("GET")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/executions");
+    client.when(empty).respond(response().withBody(loadBodyJson("execution/list-empty.json")));
+
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
+    Iterator<PipelineExecution> iterator = underTest.listExecutions(pipeline, 30);
+    assertFalse(iterator.hasNext(), "Iterator Empty.");
+    client.verify(empty, VerificationTimes.exactly(1));
+    client.clear(listPipelines);
+    client.clear(empty);
+  }
+
+  @Test
+  void listExecutions_success_onePage() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest listPipelines = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(listPipelines).respond(response().withBody(loadBodyJson("pipeline/list.json")));
+
+    HttpRequest empty = request().withMethod("GET")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/executions")
+        .withQueryStringParameter(PipelineExecutionApiClient.START_PARAM, "20")
+        .withQueryStringParameter(PipelineExecutionApiClient.LIMIT_PARAM, "20");
+    client.when(empty).respond(response().withBody(loadBodyJson("execution/list-empty.json")));
+
+    HttpRequest start = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/executions");
+    client.when(start).respond(response().withBody(loadBodyJson("execution/list-start.json")));
+
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
+    Iterator<PipelineExecution> iterator = underTest.listExecutions(pipeline);
+    int counter = 0;
+    while (iterator.hasNext()) {
+      counter++;
+      iterator.next();
+    }
+    assertEquals(20, counter, "Correct list length.");
+
+    client.clear(listPipelines);
+    client.clear(start);
+    client.clear(empty);
+  }
+
+  @Test
+  void listExecutions_success_multiPage() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest listPipelines = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipelines");
+    client.when(listPipelines).respond(response().withBody(loadBodyJson("pipeline/list.json")));
+
+    HttpRequest middle = request().withMethod("GET")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/executions")
+        .withQueryStringParameter(PipelineExecutionApiClient.START_PARAM, "20")
+        .withQueryStringParameter(PipelineExecutionApiClient.LIMIT_PARAM, "20");
+    client.when(middle).respond(response().withBody(loadBodyJson("execution/list-middle.json")));
+
+    HttpRequest end = request().withMethod("GET")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/executions")
+        .withQueryStringParameter(PipelineExecutionApiClient.START_PARAM, "40")
+        .withQueryStringParameter(PipelineExecutionApiClient.LIMIT_PARAM, "20");
+    client.when(end).respond(response().withBody(loadBodyJson("execution/list-end.json")));
+
+    HttpRequest empty = request().withMethod("GET")
+        .withHeader("x-api-key", sessionId)
+        .withPath("/api/program/1/pipeline/1/executions")
+        .withQueryStringParameter(PipelineExecutionApiClient.START_PARAM, "60")
+        .withQueryStringParameter(PipelineExecutionApiClient.LIMIT_PARAM, "20");
+    client.when(empty).respond(response().withBody(loadBodyJson("execution/list-empty.json")));
+
+    HttpRequest start = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/executions");
+    client.when(start).respond(response().withBody(loadBodyJson("execution/list-start.json")));
+
+    Pipeline pipeline = underTest.listPipelines("1", new Pipeline.IdPredicate("1")).stream().findFirst().get();
+    Iterator<PipelineExecution> iterator = underTest.listExecutions(pipeline);
+    int counter = 0;
+    while (iterator.hasNext()) {
+      counter++;
+      iterator.next();
+    }
+    assertEquals(45, counter, "Correct list length.");
+    client.verify(empty, VerificationTimes.exactly(1));
+    client.clear(listPipelines);
+    client.clear(start);
+    client.clear(middle);
+    client.clear(end);
+    client.clear(empty);
+  }
+
+  @Test
   void Pipeline_Status() {
     assertEquals(PipelineExecution.Status.fromValue("FAILED"), PipelineExecution.Status.FAILED);
     assertNull(PipelineExecution.Status.fromValue("foo"));
@@ -1178,39 +1335,5 @@ public class PipelineExecutionApiTest extends AbstractApiClientTest {
     assertEquals(Metric.Comparator.fromValue("NEQ"), Metric.Comparator.NEQ);
     assertNull(Metric.Comparator.fromValue("foo"));
     assertEquals(Metric.Comparator.NEQ.getValue(), Metric.Comparator.NEQ.toString());
-  }
-
-  private HttpRequest setupDownloadUrl(String sessionId) {
-    HttpRequest redirect = request().withMethod("GET").withHeader("x-api-key", sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
-    client.when(redirect).respond(
-        response()
-            .withStatusCode(OK_200.code())
-            .withBody(String.format("{ \"redirect\": \"%s/logs/special.txt\" }", baseUrl))
-    );
-    return redirect;
-  }
-
-  private HttpRequest setupDownloadUrlSpecial(String sessionId) {
-    HttpRequest redirect = request()
-        .withMethod("GET")
-        .withHeader("x-api-key", sessionId)
-        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs")
-        .withQueryStringParameter("file", "somethingspecial");
-    client.when(redirect).respond(
-        response()
-            .withStatusCode(OK_200.code())
-            .withBody(String.format("{ \"redirect\": \"%s/logs/somethingspecial.txt\" }", baseUrl))
-    );
-    return redirect;
-  }
-
-  private HttpRequest setupFileContent(String filename) {
-    HttpRequest download = request().withMethod("GET").withPath(String.format("/logs/%s.txt", filename));
-    client.when(download).respond(
-        response()
-            .withStatusCode(OK_200.code())
-            .withBody("some log line\nsome other log line\n")
-    );
-    return download;
   }
 }

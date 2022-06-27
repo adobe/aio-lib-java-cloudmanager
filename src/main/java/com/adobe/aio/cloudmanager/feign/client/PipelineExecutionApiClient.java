@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.adobe.aio.cloudmanager.CloudManagerApiException;
 import com.adobe.aio.cloudmanager.impl.model.PipelineExecution;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionListRepresentation;
 import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepState;
 import com.adobe.aio.cloudmanager.impl.model.PipelineStepMetrics;
 import com.adobe.aio.cloudmanager.impl.model.Redirect;
@@ -34,7 +35,10 @@ import feign.QueryMap;
 import feign.RequestLine;
 
 public interface PipelineExecutionApiClient {
-  
+
+  String START_PARAM = "start";
+  String LIMIT_PARAM = "limit";
+
   @RequestLine("GET /api/program/{programId}/pipeline/{pipelineId}/execution")
   PipelineExecution current(@Param("programId") String programId, @Param("pipelineId") String pipelineId) throws CloudManagerApiException;
   
@@ -66,4 +70,10 @@ public interface PipelineExecutionApiClient {
   
   @RequestLine("GET {uriPath}")
   PipelineStepMetrics getStepMetrics(@Param("uriPath") String uriPath) throws CloudManagerApiException;
+
+  @RequestLine("GET /api/program/{programId}/pipeline/{pipelineId}/executions")
+  PipelineExecutionListRepresentation list(@Param("programId") String programId, @Param("pipelineId") String pipelineId, @QueryMap Map<String, Object> params) throws CloudManagerApiException;
+
+  @RequestLine("GET {uriPath}")
+  PipelineExecutionListRepresentation list(@Param("uriPath") String uriPath, @QueryMap Map<String, Object> params) throws CloudManagerApiException;
 }

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ import com.adobe.aio.cloudmanager.impl.model.EnvironmentList;
 import com.adobe.aio.cloudmanager.impl.model.EnvironmentLogs;
 import com.adobe.aio.cloudmanager.impl.model.HalLink;
 import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionEmbedded;
+import com.adobe.aio.cloudmanager.impl.model.PipelineExecutionListRepresentation;
 import com.adobe.aio.cloudmanager.impl.model.PipelineList;
 import com.adobe.aio.cloudmanager.impl.model.PipelinePhase;
 import com.adobe.aio.cloudmanager.impl.model.PipelineStepMetrics;
@@ -99,7 +101,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   private final PipelineExecutionApiClient executionsApi;
   private final EnvironmentApiClient environmentApi;
   private final VariableApiClient variableApi;
-  
+
   public CloudManagerApiImpl(Feign.Builder builder, String baseUrl) {
     programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(ProgramApiClient.class, baseUrl);
     repositoryApi = builder.errorDecoder(new RepositoryExceptionDecoder()).target(RepositoryApiClient.class, baseUrl);
@@ -108,7 +110,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     environmentApi = builder.errorDecoder(new EnvironmentExceptionDecoder()).target(EnvironmentApiClient.class, baseUrl);
     variableApi = builder.errorDecoder(new VariableExceptionDecoder()).target(VariableApiClient.class, baseUrl);
   }
-  
+
   @Override
   public @NonNull Collection<Program> listPrograms() throws CloudManagerApiException {
     ProgramList programList = programApi.list();
@@ -166,8 +168,8 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   @Override
   public @NonNull Collection<Repository> listRepositories(@NonNull String programId, int start, int limit) throws CloudManagerApiException {
     Map<String, Object> params = new HashMap<>();
-    params.put(Repository.START_PARAM, start);
-    params.put(Repository.LIMIT_PARAM, limit);
+    params.put(RepositoryApiClient.START_PARAM, start);
+    params.put(RepositoryApiClient.LIMIT_PARAM, limit);
     RepositoryList list = repositoryApi.list(programId, params);
     return list.getEmbedded().getRepositories().stream().map(r -> new RepositoryImpl(r, this)).collect(Collectors.toList());
   }
@@ -222,7 +224,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   public @NonNull Pipeline updatePipeline(@NonNull Pipeline pipeline, @NonNull PipelineUpdate updates) throws CloudManagerApiException {
     return updatePipeline(pipelineApi.get(pipeline.getProgramId(), pipeline.getId()), updates);
   }
-  
+
   @Override
   public void invalidatePipelineCache(@NonNull String programId, @NonNull String pipelineId) throws CloudManagerApiException {
     pipelineApi.invalidateCache(programId, pipelineId);
@@ -416,8 +418,45 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public @NonNull Collection<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented.");
+  public @NonNull Iterator<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException {
+    PipelineExecutionListRepresentation list = listExecutions(pipeline.getProgramId(), pipeline.getId());
+    if (list.getTotalNumberOfItems() == 0) {
+      return Collections.emptyIterator();
+    }
+    return new PipelineExecutionIterator(list, this);
+  }
+
+  @Override
+  public @NonNull Iterator<PipelineExecution> listExecutions(@NonNull Pipeline pipeline, int limit) throws CloudManagerApiException {
+
+    PipelineExecutionListRepresentation list = listExecutions(pipeline.getProgramId(), pipeline.getId(), 0, limit);
+    if (list.getTotalNumberOfItems() == 0) {
+      return Collections.emptyIterator();
+    }
+    return new PipelineExecutionIterator(list, this);
+  }
+
+  PipelineExecutionListRepresentation listExecutions(String programId, String pipelineId) throws CloudManagerApiException {
+    return executionsApi.list(programId, pipelineId, new HashMap<>());
+  }
+
+  PipelineExecutionListRepresentation listExecutions(String programId, String pipelineId, int start, int limit) throws CloudManagerApiException {
+    Map<String, Object> params = new HashMap<>();
+    params.put(PipelineExecutionApiClient.START_PARAM, start);
+    params.put(PipelineExecutionApiClient.LIMIT_PARAM, limit);
+    return executionsApi.list(programId, pipelineId, params);
+  }
+
+  PipelineExecutionListRepresentation getNextPage(PipelineExecutionListRepresentation pel) throws CloudManagerApiException {
+    Map<String, Object> params = new HashMap<>();
+    params.put(PipelineExecutionApiClient.START_PARAM, pel.getPage().getNext());
+    params.put(PipelineExecutionApiClient.LIMIT_PARAM, pel.getPage().getLimit());
+    try {
+      String path = new URL(String.format("%s%s", CloudManagerApi.BASE_URL, pel.getLinks().getNext().getHref())).getPath();
+      return executionsApi.list(path, params);
+    } catch (MalformedURLException e) {
+      throw new CloudManagerApiException(String.format(PipelineExecutionExceptionDecoder.ErrorType.LIST_EXECUTIONS.getMessage(), e.getLocalizedMessage()));
+    }
   }
 
   @Override
@@ -467,7 +506,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     params.put(LogOption.DAYS_PARAM, Integer.toString(days));
     EnvironmentLogs logs = environmentApi.listLogs(programId, environmentId, params);
     List<com.adobe.aio.cloudmanager.impl.model.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
-    
+
     if (downloads == null || downloads.isEmpty()) {
       return Collections.emptyList();
     }
@@ -480,7 +519,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       downloadLog(log);
       downloaded.add(log);
     }
-    
+
     return downloaded;
   }
 
@@ -528,7 +567,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   public @NonNull Set<Variable> setPipelineVariables(@NonNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException {
     return setPipelineVariables(pipeline.getProgramId(), pipeline.getId(), variables);
   }
-  
+
   protected @NonNull PipelineExecution getExecution(@NonNull PipelineExecutionStepStateImpl step) throws CloudManagerApiException {
     HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelexecution();
     if (link == null) {
@@ -548,7 +587,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   protected @NonNull PipelineExecutionStepStateImpl getWaitingStep(@NonNull PipelineExecutionImpl actual) throws CloudManagerApiException {
     return getStep(actual, PipelineExecutionStepStateImpl.IS_WAITING, String.format(PipelineExecutionExceptionDecoder.ErrorType.FIND_WAITING_STEP.getMessage(), actual.getPipelineId()));
   }
-  
+
   protected void advanceExecution(PipelineExecutionImpl execution) throws CloudManagerApiException {
     PipelineExecutionImpl.StepFormData form = execution.getAdvanceLinkAndBody();
     executionsApi.advance(form.getHref(), form.getBody());
@@ -621,7 +660,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
       throw new CloudManagerApiException(String.format(PipelineExecutionExceptionDecoder.ErrorType.GET_EXECUTION.getMessage(), e.getLocalizedMessage()));
     }
   }
-  
+
   private @NonNull PipelineExecutionStepStateImpl getStep(@NonNull PipelineExecutionImpl actual,
                                                           Predicate<com.adobe.aio.cloudmanager.impl.model.PipelineExecutionStepState> predicate,
                                                           String errorMessage) throws CloudManagerApiException {

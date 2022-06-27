@@ -31,6 +31,8 @@ import feign.QueryMap;
 import feign.RequestLine;
 
 public interface RepositoryApiClient {
+  String START_PARAM = "start";
+  String LIMIT_PARAM = "limit";
 
   @RequestLine("GET /api/program/{programId}/repositories")
   RepositoryList list(@Param("programId") String programId) throws CloudManagerApiException;

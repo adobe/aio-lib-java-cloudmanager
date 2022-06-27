@@ -66,6 +66,11 @@ public class PipelineExecutionExceptionDecoder extends CloudManagerExceptionDeco
         type = ErrorType.GET_METRICS;
         break;
       }
+      case "PipelineExecutionApiClient#list(String,String,Map)":
+      case "PipelineExecutionApiClient#list(String,Map)": {
+        type = ErrorType.LIST_EXECUTIONS;
+        break;
+      }
       default: {
         type = ErrorType.UNKNOWN;
       }
@@ -86,6 +91,7 @@ public class PipelineExecutionExceptionDecoder extends CloudManagerExceptionDeco
     CANCEL_EXECUTION("Cannot cancel execution: %s."),
     GET_LOGS("Cannot get logs: %s."),
     GET_METRICS("Cannot get metrics: %s."),
+    LIST_EXECUTIONS("Cannot list executions: %s."),
     UNKNOWN("Pipeline Execution API Error: %s.");
 
     private final String message;

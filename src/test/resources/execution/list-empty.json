@@ -1,0 +1,29 @@
+{
+
+  "_embedded": {
+    "executions": [
+    ]
+  },
+  "_totalNumberOfItems": 0,
+  "_page": {
+    "limit": 20,
+    "property": [],
+    "next": 20,
+    "prev": 0
+  },
+  "_links": {
+    "next": {
+      "href": "/api/program/1/pipeline/1/executions?start=20&limit=20"
+    },
+    "page": {
+      "href": "/api/program/1/pipeline/1/executions?start={start}&limit={limit}",
+      "templated": true
+    },
+    "prev": {
+      "href": "/api/program/1/pipeline/1/executions?start=0&limit=20"
+    },
+    "self": {
+      "href": "/api/program/1/pipeline/1/executions?start=0&limit=20"
+    }
+  }
+}

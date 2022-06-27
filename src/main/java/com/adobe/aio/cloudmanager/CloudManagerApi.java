@@ -23,6 +23,7 @@ package com.adobe.aio.cloudmanager;
 import java.io.File;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -610,7 +611,26 @@ public interface CloudManagerApi {
    */
   @NonNull Collection<Metric> getQualityGateResults(@NonNull PipelineExecution execution, @NonNull String action) throws CloudManagerApiException;
 
-  @NonNull Collection<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException;
+  /**
+   * Provides an iterator for traversing executions for the specified pipeline, newest to oldest.
+   *
+   * @param pipeline the pipeline context
+   * @return iterator of pipeline executions
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getExecutions">Get Step Metrics API</a>
+   */
+  @NonNull Iterator<PipelineExecution> listExecutions(@NonNull Pipeline pipeline) throws CloudManagerApiException;
+
+  /**
+   *Provides an iterator for traversing executions for the specified pipeline, newest to oldest. Each fetch will use the specified limit.
+   *
+   * @param pipeline the pipeline context
+   * @param limit the number of executions to retrieve per API call
+   * @return iterator of pipeline executions
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getExecutions">Get Step Metrics API</a>
+   */
+  @NonNull Iterator<PipelineExecution> listExecutions(@NonNull Pipeline pipeline, int limit) throws CloudManagerApiException;
 
   /**
    * Lists all environments in the specified program.

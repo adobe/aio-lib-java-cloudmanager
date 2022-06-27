@@ -1,0 +1,1788 @@
+{
+  "_embedded": {
+    "executions": [
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "RUNNING"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "21",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "22",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "23",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "24",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "25",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "26",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "27",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "28",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "29",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "30",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "31",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "32",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "33",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "34",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "35",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "36",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "37",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "38",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "39",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      },
+      {
+        "_embedded": {
+          "stepStates": [
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/1/step/1",
+                  "templated": false
+                }
+              },
+              "id": "21",
+              "stepId": "1",
+              "phaseId": "1",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "validate",
+              "startedAt": "2019-07-08T22:44:32.267+0000",
+              "finishedAt": "2019-07-08T22:44:35.320+0000",
+              "updatedAt": "2019-07-08T22:44:35.383+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "http://ns.adobe.com/adobecloud/rel/execution": {
+                  "href": "/api/program/1/pipeline/1/execution/1",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/cancel": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/cancel",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+                  "templated": false
+                },
+                "http://ns.adobe.com/adobecloud/rel/pipeline/metrics": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/metrics",
+                  "templated": false
+                },
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+                  "templated": false
+                }
+              },
+              "id": "22",
+              "stepId": "1",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "build",
+              "repository": "weretail",
+              "branch": "master",
+              "startedAt": "2019-07-08T22:44:36.814+0000",
+              "updatedAt": "2019-07-08T22:44:36.877+0000",
+              "status": "FINISHED"
+            },
+            {
+              "_links": {
+                "self": {
+                  "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/2",
+                  "templated": false
+                }
+              },
+              "id": "23",
+              "stepId": "2",
+              "phaseId": "2",
+              "executionId": "1",
+              "pipelineId": "1",
+              "programId": "1",
+              "action": "codeQuality",
+              "repository": "weretail",
+              "branch": "master",
+              "updatedAt": "2019-07-08T22:44:25.618+0000",
+              "status": "NOT_STARTED"
+            }
+          ]
+        },
+        "id": "40",
+        "programId": "1",
+        "pipelineId": "1",
+        "trigger": "MANUAL",
+        "user": "AB1234567C8D90123E466EAB@AdobeID",
+        "status": "FINISHED",
+        "createdAt": "2019-05-23T13:49:47.688+0000",
+        "updatedAt": "2019-05-23T13:56:43.811+0000"
+      }
+    ]
+  },
+  "_totalNumberOfItems": 20,
+  "_page": {
+    "limit": 20,
+    "property": [],
+    "next": 40,
+    "prev": 0
+  },
+  "_links": {
+    "next": {
+      "href": "/api/program/1/pipeline/1/executions?start=20&limit=20"
+    },
+    "page": {
+      "href": "/api/program/1/pipeline/1/executions?start={start}&limit={limit}",
+      "templated": true
+    },
+    "prev": {
+      "href": "/api/program/1/pipeline/1/executions?start=0&limit=20"
+    },
+    "self": {
+      "href": "/api/program/1/pipeline/1/executions?start=0&limit=20"
+    }
+  }
+}

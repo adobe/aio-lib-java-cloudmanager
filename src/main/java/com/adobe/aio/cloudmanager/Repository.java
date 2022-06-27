@@ -24,9 +24,6 @@ import java.util.Collection;
 
 public interface Repository {
 
-  String START_PARAM = "start";
-  String LIMIT_PARAM = "limit";
-
   /**
    * Identifier of the repository. Unique within the space.
    *

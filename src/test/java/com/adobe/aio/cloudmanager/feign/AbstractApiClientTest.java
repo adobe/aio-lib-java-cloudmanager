@@ -50,7 +50,7 @@ public class AbstractApiClientTest {
   protected static String baseUrl;
   protected CloudManagerApi underTest;
 
-  @Mock 
+  @Mock
   protected Workspace workspace;
   @Mock
   private JWTAuthInterceptor.Builder jwtBuilder;
