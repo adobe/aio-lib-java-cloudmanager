@@ -475,11 +475,6 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public void createEnvironment(@NonNull String programId, Environment.Type type) throws CloudManagerApiException {
-    throw new IllegalStateException("Not Implemented.");
-  }
-
-  @Override
   public @NonNull Environment getEnvironment(@NonNull String programId, Predicate<Environment> predicate) throws CloudManagerApiException {
     Collection<Environment> environments = listEnvironments(programId, null);
     return environments.stream()
