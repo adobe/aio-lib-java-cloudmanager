@@ -1,8 +1,8 @@
 #
 
-## [Unreleased](https://github.com/adobe/aio-lib-java-cloudmanager/tree/HEAD)
+## [aio-lib-cloudmanager-1.0.1](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-1.0.1) (2023-05-01)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-1.0.0...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-1.0.0...aio-lib-cloudmanager-1.0.1)
 
 ###
 
@@ -24,11 +24,14 @@
 - Add Cause to API. [\#31](https://github.com/adobe/aio-lib-java-cloudmanager/pull/31) ([bstopp](https://github.com/bstopp))
 - Add serialUID to serializeable classes. [\#28](https://github.com/adobe/aio-lib-java-cloudmanager/pull/28) ([bstopp](https://github.com/bstopp))
 - Use Java8 date classes [\#27](https://github.com/adobe/aio-lib-java-cloudmanager/pull/27) ([kwin](https://github.com/kwin))
-- Clarify Javadoc to make clear that certain operations fail if there is [\#22](https://github.com/adobe/aio-lib-java-cloudmanager/pull/22) ([kwin](https://github.com/kwin))
 
 ## [aio-lib-cloudmanager-0.4.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.4.0) (2020-12-01)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.3.0...aio-lib-cloudmanager-0.4.0)
+
+###
+
+- Audience Format is wrong [\#19](https://github.com/adobe/aio-lib-java-cloudmanager/pull/19) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-cloudmanager-0.3.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.3.0) (2020-11-25)
 
@@ -42,12 +45,13 @@
 
 ###
 
-- Audience Format is wrong [\#19](https://github.com/adobe/aio-lib-java-cloudmanager/pull/19) ([bstopp](https://github.com/bstopp))
+- Clarify Javadoc to make clear that certain operations fail if there is [\#22](https://github.com/adobe/aio-lib-java-cloudmanager/pull/22) ([kwin](https://github.com/kwin))
 - Identity Management empty constructor [\#17](https://github.com/adobe/aio-lib-java-cloudmanager/pull/17) ([bstopp](https://github.com/bstopp))
 - Clarify example code to get a token [\#15](https://github.com/adobe/aio-lib-java-cloudmanager/pull/15) ([kwin](https://github.com/kwin))
 - Documentation updates [\#14](https://github.com/adobe/aio-lib-java-cloudmanager/pull/14) ([bstopp](https://github.com/bstopp))
 - Make AdobeClientCredentials serializable [\#13](https://github.com/adobe/aio-lib-java-cloudmanager/pull/13) ([kwin](https://github.com/kwin))
 - Support PEM PKCS\#8 private keys [\#12](https://github.com/adobe/aio-lib-java-cloudmanager/pull/12) ([kwin](https://github.com/kwin))
+- Updating how JavaDocs are built. [\#7](https://github.com/adobe/aio-lib-java-cloudmanager/pull/7) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-cloudmanager-0.2.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.2.0) (2020-11-16)
 
@@ -63,7 +67,6 @@
 
 ###
 
-- Updating how JavaDocs are built. [\#7](https://github.com/adobe/aio-lib-java-cloudmanager/pull/7) ([bstopp](https://github.com/bstopp))
 - Updates to prepare for first release. [\#5](https://github.com/adobe/aio-lib-java-cloudmanager/pull/5) ([bstopp](https://github.com/bstopp))
 - Use OSO Secret Names. [\#4](https://github.com/adobe/aio-lib-java-cloudmanager/pull/4) ([bstopp](https://github.com/bstopp))
 - Add more Documentation [\#3](https://github.com/adobe/aio-lib-java-cloudmanager/pull/3) ([bstopp](https://github.com/bstopp))
