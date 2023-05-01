@@ -2,19 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java-cloudmanager/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.4.0...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-1.0.0...HEAD)
 
 ###
 
-- Support List Exeutions API [\#29](https://github.com/adobe/aio-lib-java-cloudmanager/issues/29)
-- Use Java8 native java.time package instead of Joda [\#26](https://github.com/adobe/aio-lib-java-cloudmanager/issues/26)
-- Calling cancelCurrentExecution followed by startExecution leads to Exception [\#25](https://github.com/adobe/aio-lib-java-cloudmanager/issues/25)
-- Expose getDelegate for non-serializable wrappers around Swagger models [\#24](https://github.com/adobe/aio-lib-java-cloudmanager/issues/24)
-- CloudManagerApiException message contains double slash in URL [\#23](https://github.com/adobe/aio-lib-java-cloudmanager/issues/23)
-- Add method to check for a running execution [\#21](https://github.com/adobe/aio-lib-java-cloudmanager/issues/21)
-- java.lang.NoSuchMethodError: 'void javax.ws.rs.core.MultivaluedMap.addAll\(java.lang.Object, java.lang.Object\[\]\)' when used in Jenkins [\#20](https://github.com/adobe/aio-lib-java-cloudmanager/issues/20)
-- Expose more metadata from CloudManagerApiException [\#16](https://github.com/adobe/aio-lib-java-cloudmanager/issues/16)
-- Add generated Swagger classes as source directory [\#9](https://github.com/adobe/aio-lib-java-cloudmanager/issues/9)
+- Add dependabot, update dependencies. [\#46](https://github.com/adobe/aio-lib-java-cloudmanager/pull/46) ([bstopp](https://github.com/bstopp))
+
+## [aio-lib-cloudmanager-1.0.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-1.0.0) (2021-06-02)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.5.5...aio-lib-cloudmanager-1.0.0)
 
 ###
 
@@ -35,6 +31,7 @@
 ###
 
 - Audience Format is wrong [\#19](https://github.com/adobe/aio-lib-java-cloudmanager/pull/19) ([bstopp](https://github.com/bstopp))
+- Updating how JavaDocs are built. [\#7](https://github.com/adobe/aio-lib-java-cloudmanager/pull/7) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-cloudmanager-0.3.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.3.0) (2020-11-25)
 
@@ -53,7 +50,6 @@
 - Documentation updates [\#14](https://github.com/adobe/aio-lib-java-cloudmanager/pull/14) ([bstopp](https://github.com/bstopp))
 - Make AdobeClientCredentials serializable [\#13](https://github.com/adobe/aio-lib-java-cloudmanager/pull/13) ([kwin](https://github.com/kwin))
 - Support PEM PKCS\#8 private keys [\#12](https://github.com/adobe/aio-lib-java-cloudmanager/pull/12) ([kwin](https://github.com/kwin))
-- Updating how JavaDocs are built. [\#7](https://github.com/adobe/aio-lib-java-cloudmanager/pull/7) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-cloudmanager-0.2.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.2.0) (2020-11-16)
 
