@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Generate Changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.2
+        uses: heinrichreimer/github-changelog-generator-action@v2.2.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           headerLabel: "# 📑 Changelog"
