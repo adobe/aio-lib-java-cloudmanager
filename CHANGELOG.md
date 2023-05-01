@@ -7,6 +7,7 @@
 ### 📁 Other pull requests
 
 - Update even more deps. [\#54](https://github.com/adobe/aio-lib-java-cloudmanager/pull/54) ([bstopp](https://github.com/bstopp))
+- Bump heinrichreimer/github-changelog-generator-action from 2.2 to 2.3 [\#53](https://github.com/adobe/aio-lib-java-cloudmanager/pull/53) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update action versions. [\#50](https://github.com/adobe/aio-lib-java-cloudmanager/pull/50) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-cloudmanager-1.0.1](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-1.0.1) (2023-05-01)
