@@ -6,6 +6,8 @@
 
 ###
 
+- Bump maven-jar-plugin from 3.2.0 to 3.3.0 [\#49](https://github.com/adobe/aio-lib-java-cloudmanager/pull/49) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump commons-lang3 from 3.11 to 3.12.0 [\#48](https://github.com/adobe/aio-lib-java-cloudmanager/pull/48) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Add dependabot, update dependencies. [\#46](https://github.com/adobe/aio-lib-java-cloudmanager/pull/46) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-cloudmanager-1.0.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-1.0.0) (2021-06-02)
@@ -28,11 +30,6 @@
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.3.0...aio-lib-cloudmanager-0.4.0)
 
-###
-
-- Audience Format is wrong [\#19](https://github.com/adobe/aio-lib-java-cloudmanager/pull/19) ([bstopp](https://github.com/bstopp))
-- Updating how JavaDocs are built. [\#7](https://github.com/adobe/aio-lib-java-cloudmanager/pull/7) ([bstopp](https://github.com/bstopp))
-
 ## [aio-lib-cloudmanager-0.3.0](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-0.3.0) (2020-11-25)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-0.2.0...aio-lib-cloudmanager-0.3.0)
@@ -45,6 +42,7 @@
 
 ###
 
+- Audience Format is wrong [\#19](https://github.com/adobe/aio-lib-java-cloudmanager/pull/19) ([bstopp](https://github.com/bstopp))
 - Identity Management empty constructor [\#17](https://github.com/adobe/aio-lib-java-cloudmanager/pull/17) ([bstopp](https://github.com/bstopp))
 - Clarify example code to get a token [\#15](https://github.com/adobe/aio-lib-java-cloudmanager/pull/15) ([kwin](https://github.com/kwin))
 - Documentation updates [\#14](https://github.com/adobe/aio-lib-java-cloudmanager/pull/14) ([bstopp](https://github.com/bstopp))
@@ -65,6 +63,7 @@
 
 ###
 
+- Updating how JavaDocs are built. [\#7](https://github.com/adobe/aio-lib-java-cloudmanager/pull/7) ([bstopp](https://github.com/bstopp))
 - Updates to prepare for first release. [\#5](https://github.com/adobe/aio-lib-java-cloudmanager/pull/5) ([bstopp](https://github.com/bstopp))
 - Use OSO Secret Names. [\#4](https://github.com/adobe/aio-lib-java-cloudmanager/pull/4) ([bstopp](https://github.com/bstopp))
 - Add more Documentation [\#3](https://github.com/adobe/aio-lib-java-cloudmanager/pull/3) ([bstopp](https://github.com/bstopp))
