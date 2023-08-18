@@ -6,6 +6,7 @@
 
 ### 📦 Uncategorized
 
+- Update Dependencies and clean up workflows. [#65](https://github.com/adobe/aio-lib-java-cloudmanager/pull/65) (bstopp)
 - Changelog history is getting lost. [#64](https://github.com/adobe/aio-lib-java-cloudmanager/pull/64) (bstopp)
 - Update Actions [#63](https://github.com/adobe/aio-lib-java-cloudmanager/pull/63) (bstopp)
 - Update workflows for changelog generation. [#62](https://github.com/adobe/aio-lib-java-cloudmanager/pull/62) (bstopp)
