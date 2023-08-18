@@ -36,15 +36,15 @@ jobs:
       - name: Build Changelog
         if: steps.build_changelog_fragment.outputs.changelog != '- no changes'
         run: |
-          sed -i '/^#.*Changelog/,/## \[aio-lib-java-cloudmanager/{
+          sed -i '/^#.*Changelog/,/## \[aio-lib-cloudmanager/{
           /^#.*Changelog/p
           /^#.*Changelog/a\
           
           /^#.*Changelog/r fragment.md
           
-          /^## \[aio-lib-java-cloudmanager/! d
+          /^## \[aio-lib-cloudmanager/! d
           
-          /## \[aio-lib-java-cloudmanager/i\
+          /## \[aio-lib-cloudmanager/i\
         
           }' CHANGELOG.md
 
