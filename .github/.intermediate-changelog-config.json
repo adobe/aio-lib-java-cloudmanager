@@ -1,0 +1,50 @@
+{
+  "categories": [
+    {
+      "title": "### 💥 Breaking",
+      "labels": ["breaking"]
+    },
+    {
+      "title": "### 🚀 Enhancements",
+      "labels": ["enhancement"]
+    },
+    {
+      "title": "### 🐛 Bug fixes",
+      "labels": ["bug"]
+    },
+    {
+      "title": "### 🛡️ Security",
+      "labels": ["security"]
+    },
+    {
+      "title": "### ✅ Testing",
+      "labels": ["tests"]
+    },
+    {
+      "title": "### 📖 Documentation",
+      "labels": ["documentation"]
+    },
+    {
+      "title": "### 📦 Uncategorized",
+      "labels": []
+    }
+  ],
+  "sort": {
+    "order": "DESC",
+    "on_property": "mergedAt"
+  },
+  "template": "## [Unreleased](https://github.com/adobe/aio-lib-java-cloudmanager/tree/main)\n\n[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/${{FROM_TAG}}...${{TO_TAG}})\n\n${{CHANGELOG}}",
+  "pr_template": "- ${{TITLE}} [#${{NUMBER}}](${{URL}}) (${{AUTHOR}})",
+  "tag_resolver": {
+    "method": "semver",
+    "filter": {
+      "pattern": "aio-lib-java-cloudmanager-(.+)",
+      "flags": "gu"
+    },
+    "transformer": {
+      "pattern": "aio-lib-java-cloudmanager-(.+)",
+      "flags": "gu",
+      "target": "$1"
+    }
+  }
+}

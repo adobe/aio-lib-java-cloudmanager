@@ -5,41 +5,45 @@ on:
   push:
     branches:
       - main
-  workflow_run:
-    workflows: ["Tag & Release"]
-    branches: [main]
-    types:
-      - completed
 
 jobs:
   changelog:
     runs-on: ubuntu-latest
+    if: github.repository == 'adobe/aio-lib-java-cloudmanager' && github.ref == 'refs/heads/main'
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Generate Changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.3
+      - name: Set From Tag
+        id: set_from_tag
+        run: |
+          TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo "fromTag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build Changelog Fragment
+        id: build_changelog_fragment
+        uses: mikepenz/release-changelog-builder-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          headerLabel: "# 📑 Changelog"
-          breakingLabel: '### 💥 Breaking'
-          enhancementLabel: '### 🚀 Enhancements'
-          bugsLabel: '### 🐛 Bug fixes'
-          securityLabel: '### 🛡️ Security'
-          issuesLabel: '### 📁 Other issues'
-          prLabel: '### 📁 Other pull requests'
-          addSections: '{"documentation":{"prefix":"### 📖 Documentation","labels":["documentation"]},"tests":{"prefix":"### ✅ Testing","labels":["tests"]}}'
-          issues: true
-          issuesWoLabels: true
-          pullRequests: true
-          prWoLabels: true
-          author: true
-          unreleased: true
-          compareLink: true
-          stripGeneratorNotice: true
-          verbose: true
-          excludeTagsRegex: "aio-lib-cloudmanager-0.5.*"
+          configuration: ".github/.intermediate-changelog-config.json"
+          fromTag: ${{steps.set_from_tag.outputs.fromTag}}
+          toTag: HEAD
+          outputfile: fragment.md
+
+      - name: Build Changelog
+        if: steps.build_changelog_fragment.outputs.changelog != '- no changes'
+        run: |
+          sed -i '/^#.*Changelog/,/## \[aio-lib-java-cloudmanager/{
+          /^#.*Changelog/p
+          /^#.*Changelog/a\
+          
+          /^#.*Changelog/r fragment.md
+          
+          /^## \[aio-lib-java-cloudmanager/! d
+          
+          /## \[aio-lib-java-cloudmanager/i\
+        
+          }' CHANGELOG.md
 
       - name: Commit Changelog
         run: |
