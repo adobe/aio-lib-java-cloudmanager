@@ -24,6 +24,10 @@ import javax.validation.constraints.NotNull;
 
 import io.adobe.cloudmanager.impl.IdentityManagementApiImpl;
 
+/**
+ * @deprecated To be removed in v2.0. See {@link com.adobe.aio.ims.ImsService}
+ */
+@Deprecated
 public interface IdentityManagementApi {
 
   String META_SCOPE = "https://ims-na1.adobelogin.com/s/ent_cloudmgr_sdk";

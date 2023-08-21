@@ -62,13 +62,15 @@
     </distributionManagement>
 
     <properties>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <aio.lib.version>1.1.0-SNAPSHOT</aio.lib.version>
+
         <ims.api>${project.basedir}/src/main/resources/swagger/ims.yaml</ims.api>
-        <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
-        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
+        <!-- Use this temporary file with Repository ID fix until CMGR-36102 is closed -->
+        <cm.api>${project.basedir}/src/main/resources/api.yaml</cm.api>
+        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/events.yaml</cm.events>
 
         <jjwt.version>0.11.5</jjwt.version>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
@@ -81,7 +83,6 @@
         <jackson-version>2.15.2</jackson-version>
         <jackson-databind-version>2.15.2</jackson-databind-version>
         <!-- END Generated Properties -->
-
     </properties>
 
     <build>
@@ -603,6 +604,23 @@
         </dependency>
         <!-- END Generated Dependencies -->
 
+        <dependency>
+            <groupId>com.adobe.aio</groupId>
+            <artifactId>aio-lib-java-core</artifactId>
+            <version>${aio.lib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.aio</groupId>
+            <artifactId>aio-lib-java-ims</artifactId>
+            <version>${aio.lib.version}</version>
+        </dependency>
+
+        <!-- API, java.xml.bind module -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>

@@ -47,18 +47,23 @@ public interface CloudManagerApi {
   /**
    * Create a new API instance
    *
+   * @deprecated
+   *
    * @param orgId       the org id
    * @param apiKey      the Api Key
    * @param accessToken the access token
    * @return an api instance
    */
   @NotNull
+  @Deprecated
   static CloudManagerApi create(@NotNull String orgId, @NotNull String apiKey, @NotNull String accessToken) {
     return new CloudManagerApiImpl(orgId, apiKey, accessToken, null);
   }
 
   /**
    * Create a new API instance, with the specified baseUrl
+   *
+   * @deprecated
    *
    * @param orgId       the org id
    * @param apiKey      the Api Key
@@ -67,10 +72,10 @@ public interface CloudManagerApi {
    * @return an api instance
    */
   @NotNull
+  @Deprecated
   static CloudManagerApi create(@NotNull String orgId, @NotNull String apiKey, @NotNull String accessToken, @NotNull String baseUrl) {
     return new CloudManagerApiImpl(orgId, apiKey, accessToken, baseUrl);
   }
-
   // Try to keep the APIs in the order they are listed on the Reference Docs
   // Helper APIs come after the associated publicly defined ones
   // Reference: https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml
@@ -579,7 +584,7 @@ public interface CloudManagerApi {
    *
    * @param programId     the program id of the environment
    * @param environmentId the environment id
-   * @return list of variables in the environment
+   * @return set of variables in the environment
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getEnvironmentVariables">List User Environment Variables API</a>
    */
@@ -627,7 +632,7 @@ public interface CloudManagerApi {
    *
    * @param programId  the program id of the pipeline
    * @param pipelineId the pipeline id
-   * @return list of variables in the pipeline
+   * @return set of variables in the pipeline
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
    */
@@ -638,7 +643,7 @@ public interface CloudManagerApi {
    * Lists all variables associated with the specified pipeline
    *
    * @param pipeline the pipeline context
-   * @return list of variables in the pipeline
+   * @return set of variables in the pipeline
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Variables/getPipelineVariables">List User Pipeline Variables</a>
    */

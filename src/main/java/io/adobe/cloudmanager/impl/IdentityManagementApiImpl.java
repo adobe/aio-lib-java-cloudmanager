@@ -42,6 +42,11 @@ import io.adobe.cloudmanager.ims.generated.model.Token;
 import io.adobe.cloudmanager.ims.generated.model.User;
 import io.jsonwebtoken.Jwts;
 
+
+/**
+ * @deprecated To be removed in v2.0. See {@link com.adobe.aio.ims.ImsService}
+ */
+@Deprecated
 public class IdentityManagementApiImpl implements IdentityManagementApi {
 
   private final ApiClient apiClient = new ApiClient();

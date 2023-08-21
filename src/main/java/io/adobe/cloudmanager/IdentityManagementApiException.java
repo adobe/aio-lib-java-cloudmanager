@@ -22,7 +22,9 @@ package io.adobe.cloudmanager;
 
 /**
  * Represents exception state that may occur when authenticating to Adobe IMS.
+ * @deprecated To be removed in v2.0
  */
+@Deprecated
 public class IdentityManagementApiException extends Exception {
   
   public IdentityManagementApiException(String message, Throwable cause) {

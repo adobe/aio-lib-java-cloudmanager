@@ -34,7 +34,12 @@ import java.util.stream.Collectors;
 
 import lombok.Value;
 
+
+/**
+ * @deprecated To be removed in v2.0. See {@link com.adobe.aio.auth.Context}
+ */
 @Value
+@Deprecated
 public class AdobeClientCredentials {
 
   String orgId;
