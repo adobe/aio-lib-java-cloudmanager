@@ -36,12 +36,26 @@ The default library is Java11, to use the Java8 library, use the classifier.
 
 To make API calls into Cloud Manager, an Access Token is required. 
 
-#### Create OAuth Client Credential Access Token
+#### OAuth Client Credential Access Token
 
-To create an OAuth client credential access token, use the [AIO Java client library](https://opensource.adobe.com/aio-lib-java).
+For OAuth Access Tokens, the API will manage creating and updating as needed. However, you need to provide a valid Workspace, found in [AIO Java client library](https://opensource.adobe.com/aio-lib-java).
+
+```java
+OAuthContext authContext = OAuthContext.builder()
+    .clientSecret("<CLIENT_SECRET>")
+    .addScope("<SCOPE>") // Add all necessary scopes.
+    .build();
+Workspace workspace = Workspace.builder()
+    .authContext(authContext
+    .orgId("<IMS ORG ID>")
+    .apiKey("<API KEY>")
+    .build();
+
+CloudManagerApi api = CloudManagerApi.builder().workspace(workspace).build();
+```
 
 
-#### Create JWT Access Token
+#### JWT Access Token (Deprecated)
 
 JWT Access Tokens have been deprecated by AIO. They will continue to work until Jan 1 2025. If you need to, you can create one using the now deprecated `IdentityManagementApi`. For example:
 
@@ -54,12 +68,7 @@ PrivateKey privateKey;
 AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
 IdentityManagementApi imApi = IdentityManagementApi.create();
 String token = imApi.authenticate(org);
-```
 
-#### Using the Token
-Use the token returned from the IdentityManagementApi to instantiate the Cloud Manager API. Then make the desired requests:
-
-```java
 CloudManagerApi api = CloudManagerApi.create("Org Id", "API Key", token);
 List<EmbeddedProgram> programs = api.listPrograms();
 ```

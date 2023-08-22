@@ -45,6 +45,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 
+import com.adobe.aio.ims.ImsService;
+import com.adobe.aio.ims.model.AccessToken;
+import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
@@ -83,8 +86,11 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   private final ApiClient apiClient = new ConfiguredApiClient();
   private final String orgId;
   private final String apiKey;
-  private final String accessToken;
+  private String accessToken;
   private final String baseUrl;
+  private ImsService imsService;
+  private AccessToken token;
+  private Long expiration = 0L;
 
   public CloudManagerApiImpl(String orgId, String apiKey, String accessToken) {
     this(orgId, apiKey, accessToken, null);
@@ -101,6 +107,15 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     baseUrl = StringUtils.removeEnd(baseUrl, "/");
     apiClient.setBasePath(baseUrl);
     this.baseUrl = baseUrl;
+  }
+
+  public CloudManagerApiImpl(Workspace workspace, URL url) {
+    this.orgId = workspace.getImsOrgId();
+    this.apiKey = workspace.getApiKey();
+    String urlStr = url == null ? CLOUD_MANAGER_URL : url.toString();
+    this.baseUrl = StringUtils.removeEnd(urlStr, "/");
+    apiClient.setBasePath(baseUrl);
+    this.imsService = ImsService.builder().workspace(workspace).build();
   }
 
   private static String processTemplate(String path, Map<String, String> values) {
@@ -786,10 +801,23 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     return doRequest(path, "DELETE", Collections.emptyList(), null, null);
   }
 
+  private String getAccessToken() {
+    // The only way Ims Service is populated is if we are using the AIO Lib Workspace OAuth approach.
+    if (imsService != null) {
+      if (token == null || System.currentTimeMillis() >= expiration) {
+        token = imsService.getOAuthAccessToken();
+        expiration = System.currentTimeMillis() + token.getExpiresIn();
+      }
+      this.accessToken = token.getAccessToken();
+    }
+    return this.accessToken;
+  }
+
   private <T> T doRequest(String path, String method, List<Pair> queryParams, Object body, GenericType<T> returnType) throws ApiException {
+
     Map<String, String> headers = new HashMap<>();
     headers.put("x-gw-ims-org-id", orgId);
-    headers.put("Authorization", String.format("Bearer %s", accessToken));
+    headers.put("Authorization", String.format("Bearer %s", getAccessToken()));
     headers.put("x-api-key", apiKey);
 
     return apiClient.invokeAPI(path, method, queryParams, body, headers, Collections.emptyMap(), "application/json", "application/json", new String[0], returnType);

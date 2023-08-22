@@ -6,6 +6,9 @@
       "headers": {
         "x-gw-ims-org-id": [
           "success"
+        ],
+        "Authorization": [
+          "Bearer test-token"
         ]
       }
     },

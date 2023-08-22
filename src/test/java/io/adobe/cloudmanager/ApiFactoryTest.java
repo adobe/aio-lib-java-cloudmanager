@@ -20,11 +20,29 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import com.adobe.aio.auth.Context;
+import com.adobe.aio.ims.ImsService;
+import com.adobe.aio.workspace.Workspace;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedConstruction;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class ApiFactoryTest {
+
+  @Mock
+  private Workspace workspace;
+
+  @Mock
+  private Context authContext;
+
+  @Mock
+  private ImsService imsService;
 
   @Test
   public void testIdentityManagementFactory() {
@@ -39,11 +57,38 @@ public class ApiFactoryTest {
   @Test
   public void testCloudManagerFactory() {
     assertNotNull(CloudManagerApi.create(null, null, null));
-
   }
-
   @Test
   public void testCloudManagerFactoryBaseUrl() {
     assertNotNull(CloudManagerApi.create(null, null, null, null));
   }
+
+  @Test
+  public void testCloudManagerBuilderNoWorkspace() {
+    assertThrows(IllegalStateException.class, () -> CloudManagerApi.builder().build());
+  }
+
+  @Test
+  public void testCloudManagerBuilderInvalidAuthContext() {
+    when(workspace.getAuthContext()).thenReturn(authContext);
+    doThrow(IllegalStateException.class).when(authContext).validate();
+    assertThrows(IllegalStateException.class, () -> CloudManagerApi.builder().workspace(workspace).build());
+  }
+
+  @Test
+  public void testCloudManagerBuilder() {
+    when(workspace.getAuthContext()).thenReturn(authContext);
+
+    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
+        (mock, mockContext) -> {
+          when(mock.workspace(workspace)).thenReturn(mock);
+          when(mock.build()).thenReturn(imsService);
+        }
+    )) {
+      assertNotNull(CloudManagerApi.builder().workspace(workspace).build());
+    }
+    verify(authContext).validate();
+  }
 }
+
+

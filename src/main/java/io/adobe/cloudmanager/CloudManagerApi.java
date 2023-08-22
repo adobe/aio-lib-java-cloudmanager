@@ -22,12 +22,14 @@ package io.adobe.cloudmanager;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
+import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.event.PipelineExecutionEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
@@ -43,6 +45,8 @@ import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
  * @since 1.0
  */
 public interface CloudManagerApi {
+
+  public static final String CLOUD_MANAGER_URL = "https://cloudmanager.adobe.io";
 
   /**
    * Create a new API instance
@@ -81,13 +85,58 @@ public interface CloudManagerApi {
   // Reference: https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml
 
   /**
+   * Create a CloudManager API builder.
+   *
+   * @return a builder.
+   */
+  static Builder builder() {
+    return new Builder();
+  }
+
+  /**
+   * Builds instances of the CloudManager API.
+   */
+  class Builder {
+    private Workspace workspace;
+    private URL url;
+
+    public Builder() {
+    }
+
+    public Builder workspace(@NotNull Workspace workspace) {
+      this.workspace = workspace;
+      return this;
+    }
+
+    public Builder url(@NotNull URL url) {
+      this.url = url;
+      return this;
+    }
+
+    public CloudManagerApi build() {
+      if (workspace == null) {
+        throw new IllegalStateException("Workspace must be specified.");
+      }
+      if (workspace.getAuthContext() == null) {
+        throw new IllegalStateException("Workspace must specify AuthContext");
+      }
+      workspace.getAuthContext().validate();
+      return new CloudManagerApiImpl(workspace, url);
+    }
+  }
+
+
+  /**
    * List all programs in the organization
+   *
+   * @deprecated
    *
    * @return a list of {@link Program}s
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/getPrograms">List Programs API</a>
    */
   @NotNull
+  @Deprecated
   Collection<Program> listPrograms() throws CloudManagerApiException;
 
   /**
