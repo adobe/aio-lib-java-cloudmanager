@@ -6,6 +6,7 @@
 
 ### 📦 Uncategorized
 
+- Change Issue templates. [#66](https://github.com/adobe/aio-lib-java-cloudmanager/pull/66) (bstopp)
 - Update Dependencies and clean up workflows. [#65](https://github.com/adobe/aio-lib-java-cloudmanager/pull/65) (bstopp)
 - Changelog history is getting lost. [#64](https://github.com/adobe/aio-lib-java-cloudmanager/pull/64) (bstopp)
 - Update Actions [#63](https://github.com/adobe/aio-lib-java-cloudmanager/pull/63) (bstopp)
