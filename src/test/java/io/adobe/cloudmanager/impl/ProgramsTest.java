@@ -27,6 +27,7 @@ import java.util.Collection;
 
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
+import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
@@ -43,6 +44,9 @@ import static org.mockserver.model.HttpRequest.*;
 
 @ExtendWith({ MockServerExtension.class, MockitoExtension.class })
 class ProgramsTest extends AbstractApiTest {
+
+  @Mock
+  protected Workspace workspace;
 
   public static Collection<String> getTestExpectationFiles() {
     return Arrays.asList(
@@ -135,6 +139,8 @@ class ProgramsTest extends AbstractApiTest {
   void listPrograms_oauth_noToken(
       @Mock ImsService imsService
   ) throws Exception {
+    when(workspace.getImsOrgId()).thenReturn("success");
+    when(workspace.getApiKey()).thenReturn("test-apikey");
 
     AccessToken token = new AccessToken("test-token", 300000L);
 
@@ -154,6 +160,9 @@ class ProgramsTest extends AbstractApiTest {
   void listPrograms_oauth_expired(
       @Mock ImsService imsService
   ) throws Exception {
+    when(workspace.getImsOrgId()).thenReturn("success");
+    when(workspace.getApiKey()).thenReturn("test-apikey");
+
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
         (mock, mockContext) -> {
           when(mock.workspace(workspace)).thenReturn(mock);
@@ -176,6 +185,9 @@ class ProgramsTest extends AbstractApiTest {
   void listPrograms_oauth(
       @Mock ImsService imsService
   ) throws Exception {
+    when(workspace.getImsOrgId()).thenReturn("success");
+    when(workspace.getApiKey()).thenReturn("test-apikey");
+
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
         (mock, mockContext) -> {
           when(mock.workspace(workspace)).thenReturn(mock);

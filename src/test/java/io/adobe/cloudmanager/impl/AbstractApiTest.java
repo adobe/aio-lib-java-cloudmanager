@@ -20,21 +20,14 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.CloudManagerApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
-import static org.mockito.Mockito.*;
 
-@ExtendWith({ MockServerExtension.class, MockitoExtension.class })
+@ExtendWith(MockServerExtension.class)
 public abstract class AbstractApiTest {
-
-  @Mock(strictness = Mock.Strictness.LENIENT)
-  protected Workspace workspace;
 
   protected MockServerClient client;
   protected String baseUrl;
@@ -42,9 +35,6 @@ public abstract class AbstractApiTest {
 
   @BeforeEach
   public void beforeEach(MockServerClient client) {
-
-    when(workspace.getImsOrgId()).thenReturn("success");
-    when(workspace.getApiKey()).thenReturn("test-apikey");
     this.client = client;
     this.baseUrl = String.format("http://localhost:%s", client.getPort());
     underTest = CloudManagerApi.create("success", "test-apikey", "test-token", baseUrl + "/");

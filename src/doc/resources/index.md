@@ -57,7 +57,7 @@ CloudManagerApi api = CloudManagerApi.builder().workspace(workspace).build();
 
 #### JWT Access Token (Deprecated)
 
-JWT Access Tokens have been deprecated by AIO. They will continue to work until Jan 1 2025. If you need to, you can create one using the now deprecated `IdentityManagementApi`. For example:
+JWT Access Tokens have been deprecated by AIO. They will continue to work until Jan 1, 2025. If you need to, you can create one using the now deprecated `IdentityManagementApi`. For example:
 
 ```java
 PrivateKey privateKey;
