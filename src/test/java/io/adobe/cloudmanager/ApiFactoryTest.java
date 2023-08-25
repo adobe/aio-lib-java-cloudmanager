@@ -45,16 +45,6 @@ public class ApiFactoryTest {
   private ImsService imsService;
 
   @Test
-  public void testIdentityManagementFactory() {
-    assertNotNull(IdentityManagementApi.create());
-  }
-
-  @Test
-  public void testIdentityManagementFactoryBaseUrl() {
-    assertNotNull(IdentityManagementApi.create(null));
-  }
-
-  @Test
   public void testCloudManagerFactory() {
     assertNotNull(CloudManagerApi.create(null, null, null));
   }

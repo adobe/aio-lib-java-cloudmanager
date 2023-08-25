@@ -67,9 +67,8 @@
 
         <aio.lib.version>1.1.0-SNAPSHOT</aio.lib.version>
 
-        <ims.api>${project.basedir}/src/main/resources/swagger/ims.yaml</ims.api>
         <!-- Use this temporary file with Repository ID fix until CMGR-36102 is closed -->
-        <cm.api>${project.basedir}/src/main/resources/api.yaml</cm.api>
+        <cm.api>${project.basedir}/src/main/resources/swagger/api.yaml</cm.api>
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/events.yaml</cm.events>
 
         <jjwt.version>0.11.5</jjwt.version>
@@ -92,28 +91,6 @@
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>generate-swagger-ims</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${ims.api}</inputSpec>
-                            <modelPackage>${project.groupId}.ims.generated.model</modelPackage>
-                            <apiPackage>${project.groupId}.ims.generated.api</apiPackage>
-                            <invokerPackage>${project.groupId}.ims.generated.invoker</invokerPackage>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>generate-swagger-cm-api</id>
                         <phase>generate-sources</phase>
