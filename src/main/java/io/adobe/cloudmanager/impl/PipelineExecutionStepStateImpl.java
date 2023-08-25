@@ -37,12 +37,12 @@ import lombok.experimental.Delegate;
  */
 @ToString
 @EqualsAndHashCode
-public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.generated.model.PipelineExecutionStepState implements PipelineExecutionStepState {
+public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState implements PipelineExecutionStepState {
 
   private static final long serialVersionUID = 1L;
 
   @Delegate
-  private final io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate;
+  private final io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApiImpl client;
@@ -51,7 +51,7 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.genera
   @EqualsAndHashCode.Exclude
   private PipelineExecution execution;
 
-  public PipelineExecutionStepStateImpl(io.adobe.cloudmanager.generated.model.PipelineExecutionStepState delegate, CloudManagerApiImpl client) {
+  public PipelineExecutionStepStateImpl(io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }
@@ -87,15 +87,15 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.genera
   /**
    * Predicate for pipelines based on they are the current execution.
    */
-  public static final Predicate<io.adobe.cloudmanager.generated.model.PipelineExecutionStepState> IS_CURRENT = (stepState ->
-      stepState.getStatus() != io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.FINISHED
+  public static final Predicate<io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState> IS_CURRENT = (stepState ->
+      stepState.getStatus() != io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.FINISHED
   );
 
   /**
    * Predicate for pipelines that are in a waiting state.
    */
-  public static final Predicate<io.adobe.cloudmanager.generated.model.PipelineExecutionStepState> IS_WAITING = (stepState ->
-      stepState.getStatus() == io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING
+  public static final Predicate<io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState> IS_WAITING = (stepState ->
+      stepState.getStatus() == io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING
   );
 
 }

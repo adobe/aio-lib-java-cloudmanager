@@ -4,14 +4,14 @@ package io.adobe.cloudmanager.event;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,9 +29,13 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.generated.invoker.JSON;
 
 public class CloudManagerEvent {
 
@@ -64,11 +68,20 @@ public class CloudManagerEvent {
   @NotNull
   public static <T> T parseEvent(String source, Class<T> type) throws CloudManagerApiException, IllegalArgumentException {
 
-    if (EventType.from(type) == null ) {
+    if (EventType.from(type) == null) {
       throw new IllegalArgumentException(String.format("Unknown event type: %s", type));
     }
     try {
-      return new JSON().getContext(type).readValue(source, type);
+      // TODO: See if we need this JSON Object Mapper from Jersey2 impl
+      ObjectMapper mapper = new ObjectMapper()
+          .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+          .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
+          .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+          .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+          .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+          .registerModule(new JavaTimeModule());
+      return mapper.readValue(source, type);
     } catch (JsonProcessingException e) {
       throw new CloudManagerApiException(CloudManagerApiException.ErrorType.PROCESS_EVENT, e.getMessage());
     }
@@ -93,7 +106,6 @@ public class CloudManagerEvent {
       throw new CloudManagerApiException(CloudManagerApiException.ErrorType.VALIDATE_EVENT, e.getLocalizedMessage());
     }
   }
-
 
   public enum EventType {
     PIPELINE_STARTED(PipelineExecutionStartEvent.class, STARTED_EVENT_TYPE, PIPELINE_EXECUTION_TYPE),
@@ -134,7 +146,16 @@ public class CloudManagerEvent {
     public static EventType from(String source) throws CloudManagerApiException {
       try {
         // Any object will do, to get the root of the object tree.
-        PipelineExecutionStartEvent tester = new JSON().getContext(PipelineExecutionStartEvent.class).readValue(source, PipelineExecutionStartEvent.class);
+
+        ObjectMapper mapper = new ObjectMapper()
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+            .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+            .registerModule(new JavaTimeModule());
+        PipelineExecutionStartEvent tester = mapper.readValue(source, PipelineExecutionStartEvent.class);
         PipelineExecutionStartEventEvent event = tester.getEvent();
         return Arrays.stream(EventType.values()).filter(t -> t.getObjectType().equals(event.getXdmEventEnvelopeobjectType()) && t.getEventType().equals(event.getAtType())).findFirst().orElse(null);
       } catch (JsonProcessingException e) {
@@ -144,7 +165,7 @@ public class CloudManagerEvent {
 
     /**
      * Returns the EventType for the specified Class.
-     *
+     * <p>
      * Class must be one of:
      * <ul>
      *  <li>{@link PipelineExecutionStartEvent}</li>

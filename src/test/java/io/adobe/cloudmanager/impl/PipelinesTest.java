@@ -35,7 +35,7 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineUpdate;
-import io.adobe.cloudmanager.generated.model.PipelinePhase;
+import io.adobe.cloudmanager.impl.generated.PipelinePhase;
 import io.adobe.cloudmanager.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +82,7 @@ class PipelinesTest extends AbstractApiTest {
 
   private HttpResponse handleGoodPatch(HttpRequest request) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    io.adobe.cloudmanager.generated.model.Pipeline pipeline = objectMapper.readValue(request.getBodyAsJsonOrXmlString(), io.adobe.cloudmanager.generated.model.Pipeline.class);
+    io.adobe.cloudmanager.impl.generated.Pipeline pipeline = objectMapper.readValue(request.getBodyAsJsonOrXmlString(), io.adobe.cloudmanager.impl.generated.Pipeline.class);
 
     Optional<PipelinePhase> buildPhase = pipeline.getPhases().stream().filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType()).findFirst();
     if (buildPhase.isPresent()) {
@@ -294,12 +294,12 @@ class PipelinesTest extends AbstractApiTest {
     Set<Variable> variables = underTest.listPipelineVariables("3", "1");
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -309,12 +309,12 @@ class PipelinesTest extends AbstractApiTest {
     Set<Variable> variables = underTest.listPipelineVariables(pipeline);
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -324,12 +324,12 @@ class PipelinesTest extends AbstractApiTest {
     Set<Variable> variables = pipeline.listVariables();
     Variable v = new Variable();
     v.setName("KEY");
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.STRING);
     v.setValue("value");
     assertTrue(variables.contains(v));
     v = new Variable();
     v.setName("I_AM_A_SECRET");
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.SECRETSTRING);
     assertTrue(variables.contains(v));
   }
 
@@ -378,8 +378,8 @@ class PipelinesTest extends AbstractApiTest {
     v2.setValue("bar2");
 
     Set<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
-    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.STRING);
+    v2.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.STRING);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");
     assertTrue(results.contains(v2), "Results contains foo2");
@@ -391,12 +391,12 @@ class PipelinesTest extends AbstractApiTest {
     Variable v = new Variable();
     v.setName("secretFoo");
     v.setValue("secretBar");
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.SECRETSTRING);
 
     Variable v2 = new Variable();
     v2.setName("secretFoo2");
     v2.setValue("secretBar2");
-    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.SECRETSTRING);
 
     Set<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
     v.setValue(null);
@@ -416,10 +416,10 @@ class PipelinesTest extends AbstractApiTest {
     Variable v2 = new Variable();
     v2.setName("secretFoo");
     v2.setValue("secretBar");
-    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.SECRETSTRING);
 
     Set<Variable> results = underTest.setPipelineVariables("3", "1", v, v2);
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");
@@ -436,12 +436,12 @@ class PipelinesTest extends AbstractApiTest {
     Variable v2 = new Variable();
     v2.setName("secretFoo");
     v2.setValue("secretBar");
-    v2.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.SECRETSTRING);
+    v2.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.SECRETSTRING);
 
     Pipeline pipeline = underTest.listPipelines("3", p -> p.getId().equals("1")).stream().findFirst().orElse(null);
 
     Set<Variable> results = pipeline.setVariables(v, v2);
-    v.setType(io.adobe.cloudmanager.generated.model.Variable.TypeEnum.STRING);
+    v.setType(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.STRING);
     v2.setValue(null);
     assertEquals(2, results.size(), "Response list correct size.");
     assertTrue(results.contains(v), "Results contains foo");

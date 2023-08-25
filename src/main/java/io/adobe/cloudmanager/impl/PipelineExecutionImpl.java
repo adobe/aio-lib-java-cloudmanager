@@ -32,7 +32,7 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.StepAction;
-import io.adobe.cloudmanager.generated.model.HalLink;
+import io.adobe.cloudmanager.impl.generated.HalLink;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -43,7 +43,7 @@ import static io.adobe.cloudmanager.CloudManagerApiException.*;
  */
 @ToString
 @EqualsAndHashCode
-public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model.PipelineExecution implements PipelineExecution {
+public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.PipelineExecution implements PipelineExecution {
 
   private static final long serialVersionUID = 1L;
 
@@ -52,13 +52,13 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model
   public static final String ACTION_DEPLOY = "deploy";
 
   @Delegate
-  private final io.adobe.cloudmanager.generated.model.PipelineExecution delegate;
+  private final io.adobe.cloudmanager.impl.generated.PipelineExecution delegate;
 
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApiImpl client;
 
-  public PipelineExecutionImpl(io.adobe.cloudmanager.generated.model.PipelineExecution delegate, CloudManagerApiImpl client) {
+  public PipelineExecutionImpl(io.adobe.cloudmanager.impl.generated.PipelineExecution delegate, CloudManagerApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }
@@ -111,7 +111,7 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model
     PipelineExecutionStepStateImpl step = client.getCurrentStep(this);
     HalLink link;
 
-    if (io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+    if (io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
         ACTION_DEPLOY.equals(step.getAction())) {
       link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
     } else {
@@ -133,10 +133,10 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.generated.model
       gen.writeStartObject();
       if (ACTION_APPROVAL.equals(step.getAction())) {
         gen.writeBooleanField("approved", false);
-      } else if (io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+      } else if (io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
           !ACTION_SCHEDULE.equals(step.getAction()) && !ACTION_DEPLOY.equals(step.getAction())) {
         gen.writeBooleanField("override", false);
-      } else if (io.adobe.cloudmanager.generated.model.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
+      } else if (io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
           ACTION_DEPLOY.equals(step.getAction())) {
         gen.writeBooleanField("resume", false);
       } else {

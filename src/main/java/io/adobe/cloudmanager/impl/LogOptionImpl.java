@@ -21,7 +21,7 @@ package io.adobe.cloudmanager.impl;
  */
 
 import io.adobe.cloudmanager.LogOption;
-import io.adobe.cloudmanager.generated.model.LogOptionRepresentation;
+import io.adobe.cloudmanager.impl.generated.LogOptionRepresentation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;

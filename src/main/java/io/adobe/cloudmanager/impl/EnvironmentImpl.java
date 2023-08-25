@@ -29,7 +29,7 @@ import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
-import io.adobe.cloudmanager.generated.model.HalLink;
+import io.adobe.cloudmanager.impl.generated.HalLink;
 import io.adobe.cloudmanager.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -37,16 +37,16 @@ import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode
-public class EnvironmentImpl extends io.adobe.cloudmanager.generated.model.Environment implements io.adobe.cloudmanager.Environment {
+public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Environment implements io.adobe.cloudmanager.Environment {
   private static final long serialVersionUID = 1L;
 
   @Delegate
-  private final io.adobe.cloudmanager.generated.model.Environment delegate;
+  private final io.adobe.cloudmanager.impl.generated.Environment delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
-  public EnvironmentImpl(io.adobe.cloudmanager.generated.model.Environment delegate, CloudManagerApi client) {
+  public EnvironmentImpl(io.adobe.cloudmanager.impl.generated.Environment delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }

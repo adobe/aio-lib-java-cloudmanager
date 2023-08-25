@@ -33,14 +33,14 @@ public class Variable implements Serializable {
   private static final long serialVersionUID = 1L;
 
   public Variable() {
-    this.delegate = new io.adobe.cloudmanager.generated.model.Variable();
+    this.delegate = new io.adobe.cloudmanager.impl.generated.Variable();
   }
 
-  public Variable(io.adobe.cloudmanager.generated.model.Variable delegate) {
+  public Variable(io.adobe.cloudmanager.impl.generated.Variable delegate) {
     this.delegate = delegate;
   }
 
   @Delegate
-  private final io.adobe.cloudmanager.generated.model.Variable delegate;
+  private final io.adobe.cloudmanager.impl.generated.Variable delegate;
 
 }

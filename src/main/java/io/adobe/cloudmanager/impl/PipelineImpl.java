@@ -37,17 +37,17 @@ import lombok.experimental.Delegate;
  */
 @ToString
 @EqualsAndHashCode
-public class PipelineImpl extends io.adobe.cloudmanager.generated.model.Pipeline implements Pipeline {
+public class PipelineImpl extends io.adobe.cloudmanager.impl.generated.Pipeline implements Pipeline {
 
   private static final long serialVersionUID = 1L;
 
   @Delegate
-  private final io.adobe.cloudmanager.generated.model.Pipeline delegate;
+  private final io.adobe.cloudmanager.impl.generated.Pipeline delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
-  public PipelineImpl(io.adobe.cloudmanager.generated.model.Pipeline delegate, CloudManagerApi client) {
+  public PipelineImpl(io.adobe.cloudmanager.impl.generated.Pipeline delegate, CloudManagerApi client) {
     this.delegate = delegate;
     this.client = client;
   }
