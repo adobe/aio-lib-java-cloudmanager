@@ -1,0 +1,33 @@
+{
+  "id": "1",
+  "imsOrgId": "success",
+  "imsTenantId": "acmeCorp",
+  "description": "Description for acmeCorp",
+  "status": "ready",
+  "organisation": {
+    "organizationName": "adobecloudmanager-acmeCorp",
+    "status": "ready"
+  },
+  "_links": {
+    "http://ns.adobe.com/adobecloud/rel/programs": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "self": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    }
+  }
+}

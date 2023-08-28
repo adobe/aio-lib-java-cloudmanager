@@ -1,0 +1,76 @@
+{
+  "_embedded": {
+    "programs": [
+      {
+        "id": "1",
+        "name": "test1",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/1"
+          }
+        }
+      },
+      {
+        "id": "2",
+        "name": "test2",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/2"
+          }
+        }
+      },
+      {
+        "id": "3",
+        "name": "test3",
+        "enabled": false,
+        "_links": {
+          "self": {
+            "href": "/api/program/3"
+          }
+        }
+      },
+      {
+        "id": "4",
+        "name": "test4",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/4"
+          }
+        }
+      },
+      {
+        "id": "5",
+        "name": "test5",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/5"
+          }
+        }
+      },
+      {
+        "id": "6",
+        "name": "test6",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/6"
+          }
+        }
+      },
+      {
+        "id": "7",
+        "name": "test7",
+        "enabled": true,
+        "_links": {
+          "self": {
+            "href": "/api/program/7"
+          }
+        }
+      }
+    ]
+  }
+}
