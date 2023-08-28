@@ -21,7 +21,7 @@ package io.adobe.cloudmanager;
  */
 
 import com.adobe.aio.auth.Context;
-import com.adobe.aio.ims.ImsService;
+import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ public class ApiFactoryTest {
   private Context authContext;
 
   @Mock
-  private ImsService imsService;
+  private AuthInterceptor authInterceptor;
 
   @Test
   public void testCloudManagerBuilderNoWorkspace() {
@@ -60,10 +60,10 @@ public class ApiFactoryTest {
   public void testCloudManagerBuilder() {
     when(workspace.getAuthContext()).thenReturn(authContext);
 
-    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
+    try (MockedConstruction<AuthInterceptor.Builder> ignored = mockConstruction(AuthInterceptor.Builder.class,
         (mock, mockContext) -> {
           when(mock.workspace(workspace)).thenReturn(mock);
-          when(mock.build()).thenReturn(imsService);
+          when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
       assertNotNull(CloudManagerApi.builder().workspace(workspace).build());

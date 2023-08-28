@@ -22,6 +22,7 @@ package io.adobe.cloudmanager.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,19 +43,21 @@ public class CloudManagerExpectationInitializer implements ExpectationInitialize
     ExpectationSerializer serializer = new ExpectationSerializer(new MockServerLogger((CloudManagerExpectationInitializer.class)));
 
     List<String> files = new ArrayList<>();
-    files.add("general-program-setup.json");
+    files.add("general-tenant-setup.json");
+    files.addAll(TenantTest.getTestExpectationFiles());
     files.addAll(ProgramsTest.getTestExpectationFiles());
-    files.addAll(EnvironmentsTest.getTestExpectationFiles());
-    files.addAll(PipelinesTest.getTestExpectationFiles());
-    files.addAll(ExecutionsTest.getTestExpectationFiles());
+//    files.addAll(EnvironmentsTest.getTestExpectationFiles());
+//    files.addAll(PipelinesTest.getTestExpectationFiles());
+//    files.addAll(ExecutionsTest.getTestExpectationFiles());
 
-    files.stream().forEach(s -> {
+    files.forEach(s -> {
       try {
         InputStream is = CloudManagerExpectationInitializer.class.getClassLoader().getResourceAsStream(s);
-        String json = IOUtils.toString(is, "UTF-8");
-        Arrays.stream(serializer.deserializeArray(json, false)).forEach(expectations::add);
+        assert is != null;
+        String json = IOUtils.toString(is, StandardCharsets.UTF_8);
+        expectations.addAll(Arrays.asList(serializer.deserializeArray(json, false)));
       } catch (IOException e) {
-        e.printStackTrace(); // Do anything more?
+        throw new RuntimeException(e);
       }
 
     });

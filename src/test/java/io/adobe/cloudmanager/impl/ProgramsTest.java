@@ -20,19 +20,14 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 
-import com.adobe.aio.ims.feign.AuthInterceptor;
-import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Tenant;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
