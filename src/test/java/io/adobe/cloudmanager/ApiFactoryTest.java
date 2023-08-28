@@ -45,15 +45,6 @@ public class ApiFactoryTest {
   private ImsService imsService;
 
   @Test
-  public void testCloudManagerFactory() {
-    assertNotNull(CloudManagerApi.create(null, null, null));
-  }
-  @Test
-  public void testCloudManagerFactoryBaseUrl() {
-    assertNotNull(CloudManagerApi.create(null, null, null, null));
-  }
-
-  @Test
   public void testCloudManagerBuilderNoWorkspace() {
     assertThrows(IllegalStateException.class, () -> CloudManagerApi.builder().build());
   }

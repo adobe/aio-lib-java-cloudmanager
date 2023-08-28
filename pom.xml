@@ -66,6 +66,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <aio.lib.version>1.1.0-SNAPSHOT</aio.lib.version>
+        <feign.version>12.4</feign.version>
+        <jackson-version>2.15.2</jackson-version>
 
         <!-- Use this temporary file with Repository ID fix until CMGR-36102 is closed -->
         <cm.api>${project.basedir}/src/main/resources/swagger/api.yaml</cm.api>
@@ -78,9 +80,6 @@
 
         <!-- START Generated Properties -->
         <swagger-core-version>2.2.15</swagger-core-version>
-        <jersey-version>2.40</jersey-version>
-        <jackson-version>2.15.2</jackson-version>
-        <jackson-databind-version>2.15.2</jackson-databind-version>
         <!-- END Generated Properties -->
     </properties>
 
@@ -108,39 +107,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.swagger.codegen.v3</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger.codegen.version}</version>
-                <executions>
-                  <execution>
-                      <id>generate-swagger-temp</id>
-                      <phase>generate-sources</phase>
-                      <goals>
-                          <goal>generate</goal>
-                      </goals>
-                      <configuration>
-                          <inputSpec>${cm.api}</inputSpec>
-                          <modelPackage>${project.groupId}.impl.generated</modelPackage>
-                          <generateModels>false</generateModels>
-                          <apiPackage>${project.groupId}.generated.api</apiPackage>
-                          <invokerPackage>${project.groupId}.generated.invoker</invokerPackage>
-                          <generateModelTests>false</generateModelTests>
-                          <generateApiDocumentation>false</generateApiDocumentation>
-                          <generateModelDocumentation>false</generateModelDocumentation>
-                          <!-- override the default library to retrofit2 -->
-                          <language>java</language>
-                          <library>jersey2</library>
-                          <configOptions>
-                              <serializableModel>true</serializableModel>
-                              <dateLibrary>java8</dateLibrary>
-                              <java8>true</java8>
-                              <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                          </configOptions>
-                      </configuration>
-                  </execution>
-                  </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -522,6 +488,7 @@
                                     </configOptions>
                                 </configuration>
                             </execution>
+
                         </executions>
                     </plugin>
                     <plugin>
@@ -562,33 +529,45 @@
             <artifactId>swagger-annotations</artifactId>
             <version>${swagger-core-version}</version>
         </dependency>
+        <!-- END Generated Dependencies -->
 
         <!-- TODO: Remove -->
         <!-- HTTP client: jersey-client -->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.core</groupId>-->
+<!--            <artifactId>jersey-client</artifactId>-->
+<!--            <version>${jersey-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-multipart</artifactId>-->
+<!--            <version>${jersey-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
+<!--            <version>${jersey-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.inject</groupId>-->
+<!--            <artifactId>jersey-hk2</artifactId>-->
+<!--            <version>${jersey-version}</version>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>${feign.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jackson</artifactId>
+            <version>${feign.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>${jersey-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1.1</version>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-slf4j</artifactId>
+            <version>${feign.version}</version>
         </dependency>
 
         <!-- JSON processing: jackson -->
@@ -605,32 +584,43 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind-version}</version>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson-version}</version>
         </dependency>
-        <!-- END Generated Dependencies -->
 
         <dependency>
             <groupId>com.adobe.aio</groupId>
             <artifactId>aio-lib-java-core</artifactId>
             <version>${aio.lib.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.adobe.aio</groupId>
             <artifactId>aio-lib-java-ims</artifactId>
             <version>${aio.lib.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- API, java.xml.bind module -->
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>jakarta.xml.bind</groupId>-->
+<!--            <artifactId>jakarta.xml.bind-api</artifactId>-->
+<!--            <version>2.3.2</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -648,11 +638,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.13.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.10.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-text</artifactId>-->
+<!--            <version>1.10.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

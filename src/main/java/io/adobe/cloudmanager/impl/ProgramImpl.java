@@ -31,7 +31,7 @@ import lombok.experimental.Delegate;
  * Extension to the Swagger generated Embedded Program. Provides convenience methods for frequently used APIs
  */
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class ProgramImpl extends io.adobe.cloudmanager.impl.generated.EmbeddedProgram implements Program {
   private static final long serialVersionUID = 1L;
 

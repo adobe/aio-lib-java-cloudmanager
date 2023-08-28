@@ -42,7 +42,7 @@ import static io.adobe.cloudmanager.CloudManagerApiException.*;
  * Extension to the Swagger generated Pipeline. Provides convenience methods for frequently used APIs
  */
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.PipelineExecution implements PipelineExecution {
 
   private static final long serialVersionUID = 1L;
@@ -50,6 +50,8 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
   public static final String ACTION_APPROVAL = "approval";
   public static final String ACTION_SCHEDULE = "schedule";
   public static final String ACTION_DEPLOY = "deploy";
+
+  private static final String GENERATE_BODY = "Unable to generate request body: %s.";
 
   @Delegate
   private final io.adobe.cloudmanager.impl.generated.PipelineExecution delegate;
@@ -78,7 +80,7 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
     PipelineExecutionStepStateImpl step = client.getWaitingStep(this);
     HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
     if (link == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_ADVANCE_LINK, step.getAction());
+      throw new CloudManagerApiException(String.format("Cannot find an advance link for the current step (%s).", step.getAction()));
     }
     return link.getHref();
   }
@@ -103,7 +105,7 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
       gen.close();
       return writer.toString();
     } catch (IOException e) {
-      throw new CloudManagerApiException(ErrorType.GENERATE_BODY, e.getMessage());
+      throw new CloudManagerApiException(String.format(GENERATE_BODY, e.getLocalizedMessage()));
     }
   }
 
@@ -118,7 +120,7 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
       link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinecancel();
     }
     if (link == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_CANCEL_LINK, step.getAction());
+      throw new CloudManagerApiException(String.format("Cannot find a cancel link for the current step (%s). Step may not be cancellable.", step.getAction()));
     }
     return link.getHref();
   }
@@ -146,7 +148,7 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
       gen.close();
       return writer.toString();
     } catch (IOException e) {
-      throw new CloudManagerApiException(ErrorType.GENERATE_BODY, e.getMessage());
+      throw new CloudManagerApiException(String.format(GENERATE_BODY, e.getLocalizedMessage()));
     }
   }
 

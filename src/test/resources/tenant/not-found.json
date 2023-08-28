@@ -1,0 +1,30 @@
+[
+  {
+    "httpRequest":{
+      "method":"GET",
+      "path":"/api/tenant",
+      "headers":{
+        "x-gw-ims-org-id":[
+          "not-found"
+        ]
+      }
+    },
+    "httpResponse":{
+      "statusCode":404
+    }
+  },
+  {
+    "httpRequest":{
+      "method":"GET",
+      "path":"/api/tenant/1",
+      "headers":{
+        "x-gw-ims-org-id":[
+          "not-found"
+        ]
+      }
+    },
+    "httpResponse":{
+      "statusCode":404
+    }
+  }
+]

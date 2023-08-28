@@ -7,5 +7,14 @@
     "httpResponse": {
       "statusCode": 202
     }
+  },
+  {
+    "httpRequest": {
+      "method": "DELETE",
+      "path": "/api/program/4"
+    },
+    "httpResponse": {
+      "statusCode": 202
+    }
   }
 ]

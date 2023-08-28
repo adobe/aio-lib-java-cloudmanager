@@ -26,7 +26,7 @@ import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class MetricImpl extends io.adobe.cloudmanager.impl.generated.Metric implements Metric {
 
   @Delegate

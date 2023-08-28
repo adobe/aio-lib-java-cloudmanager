@@ -27,7 +27,7 @@ import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class LogOptionImpl extends LogOptionRepresentation implements LogOption {
 
   @Delegate

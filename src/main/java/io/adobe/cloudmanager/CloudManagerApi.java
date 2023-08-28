@@ -49,42 +49,6 @@ public interface CloudManagerApi {
   public static final String CLOUD_MANAGER_URL = "https://cloudmanager.adobe.io";
 
   /**
-   * Create a new API instance
-   *
-   * @deprecated
-   *
-   * @param orgId       the org id
-   * @param apiKey      the Api Key
-   * @param accessToken the access token
-   * @return an api instance
-   */
-  @NotNull
-  @Deprecated
-  static CloudManagerApi create(@NotNull String orgId, @NotNull String apiKey, @NotNull String accessToken) {
-    return new CloudManagerApiImpl(orgId, apiKey, accessToken, null);
-  }
-
-  /**
-   * Create a new API instance, with the specified baseUrl
-   *
-   * @deprecated
-   *
-   * @param orgId       the org id
-   * @param apiKey      the Api Key
-   * @param accessToken the access token
-   * @param baseUrl     the base url for the API
-   * @return an api instance
-   */
-  @NotNull
-  @Deprecated
-  static CloudManagerApi create(@NotNull String orgId, @NotNull String apiKey, @NotNull String accessToken, @NotNull String baseUrl) {
-    return new CloudManagerApiImpl(orgId, apiKey, accessToken, baseUrl);
-  }
-  // Try to keep the APIs in the order they are listed on the Reference Docs
-  // Helper APIs come after the associated publicly defined ones
-  // Reference: https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml
-
-  /**
    * Create a CloudManager API builder.
    *
    * @return a builder.
@@ -125,19 +89,9 @@ public interface CloudManagerApi {
     }
   }
 
-
-  /**
-   * List all programs in the organization
-   *
-   * @deprecated
-   *
-   * @return a list of {@link Program}s
-   * @throws CloudManagerApiException when any error occurs
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/getPrograms">List Programs API</a>
-   */
-  @NotNull
-  @Deprecated
-  Collection<Program> listPrograms() throws CloudManagerApiException;
+  // Try to keep the APIs in the order they are listed on the Reference Docs
+  // Helper APIs come after the associated publicly defined ones
+  // Reference: https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/
 
   /**
    * Delete the specified program.
@@ -156,6 +110,28 @@ public interface CloudManagerApi {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#/Programs/deleteProgram">Delete Program API</a>
    */
   void deleteProgram(@NotNull Program program) throws CloudManagerApiException;
+
+  /**
+   * List all programs for a Tenant
+   *
+   * @param tenantId the id tenant
+   * @return a list of {@link Program}s
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#tag/Programs/operation/getProgramsForTenant">List Programs for Tenant</a>
+   */
+  @NotNull
+  Collection<Program> listPrograms(@NotNull String tenantId) throws CloudManagerApiException;
+
+  /**
+   * List all programs for the Tenant
+   *
+   * @param tenant the tenant
+   * @return a list of {@link Program}s
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#tag/Programs/operation/getProgramsForTenant">List Programs for Tenant</a>
+   */
+  @NotNull
+  Collection<Program> listPrograms(@NotNull Tenant tenant) throws CloudManagerApiException;
 
   /**
    * Lists all pipelines within the specified program.
@@ -724,4 +700,23 @@ public interface CloudManagerApi {
   @NotNull
   Set<Variable> setPipelineVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
 
+  /**
+   * Lists the tenants associated with the IMS Org in the API Context
+   *
+   * @return list of tenants
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#tag/Tenants/operation/getTenants">List Tenants</a>
+   */
+  @NotNull
+  Collection<Tenant> listTenants() throws CloudManagerApiException;
+
+  /**
+   * Gets the tenant with the specified identifier.
+   *
+   * @param tenantId the id of the tenant
+   * @return the tenant
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Tenant getTenant(@NotNull String tenantId) throws CloudManagerApiException;
 }

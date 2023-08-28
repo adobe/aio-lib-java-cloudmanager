@@ -28,7 +28,7 @@ import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class EnvironmentLogImpl extends io.adobe.cloudmanager.impl.generated.EnvironmentLog implements EnvironmentLog {
 
   private static final long serialVersionUID = 1L;

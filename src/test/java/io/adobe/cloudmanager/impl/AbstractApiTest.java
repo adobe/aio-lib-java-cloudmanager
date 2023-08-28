@@ -20,23 +20,64 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.net.URL;
+
+import com.adobe.aio.auth.Context;
+import com.adobe.aio.ims.feign.AuthInterceptor;
+import com.adobe.aio.ims.feign.OAuthInterceptor;
+import com.adobe.aio.workspace.Workspace;
+import feign.RequestTemplate;
 import io.adobe.cloudmanager.CloudManagerApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedConstruction;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
 
-@ExtendWith(MockServerExtension.class)
+import static com.adobe.aio.util.Constants.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith({ MockitoExtension.class, MockServerExtension.class })
 public abstract class AbstractApiTest {
 
   protected MockServerClient client;
   protected String baseUrl;
   protected CloudManagerApi underTest;
 
+  @Mock
+  protected Workspace workspace;
+
+  @Mock
+  private Context authContext;
+
+  protected AuthInterceptor authInterceptor = new OAuthInterceptor(null) {
+    @Override
+    public void apply(RequestTemplate requestTemplate) {
+      if (requestTemplate.headers().containsKey(AUTHORIZATION_HEADER)) {
+        return;
+      }
+      requestTemplate.header(AUTHORIZATION_HEADER, "Bearer test-token");
+    }
+  };
+
   @BeforeEach
-  public void beforeEach(MockServerClient client) {
+  void before(MockServerClient client) throws Exception {
     this.client = client;
     this.baseUrl = String.format("http://localhost:%s", client.getPort());
-    underTest = CloudManagerApi.create("success", "test-apikey", "test-token", baseUrl + "/");
+    when(workspace.getImsOrgId()).thenReturn("success");
+    when(workspace.getApiKey()).thenReturn("test-apikey");
+    when(workspace.getAuthContext()).thenReturn(authContext);
+    doNothing().when(authContext).validate();
+
+    try (MockedConstruction<AuthInterceptor.Builder> ignored = mockConstruction(AuthInterceptor.Builder.class,
+        (mock, mockContext) -> {
+          when(mock.workspace(workspace)).thenReturn(mock);
+          when(mock.build()).thenReturn(authInterceptor);
+        }
+    )) {
+      underTest = CloudManagerApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+    }
   }
 }

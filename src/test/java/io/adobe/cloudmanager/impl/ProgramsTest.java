@@ -20,105 +20,40 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
-import com.adobe.aio.ims.ImsService;
-import com.adobe.aio.ims.model.AccessToken;
-import com.adobe.aio.workspace.Workspace;
+import com.adobe.aio.ims.feign.AuthInterceptor;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
+import io.adobe.cloudmanager.Tenant;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockserver.junit.jupiter.MockServerExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.*;
 
-@ExtendWith({ MockServerExtension.class, MockitoExtension.class })
 class ProgramsTest extends AbstractApiTest {
-
-  @Mock
-  protected Workspace workspace;
 
   public static Collection<String> getTestExpectationFiles() {
     return Arrays.asList(
-        "programs/not-found.json",
-        "programs/forbidden.json",
-        "programs/forbidden-code-only.json",
-        "programs/forbidden-message-only.json",
-        "programs/empty-response.json",
         "programs/delete-fails.json",
-        "programs/delete-success.json"
+        "programs/delete-success.json",
+        "programs/not-found.json",
+        "programs/empty-response.json"
     );
   }
 
   @Test
-  void listPrograms_failure404() {
-    CloudManagerApi api = new CloudManagerApiImpl("not-found", "test-apikey", "test-token", baseUrl);
-
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (404 Not Found)", baseUrl), exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void listPrograms_failure403() {
-    CloudManagerApi api = CloudManagerApi.create("forbidden", "test-apikey", "test-token", baseUrl);
-
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message (Code: 1234)", baseUrl), exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void listPrograms_failure403_errorMessageOnly() {
-    CloudManagerApi api = CloudManagerApi.create("forbidden-messageonly", "test-apikey", "test-token", baseUrl);
-
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden) - Detail: some message", baseUrl), exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void listPrograms_failure403_errorCodeOnly() {
-    CloudManagerApi api = CloudManagerApi.create("forbidden-codeonly", "test-apikey", "test-token", baseUrl);
-
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, api::listPrograms, "Exception thrown for 404");
-    assertEquals(String.format("Cannot retrieve programs: %s/api/programs (403 Forbidden)", baseUrl), exception.getMessage(), "Message was correct");
-  }
-
-  @Test
-  void listPrograms_successEmpty() throws CloudManagerApiException {
-    CloudManagerApi api = CloudManagerApi.create("empty", "test-apikey", "test-token", baseUrl);
-
-    Collection<Program> programs = api.listPrograms();
-    assertTrue(programs.isEmpty(), "Empty body returns zero length list");
-  }
-
-  @Test
-  void listPrograms_success() throws CloudManagerApiException {
-    Collection<Program> programs = underTest.listPrograms();
-    assertEquals(7, programs.size(), "Correct length of program list");
-  }
-
-  @Test
   void deleteProgram_failure() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
-        () -> underTest.deleteProgram("2"), "Exception was thrown");
-    assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request)", baseUrl), exception.getMessage(), "Correct exception message");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteProgram("2"), "Exception was thrown");
+    assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request).", baseUrl), exception.getMessage(), "Correct exception message");
     client.verify(request().withMethod("DELETE").withPath("/api/program/2"));
-  }
-
-  @Test
-  void deleteProgram_notFound() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class,
-        () -> underTest.deleteProgram("11"), "Exception was thrown");
-    assertEquals("Could not find program 11", exception.getMessage(), "Correct exception message");
   }
 
   @Test
@@ -128,84 +63,38 @@ class ProgramsTest extends AbstractApiTest {
   }
 
   @Test
-  void deleteProgram_viaProgram() throws Exception {
-    Collection<Program> programs = underTest.listPrograms();
-    Program program = programs.stream().filter(p -> p.getId().equals("3")).findFirst().orElseThrow(Exception::new);
+  void deleteProgram_viaProgram(@Mock io.adobe.cloudmanager.impl.generated.EmbeddedProgram mock) throws Exception {
+    when(mock.getId()).thenReturn("4");
+    Program program = new ProgramImpl(mock, underTest);
     program.delete();
-    client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
+    client.verify(request().withMethod("DELETE").withPath("/api/program/4"));
   }
 
   @Test
-  void listPrograms_oauth_noToken(
-      @Mock ImsService imsService
-  ) throws Exception {
-    when(workspace.getImsOrgId()).thenReturn("success");
-    when(workspace.getApiKey()).thenReturn("test-apikey");
-
-    AccessToken token = new AccessToken("test-token", 300000L);
-
-    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
-        (mock, mockContext) -> {
-          when(mock.workspace(workspace)).thenReturn(mock);
-          when(mock.build()).thenReturn(imsService);
-        }
-    )) {
-      when(imsService.getOAuthAccessToken()).thenReturn(token);
-      Collection<Program> programs = new CloudManagerApiImpl(workspace, new URL(baseUrl)).listPrograms();
-      assertEquals(7, programs.size(), "Correct length of program list");
-    }
+  void listPrograms_failure404() {
+    when(workspace.getImsOrgId()).thenReturn("not-found");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPrograms("1"), "Exception thrown for 404");
+    assertEquals(String.format("Cannot retrieve programs: %s/api/tenant/1/programs (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
   }
 
   @Test
-  void listPrograms_oauth_expired(
-      @Mock ImsService imsService
-  ) throws Exception {
-    when(workspace.getImsOrgId()).thenReturn("success");
-    when(workspace.getApiKey()).thenReturn("test-apikey");
-
-    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
-        (mock, mockContext) -> {
-          when(mock.workspace(workspace)).thenReturn(mock);
-          when(mock.build()).thenReturn(imsService);
-        }
-    )) {
-      CloudManagerApi api =  new CloudManagerApiImpl(workspace, new URL(baseUrl));
-      AccessToken token = new AccessToken("test-token", 300000L);
-      Field tokenField = CloudManagerApiImpl.class.getDeclaredField("token");
-      tokenField.setAccessible(true);
-      tokenField.set(api, token);
-
-      when(imsService.getOAuthAccessToken()).thenReturn(token);
-      Collection<Program> programs = api.listPrograms();
-      assertEquals(7, programs.size(), "Correct length of program list");
-    }
+  void listPrograms_successEmpty() throws CloudManagerApiException {
+    when(workspace.getImsOrgId()).thenReturn("empty");
+    Collection<Program> programs = underTest.listPrograms("1");
+    assertTrue(programs.isEmpty(), "Empty body returns zero length list");
   }
 
   @Test
-  void listPrograms_oauth(
-      @Mock ImsService imsService
-  ) throws Exception {
-    when(workspace.getImsOrgId()).thenReturn("success");
-    when(workspace.getApiKey()).thenReturn("test-apikey");
+  void listPrograms_success() throws CloudManagerApiException {
+    Collection<Program> programs = underTest.listPrograms("1");
+    assertEquals(7, programs.size(), "Correct length of program list");
+  }
 
-    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
-        (mock, mockContext) -> {
-          when(mock.workspace(workspace)).thenReturn(mock);
-          when(mock.build()).thenReturn(imsService);
-        }
-    )) {
-      CloudManagerApi api =  new CloudManagerApiImpl(workspace, new URL(baseUrl));
-      AccessToken token = new AccessToken("test-token", 300000L);
-      Field tokenField = CloudManagerApiImpl.class.getDeclaredField("token");
-      tokenField.setAccessible(true);
-      tokenField.set(api, token);
-
-      Field expiresField = CloudManagerApiImpl.class.getDeclaredField("expiration");
-      expiresField.setAccessible(true);
-      expiresField.set(api, System.currentTimeMillis() + token.getExpiresIn());
-
-      Collection<Program> programs = api.listPrograms();
-      assertEquals(7, programs.size(), "Correct length of program list");
-    }
+  @Test
+  void listPrograms_fromTenant(@Mock io.adobe.cloudmanager.impl.generated.Tenant mock) throws CloudManagerApiException {
+    when(mock.getId()).thenReturn("1");
+    Tenant tenant = new TenantImpl(mock, underTest);
+    Collection<Program> programs = tenant.listPrograms();
+    assertEquals(7, programs.size(), "Correct length of program list");
   }
 }

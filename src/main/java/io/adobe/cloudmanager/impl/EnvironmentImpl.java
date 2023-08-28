@@ -36,7 +36,7 @@ import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Environment implements io.adobe.cloudmanager.Environment {
   private static final long serialVersionUID = 1L;
 
@@ -65,7 +65,7 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
   public String getDeveloperConsoleUrl() throws CloudManagerApiException {
     HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
     if (link == null) {
-      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.NO_DEVELOPER_CONSOLE, getId(), getProgramId());
+      throw new CloudManagerApiException(String.format("Environment %s does not appear to support Developer Console.", getId()));
     } else {
       return link.getHref();
     }

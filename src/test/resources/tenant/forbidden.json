@@ -2,18 +2,18 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/api/tenant/1/programs",
+      "path": "/api/tenants",
       "headers": {
         "x-gw-ims-org-id": [
-          "empty"
+          "forbidden"
         ]
       }
     },
     "httpResponse": {
+      "statusCode": 403,
       "body": {
-        "type": "JSON",
-        "json": {
-        }
+        "error_code": "1234",
+        "message": "some message"
       }
     }
   }

@@ -2,17 +2,16 @@
   {
     "httpRequest":{
       "method":"GET",
-      "path":"/api/programs",
+      "path":"/api/tenants",
       "headers":{
         "x-gw-ims-org-id":[
-          "forbidden"
+          "forbidden-messageonly"
         ]
       }
     },
     "httpResponse":{
       "statusCode":403,
       "body":{
-        "error_code":"1234",
         "message":"some message"
       }
     }
