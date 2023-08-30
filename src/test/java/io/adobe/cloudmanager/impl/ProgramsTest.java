@@ -20,76 +20,132 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.UUID;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Tenant;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockserver.model.HttpRequest;
 
+import static com.adobe.aio.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.*;
+import static org.mockserver.model.HttpResponse.*;
+import static org.mockserver.model.HttpStatusCode.*;
 
 class ProgramsTest extends AbstractApiTest {
 
-  public static Collection<String> getTestExpectationFiles() {
-    return Arrays.asList(
-        "programs/delete-fails.json",
-        "programs/delete-success.json",
-        "programs/not-found.json",
-        "programs/empty-response.json"
-    );
+  @Test
+  void get_failure404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getProgram("1"), "Exception was thrown");
+    assertEquals(String.format("Cannot retrieve program: %s/api/program/1 (404 Not Found).", baseUrl), exception.getMessage(), "Correct exception message");
+    client.verify(get);
+    client.clear(get);
   }
 
   @Test
-  void deleteProgram_failure() {
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteProgram("2"), "Exception was thrown");
-    assertEquals(String.format("Cannot delete program: %s/api/program/2 (400 Bad Request).", baseUrl), exception.getMessage(), "Correct exception message");
-    client.verify(request().withMethod("DELETE").withPath("/api/program/2"));
+  void get_success() throws Exception {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1");
+    client.when(get).respond(response().withBody(loadBodyJson("programs/get.json")));
+    assertNotNull(underTest.getProgram("1"), "Program found.");
+    client.verify(get);
+    client.clear(get);
   }
 
   @Test
-  void deleteProgram_success() throws CloudManagerApiException {
-    underTest.deleteProgram("3");
-    client.verify(request().withMethod("DELETE").withPath("/api/program/3"));
+  void delete_failure() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest del = request().withMethod("DELETE").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1");
+    client.when(del).respond(response().withStatusCode(BAD_REQUEST_400.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.deleteProgram("1"), "Exception was thrown");
+    assertEquals(String.format("Cannot delete program: %s/api/program/1 (400 Bad Request).", baseUrl), exception.getMessage(), "Correct exception message");
+    client.verify(del);
+    client.clear(del);
   }
 
   @Test
-  void deleteProgram_viaProgram(@Mock io.adobe.cloudmanager.impl.generated.EmbeddedProgram mock) throws Exception {
+  void delete_success() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest del = request().withMethod("DELETE").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1");
+    client.when(del).respond(response().withStatusCode(ACCEPTED_202.code()));
+    underTest.deleteProgram("1");
+    client.verify(del);
+    client.clear(del);
+  }
+
+  @Test
+  void delete_viaProgram(@Mock io.adobe.cloudmanager.impl.generated.EmbeddedProgram mock) throws CloudManagerApiException {
     when(mock.getId()).thenReturn("4");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest del = request().withMethod("DELETE").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/4");
+    client.when(del).respond(response().withStatusCode(ACCEPTED_202.code()));
     Program program = new ProgramImpl(mock, underTest);
     program.delete();
-    client.verify(request().withMethod("DELETE").withPath("/api/program/4"));
+    client.verify(del);
+    client.clear(del);
   }
 
   @Test
-  void listPrograms_failure404() {
-    when(workspace.getImsOrgId()).thenReturn("not-found");
+  void list_failure404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
+    client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listPrograms("1"), "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve programs: %s/api/tenant/1/programs (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(list);
+    client.clear(list);
   }
 
   @Test
-  void listPrograms_successEmpty() throws CloudManagerApiException {
-    when(workspace.getImsOrgId()).thenReturn("empty");
+  void list_successEmpty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
+    client.when(list).respond(response(). withBody("{}"));
     Collection<Program> programs = underTest.listPrograms("1");
     assertTrue(programs.isEmpty(), "Empty body returns zero length list");
+    client.verify(list);
+    client.clear(list);
   }
 
   @Test
-  void listPrograms_success() throws CloudManagerApiException {
+  void list_success() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
+    client.when(list).respond(response(). withBody(loadBodyJson("programs/list.json")));
     Collection<Program> programs = underTest.listPrograms("1");
     assertEquals(7, programs.size(), "Correct length of program list");
+    client.verify(list);
+    client.clear(list);
   }
 
   @Test
-  void listPrograms_fromTenant(@Mock io.adobe.cloudmanager.impl.generated.Tenant mock) throws CloudManagerApiException {
+  void list_fromTenant(@Mock io.adobe.cloudmanager.impl.generated.Tenant mock) throws CloudManagerApiException {
     when(mock.getId()).thenReturn("1");
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
+    client.when(list).respond(response(). withBody(loadBodyJson("programs/list.json")));
     Tenant tenant = new TenantImpl(mock, underTest);
     Collection<Program> programs = tenant.listPrograms();
     assertEquals(7, programs.size(), "Correct length of program list");
+    client.verify(list);
+    client.clear(list);
   }
 }

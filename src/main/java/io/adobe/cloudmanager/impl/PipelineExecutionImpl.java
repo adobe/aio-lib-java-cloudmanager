@@ -36,7 +36,6 @@ import io.adobe.cloudmanager.impl.generated.HalLink;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
-import static io.adobe.cloudmanager.CloudManagerApiException.*;
 
 /**
  * Extension to the Swagger generated Pipeline. Provides convenience methods for frequently used APIs

@@ -21,33 +21,34 @@ package io.adobe.cloudmanager.impl;
  */
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringSubstitutor;
-
-import com.adobe.aio.ims.ImsService;
-import com.adobe.aio.ims.model.AccessToken;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
+import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import feign.Feign;
+import feign.Logger;
+import feign.Request;
+import feign.RequestInterceptor;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
+import feign.slf4j.Slf4jLogger;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
@@ -56,770 +57,417 @@ import io.adobe.cloudmanager.LogOption;
 import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
+import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.Program;
+import io.adobe.cloudmanager.Repository;
+import io.adobe.cloudmanager.Tenant;
 import io.adobe.cloudmanager.Variable;
 import io.adobe.cloudmanager.event.PipelineExecutionEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
-import io.adobe.cloudmanager.generated.invoker.ApiClient;
-import io.adobe.cloudmanager.generated.invoker.ApiException;
-import io.adobe.cloudmanager.generated.invoker.Pair;
-import io.adobe.cloudmanager.impl.generated.EnvironmentList;
-import io.adobe.cloudmanager.impl.generated.EnvironmentLogs;
-import io.adobe.cloudmanager.impl.generated.HalLink;
-import io.adobe.cloudmanager.impl.generated.PipelineExecutionEmbedded;
-import io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState;
-import io.adobe.cloudmanager.impl.generated.PipelineList;
-import io.adobe.cloudmanager.impl.generated.PipelinePhase;
-import io.adobe.cloudmanager.impl.generated.PipelineStepMetrics;
+import io.adobe.cloudmanager.impl.client.FeignProgramApi;
+import io.adobe.cloudmanager.impl.client.FeignRepositoryApi;
+import io.adobe.cloudmanager.impl.client.FeignTenantApi;
+import io.adobe.cloudmanager.impl.exception.ProgramExceptionDecoder;
+import io.adobe.cloudmanager.impl.exception.RepositoryExceptionDecoder;
+import io.adobe.cloudmanager.impl.exception.TenantExceptionDecoder;
+import io.adobe.cloudmanager.impl.generated.BranchList;
+import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
 import io.adobe.cloudmanager.impl.generated.ProgramList;
-import io.adobe.cloudmanager.impl.generated.Redirect;
-import io.adobe.cloudmanager.impl.generated.VariableList;
+import io.adobe.cloudmanager.impl.generated.RepositoryBranch;
+import io.adobe.cloudmanager.impl.generated.RepositoryList;
+import io.adobe.cloudmanager.impl.generated.TenantList;
+import lombok.NonNull;
 
-import static io.adobe.cloudmanager.CloudManagerApiException.*;
+import static com.adobe.aio.util.feign.FeignUtil.*;
 
 public class CloudManagerApiImpl implements CloudManagerApi {
 
-  private final ApiClient apiClient = new ConfiguredApiClient();
-  private final String orgId;
-  private final String apiKey;
-  private String accessToken;
-  private final String baseUrl;
-  private ImsService imsService;
-  private AccessToken token;
-  private Long expiration = 0L;
-
-  public CloudManagerApiImpl(String orgId, String apiKey, String accessToken) {
-    this(orgId, apiKey, accessToken, null);
-  }
-
-  public CloudManagerApiImpl(String orgId, String apiKey, String accessToken, String baseUrl) {
-    this.orgId = orgId;
-    this.apiKey = apiKey;
-    this.accessToken = accessToken;
-    if (baseUrl == null) {
-      baseUrl = apiClient.getBasePath();
-    }
-
-    baseUrl = StringUtils.removeEnd(baseUrl, "/");
-    apiClient.setBasePath(baseUrl);
-    this.baseUrl = baseUrl;
-  }
+  private final FeignTenantApi tenantApi;
+  private final FeignProgramApi programApi;
+  private final FeignRepositoryApi repositoryApi;
 
   public CloudManagerApiImpl(Workspace workspace, URL url) {
-    this.orgId = workspace.getImsOrgId();
-    this.apiKey = workspace.getApiKey();
-    String urlStr = url == null ? CLOUD_MANAGER_URL : url.toString();
-    this.baseUrl = StringUtils.removeEnd(urlStr, "/");
-    apiClient.setBasePath(baseUrl);
-    this.imsService = ImsService.builder().workspace(workspace).build();
-  }
 
-  private static String processTemplate(String path, Map<String, String> values) {
-    return new StringSubstitutor(values, "{", StringSubstitutor.DEFAULT_VAR_END).replace(path);
+    ObjectMapper mapper = JsonMapper.builder()
+        .serializationInclusion(JsonInclude.Include.NON_NULL)
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+        .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+        .addModule(new JavaTimeModule())
+        .build();
+
+    RequestInterceptor authInterceptor = AuthInterceptor.builder().workspace(workspace).build();
+    RequestInterceptor aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
+    Request.Options options = new Request.Options(DEFAULT_CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, DEFAULT_READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, true);
+    Feign.Builder builder = Feign.builder()
+        .logger(new Slf4jLogger())
+        .logLevel(Logger.Level.BASIC)
+        .requestInterceptor(authInterceptor)
+        .requestInterceptor(aioHeaderInterceptor)
+        .encoder(new JacksonEncoder(mapper))
+        .decoder(new JacksonDecoder(mapper))
+        .options(options);
+
+    String baseUrl = url == null ? CLOUD_MANAGER_URL : url.toString();
+    tenantApi = builder.errorDecoder(new TenantExceptionDecoder()).target(FeignTenantApi.class, baseUrl);
+    programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(FeignProgramApi.class, baseUrl);
+    repositoryApi = builder.errorDecoder(new RepositoryExceptionDecoder()).target(FeignRepositoryApi.class, baseUrl);
   }
 
   @Override
-  public Collection<Program> listPrograms() throws CloudManagerApiException {
-    ProgramList programList;
-    try {
-      programList = get("/api/programs", new GenericType<ProgramList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.LIST_PROGRAMS, baseUrl, "/api/programs", e);
-    }
-    return programList.getEmbedded() == null ?
+  public Program getProgram(String programId) throws CloudManagerApiException {
+    EmbeddedProgram program = programApi.get(programId);
+    return new ProgramImpl(program,this);
+  }
+
+  @Override
+  public void deleteProgram(String programId) throws CloudManagerApiException {
+    programApi.delete(programId);
+  }
+
+  @Override
+  public void deleteProgram(Program program) throws CloudManagerApiException {
+    deleteProgram(program.getId());
+  }
+
+  @Override
+  public Collection<Program> listPrograms(String tenantId) throws CloudManagerApiException {
+    ProgramList list = programApi.list(tenantId);
+    return list.getEmbedded() == null ?
         Collections.emptyList() :
-        programList.getEmbedded().getPrograms().stream().map(p -> new ProgramImpl(p, this)).collect(Collectors.toList());
+        list.getEmbedded().getPrograms().stream().map(p -> new ProgramImpl(p, this)).collect(Collectors.toList());
+  }
+
+  public Collection<Program> listPrograms(Tenant tenant) throws CloudManagerApiException {
+    return listPrograms(tenant.getId());
   }
 
   @Override
-  public void deleteProgram(@NotNull String programId) throws CloudManagerApiException {
-    Collection<Program> programs = listPrograms();
-    Program program = programs.stream().filter(p -> programId.equals(p.getId())).findFirst().
-        orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
-    deleteProgram(program);
+  public Collection<Repository> listRepositories(String programId) throws CloudManagerApiException {
+    RepositoryList list = repositoryApi.list(programId);
+    return list.getEmbedded() == null ?
+        Collections.emptyList() :
+        list.getEmbedded().getRepositories().stream().map(r -> new RepositoryImpl(r, this)).collect(Collectors.toList());
   }
 
   @Override
-  public void deleteProgram(@NotNull Program p) throws CloudManagerApiException {
-    io.adobe.cloudmanager.impl.generated.Program program = getProgramDetail(p.getId());
-    String href = program.getLinks().getSelf().getHref();
-    try {
-      delete(href);
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.DELETE_PROGRAM, baseUrl, href, e);
-    }
+  public Collection<Repository> listRepositories(Program program) throws CloudManagerApiException {
+    return listRepositories(program.getId());
   }
 
   @Override
-  public Collection<Pipeline> listPipelines(@NotNull String programId) throws CloudManagerApiException {
-    return listPipelines(programId, p -> true);
+  public @NonNull Collection<Repository> listRepositories(@NonNull String programId, int limit) throws CloudManagerApiException {
+    return listRepositories(programId, 0, limit);
   }
 
   @Override
-  public Collection<Pipeline> listPipelines(@NotNull String programId, @NotNull Predicate<Pipeline> predicate) throws CloudManagerApiException {
-    return new ArrayList<>(listPipelineDetails(programId, predicate));
+  public @NonNull Collection<Repository> listRepositories(@NonNull Program program, int limit) throws CloudManagerApiException {
+    return listRepositories(program.getId(), 0, limit);
   }
 
   @Override
-  public void deletePipeline(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException {
-    PipelineImpl original = getPipeline(programId, pipelineId);
-    deletePipeline(original);
+  public @NonNull Collection<Repository> listRepositories(@NonNull String programId, int start, int limit) throws CloudManagerApiException {
+    Map<String, Object> params = new HashMap<>();
+    params.put(FeignRepositoryApi.START_PARAM, start);
+    params.put(FeignRepositoryApi.LIMIT_PARAM, limit);
+    RepositoryList list = repositoryApi.list(programId, params);
+    return list.getEmbedded() == null ?
+        Collections.emptyList() :
+        list.getEmbedded().getRepositories().stream().map(r -> new RepositoryImpl(r, this)).collect(Collectors.toList());
   }
 
   @Override
-  public void deletePipeline(@NotNull Pipeline pipeline) throws CloudManagerApiException {
-    try {
-      delete(pipeline.getSelfLink());
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.DELETE_PIPELINE, baseUrl, pipeline.getSelfLink(), e);
-    }
+  public @NonNull Collection<Repository> listRepositories(@NonNull Program program, int start, int limit) throws CloudManagerApiException {
+    return listRepositories(program.getId(), start, limit);
   }
 
   @Override
-  public PipelineImpl updatePipeline(@NotNull String programId, @NotNull String pipelineId, @NotNull PipelineUpdate updates) throws CloudManagerApiException {
-    Pipeline original = getPipeline(programId, pipelineId);
-    return updatePipeline(original, updates);
+  public @NonNull Repository getRepository(@NonNull String programId, @NonNull String repositoryId) throws CloudManagerApiException {
+    return new RepositoryImpl(repositoryApi.get(programId, repositoryId), this);
   }
 
   @Override
-  public PipelineImpl updatePipeline(@NotNull Pipeline original, @NotNull PipelineUpdate updates) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(original);
-    io.adobe.cloudmanager.impl.generated.Pipeline toUpdate = new io.adobe.cloudmanager.impl.generated.Pipeline();
-    PipelinePhase buildPhase = pipeline.getPhases().stream().filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType())
-        .findFirst().orElseThrow(() -> new CloudManagerApiException(ErrorType.NO_BUILD_PHASE, original.getId()));
-    if (updates.getBranch() != null) {
-      buildPhase.setBranch(updates.getBranch());
-    }
-
-    if (updates.getRepositoryId() != null) {
-      buildPhase.setRepositoryId(updates.getRepositoryId());
-    }
-    toUpdate.getPhases().add(buildPhase);
-
-    String pipelinePath = pipeline.getSelfLink();
-    try {
-      io.adobe.cloudmanager.impl.generated.Pipeline result = patch(pipelinePath, toUpdate, new GenericType<io.adobe.cloudmanager.impl.generated.Pipeline>() {});
-      return new PipelineImpl(result, this);
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.UPDATE_PIPELINE, baseUrl, pipelinePath, e);
-    }
+  public @NonNull Repository getRepository(@NonNull Program program, @NonNull String repositoryId) throws CloudManagerApiException {
+    return getRepository(program.getId(), repositoryId);
   }
 
   @Override
-  public Optional<PipelineExecution> getCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(programId, pipelineId);
-    String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
-    try {
-      io.adobe.cloudmanager.impl.generated.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.impl.generated.PipelineExecution>() {});
-      return Optional.of(new PipelineExecutionImpl(execution, this));
-    } catch (ApiException e) {
-      if (Response.Status.NOT_FOUND.getStatusCode() == e.getCode()) {
-        return Optional.empty();
-      }
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
-    }
+  public @NonNull Collection<String> listBranches(@NonNull Repository repository) throws CloudManagerApiException {
+    BranchList list = repositoryApi.listBranches(repository.getProgramId(), repository.getId());
+    return list.getEmbedded() == null ?
+        Collections.emptyList() :
+        list.getEmbedded().getBranches().stream().map(RepositoryBranch::getName).collect(Collectors.toList());
   }
 
   @Override
-  public PipelineExecutionImpl startExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(programId, pipelineId, ErrorType.FIND_PIPELINE_START);
-    return startExecution(pipeline);
+  public Collection<Pipeline> listPipelines(String programId) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionImpl startExecution(@NotNull Pipeline p) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(p);
-    String executionHref = pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref();
-    io.adobe.cloudmanager.impl.generated.PipelineExecution execution;
-    try {
-      execution = put(executionHref, new GenericType<io.adobe.cloudmanager.impl.generated.PipelineExecution>() {});
-    } catch (ApiException e) {
-      if (412 == e.getCode()) {
-        throw new CloudManagerApiException(ErrorType.PIPELINE_START_RUNNING);
-      }
-      throw new CloudManagerApiException(ErrorType.PIPELINE_START, baseUrl, executionHref, e);
-    }
-    return new PipelineExecutionImpl(execution, this);
+  public Collection<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionImpl getExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(programId, pipelineId);
-    return getExecution(pipeline, executionId);
+  public void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException {
+
   }
 
   @Override
-  public PipelineExecutionImpl getExecution(@NotNull Pipeline p, @NotNull String executionId) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(p);
-    Map<String, String> values = new HashMap<>();
-    values.put("executionId", executionId);
-    String executionHref = processTemplate(pipeline.getLinks().getHttpnsAdobeComadobecloudrelexecutionid().getHref(), values);
-    try {
-      io.adobe.cloudmanager.impl.generated.PipelineExecution execution = get(executionHref, new GenericType<io.adobe.cloudmanager.impl.generated.PipelineExecution>() {});
-      return new PipelineExecutionImpl(execution, this);
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, executionHref, e);
-    }
+  public void deletePipeline(Pipeline pipeline) throws CloudManagerApiException {
+
   }
 
   @Override
-  public PipelineExecutionImpl getExecution(@NotNull PipelineExecutionStartEvent event) throws CloudManagerApiException {
-    return getExecution(event.getEvent().getActivitystreamsobject().getAtId());
+  public Pipeline updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionImpl getExecution(@NotNull PipelineExecutionEndEvent event) throws CloudManagerApiException {
-    return getExecution(event.getEvent().getActivitystreamsobject().getAtId());
+  public Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public boolean isExecutionRunning(@NotNull PipelineExecution execution) throws CloudManagerApiException {
-    return isExecutionRunning(execution.getProgramId(), execution.getPipelineId(), execution.getId());
+  public Optional<PipelineExecution> getCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
+    return Optional.empty();
   }
 
   @Override
-  public boolean isExecutionRunning(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException {
-    PipelineExecution execution = getExecution(programId, pipelineId, executionId);
-    PipelineExecution.Status current = execution.getStatusState();
-    return current == PipelineExecution.Status.NOT_STARTED ||
-        current == PipelineExecution.Status.RUNNING ||
-        current == PipelineExecution.Status.CANCELLING;
+  public PipelineExecution startExecution(String programId, String pipelineId) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getExecutionStepState(@NotNull PipelineExecution pe, @NotNull String action) throws CloudManagerApiException {
-    PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
-    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState stepState = execution.getEmbedded().getStepStates()
-        .stream()
-        .filter(s -> s.getAction().equals(action))
-        .findFirst()
-        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_STEP_STATE, action, execution.getId()));
-    return new PipelineExecutionStepStateImpl(stepState, this);
+  public PipelineExecution startExecution(Pipeline pipeline) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecutionStepStartEvent event) throws CloudManagerApiException {
-    return getExecutionStepState(event.getEvent().getActivitystreamsobject().getAtId());
+  public PipelineExecution getExecution(Pipeline pipeline, String executionId) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecutionStepWaitingEvent event) throws CloudManagerApiException {
-    return getExecutionStepState(event.getEvent().getActivitystreamsobject().getAtId());
+  public PipelineExecution getExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getExecutionStepState(PipelineExecutionStepEndEvent event) throws CloudManagerApiException {
-    return getExecutionStepState(event.getEvent().getActivitystreamsobject().getAtId());
+  public PipelineExecution getExecution(PipelineExecutionStartEvent event) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getCurrentStep(@NotNull PipelineExecution pe) throws CloudManagerApiException {
-    PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
-    PipelineExecutionEmbedded embeddeds = execution.getEmbedded();
-    if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
-      throw new CloudManagerApiException(ErrorType.FIND_CURRENT_STEP, execution.getPipelineId());
-    }
-    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState step = embeddeds.getStepStates()
-        .stream()
-        .filter(PipelineExecutionStepStateImpl.IS_CURRENT)
-        .findFirst()
-        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_CURRENT_STEP, execution.getPipelineId()));
-    return new PipelineExecutionStepStateImpl(step, this);
+  public PipelineExecution getExecution(PipelineExecutionEndEvent event) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public PipelineExecutionStepStateImpl getWaitingStep(@NotNull PipelineExecution pe) throws CloudManagerApiException {
-    PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
-    PipelineExecutionEmbedded embeddeds = execution.getEmbedded();
-    if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
-      throw new CloudManagerApiException(ErrorType.FIND_WAITING_STEP, execution.getPipelineId());
-    }
-    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState step = embeddeds.getStepStates()
-        .stream()
-        .filter(PipelineExecutionStepStateImpl.IS_WAITING)
-        .findFirst()
-        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_WAITING_STEP, execution.getPipelineId()));
-    return new PipelineExecutionStepStateImpl(step, this);
+  public boolean isExecutionRunning(PipelineExecution execution) throws CloudManagerApiException {
+    return false;
   }
 
   @Override
-  public void advanceExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException {
-    advanceExecution(getExecution(programId, pipelineId, executionId));
+  public boolean isExecutionRunning(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+    return false;
   }
 
   @Override
-  public void advanceExecution(@NotNull PipelineExecution pe) throws CloudManagerApiException {
-    PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
-    String href = execution.getAdvanceLink();
-    try {
-      put(href, execution.getAdvanceBody());
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.ADVANCE_EXECUTION, baseUrl, href, e);
-    }
+  public PipelineExecutionStepState getExecutionStepState(PipelineExecution execution, String action) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public void advanceCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException {
-    Optional<PipelineExecution> execution = getCurrentExecution(programId, pipelineId);
-    if (execution.isPresent()) {
-      advanceExecution(execution.get());
-    }
+  public PipelineExecutionStepState getExecutionStepState(PipelineExecutionStepStartEvent event) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public void cancelExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException {
-    cancelExecution(getExecution(programId, pipelineId, executionId));
+  public PipelineExecutionStepState getExecutionStepState(PipelineExecutionStepWaitingEvent event) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public void cancelExecution(@NotNull PipelineExecution pe) throws CloudManagerApiException {
-    PipelineExecutionImpl execution = getExecution(pe.getProgramId(), pe.getPipelineId(), pe.getId());
-    String href = execution.getCancelLink();
-    try {
-      put(href, execution.getCancelBody());
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.CANCEL_EXECUTION, baseUrl, href, e);
-    }
+  public PipelineExecutionStepState getExecutionStepState(PipelineExecutionStepEndEvent event) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public void cancelCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException {
-    Optional<PipelineExecution> execution = getCurrentExecution(programId, pipelineId);
-    if (execution.isPresent()) {
-      cancelExecution(execution.get());
-    }
+  public PipelineExecutionStepStateImpl getCurrentStep(PipelineExecution execution) throws CloudManagerApiException {
+    return null;
+  }
+
+  @Override
+  public PipelineExecutionStepStateImpl getWaitingStep(PipelineExecution execution) throws CloudManagerApiException {
+    return null;
+  }
+
+  @Override
+  public void advanceExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+
+  }
+
+  @Override
+  public void advanceExecution(PipelineExecution execution) throws CloudManagerApiException {
+
+  }
+
+  @Override
+  public void advanceCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
+
+  }
+
+  @Override
+  public void cancelExecution(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
+
+  }
+
+  @Override
+  public void cancelExecution(PipelineExecution execution) throws CloudManagerApiException {
+
+  }
+
+  @Override
+  public void cancelCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
+
   }
 
   @Override
   public String getExecutionStepLogDownloadUrl(String programId, String pipelineId, String executionId, String action) throws CloudManagerApiException {
-    PipelineExecution execution = getExecution(programId, pipelineId, executionId);
-    return getExecutionStepLogDownloadUrl(execution, action, null);
+    return null;
   }
 
   @Override
   public String getExecutionStepLogDownloadUrl(String programId, String pipelineId, String executionId, String action, String name) throws CloudManagerApiException {
-    PipelineExecution execution = getExecution(programId, pipelineId, executionId);
-    return getExecutionStepLogDownloadUrl(execution, action, name);
+    return null;
   }
 
   @Override
   public String getExecutionStepLogDownloadUrl(PipelineExecution execution, String action) throws CloudManagerApiException {
-    return getExecutionStepLogDownloadUrl(execution, action, null);
+    return null;
   }
 
   @Override
   public String getExecutionStepLogDownloadUrl(PipelineExecution execution, String action, String name) throws CloudManagerApiException {
-    PipelineExecutionStepStateImpl stepState = getExecutionStepState(execution, action);
-    if (!stepState.hasLogs()) {
-      throw new CloudManagerApiException(ErrorType.FIND_LOGS_LINK_EXECUTION, stepState.getAction());
-    }
-    return getLogRedirect(stepState.getLinks().getHttpnsAdobeComadobecloudrelpipelinelogs(), name);
+    return null;
   }
 
   @Override
-  public void downloadExecutionStepLog(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull OutputStream outputStream) throws CloudManagerApiException {
-    downloadExecutionStepLog(programId, pipelineId, executionId, action, null, outputStream);
+  public void downloadExecutionStepLog(String programId, String pipelineId, String executionId, String action, OutputStream outputStream) throws CloudManagerApiException {
+
   }
 
   @Override
-  public void downloadExecutionStepLog(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull String name, @NotNull OutputStream outputStream) throws CloudManagerApiException {
-    PipelineExecution execution = getExecution(programId, pipelineId, executionId);
-    PipelineExecutionStepStateImpl stepState = getExecutionStepState(execution, action);
-    downloadExecutionStepLog(stepState, name, outputStream);
-  }
+  public void downloadExecutionStepLog(String programId, String pipelineId, String executionId, String action, String name, OutputStream outputStream) throws CloudManagerApiException {
 
-
-  @Override
-  public void downloadExecutionStepLog(@NotNull PipelineExecution execution, @NotNull String action, @NotNull OutputStream outputStream) throws CloudManagerApiException {
-    downloadExecutionStepLog(execution, action, null, outputStream);
   }
 
   @Override
-  public void downloadExecutionStepLog(@NotNull PipelineExecution execution, @NotNull String action, @NotNull String filename, @NotNull OutputStream outputStream) throws CloudManagerApiException {
-    PipelineExecutionStepStateImpl stepState = getExecutionStepState(execution, action);
-    downloadExecutionStepLog(stepState, filename, outputStream);
+  public void downloadExecutionStepLog(PipelineExecution execution, String action, OutputStream outputStream) throws CloudManagerApiException {
+
   }
 
   @Override
-  public Collection<Metric> getQualityGateResults(@NotNull PipelineExecution pe, @NotNull String action) throws CloudManagerApiException {
-    PipelineExecutionStepStateImpl step = getExecutionStepState(pe, action);
-    String href = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinemetrics().getHref();
-    try {
-      PipelineStepMetrics psm = get(href, new GenericType<PipelineStepMetrics>() {});
-      return psm.getMetrics().stream().map(MetricImpl::new).collect(Collectors.toList());
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_METRICS, baseUrl, href, e);
-    }
+  public void downloadExecutionStepLog(PipelineExecution execution, String action, String filename, OutputStream outputStream) throws CloudManagerApiException {
+
   }
 
   @Override
-  public Collection<Environment> listEnvironments(@NotNull String programId) throws CloudManagerApiException {
-    io.adobe.cloudmanager.impl.generated.Program program = getProgramDetail(programId);
-    return new ArrayList<>(listEnvironments(program));
+  public Collection<Metric> getQualityGateResults(PipelineExecution execution, String action) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public void deleteEnvironment(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException {
-    deleteEnvironment(getEnvironment(programId, environmentId));
+  public Collection<Environment> listEnvironments(String programId) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public void deleteEnvironment(@NotNull Environment environment) throws CloudManagerApiException {
+  public void deleteEnvironment(String programId, String environmentId) throws CloudManagerApiException {
 
-    String environmentPath = environment.getSelfLink();
-    try {
-      delete(environmentPath);
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.DELETE_ENVIRONMENT, baseUrl, environmentPath, e);
-    }
   }
 
   @Override
-  public Collection<EnvironmentLog> downloadLogs(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption logOptions, int days, @NotNull File dir) throws CloudManagerApiException {
-    return downloadLogs(getEnvironment(programId, environmentId), logOptions, days, dir);
+  public void deleteEnvironment(Environment environment) throws CloudManagerApiException {
+
   }
 
   @Override
-  public Collection<EnvironmentLog> downloadLogs(@NotNull Environment e, @NotNull LogOption logOptions, int days, @NotNull File dir) throws CloudManagerApiException {
-
-    EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
-    HalLink logLink = environment.getLinks().getHttpnsAdobeComadobecloudrellogs();
-    if (logLink == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_LOGS_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
-    }
-
-    Map<String, String> values = new HashMap<>();
-    values.put("service", logOptions.getService());
-    values.put("name", logOptions.getName());
-    values.put("days", Integer.toString(days));
-    String logHref = processTemplate(logLink.getHref(), values);
-    EnvironmentLogs logs = getLogs(logHref);
-
-    List<io.adobe.cloudmanager.impl.generated.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
-    List<EnvironmentLog> downloaded = new ArrayList<>();
-
-    if (downloads == null || downloads.isEmpty()) {
-      return Collections.emptyList();
-    } else {
-      for (io.adobe.cloudmanager.impl.generated.EnvironmentLog d : downloads) {
-        EnvironmentLogImpl log = new EnvironmentLogImpl(d);
-        String logfileName = String.format("%d-%s-%s-%s.log.gz", log.getEnvironmentId(), log.getService(), log.getName(), log.getDate());
-        log.setPath(dir.getPath() + "/" + logfileName);
-        log.setUrl(log.getLinks().getHttpnsAdobeComadobecloudrellogsdownload().getHref());
-        downloadLog(log);
-        downloaded.add(log);
-      }
-    }
-    return downloaded;
+  public Collection<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOption logOption, int days, File dir) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> listEnvironmentVariables(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException {
-    return listEnvironmentVariables(getEnvironment(programId, environmentId));
+  public Collection<EnvironmentLog> downloadLogs(Environment environment, LogOption logOption, int days, File dir) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> listEnvironmentVariables(@NotNull Environment e) throws CloudManagerApiException {
-    EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
-    HalLink variableLink = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
-    if (variableLink == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
-    }
-    return listVariables(variableLink);
+  public Set<Variable> listEnvironmentVariables(String programId, String environmentId) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> setEnvironmentVariables(@NotNull String programId, @NotNull String environmentId, Variable... variables) throws CloudManagerApiException {
-    return setEnvironmentVariables(getEnvironment(programId, environmentId), variables);
+  public Set<Variable> listEnvironmentVariables(Environment environment) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> setEnvironmentVariables(@NotNull Environment e, Variable... variables) throws CloudManagerApiException {
-    EnvironmentImpl environment = getEnvironment(e.getProgramId(), e.getId());
-    HalLink variableLInk = environment.getLinks().getHttpnsAdobeComadobecloudrelvariables();
-    if (variableLInk == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_ENVIRONMENT, environment.getId(), environment.getProgramId());
-    }
-    return setVariables(variableLInk, variables);
+  public Set<Variable> setEnvironmentVariables(String programId, String environmentId, Variable... variables) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> listPipelineVariables(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException {
-    return listPipelineVariables(getPipeline(programId, pipelineId));
+  public Set<Variable> setEnvironmentVariables(Environment environment, Variable... variables) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> listPipelineVariables(@NotNull Pipeline p) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(p);
-    HalLink variableLink = pipeline.getLinks().getHttpnsAdobeComadobecloudrelvariables();
-    if (variableLink == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_PIPELINE, pipeline.getId(), pipeline.getProgramId());
-    }
-    return listVariables(variableLink);
+  public Set<Variable> listPipelineVariables(String programId, String pipelineId) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> setPipelineVariables(@NotNull String programId, @NotNull String pipelineId, Variable... variables) throws CloudManagerApiException {
-    return setPipelineVariables(getPipeline(programId, pipelineId), variables);
+  public Set<Variable> listPipelineVariables(Pipeline pipeline) throws CloudManagerApiException {
+    return null;
   }
 
   @Override
-  public Set<Variable> setPipelineVariables(@NotNull Pipeline p, Variable... variables) throws CloudManagerApiException {
-    PipelineImpl pipeline = getPipeline(p);
-    HalLink variableLink = pipeline.getLinks().getHttpnsAdobeComadobecloudrelvariables();
-    if (variableLink == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_VARIABLES_LINK_PIPELINE, pipeline.getId(), pipeline.getProgramId());
-    }
-    return setVariables(variableLink, variables);
+  public Set<Variable> setPipelineVariables(String programId, String pipelineId, Variable... variables) throws CloudManagerApiException {
+    return null;
   }
 
-  private String getLogRedirect(HalLink link, String name) throws CloudManagerApiException {
-    List<Pair> params = new ArrayList<>();
-    if (StringUtils.isNotBlank(name)) {
-      params.add(new Pair("file", name));
-    }
-    String url;
-    try {
-      url = get(link.getHref(), params, new GenericType<Redirect>() {}).getRedirect();
-      if (StringUtils.isBlank(url)) {
-        throw new CloudManagerApiException(ErrorType.NO_LOG_REDIRECT, String.format("%s%s", baseUrl, link.getHref()), url);
-      }
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_LOGS, baseUrl, link.getHref(), e);
-    }
-    return url;
+  @Override
+  public Set<Variable> setPipelineVariables(Pipeline pipeline, Variable... variables) throws CloudManagerApiException {
+    return null;
   }
 
-  // Private Implementation detail methods.
-
-  private void streamLog(OutputStream outputStream, String url) throws CloudManagerApiException {
-    try (InputStream is = new URL(url).openStream()) {
-      IOUtils.copy(is, outputStream);
-    } catch (IOException e) {
-      throw new CloudManagerApiException(ErrorType.GET_LOGS, e.getMessage());
-    } finally {
-      try {
-        IOUtils.close(outputStream);
-      } catch (IOException e) {
-        // Do nothing on failed to close
-      }
-    }
+  @Override
+  public Collection<Tenant> listTenants() throws CloudManagerApiException {
+    TenantList tenantList = tenantApi.list();
+    return tenantList.getEmbedded() == null ?
+        Collections.emptyList() :
+        tenantList.getEmbedded().getTenants().stream().map(t -> new TenantImpl(t, this)).collect(Collectors.toList());
   }
 
-  private io.adobe.cloudmanager.impl.generated.Program getProgramDetail(String programId) throws CloudManagerApiException {
-    Program program = listPrograms().stream().filter(p -> programId.equals(p.getId())).findFirst()
-        .orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_PROGRAM, programId));
-    try {
-      return get(program.getSelfLink(), new GenericType<io.adobe.cloudmanager.impl.generated.Program>() {});
-    } catch (ApiException e) {
-
-      throw new CloudManagerApiException(ErrorType.GET_PROGRAM, baseUrl, program.getSelfLink(), e);
-    }
-  }
-
-  private Collection<PipelineImpl> listPipelineDetails(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
-    io.adobe.cloudmanager.impl.generated.Program program = getProgramDetail(programId);
-    String pipelinesHref = program.getLinks().getHttpnsAdobeComadobecloudrelpipelines().getHref();
-    PipelineList pipelineList;
-    try {
-      pipelineList = get(pipelinesHref, new GenericType<PipelineList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.LIST_PIPELINES, baseUrl, pipelinesHref, e);
-    }
-
-    if (pipelineList == null ||
-        pipelineList.getEmbedded() == null ||
-        pipelineList.getEmbedded().getPipelines() == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_PIPELINES, programId);
-    }
-    return pipelineList.getEmbedded().getPipelines().stream().map(p -> new PipelineImpl(p, this)).filter(predicate).collect(Collectors.toList());
-  }
-
-  private PipelineImpl getPipeline(Pipeline p) throws CloudManagerApiException {
-    return getPipeline(p.getProgramId(), p.getId());
-  }
-
-  private PipelineImpl getPipeline(String programId, String pipelineId) throws CloudManagerApiException {
-    return getPipeline(programId, pipelineId, ErrorType.FIND_PIPELINE);
-  }
-
-  private PipelineImpl getPipeline(String programId, String pipelineId, CloudManagerApiException.ErrorType errorType) throws CloudManagerApiException {
-    return listPipelineDetails(programId, new Pipeline.IdPredicate(pipelineId)).stream().findFirst()
-        .orElseThrow(() -> new CloudManagerApiException(errorType, pipelineId, programId));
-  }
-
-  private PipelineExecutionStepStateImpl getExecutionStepState(String url) throws CloudManagerApiException {
-    PipelineExecutionStepState stepState;
-    String path = null;
-    try {
-      path = new URL(url).getPath();
-      stepState = get(path, new GenericType<PipelineExecutionStepState>() {});
-      return new PipelineExecutionStepStateImpl(stepState, this);
-    } catch (MalformedURLException e) {
-      throw new CloudManagerApiException(ErrorType.PROCESS_EVENT, e.getLocalizedMessage());
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_STEP_STATE, baseUrl, path, e);
-    }
+  @Override
+  public Tenant getTenant(String tenantId) throws CloudManagerApiException {
+    return new TenantImpl(tenantApi.get(tenantId), this);
   }
 
   protected PipelineExecutionImpl getExecution(PipelineExecutionStepStateImpl step) throws CloudManagerApiException {
-    HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelexecution();
-    if (link == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_EXECUTION_LINK, step.getLinks().getSelf().getHref());
-    }
-    try {
-      io.adobe.cloudmanager.impl.generated.PipelineExecution execution = get(link.getHref(), new GenericType<io.adobe.cloudmanager.impl.generated.PipelineExecution>() {});
-      return new PipelineExecutionImpl(execution, this);
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, link.getHref(), e);
-    }
-  }
-
-  protected PipelineExecutionImpl getExecution(@NotNull String url) throws CloudManagerApiException {
-    io.adobe.cloudmanager.impl.generated.PipelineExecution execution;
-    String path = null;
-    try {
-      path = new URL(url).getPath();
-      execution = get(path, new GenericType<io.adobe.cloudmanager.impl.generated.PipelineExecution>() {});
-      return new PipelineExecutionImpl(execution, this);
-    } catch (MalformedURLException e) {
-      throw new CloudManagerApiException(ErrorType.PROCESS_EVENT, e.getLocalizedMessage());
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_EXECUTION, baseUrl, path, e);
-    }
-
+    return null;
   }
 
   protected void downloadExecutionStepLog(PipelineExecutionStepStateImpl step, String filename, OutputStream outputStream) throws CloudManagerApiException {
-    HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinelogs();
-    if (link == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_LOGS_LINK_EXECUTION, step.getAction());
-    }
-    String url = getLogRedirect(link, filename);
-    streamLog(outputStream, url);
   }
 
-  public Collection<EnvironmentImpl> listEnvironments(io.adobe.cloudmanager.impl.generated.Program program) throws CloudManagerApiException {
-    String environmentsHref = program.getLinks().getHttpnsAdobeComadobecloudrelenvironments().getHref();
-    EnvironmentList environmentList;
-    try {
-      environmentList = get(environmentsHref, new GenericType<EnvironmentList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.RETRIEVE_ENVIRONMENTS, baseUrl, environmentsHref, e);
-    }
-    if (environmentList == null ||
-        environmentList.getEmbedded() == null ||
-        environmentList.getEmbedded().getEnvironments() == null) {
-      throw new CloudManagerApiException(ErrorType.FIND_ENVIRONMENTS, program.getId());
-    }
-    return environmentList.getEmbedded().getEnvironments().stream().map(e -> new EnvironmentImpl(e, this)).collect(Collectors.toList());
-  }
-
-  private EnvironmentImpl getEnvironment(String programId, String environmentId) throws CloudManagerApiException {
-    io.adobe.cloudmanager.impl.generated.Program program = getProgramDetail(programId);
-    Collection<EnvironmentImpl> environments = listEnvironments(program);
-    return environments.stream().filter(e -> environmentId.equals(e.getId())).findFirst().
-        orElseThrow(() -> new CloudManagerApiException(ErrorType.FIND_ENVIRONMENT, environmentId, programId));
-  }
-
-  private Set<Variable> listVariables(HalLink variableLink) throws CloudManagerApiException {
-    VariableList list;
-    try {
-      list = get(variableLink.getHref(), new GenericType<VariableList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_VARIABLES, baseUrl, variableLink.getHref(), e);
-    }
-    if (list.getTotalNumberOfItems().equals(0)) {
-      return Collections.emptySet();
-    }
-    return list.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toSet());
-  }
-
-  private Set<Variable> setVariables(HalLink variableLInk, Variable[] variables) throws CloudManagerApiException {
-    VariableList list;
-    try {
-      list = patch(variableLInk.getHref(), variables, new GenericType<VariableList>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.SET_VARIABLES, baseUrl, variableLInk.getHref(), e);
-    }
-    if (list.getTotalNumberOfItems().equals(0)) {
-      return Collections.emptySet();
-    }
-    return list.getEmbedded().getVariables().stream().map(Variable::new).collect(Collectors.toSet());
-  }
-
-  private EnvironmentLogs getLogs(String path) throws CloudManagerApiException {
-    try {
-      return get(path, new GenericType<EnvironmentLogs>() {});
-    } catch (ApiException e) {
-      throw new CloudManagerApiException(ErrorType.GET_LOGS, baseUrl, path, e);
-    }
-  }
-
-  private void downloadLog(EnvironmentLogImpl log) throws CloudManagerApiException {
-    Redirect redirect;
-    try {
-      redirect = get(log.getUrl(), new GenericType<Redirect>() {});
-      File downloadedFile = new File(log.getPath());
-      FileUtils.copyInputStreamToFile(new URL(redirect.getRedirect()).openStream(), downloadedFile);
-    } catch (ApiException | MalformedURLException e) {
-      throw new CloudManagerApiException(ErrorType.NO_LOG_REDIRECT, log.getUrl(), e.getMessage());
-    } catch (IOException e) {
-      throw new CloudManagerApiException(ErrorType.LOG_DOWNLOAD, e.getMessage(), log.getPath(), e.getMessage());
-    }
-  }
-
-  private <T> T get(String path, GenericType<T> returnType) throws ApiException {
-    return doRequest(path, "GET", Collections.emptyList(), null, returnType);
-  }
-
-  private <T> T get(String path, List<Pair> queryParams, GenericType<T> returnType) throws ApiException {
-    return doRequest(path, "GET", queryParams, null, returnType);
-  }
-
-  private <T> T put(String path, Object body) throws ApiException {
-    return put(path, body, null);
-  }
-
-  private <T> T put(String path, GenericType<T> returnType) throws ApiException {
-    return put(path, "", returnType);
-  }
-
-  private <T> T put(String path, Object body, GenericType<T> returnType) throws ApiException {
-    return doRequest(path, "PUT", Collections.emptyList(), body, returnType);
-  }
-
-  private <T> T patch(String path, Object body, GenericType<T> returnType) throws ApiException {
-    return doRequest(path, "PATCH", Collections.emptyList(), body, returnType);
-  }
-
-  private <T> T delete(String path) throws ApiException {
-    return doRequest(path, "DELETE", Collections.emptyList(), null, null);
-  }
-
-  private String getAccessToken() {
-    // The only way Ims Service is populated is if we are using the AIO Lib Workspace OAuth approach.
-    if (imsService != null) {
-      if (token == null || System.currentTimeMillis() >= expiration) {
-        token = imsService.getOAuthAccessToken();
-        expiration = System.currentTimeMillis() + token.getExpiresIn();
-      }
-      this.accessToken = token.getAccessToken();
-    }
-    return this.accessToken;
-  }
-
-  private <T> T doRequest(String path, String method, List<Pair> queryParams, Object body, GenericType<T> returnType) throws ApiException {
-
-    Map<String, String> headers = new HashMap<>();
-    headers.put("x-gw-ims-org-id", orgId);
-    headers.put("Authorization", String.format("Bearer %s", getAccessToken()));
-    headers.put("x-api-key", apiKey);
-
-    return apiClient.invokeAPI(path, method, queryParams, body, headers, Collections.emptyMap(), "application/json", "application/json", new String[0], returnType);
-  }
 }

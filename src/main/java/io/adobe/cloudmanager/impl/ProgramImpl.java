@@ -20,9 +20,12 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.util.Collection;
+
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
+import io.adobe.cloudmanager.Repository;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -47,11 +50,12 @@ public class ProgramImpl extends io.adobe.cloudmanager.impl.generated.EmbeddedPr
   @EqualsAndHashCode.Exclude
   private final CloudManagerApi client;
 
-  public String getSelfLink() {
-    return delegate.getLinks().getSelf().getHref();
-  }
-
   public void delete() throws CloudManagerApiException {
     client.deleteProgram(this);
+  }
+
+  @Override
+  public Collection<Repository> listRepositories() throws CloudManagerApiException {
+    return client.listRepositories(this);
   }
 }

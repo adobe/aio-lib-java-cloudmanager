@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2022 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,34 +22,49 @@ package io.adobe.cloudmanager;
 
 import java.util.Collection;
 
-public interface Program {
+public interface Repository {
 
   /**
-   * Identifier of the program. Unique within the space.
+   * Identifier of the repository. Unique within the space.
    *
    * @return id
    **/
   String getId();
 
   /**
-   * Name of the program
+   * The id of the associated program context
+   *
+   * @return the program id
+   */
+  String getProgramId();
+
+  /**
+   * Name of the repository
    *
    * @return name
-   **/
+   */
   String getName();
 
   /**
-   * Delete this program.
+   * Description of this repository.
    *
-   * @throws CloudManagerApiException when an error occurs
+   * @return description
    */
-  void delete() throws CloudManagerApiException;
+  String getDescription();
 
   /**
-   * Lists any repositories associated with this program
+   * URL to the repository.
    *
-   * @return the repositories
-   * @throws CloudManagerApiException when any error occurs
+   * @return url
    */
-  Collection<Repository> listRepositories() throws CloudManagerApiException;
+  String getUrl();
+
+  /**
+   * Lists all the branches associated with the repository.
+   *
+   * @return branches
+   * @throws CloudManagerApiException when any error occurs
+   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getBranches">List Branches API</a>
+   */
+  Collection<String> listBranches() throws CloudManagerApiException;
 }

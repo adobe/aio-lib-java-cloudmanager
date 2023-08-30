@@ -20,7 +20,12 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.IOUtils;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.ims.feign.AuthInterceptor;
@@ -30,11 +35,13 @@ import feign.RequestTemplate;
 import io.adobe.cloudmanager.CloudManagerApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
+import org.mockserver.model.JsonBody;
 
 import static com.adobe.aio.util.Constants.*;
 import static org.mockito.Mockito.*;
@@ -66,8 +73,6 @@ public abstract class AbstractApiTest {
   void before(MockServerClient client) throws Exception {
     this.client = client;
     this.baseUrl = String.format("http://localhost:%s", client.getPort());
-    when(workspace.getImsOrgId()).thenReturn("success");
-    when(workspace.getApiKey()).thenReturn("test-apikey");
     when(workspace.getAuthContext()).thenReturn(authContext);
     doNothing().when(authContext).validate();
 
@@ -78,6 +83,16 @@ public abstract class AbstractApiTest {
         }
     )) {
       underTest = CloudManagerApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+    }
+  }
+
+
+  protected static JsonBody loadBodyJson(String filePath) {
+    try (InputStream is = AbstractApiTest.class.getClassLoader().getResourceAsStream(filePath)) {
+      assert is != null;
+      return JsonBody.json(IOUtils.toString(is, Charset.defaultCharset()));
+    } catch (IOException e) {
+      throw new TestInstantiationException(e.getMessage());
     }
   }
 }

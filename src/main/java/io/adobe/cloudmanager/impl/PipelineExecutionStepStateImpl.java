@@ -23,8 +23,6 @@ package io.adobe.cloudmanager.impl;
 import java.io.OutputStream;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.StringUtils;
-
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
