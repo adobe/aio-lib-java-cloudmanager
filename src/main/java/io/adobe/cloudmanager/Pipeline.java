@@ -80,7 +80,6 @@ public interface Pipeline {
   void invalidateCache() throws CloudManagerApiException;
 
 
-
   /**
    * Starts this pipeline.
    *

@@ -23,7 +23,6 @@ package io.adobe.cloudmanager.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -343,5 +342,30 @@ class PipelineTest extends AbstractApiTest {
     new PipelineImpl(mock, underTest).invalidateCache();
     client.verify(delete, VerificationTimes.once());
     client.clear(delete);
+  }
+
+  @Test
+  void status() {
+    assertEquals(Pipeline.Status.fromValue("WAITING"), Pipeline.Status.WAITING);
+    assertNull(Pipeline.Status.fromValue("foo"));
+    assertEquals(Pipeline.Status.IDLE.getValue(), Pipeline.Status.IDLE.toString());
+  }
+
+  @Test
+  void predicates() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipelines");
+    client.when(list).respond(response().withBody(LIST_BODY));
+
+    Collection<Pipeline> busy = underTest.listPipelines("1", Pipeline.IS_BUSY);
+    assertEquals(2, busy.size());
+    Collection<Pipeline> named = underTest.listPipelines("1", new Pipeline.NamePredicate("test1"));
+    assertEquals(1, named.size());
+    Collection<Pipeline> id = underTest.listPipelines("1", new Pipeline.IdPredicate("4"));
+    assertEquals(1, id.size());
+
+    client.verify(list, VerificationTimes.exactly(3));
+    client.clear(list);
   }
 }
