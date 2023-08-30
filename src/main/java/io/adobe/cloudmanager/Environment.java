@@ -48,13 +48,6 @@ public interface Environment {
   String getName();
 
   /**
-   * Link to this environment.
-   *
-   * @return the link to this environment.
-   */
-  String getSelfLink();
-
-  /**
    * A list of available log options for downloading.
    *
    * @return list of log options

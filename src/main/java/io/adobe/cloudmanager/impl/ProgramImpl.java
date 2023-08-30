@@ -24,6 +24,7 @@ import java.util.Collection;
 
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Repository;
 import lombok.EqualsAndHashCode;
@@ -57,5 +58,10 @@ public class ProgramImpl extends io.adobe.cloudmanager.impl.generated.EmbeddedPr
   @Override
   public Collection<Repository> listRepositories() throws CloudManagerApiException {
     return client.listRepositories(this);
+  }
+
+  @Override
+  public Collection<Pipeline> listPipelines() throws CloudManagerApiException {
+    return client.listPipelines(this);
   }
 }

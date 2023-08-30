@@ -43,8 +43,8 @@ import lombok.NonNull;
  * <p>
  * Implementations of this interface must be context aware of the Adobe IMS Org when making API calls.
  *
- * @since 1.0
  * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/">Cloud Manager API</a>
+ * @since 1.0
  */
 public interface CloudManagerApi {
 
@@ -164,7 +164,7 @@ public interface CloudManagerApi {
    * Lists all repositories for the specified program, up to the defined limit.
    *
    * @param programId the program id
-   * @param limit the maximum number of repositories to retrieve
+   * @param limit     the maximum number of repositories to retrieve
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
@@ -175,7 +175,7 @@ public interface CloudManagerApi {
    * Lists all repositories for the specified program, up to the defined limit.
    *
    * @param program the program
-   * @param limit the maximum number of repositories to retrieve
+   * @param limit   the maximum number of repositories to retrieve
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
@@ -186,8 +186,8 @@ public interface CloudManagerApi {
    * Lists all repositories for the specified program, from the starting position, up to the defined limit.
    *
    * @param programId the program id
-   * @param start the starting position in the list to retrieve
-   * @param limit the maximum number of repositories to retrieve
+   * @param start     the starting position in the list to retrieve
+   * @param limit     the maximum number of repositories to retrieve
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
@@ -198,8 +198,8 @@ public interface CloudManagerApi {
    * Lists all repositories for the specified program, from the starting position, up to the defined limit.
    *
    * @param program the program
-   * @param start the starting position in the list to retrieve
-   * @param limit the maximum number of repositories to retrieve
+   * @param start   the starting position in the list to retrieve
+   * @param limit   the maximum number of repositories to retrieve
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
@@ -209,7 +209,7 @@ public interface CloudManagerApi {
   /**
    * Get a specific repository in the program.
    *
-   * @param programId the program id
+   * @param programId    the program id
    * @param repositoryId the repository id
    * @return the repository
    * @throws CloudManagerApiException when any error occurs
@@ -220,7 +220,7 @@ public interface CloudManagerApi {
   /**
    * Get a specific repository in the program.
    *
-   * @param program the program
+   * @param program      the program
    * @param repositoryId the repository id
    * @return the repository
    * @throws CloudManagerApiException when any error occurs
@@ -232,13 +232,11 @@ public interface CloudManagerApi {
    * Lists all the branches associated with the repository.
    *
    * @param repository the repository
-   * @return branches
+   * @return list of branch names
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getBranches">List Branches API</a>
    */
   @NonNull Collection<String> listBranches(@NonNull Repository repository) throws CloudManagerApiException;
-
-
 
   /**
    * Lists all pipelines within the specified program.
@@ -251,15 +249,36 @@ public interface CloudManagerApi {
   Collection<Pipeline> listPipelines(@NotNull String programId) throws CloudManagerApiException;
 
   /**
+   * Lists all pipelines within the specified program.
+   *
+   * @param program the program
+   * @return the list of pipelines
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<Pipeline> listPipelines(@NotNull Program program) throws CloudManagerApiException;
+
+  /**
    * Lists all pipelines in the program that meet the predicate clause.
    *
    * @param programId the program id
    * @param predicate a predicate used to filter the pipelines
-   * @return a list of {@link Pipeline}s
+   * @return a list of pipelines
    * @throws CloudManagerApiException when any error occurs
    */
   @NotNull
   Collection<Pipeline> listPipelines(@NotNull String programId, @NotNull Predicate<Pipeline> predicate) throws CloudManagerApiException;
+
+  /**
+   * Returns the pipeline within the specified program, with the specified id.
+   *
+   * @param programId  the program id
+   * @param pipelineId the pipeline id
+   * @return the {@link Pipeline}
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Pipeline getPipeline(@NotNull String programId, String pipelineId) throws CloudManagerApiException;
 
   /**
    * Delete the specified pipeline.
@@ -302,6 +321,24 @@ public interface CloudManagerApi {
   Pipeline updatePipeline(@NotNull Pipeline pipeline, @NotNull PipelineUpdate updates) throws CloudManagerApiException;
 
   /**
+   * Invalidates the build cache for the specified pipeline.
+   *
+   * @param programId  the program id for the pipeline context
+   * @param pipelineId the id of the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void invalidatePipelineCache(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
+
+  /**
+   * Invalidates the build cache for the specified pipeline.
+   *
+   * @param pipeline the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void invalidatePipelineCache(@NotNull Pipeline pipeline) throws CloudManagerApiException;
+
+
+  /**
    * Returns an optional current execution of the specified pipeline.
    *
    * @param programId  the program id context of the pipeline
@@ -321,7 +358,6 @@ public interface CloudManagerApi {
    * @param pipelineId the id of the pipeline
    * @return the new execution
    * @throws CloudManagerApiException when any error occurs
-   *
    */
   @NotNull
   PipelineExecution startExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
@@ -363,6 +399,7 @@ public interface CloudManagerApi {
 
   /**
    * Returns the Pipeline Execution associated with the AdobeIO Execution Start event
+   *
    * @param event the pipeline start event
    * @return the execution details
    * @throws CloudManagerApiException when any error occurs
@@ -372,6 +409,7 @@ public interface CloudManagerApi {
 
   /**
    * Returns the Pipeline Execution associated with the AdobeIO Execution End event
+   *
    * @param event the pipeline end event
    * @return the execution details
    * @throws CloudManagerApiException when any error occurs
@@ -517,10 +555,10 @@ public interface CloudManagerApi {
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @param programId    the program id of the pipeline context
-   * @param pipelineId   the pipeline id for the execution context
-   * @param executionId  the execution id for the logs
-   * @param action       the execution step action for the log
+   * @param programId   the program id of the pipeline context
+   * @param pipelineId  the pipeline id for the execution context
+   * @param executionId the execution id for the logs
+   * @param action      the execution step action for the log
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs
    */
@@ -529,22 +567,21 @@ public interface CloudManagerApi {
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @param programId    the program id of the pipeline context
-   * @param pipelineId   the pipeline id for the execution context
-   * @param executionId  the execution id for the logs
-   * @param action       the execution step action for the log
-   * @param name         custom log file name
+   * @param programId   the program id of the pipeline context
+   * @param pipelineId  the pipeline id for the execution context
+   * @param executionId the execution id for the logs
+   * @param action      the execution step action for the log
+   * @param name        custom log file name
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs
    */
   String getExecutionStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull String name) throws CloudManagerApiException;
 
-
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @param execution    the execution for the log
-   * @param action       the execution step action for the log
+   * @param execution the execution for the log
+   * @param action    the execution step action for the log
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs
    */
@@ -553,14 +590,13 @@ public interface CloudManagerApi {
   /**
    * Returns the fully qualified URL to the log file for download.
    *
-   * @param execution    the execution for the log
-   * @param action       the execution step action for the log
-   * @param name         custom log file name
+   * @param execution the execution for the log
+   * @param action    the execution step action for the log
+   * @param name      custom log file name
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs
    */
   String getExecutionStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull String action, @NotNull String name) throws CloudManagerApiException;
-
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.

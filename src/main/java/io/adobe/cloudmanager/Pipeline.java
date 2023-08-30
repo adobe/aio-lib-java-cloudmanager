@@ -56,6 +56,32 @@ public interface Pipeline {
   Status getStatusState();
 
   /**
+   * Delete this pipeline.
+   *
+   * @throws CloudManagerApiException when any error occurs.
+   */
+  void delete() throws CloudManagerApiException;
+
+  /**
+   *
+   * Updates this pipeline with the specified changes.
+   *
+   * @param update the updates to make to this pipeline
+   * @return the updated Pipeline.
+   * @throws CloudManagerApiException when any errors occur
+   */
+  Pipeline update(PipelineUpdate update) throws CloudManagerApiException;
+
+  /**
+   * Invalidates the build cache for this pipeline.
+   *
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void invalidateCache() throws CloudManagerApiException;
+
+
+
+  /**
    * Starts this pipeline.
    *
    * @return the new execution.
@@ -73,22 +99,6 @@ public interface Pipeline {
   PipelineExecution getExecution(String executionId) throws CloudManagerApiException;
 
   /**
-   * Updates this pipeline with the specified changes.
-   *
-   * @param update the updates to make to this pipeline
-   * @return the updated Pipeline.
-   * @throws CloudManagerApiException when any errors occur
-   */
-  Pipeline update(PipelineUpdate update) throws CloudManagerApiException;
-
-  /**
-   * Delete this pipeline.
-   *
-   * @throws CloudManagerApiException when any error occurs.
-   */
-  void delete() throws CloudManagerApiException;
-
-  /**
    * Retrieve the variables associated with this pipeline.
    *
    * @return the variables in this pipeline
@@ -104,13 +114,6 @@ public interface Pipeline {
    * @throws CloudManagerApiException when any error occurs.
    */
   Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
-
-  /**
-   * Link to this pipeline.
-   *
-   * @return the link to this pipeline.
-   */
-  String getSelfLink();
 
   /**
    * Pipeline status values

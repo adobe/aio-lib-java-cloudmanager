@@ -48,6 +48,8 @@ public class CloudManagerEvent {
 
   private static final String HMAC_ALG = "HmacSHA256";
 
+  private static final String PROCESS_EVENT_ERROR = "Unable to process event: %s";
+
   /**
    * Attempts to convert the provided string source into the specified event type T.
    * <p>
@@ -83,7 +85,7 @@ public class CloudManagerEvent {
           .registerModule(new JavaTimeModule());
       return mapper.readValue(source, type);
     } catch (JsonProcessingException e) {
-      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.PROCESS_EVENT, e.getMessage());
+      throw new CloudManagerApiException(String.format(PROCESS_EVENT_ERROR, e.getLocalizedMessage()));
     }
   }
 
@@ -103,7 +105,7 @@ public class CloudManagerEvent {
       mac.init(new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), HMAC_ALG));
       return signature.equals(Base64.getEncoder().encodeToString(mac.doFinal(eventBody.getBytes(StandardCharsets.UTF_8))));
     } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-      throw new CloudManagerApiException(CloudManagerApiException.ErrorType.VALIDATE_EVENT, e.getLocalizedMessage());
+      throw new CloudManagerApiException(String.format("Unable to validate event: %s", e.getLocalizedMessage()));
     }
   }
 
@@ -159,7 +161,7 @@ public class CloudManagerEvent {
         PipelineExecutionStartEventEvent event = tester.getEvent();
         return Arrays.stream(EventType.values()).filter(t -> t.getObjectType().equals(event.getXdmEventEnvelopeobjectType()) && t.getEventType().equals(event.getAtType())).findFirst().orElse(null);
       } catch (JsonProcessingException e) {
-        throw new CloudManagerApiException(CloudManagerApiException.ErrorType.PROCESS_EVENT, e.getMessage());
+        throw new CloudManagerApiException(String.format(PROCESS_EVENT_ERROR, e.getLocalizedMessage()));
       }
     }
 

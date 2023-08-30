@@ -1,0 +1,27 @@
+{
+  "id": "1",
+  "programId": "1",
+  "name": "test1",
+  "status": "IDLE",
+  "phases": [
+    {
+      "name": "VALIDATE",
+      "type": "VALIDATE"
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/api/program/1/pipeline/1"
+    },
+    "http://ns.adobe.com/adobecloud/rel/execution": {
+      "href": "/api/program/1/pipeline/1/execution"
+    },
+    "http://ns.adobe.com/adobecloud/rel/execution/id": {
+      "href": "/api/program/1/pipeline/1/execution/{executionId}",
+      "templated": true
+    },
+    "http://ns.adobe.com/adobecloud/rel/variables": {
+      "href": "/api/program/1/pipeline/1/variables"
+    }
+  }
+}

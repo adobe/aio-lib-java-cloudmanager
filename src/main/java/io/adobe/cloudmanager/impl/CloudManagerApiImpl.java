@@ -48,6 +48,7 @@ import feign.Request;
 import feign.RequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
@@ -68,14 +69,18 @@ import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
+import io.adobe.cloudmanager.impl.client.FeignPipelineApi;
 import io.adobe.cloudmanager.impl.client.FeignProgramApi;
 import io.adobe.cloudmanager.impl.client.FeignRepositoryApi;
 import io.adobe.cloudmanager.impl.client.FeignTenantApi;
+import io.adobe.cloudmanager.impl.exception.PipelineExceptionDecoder;
 import io.adobe.cloudmanager.impl.exception.ProgramExceptionDecoder;
 import io.adobe.cloudmanager.impl.exception.RepositoryExceptionDecoder;
 import io.adobe.cloudmanager.impl.exception.TenantExceptionDecoder;
 import io.adobe.cloudmanager.impl.generated.BranchList;
 import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
+import io.adobe.cloudmanager.impl.generated.PipelineList;
+import io.adobe.cloudmanager.impl.generated.PipelinePhase;
 import io.adobe.cloudmanager.impl.generated.ProgramList;
 import io.adobe.cloudmanager.impl.generated.RepositoryBranch;
 import io.adobe.cloudmanager.impl.generated.RepositoryList;
@@ -89,6 +94,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   private final FeignTenantApi tenantApi;
   private final FeignProgramApi programApi;
   private final FeignRepositoryApi repositoryApi;
+  private final FeignPipelineApi pipelineApi;
 
   public CloudManagerApiImpl(Workspace workspace, URL url) {
 
@@ -106,6 +112,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     RequestInterceptor aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
     Request.Options options = new Request.Options(DEFAULT_CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, DEFAULT_READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, true);
     Feign.Builder builder = Feign.builder()
+        .client(new OkHttpClient())
         .logger(new Slf4jLogger())
         .logLevel(Logger.Level.BASIC)
         .requestInterceptor(authInterceptor)
@@ -118,6 +125,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     tenantApi = builder.errorDecoder(new TenantExceptionDecoder()).target(FeignTenantApi.class, baseUrl);
     programApi = builder.errorDecoder(new ProgramExceptionDecoder()).target(FeignProgramApi.class, baseUrl);
     repositoryApi = builder.errorDecoder(new RepositoryExceptionDecoder()).target(FeignRepositoryApi.class, baseUrl);
+    pipelineApi = builder.errorDecoder(new PipelineExceptionDecoder()).target(FeignPipelineApi.class, baseUrl);
   }
 
   @Override
@@ -207,32 +215,68 @@ public class CloudManagerApiImpl implements CloudManagerApi {
 
   @Override
   public Collection<Pipeline> listPipelines(String programId) throws CloudManagerApiException {
-    return null;
+    return listPipelines(programId, p -> true);
+  }
+
+  @Override
+  public Collection<Pipeline> listPipelines(Program program) throws CloudManagerApiException {
+    return listPipelines(program.getId());
   }
 
   @Override
   public Collection<Pipeline> listPipelines(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
-    return null;
+    return listPipelineDetails(programId, predicate);
+  }
+
+  @Override
+  public PipelineImpl getPipeline(String programId, String pipelineId) throws CloudManagerApiException {
+    return new PipelineImpl(pipelineApi.get(programId, pipelineId), this);
   }
 
   @Override
   public void deletePipeline(String programId, String pipelineId) throws CloudManagerApiException {
-
+    pipelineApi.delete(programId, pipelineId);
   }
 
   @Override
   public void deletePipeline(Pipeline pipeline) throws CloudManagerApiException {
-
+    pipelineApi.delete(pipeline.getProgramId(), pipeline.getId());
   }
 
   @Override
   public Pipeline updatePipeline(String programId, String pipelineId, PipelineUpdate updates) throws CloudManagerApiException {
-    return null;
+    PipelineImpl original = getPipeline(programId, pipelineId);
+
+    PipelinePhase buildPhase = original.getPhases().stream()
+        .filter(p -> PipelinePhase.TypeEnum.BUILD == p.getType())
+        .findFirst()
+        .orElseThrow(() -> new CloudManagerApiException(String.format(PipelineExceptionDecoder.ErrorType.NO_BUILD_PHASE.getMessage(), pipelineId)));
+
+    if (updates.getBranch() != null) {
+      buildPhase.setBranch(updates.getBranch());
+    }
+
+    if (updates.getRepositoryId() != null) {
+      buildPhase.setRepositoryId(updates.getRepositoryId());
+    }
+    io.adobe.cloudmanager.impl.generated.Pipeline toUpdate = new io.adobe.cloudmanager.impl.generated.Pipeline();
+    toUpdate.getPhases().add(buildPhase);
+    return new PipelineImpl(pipelineApi.update(programId, pipelineId, toUpdate),this);
   }
 
   @Override
   public Pipeline updatePipeline(Pipeline pipeline, PipelineUpdate updates) throws CloudManagerApiException {
-    return null;
+    return updatePipeline(pipeline.getProgramId(), pipeline.getId(), updates);
+  }
+
+  @Override
+  public void invalidatePipelineCache(String programId, String pipelineId) throws CloudManagerApiException {
+    pipelineApi.invalidateCache(programId, pipelineId);
+  }
+
+  @Override
+  public void invalidatePipelineCache(Pipeline pipeline) throws CloudManagerApiException {
+    invalidatePipelineCache(pipeline.getProgramId(), pipeline.getId());
   }
 
   @Override
@@ -470,4 +514,14 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   protected void downloadExecutionStepLog(PipelineExecutionStepStateImpl step, String filename, OutputStream outputStream) throws CloudManagerApiException {
   }
 
+
+  @NonNull
+  private Collection<Pipeline> listPipelineDetails(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
+    PipelineList list = pipelineApi.list(programId);
+    if (list == null || list.getEmbedded() == null || list.getEmbedded().getPipelines() == null) {
+      throw new CloudManagerApiException(String.format(PipelineExceptionDecoder.ErrorType.FIND_PIPELINES.getMessage(), programId));
+    }
+
+    return list.getEmbedded().getPipelines().stream().map(p -> new PipelineImpl(p, this)).filter(predicate).collect(Collectors.toList());
+  }
 }

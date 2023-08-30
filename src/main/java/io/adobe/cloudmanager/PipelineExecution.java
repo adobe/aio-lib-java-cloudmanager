@@ -65,22 +65,6 @@ public interface PipelineExecution {
   void cancel() throws CloudManagerApiException;
 
   /**
-   * Get the url to advance this pipeline.
-   *
-   * @return the URL to the Advance API endpoint
-   * @throws CloudManagerApiException when any error occurs
-   */
-  String getAdvanceLink() throws CloudManagerApiException;
-
-  /**
-   * Get the url to cancel this pipeline.
-   *
-   * @return the URL to the Cancel API endpoint
-   * @throws CloudManagerApiException when any error occurs
-   */
-  String getCancelLink() throws CloudManagerApiException;
-
-  /**
    * Pipeline Execution status values
    *
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>

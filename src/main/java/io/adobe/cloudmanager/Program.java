@@ -52,4 +52,12 @@ public interface Program {
    * @throws CloudManagerApiException when any error occurs
    */
   Collection<Repository> listRepositories() throws CloudManagerApiException;
+
+  /**
+   * Lists pipelines associated with this program
+   *
+   * @return list if pipelines
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Collection<Pipeline> listPipelines() throws CloudManagerApiException;
 }

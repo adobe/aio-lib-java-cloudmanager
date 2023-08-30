@@ -65,7 +65,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <aio.lib.version>1.1.0-SNAPSHOT</aio.lib.version>
+        <aio.lib.version>1.1.0</aio.lib.version>
         <feign.version>12.4</feign.version>
         <jackson-version>2.15.2</jackson-version>
 
@@ -228,6 +228,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>3.1.0</version>
                 </plugin>
@@ -315,7 +320,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
-                        <version>3.3.0</version>
                         <configuration>
                             <classifier>java8</classifier>
                         </configuration>
@@ -557,6 +561,11 @@
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>
+            <version>${feign.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
             <version>${feign.version}</version>
         </dependency>
         <dependency>

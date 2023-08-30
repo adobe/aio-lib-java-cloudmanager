@@ -18,7 +18,7 @@ import static org.mockserver.model.JsonBody.*;
 
 public class TenantTest extends AbstractApiTest {
   @Test
-  void list_failure404() {
+  void list_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenants");
@@ -30,7 +30,7 @@ public class TenantTest extends AbstractApiTest {
   }
 
   @Test
-  void list_failure403() {
+  void list_failure_403() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenants");
@@ -42,7 +42,7 @@ public class TenantTest extends AbstractApiTest {
   }
 
   @Test
-  void list_failure403_errorMessageOnly() {
+  void list_failure_403_errorMessageOnly() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenants");
@@ -54,7 +54,7 @@ public class TenantTest extends AbstractApiTest {
   }
 
   @Test
-  void list_failure403_errorCodeOnly() {
+  void list_failure_403_errorCodeOnly() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenants");
@@ -91,7 +91,7 @@ public class TenantTest extends AbstractApiTest {
   }
 
   @Test
-  void get_failure404() {
+  void get_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1");

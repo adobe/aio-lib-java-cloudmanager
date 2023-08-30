@@ -29,6 +29,7 @@ import io.adobe.cloudmanager.Tenant;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockserver.model.HttpRequest;
+import org.mockserver.model.JsonBody;
 
 import static com.adobe.aio.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,10 +38,12 @@ import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 
-class ProgramsTest extends AbstractApiTest {
+class ProgramTest extends AbstractApiTest {
+  private static final JsonBody GET_BODY = loadBodyJson("program/get.json");
+  public static final JsonBody LIST_BODY = loadBodyJson("program/list.json");
 
   @Test
-  void get_failure404() {
+  void get_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1");
@@ -57,7 +60,7 @@ class ProgramsTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1");
-    client.when(get).respond(response().withBody(loadBodyJson("programs/get.json")));
+    client.when(get).respond(response().withBody(GET_BODY));
     assertNotNull(underTest.getProgram("1"), "Program found.");
     client.verify(get);
     client.clear(get);
@@ -100,7 +103,7 @@ class ProgramsTest extends AbstractApiTest {
   }
 
   @Test
-  void list_failure404() {
+  void list_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
@@ -128,7 +131,7 @@ class ProgramsTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
-    client.when(list).respond(response(). withBody(loadBodyJson("programs/list.json")));
+    client.when(list).respond(response(). withBody(LIST_BODY));
     Collection<Program> programs = underTest.listPrograms("1");
     assertEquals(7, programs.size(), "Correct length of program list");
     client.verify(list);
@@ -141,7 +144,7 @@ class ProgramsTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
-    client.when(list).respond(response(). withBody(loadBodyJson("programs/list.json")));
+    client.when(list).respond(response(). withBody(LIST_BODY));
     Tenant tenant = new TenantImpl(mock, underTest);
     Collection<Program> programs = tenant.listPrograms();
     assertEquals(7, programs.size(), "Correct length of program list");

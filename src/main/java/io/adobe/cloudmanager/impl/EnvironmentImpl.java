@@ -71,11 +71,6 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
     }
   }
 
-  @Override
-  public String getSelfLink() {
-    return getLinks().getSelf().getHref();
-  }
-
   public Set<Variable> getVariables() throws CloudManagerApiException {
     return client.listEnvironmentVariables(this);
   }

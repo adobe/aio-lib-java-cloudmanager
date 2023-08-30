@@ -10,6 +10,7 @@ import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockserver.model.HttpRequest;
+import org.mockserver.model.JsonBody;
 import org.mockserver.verify.VerificationTimes;
 
 import static com.adobe.aio.util.Constants.*;
@@ -19,10 +20,13 @@ import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 
-public class RepositoryApiTest extends AbstractApiTest {
+public class RepositoryTest extends AbstractApiTest {
+  private static final JsonBody GET_BODY = loadBodyJson("repository/get.json");
+  public static final JsonBody LIST_BODY = loadBodyJson("repository/list.json");
+
 
   @Test
-  void list_failure404() {
+  void list_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -40,7 +44,7 @@ public class RepositoryApiTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/repositories");
-    client.when(list).respond(response().withBody(loadBodyJson("repository/list.json")));
+    client.when(list).respond(response().withBody(LIST_BODY));
     Collection<Repository> repositories = underTest.listRepositories("1");
     assertEquals(3, repositories.size());
     client.verify(list);
@@ -53,7 +57,7 @@ public class RepositoryApiTest extends AbstractApiTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getId()).thenReturn("1");
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/repositories");
-    client.when(list).respond(response().withBody(loadBodyJson("repository/list.json")));
+    client.when(list).respond(response().withBody(LIST_BODY));
 
     Program program = new ProgramImpl(mock, underTest);
     Collection<Repository> repositories = program.listRepositories();
@@ -63,7 +67,7 @@ public class RepositoryApiTest extends AbstractApiTest {
   }
 
   @Test
-  void list_with_limit_failure404() {
+  void list_with_limit_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -92,7 +96,7 @@ public class RepositoryApiTest extends AbstractApiTest {
         .withPath("/api/program/1/repositories")
         .withQueryStringParameter("start", "0")
         .withQueryStringParameter("limit", "10");
-    client.when(list).respond(response().withBody(loadBodyJson("repository/list.json")));
+    client.when(list).respond(response().withBody(LIST_BODY));
 
     Collection<Repository> repositories = underTest.listRepositories("1", 10);
     assertEquals(3, repositories.size());
@@ -111,7 +115,7 @@ public class RepositoryApiTest extends AbstractApiTest {
         .withPath("/api/program/1/repositories")
         .withQueryStringParameter("start", "10")
         .withQueryStringParameter("limit", "10");
-    client.when(list).respond(response().withBody(loadBodyJson("repository/list.json")));
+    client.when(list).respond(response().withBody(LIST_BODY));
 
     Collection<Repository> repositories = underTest.listRepositories("1", 10, 10);
     assertEquals(3, repositories.size());
@@ -120,7 +124,7 @@ public class RepositoryApiTest extends AbstractApiTest {
   }
 
   @Test
-  void get_failure404() {
+  void get_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
 
@@ -139,7 +143,7 @@ public class RepositoryApiTest extends AbstractApiTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/repository/1");
-    client.when(get).respond(response().withBody(loadBodyJson("repository/get.json")));
+    client.when(get).respond(response().withBody(GET_BODY));
 
     Repository repository = underTest.getRepository("1", "1");
     assertNotNull(repository, "Repository retrieval success.");
@@ -149,7 +153,7 @@ public class RepositoryApiTest extends AbstractApiTest {
   }
 
   @Test
-  void listBranches_failure404(@Mock Repository mock) throws CloudManagerApiException {
+  void listBranches_failure_404(@Mock Repository mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getProgramId()).thenReturn("1");

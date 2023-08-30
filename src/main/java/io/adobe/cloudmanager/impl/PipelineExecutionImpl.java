@@ -74,16 +74,6 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
     client.cancelExecution(this);
   }
 
-  @Override
-  public String getAdvanceLink() throws CloudManagerApiException {
-    PipelineExecutionStepStateImpl step = client.getWaitingStep(this);
-    HalLink link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
-    if (link == null) {
-      throw new CloudManagerApiException(String.format("Cannot find an advance link for the current step (%s).", step.getAction()));
-    }
-    return link.getHref();
-  }
-
   public String getAdvanceBody() throws CloudManagerApiException {
     PipelineExecutionStepStateImpl step = client.getWaitingStep(this);
     StringWriter writer = new StringWriter();
@@ -106,22 +96,6 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
     } catch (IOException e) {
       throw new CloudManagerApiException(String.format(GENERATE_BODY, e.getLocalizedMessage()));
     }
-  }
-
-  public String getCancelLink() throws CloudManagerApiException {
-    PipelineExecutionStepStateImpl step = client.getCurrentStep(this);
-    HalLink link;
-
-    if (io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING.equals(step.getStatus()) &&
-        ACTION_DEPLOY.equals(step.getAction())) {
-      link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelineadvance();
-    } else {
-      link = step.getLinks().getHttpnsAdobeComadobecloudrelpipelinecancel();
-    }
-    if (link == null) {
-      throw new CloudManagerApiException(String.format("Cannot find a cancel link for the current step (%s). Step may not be cancellable.", step.getAction()));
-    }
-    return link.getHref();
   }
 
   public String getCancelBody() throws CloudManagerApiException {

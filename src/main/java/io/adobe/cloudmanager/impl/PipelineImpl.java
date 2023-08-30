@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,6 +53,21 @@ public class PipelineImpl extends io.adobe.cloudmanager.impl.generated.Pipeline 
   }
 
   @Override
+  public void delete() throws CloudManagerApiException {
+    client.deletePipeline(this);
+  }
+
+  @Override
+  public Pipeline update(PipelineUpdate update) throws CloudManagerApiException {
+    return client.updatePipeline(this, update);
+  }
+
+  @Override
+  public void invalidateCache() throws CloudManagerApiException {
+    client.invalidatePipelineCache(this);
+  }
+
+  @Override
   public Status getStatusState() {
     return Status.fromValue(getStatus().getValue());
   }
@@ -68,16 +83,6 @@ public class PipelineImpl extends io.adobe.cloudmanager.impl.generated.Pipeline 
   }
 
   @Override
-  public Pipeline update(PipelineUpdate update) throws CloudManagerApiException {
-    return client.updatePipeline(this, update);
-  }
-
-  @Override
-  public void delete() throws CloudManagerApiException {
-    client.deletePipeline(this);
-  }
-
-  @Override
   public Set<Variable> listVariables() throws CloudManagerApiException {
     return client.listPipelineVariables(this);
   }
@@ -85,10 +90,5 @@ public class PipelineImpl extends io.adobe.cloudmanager.impl.generated.Pipeline 
   @Override
   public Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
     return client.setPipelineVariables(this, variables);
-  }
-
-  @Override
-  public String getSelfLink() {
-    return getLinks().getSelf().getHref();
   }
 }
