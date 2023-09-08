@@ -21,7 +21,7 @@ package io.adobe.cloudmanager;
  */
 
 /**
- * Possible values of the Step State's Action proprerty.
+ * Possible values of the Step State's Action property.
  *
  * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html#!AdobeDocs/cloudmanager-api-docs/master/receiving-events.md">Adobe IO Events</a>
  */

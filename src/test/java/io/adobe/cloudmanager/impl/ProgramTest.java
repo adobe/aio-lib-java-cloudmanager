@@ -90,7 +90,7 @@ class ProgramTest extends AbstractApiTest {
   }
 
   @Test
-  void delete_viaProgram(@Mock io.adobe.cloudmanager.impl.generated.EmbeddedProgram mock) throws CloudManagerApiException {
+  void delete_via_program(@Mock io.adobe.cloudmanager.impl.generated.EmbeddedProgram mock) throws CloudManagerApiException {
     when(mock.getId()).thenReturn("4");
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);

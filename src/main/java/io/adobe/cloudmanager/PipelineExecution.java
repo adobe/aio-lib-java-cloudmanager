@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@ package io.adobe.cloudmanager;
  * limitations under the License.
  * #L%
  */
+
+import lombok.Getter;
 
 public interface PipelineExecution {
 
@@ -69,6 +71,7 @@ public interface PipelineExecution {
    *
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
+  @Getter
   enum Status {
     NOT_STARTED("NOT_STARTED"),
     RUNNING("RUNNING"),
@@ -78,7 +81,7 @@ public interface PipelineExecution {
     ERROR("ERROR"),
     FAILED("FAILED");
 
-    private String value;
+    private final String value;
 
     Status(String value) {
       this.value = value;
@@ -98,8 +101,5 @@ public interface PipelineExecution {
       return null;
     }
 
-    public String getValue() {
-      return value;
-    }
   }
 }

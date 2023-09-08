@@ -22,6 +22,8 @@ package io.adobe.cloudmanager;
 
 import java.io.OutputStream;
 
+import lombok.Getter;
+
 public interface PipelineExecutionStepState {
 
   /**
@@ -46,7 +48,7 @@ public interface PipelineExecutionStepState {
   String getPhaseId();
 
   /**
-   * The name of the step action.
+   * The name of the step action, see {@link StepAction}
    *
    * @return the action
    */
@@ -68,7 +70,7 @@ public interface PipelineExecutionStepState {
   PipelineExecution getExecution() throws CloudManagerApiException;
 
   /**
-   * Indicates whether or not this step has a log which can be downloaded.
+   * Indicates if this step has a log which can be downloaded.
    *
    * @return {@code true} if a log exists, {@code false} otherwise.
    */
@@ -96,6 +98,7 @@ public interface PipelineExecutionStepState {
    *
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
+  @Getter
   enum Status {
     NOT_STARTED("NOT_STARTED"),
     RUNNING("RUNNING"),
@@ -107,7 +110,7 @@ public interface PipelineExecutionStepState {
     CANCELLED("CANCELLED"),
     FAILED("FAILED");
 
-    private String value;
+    private final String value;
 
     Status(String value) {
       this.value = value;
@@ -120,10 +123,6 @@ public interface PipelineExecutionStepState {
         }
       }
       return null;
-    }
-
-    public String getValue() {
-      return value;
     }
 
     @Override

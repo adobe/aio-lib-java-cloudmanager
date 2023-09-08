@@ -20,6 +20,7 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import java.util.Optional;
 import java.util.Set;
 
 import io.adobe.cloudmanager.CloudManagerApi;
@@ -68,8 +69,8 @@ public class PipelineImpl extends io.adobe.cloudmanager.impl.generated.Pipeline 
   }
 
   @Override
-  public Status getStatusState() {
-    return Status.fromValue(getStatus().getValue());
+  public Optional<PipelineExecution> getCurrentExecution() throws CloudManagerApiException {
+    return client.getCurrentExecution(this);
   }
 
   @Override
@@ -80,6 +81,11 @@ public class PipelineImpl extends io.adobe.cloudmanager.impl.generated.Pipeline 
   @Override
   public PipelineExecution getExecution(String executionId) throws CloudManagerApiException {
     return client.getExecution(this, executionId);
+  }
+
+  @Override
+  public Status getStatusState() {
+    return Status.fromValue(getStatus().getValue());
   }
 
   @Override

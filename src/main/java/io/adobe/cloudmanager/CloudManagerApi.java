@@ -36,7 +36,6 @@ import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
-import lombok.NonNull;
 
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.
@@ -168,8 +167,8 @@ public interface CloudManagerApi {
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
-  @NonNull
-  Collection<Repository> listRepositories(@NonNull String programId, int limit) throws CloudManagerApiException;
+  @NotNull
+  Collection<Repository> listRepositories(@NotNull String programId, int limit) throws CloudManagerApiException;
 
   /**
    * Lists all repositories for the specified program, up to the defined limit.
@@ -179,8 +178,8 @@ public interface CloudManagerApi {
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
-  @NonNull
-  Collection<Repository> listRepositories(@NonNull Program program, int limit) throws CloudManagerApiException;
+  @NotNull
+  Collection<Repository> listRepositories(@NotNull Program program, int limit) throws CloudManagerApiException;
 
   /**
    * Lists all repositories for the specified program, from the starting position, up to the defined limit.
@@ -191,8 +190,8 @@ public interface CloudManagerApi {
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
-  @NonNull
-  Collection<Repository> listRepositories(@NonNull String programId, int start, int limit) throws CloudManagerApiException;
+  @NotNull
+  Collection<Repository> listRepositories(@NotNull String programId, int start, int limit) throws CloudManagerApiException;
 
   /**
    * Lists all repositories for the specified program, from the starting position, up to the defined limit.
@@ -203,8 +202,8 @@ public interface CloudManagerApi {
    * @return list of repositories
    * @throws CloudManagerApiException when any error occurs
    */
-  @NonNull
-  Collection<Repository> listRepositories(@NonNull Program program, int start, int limit) throws CloudManagerApiException;
+  @NotNull
+  Collection<Repository> listRepositories(@NotNull Program program, int start, int limit) throws CloudManagerApiException;
 
   /**
    * Get a specific repository in the program.
@@ -214,8 +213,8 @@ public interface CloudManagerApi {
    * @return the repository
    * @throws CloudManagerApiException when any error occurs
    */
-  @NonNull
-  Repository getRepository(@NonNull String programId, @NonNull String repositoryId) throws CloudManagerApiException;
+  @NotNull
+  Repository getRepository(@NotNull String programId, @NotNull String repositoryId) throws CloudManagerApiException;
 
   /**
    * Get a specific repository in the program.
@@ -225,8 +224,8 @@ public interface CloudManagerApi {
    * @return the repository
    * @throws CloudManagerApiException when any error occurs
    */
-  @NonNull
-  Repository getRepository(@NonNull Program program, @NonNull String repositoryId) throws CloudManagerApiException;
+  @NotNull
+  Repository getRepository(@NotNull Program program, @NotNull String repositoryId) throws CloudManagerApiException;
 
   /**
    * Lists all the branches associated with the repository.
@@ -236,7 +235,7 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getBranches">List Branches API</a>
    */
-  @NonNull Collection<String> listBranches(@NonNull Repository repository) throws CloudManagerApiException;
+  @NotNull Collection<String> listBranches(@NotNull Repository repository) throws CloudManagerApiException;
 
   /**
    * Lists all pipelines within the specified program.
@@ -337,7 +336,6 @@ public interface CloudManagerApi {
    */
   void invalidatePipelineCache(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
-
   /**
    * Returns an optional current execution of the specified pipeline.
    *
@@ -348,6 +346,16 @@ public interface CloudManagerApi {
    */
   @NotNull
   Optional<PipelineExecution> getCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
+
+  /**
+   * Returns an optional current execution of the specified pipeline.
+   *
+   * @param pipeline the pipeline reference
+   * @return An optional containing the execution details of the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Optional<PipelineExecution> getCurrentExecution(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
    * Starts the specified pipeline.
@@ -374,16 +382,6 @@ public interface CloudManagerApi {
   @NotNull
   PipelineExecution startExecution(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
-  /**
-   * Returns the specified execution of the pipeline.
-   *
-   * @param pipeline    the pipeline context for the execution
-   * @param executionId the id of the execution to retrieve
-   * @return the execution details
-   * @throws CloudManagerApiException when any error occurs
-   */
-  @NotNull
-  PipelineExecution getExecution(@NotNull Pipeline pipeline, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
    * Returns the specified execution of the pipeline.
@@ -396,6 +394,218 @@ public interface CloudManagerApi {
    */
   @NotNull
   PipelineExecution getExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
+
+  /**
+   * Returns the specified execution of the pipeline.
+   *
+   * @param pipeline    the pipeline context for the execution
+   * @param executionId the id of the execution to retrieve
+   * @return the execution details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecution getExecution(@NotNull Pipeline pipeline, @NotNull String executionId) throws CloudManagerApiException;
+
+  /**
+   * Returns the specified action step for the pipeline execution
+   *
+   * @param execution the execution context
+   * @param action    the step state action (see {@link StepAction})
+   * @return the step state details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecutionStepState getExecutionStepState(@NotNull PipelineExecution execution, @NotNull StepAction action) throws CloudManagerApiException;
+
+  /**
+   * Advances the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param programId   the program id context of the pipeline
+   * @param pipelineId  the id of the pipeline to cancel
+   * @param executionId the execution id to be advanced
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void advanceExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
+
+  /**
+   * Advances the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param execution the execution to be advanced
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void advanceExecution(@NotNull PipelineExecution execution) throws CloudManagerApiException;
+
+  /**
+   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param programId   the program id context of the pipeline
+   * @param pipelineId  the id of the pipeline to cancel
+   * @param executionId the execution id to be canceled
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void cancelExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
+
+  /**
+   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
+   *
+   * @param execution the execution to be canceled
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void cancelExecution(@NotNull PipelineExecution execution) throws CloudManagerApiException;
+
+  /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @param programId   the program id of the pipeline context
+   * @param pipelineId  the pipeline id for the execution context
+   * @param executionId the execution id for the logs
+   * @param action      the execution step action for the log
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull StepAction action) throws CloudManagerApiException;
+
+  /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @param programId   the program id of the pipeline context
+   * @param pipelineId  the pipeline id for the execution context
+   * @param executionId the execution id for the logs
+   * @param action      the execution step action for the log
+   * @param name        custom log file name
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull StepAction action, @NotNull String name) throws CloudManagerApiException;
+
+  /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @param execution the execution for the log
+   * @param action    the execution step action for the log
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull StepAction action) throws CloudManagerApiException;
+
+  /**
+   * Returns the fully qualified URL to the log file for download.
+   *
+   * @param execution the execution for the log
+   * @param action    the execution step action for the log
+   * @param name      custom log file name
+   * @return the log file download URL
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String getExecutionStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull StepAction action, @NotNull String name) throws CloudManagerApiException;
+
+
+  /**
+   * Retrieves the metrics for the specified execution and step, if any.
+   *
+   * @param execution the execution step
+   * @param action    the action step for which quality metrics are desired
+   * @return the metrics for the execution
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<Metric> getQualityGateResults(@NotNull PipelineExecution execution, @NotNull StepAction action) throws CloudManagerApiException;
+
+  /**
+   * Lists executions of the specified pipeline, using the default limit and starting at 0.
+   *
+   * @param programId the program id context of the pipeline
+   * @param pipelineId the pipeline id
+   * @return list of executions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<PipelineExecution> listExecutions(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
+
+  /**
+   * Lists executions of the specified pipeline, using the default limit and starting at 0.
+   *
+   * @param pipeline the pipeline for the execution search
+   * @return list of executions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<PipelineExecution> listExecutions(@NotNull Pipeline pipeline) throws CloudManagerApiException;
+
+  /**
+   * Lists executions of the specified pipeline, using the specified limit and starting at 0.
+   *
+   * @param programId the program id context of the pipeline
+   * @param pipelineId the pipeline id
+   * @param limit the number of executions to return
+   * @return list of executions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<PipelineExecution> listExecutions(@NotNull String programId, @NotNull String pipelineId, int limit) throws CloudManagerApiException;
+
+  /**
+   * Lists executions of the specified pipeline, using the specified limit and starting at 0.
+   *
+   * @param pipeline the pipeline for the execution search
+   * @param limit the number of executions to return
+   * @return list of executions, if any
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<PipelineExecution> listExecutions(@NotNull Pipeline pipeline, int limit) throws CloudManagerApiException;
+
+  /**
+   * Lists executions of the specified pipeline, using the specified limit and starting at the specified position.
+   *
+   * @param programId the program id context of the pipeline
+   * @param pipelineId the pipeline id
+   * @param start the starting position of the results
+   * @param limit the number of executions to return
+   * @return list of executions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<PipelineExecution> listExecutions(@NotNull String programId, @NotNull String pipelineId, int start, int limit) throws CloudManagerApiException;
+
+  /**
+   * Lists executions of the specified pipeline, using the specified limit and starting at the specified position.
+   *
+   * @param pipeline the pipeline for the execution search
+   * @param start the starting position of the results
+   * @param limit the number of executions to return
+   * @return list of executions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<PipelineExecution> listExecutions(@NotNull Pipeline pipeline, int start, int limit) throws CloudManagerApiException;
+
+  /**
+   * Lists the tenants associated with the IMS Org in the API Context
+   *
+   * @return list of tenants
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<Tenant> listTenants() throws CloudManagerApiException;
+
+  /**
+   * Gets the tenant with the specified identifier.
+   *
+   * @param tenantId the id of the tenant
+   * @return the tenant
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Tenant getTenant(@NotNull String tenantId) throws CloudManagerApiException;
+
+
+  // Non-API convenience methods.
+
+
+
+  // Below are still in work.
+
 
   /**
    * Returns the Pipeline Execution associated with the AdobeIO Execution Start event
@@ -438,17 +648,6 @@ public interface CloudManagerApi {
   boolean isExecutionRunning(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
-   * Returns the specified action step for the pipeline execution
-   *
-   * @param execution the execution context
-   * @param action    the step state action
-   * @return the step state details
-   * @throws CloudManagerApiException when any error occurs
-   */
-  @NotNull
-  PipelineExecutionStepState getExecutionStepState(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
-
-  /**
    * Gets the step state for based on the provided event.
    *
    * @param event the event context
@@ -489,34 +688,6 @@ public interface CloudManagerApi {
   PipelineExecutionStepState getCurrentStep(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
-   * Gets the waiting step for the execution.
-   *
-   * @param execution the pipeline execution
-   * @return the waiting step
-   * @throws CloudManagerApiException when any error occurs or waiting step is not found
-   */
-  @NotNull
-  PipelineExecutionStepState getWaitingStep(@NotNull PipelineExecution execution) throws CloudManagerApiException;
-
-  /**
-   * Advances the execution of the specified pipeline execution, if in an appropriate state.
-   *
-   * @param programId   the program id context of the pipeline
-   * @param pipelineId  the id of the pipeline to cancel
-   * @param executionId the execution id to be advanced
-   * @throws CloudManagerApiException when any error occurs
-   */
-  void advanceExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
-
-  /**
-   * Advances the execution of the specified pipeline execution, if in an appropriate state.
-   *
-   * @param execution the execution to be advanced
-   * @throws CloudManagerApiException when any error occurs
-   */
-  void advanceExecution(@NotNull PipelineExecution execution) throws CloudManagerApiException;
-
-  /**
    * Advances the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
    *
    * @param programId  the program id context of the pipeline
@@ -525,25 +696,7 @@ public interface CloudManagerApi {
    */
   void advanceCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
-  /**
-   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
-   *
-   * @param programId   the program id context of the pipeline
-   * @param pipelineId  the id of the pipeline to cancel
-   * @param executionId the execution id to be canceled
-   * @throws CloudManagerApiException when any error occurs
-   */
-  void cancelExecution(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
-
-  /**
-   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
-   *
-   * @param execution the execution to be canceled
-   * @throws CloudManagerApiException when any error occurs
-   */
-  void cancelExecution(@NotNull PipelineExecution execution) throws CloudManagerApiException;
-
-  /**
+   /**
    * Cancels the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
    *
    * @param programId  the program id context of the pipeline
@@ -551,52 +704,6 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    */
   void cancelCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
-
-  /**
-   * Returns the fully qualified URL to the log file for download.
-   *
-   * @param programId   the program id of the pipeline context
-   * @param pipelineId  the pipeline id for the execution context
-   * @param executionId the execution id for the logs
-   * @param action      the execution step action for the log
-   * @return the log file download URL
-   * @throws CloudManagerApiException when any error occurs
-   */
-  String getExecutionStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action) throws CloudManagerApiException;
-
-  /**
-   * Returns the fully qualified URL to the log file for download.
-   *
-   * @param programId   the program id of the pipeline context
-   * @param pipelineId  the pipeline id for the execution context
-   * @param executionId the execution id for the logs
-   * @param action      the execution step action for the log
-   * @param name        custom log file name
-   * @return the log file download URL
-   * @throws CloudManagerApiException when any error occurs
-   */
-  String getExecutionStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull String action, @NotNull String name) throws CloudManagerApiException;
-
-  /**
-   * Returns the fully qualified URL to the log file for download.
-   *
-   * @param execution the execution for the log
-   * @param action    the execution step action for the log
-   * @return the log file download URL
-   * @throws CloudManagerApiException when any error occurs
-   */
-  String getExecutionStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
-
-  /**
-   * Returns the fully qualified URL to the log file for download.
-   *
-   * @param execution the execution for the log
-   * @param action    the execution step action for the log
-   * @param name      custom log file name
-   * @return the log file download URL
-   * @throws CloudManagerApiException when any error occurs
-   */
-  String getExecutionStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull String action, @NotNull String name) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.
@@ -645,17 +752,6 @@ public interface CloudManagerApi {
    * @throws CloudManagerApiException when any error occurs
    */
   void downloadExecutionStepLog(@NotNull PipelineExecution execution, @NotNull String action, @NotNull String filename, @NotNull OutputStream outputStream) throws CloudManagerApiException;
-
-  /**
-   * Retrieves the metrics for the specified execution and step, if any.
-   *
-   * @param execution the execution step
-   * @param action    the action step for which quality metrics are desired
-   * @return the metrics for the execution
-   * @throws CloudManagerApiException when any error occurs
-   */
-  @NotNull
-  Collection<Metric> getQualityGateResults(@NotNull PipelineExecution execution, @NotNull String action) throws CloudManagerApiException;
 
   /**
    * Lists all environments in the specified program.
@@ -798,22 +894,4 @@ public interface CloudManagerApi {
   @NotNull
   Set<Variable> setPipelineVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
 
-  /**
-   * Lists the tenants associated with the IMS Org in the API Context
-   *
-   * @return list of tenants
-   * @throws CloudManagerApiException when any error occurs
-   */
-  @NotNull
-  Collection<Tenant> listTenants() throws CloudManagerApiException;
-
-  /**
-   * Gets the tenant with the specified identifier.
-   *
-   * @param tenantId the id of the tenant
-   * @return the tenant
-   * @throws CloudManagerApiException when any error occurs
-   */
-  @NotNull
-  Tenant getTenant(@NotNull String tenantId) throws CloudManagerApiException;
 }

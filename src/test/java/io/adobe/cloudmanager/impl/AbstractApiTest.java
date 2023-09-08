@@ -51,7 +51,7 @@ public abstract class AbstractApiTest {
 
   protected MockServerClient client;
   protected String baseUrl;
-  protected CloudManagerApi underTest;
+  protected CloudManagerApiImpl underTest;
 
   @Mock
   protected Workspace workspace;
@@ -82,7 +82,7 @@ public abstract class AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = CloudManagerApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = (CloudManagerApiImpl) CloudManagerApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 

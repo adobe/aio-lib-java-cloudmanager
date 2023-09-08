@@ -1,0 +1,36 @@
+{
+  "_embedded": {
+    "stepStates": [
+      {
+        "id": "1",
+        "stepId": "1",
+        "phaseId": "1",
+        "action": "validate",
+        "status": "FINISHED"
+      },
+      {
+        "id": "2",
+        "stepId": "1",
+        "phaseId": "2",
+        "action": "build",
+        "repository": "weretail",
+        "branch": "main",
+        "status": "RUNNING"
+      },
+      {
+        "id": "3",
+        "stepId": "2",
+        "phaseId": "2",
+        "action": "codeQuality",
+        "repository": "weretail",
+        "branch": "main",
+        "status": "NOT_STARTED"
+      }
+    ]
+  },
+  "id": "1",
+  "programId": "1",
+  "pipelineId": "1",
+  "trigger": "MANUAL",
+  "status": "RUNNING"
+}

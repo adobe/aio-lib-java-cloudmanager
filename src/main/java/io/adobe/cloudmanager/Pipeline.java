@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -63,7 +64,6 @@ public interface Pipeline {
   void delete() throws CloudManagerApiException;
 
   /**
-   *
    * Updates this pipeline with the specified changes.
    *
    * @param update the updates to make to this pipeline
@@ -79,6 +79,13 @@ public interface Pipeline {
    */
   void invalidateCache() throws CloudManagerApiException;
 
+  /**
+   * Returns an optional current execution of the specified pipeline.
+   *
+   * @return An optional containing the execution details of the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Optional<PipelineExecution> getCurrentExecution() throws CloudManagerApiException;
 
   /**
    * Starts this pipeline.
@@ -166,7 +173,9 @@ public interface Pipeline {
     }
 
     @Override
-    public boolean test(Pipeline pipeline) { return StringUtils.equals(name, pipeline.getName()); }
+    public boolean test(Pipeline pipeline) {
+      return StringUtils.equals(name, pipeline.getName());
+    }
   }
 
   /**
@@ -176,7 +185,9 @@ public interface Pipeline {
 
     private final String id;
 
-    public IdPredicate(String id) { this.id = id; }
+    public IdPredicate(String id) {
+      this.id = id;
+    }
 
     @Override
     public boolean test(Pipeline pipeline) {

@@ -52,7 +52,7 @@ public class RepositoryTest extends AbstractApiTest {
   }
 
   @Test
-  void list_success_viaProgram(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
+  void list_success_via_program(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getId()).thenReturn("1");
@@ -78,17 +78,16 @@ public class RepositoryTest extends AbstractApiTest {
     client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listRepositories("1", 10), "Exception thrown.");
-    assertTrue(exception.getMessage().contains("(404 Not Found)."), "Message was correct");
-    assertTrue(exception.getMessage().contains("start=0"), "Message was correct");
-    assertTrue(exception.getMessage().contains("limit=10"), "Message was correct");
+    assertEquals(String.format("Cannot retrieve repositories: %s/api/program/1/repositories?start=0&limit=10 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
     client.verify(list);
     client.clear(list);
   }
 
   @Test
-  void list_with_limit_success() throws CloudManagerApiException {
+  void list_with_limit_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getId()).thenReturn("1");
 
     HttpRequest list = request()
         .withMethod("GET")
@@ -98,16 +97,18 @@ public class RepositoryTest extends AbstractApiTest {
         .withQueryStringParameter("limit", "10");
     client.when(list).respond(response().withBody(LIST_BODY));
 
-    Collection<Repository> repositories = underTest.listRepositories("1", 10);
+    Program program = new ProgramImpl(mock, underTest);
+    Collection<Repository> repositories = underTest.listRepositories(program, 10);
     assertEquals(3, repositories.size());
     client.verify(list);
     client.clear(list);
   }
 
   @Test
-  void list_with_start_limit_success() throws CloudManagerApiException {
+  void list_with_start_limit_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getId()).thenReturn("1");
 
     HttpRequest list = request()
         .withMethod("GET")
@@ -117,7 +118,8 @@ public class RepositoryTest extends AbstractApiTest {
         .withQueryStringParameter("limit", "10");
     client.when(list).respond(response().withBody(LIST_BODY));
 
-    Collection<Repository> repositories = underTest.listRepositories("1", 10, 10);
+    Program program = new ProgramImpl(mock, underTest);
+    Collection<Repository> repositories = underTest.listRepositories(program, 10, 10);
     assertEquals(3, repositories.size());
     client.verify(list);
     client.clear(list);
@@ -138,14 +140,16 @@ public class RepositoryTest extends AbstractApiTest {
   }
 
   @Test
-  void get_success() throws CloudManagerApiException {
+  void get_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getId()).thenReturn("1");
 
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/repository/1");
     client.when(get).respond(response().withBody(GET_BODY));
 
-    Repository repository = underTest.getRepository("1", "1");
+    Program program = new ProgramImpl(mock, underTest);
+    Repository repository = underTest.getRepository(program, "1");
     assertNotNull(repository, "Repository retrieval success.");
     assertEquals("1", repository.getId(), "Id was correct.");
     client.verify(get);

@@ -2,6 +2,7 @@ package io.adobe.cloudmanager.impl.exception;
 
 import feign.Response;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import lombok.Getter;
 
 public class PipelineExceptionDecoder extends CloudManagerExceptionDecoder {
 
@@ -37,6 +38,7 @@ public class PipelineExceptionDecoder extends CloudManagerExceptionDecoder {
     return new CloudManagerApiException(String.format(type.message, getError(response)), status);
   }
 
+  @Getter
   public enum ErrorType {
     LIST_PIPELINES("Cannot retrieve pipelines: %s."),
     FIND_PIPELINES("Could not find pipelines for program %s."),
@@ -52,8 +54,5 @@ public class PipelineExceptionDecoder extends CloudManagerExceptionDecoder {
       this.message = message;
     }
 
-    public String getMessage() {
-      return message;
-    }
   }
 }

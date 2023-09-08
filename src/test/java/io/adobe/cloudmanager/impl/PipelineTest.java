@@ -130,7 +130,7 @@ class PipelineTest extends AbstractApiTest {
   }
 
   @Test
-  void list_success_viaProgram(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
+  void list_success_via_program(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getId()).thenReturn("1");
@@ -200,7 +200,7 @@ class PipelineTest extends AbstractApiTest {
   }
 
   @Test
-  void delete_success_viaPipeline(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+  void delete_success_via_pipeline(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getProgramId()).thenReturn("1");
@@ -331,7 +331,7 @@ class PipelineTest extends AbstractApiTest {
   }
 
   @Test
-  void invalidate_success_viaPipeline(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+  void invalidate_success_via_pipeline(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getProgramId()).thenReturn("1");

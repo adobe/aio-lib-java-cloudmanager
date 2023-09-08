@@ -22,6 +22,7 @@ package io.adobe.cloudmanager.impl.exception;
 
 import feign.Response;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import lombok.Getter;
 
 public class ProgramExceptionDecoder extends CloudManagerExceptionDecoder {
 
@@ -51,6 +52,7 @@ public class ProgramExceptionDecoder extends CloudManagerExceptionDecoder {
     return new CloudManagerApiException(String.format(type.message, getError(response)), status);
   }
 
+  @Getter
   public enum ErrorType {
     LIST_PROGRAMS("Cannot retrieve programs: %s."),
     GET_PROGRAM("Cannot retrieve program: %s."),
@@ -60,10 +62,6 @@ public class ProgramExceptionDecoder extends CloudManagerExceptionDecoder {
 
     ErrorType(String message) {
       this.message = message;
-    }
-
-    public String getMessage() {
-      return message;
     }
 
   }

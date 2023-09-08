@@ -2,6 +2,7 @@ package io.adobe.cloudmanager.impl.exception;
 
 import feign.Response;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import lombok.Getter;
 
 public class RepositoryExceptionDecoder extends CloudManagerExceptionDecoder {
 
@@ -11,7 +12,7 @@ public class RepositoryExceptionDecoder extends CloudManagerExceptionDecoder {
     ErrorType type;
     switch (methodKey) {
       case "FeignRepositoryApi#list(String)":
-      case "FeignRepositoryApi#list(String,Map)":{
+      case "FeignRepositoryApi#list(String,int,int)":{
         type = ErrorType.LIST_REPOSITORIES;
         break;
       }
@@ -31,6 +32,7 @@ public class RepositoryExceptionDecoder extends CloudManagerExceptionDecoder {
     return new CloudManagerApiException(String.format(type.message, getError(response)), status);
   }
 
+  @Getter
   public enum ErrorType {
     LIST_REPOSITORIES("Cannot retrieve repositories: %s."),
     GET_REPOSITORY("Cannot retrieve repository: %s."),
@@ -40,10 +42,6 @@ public class RepositoryExceptionDecoder extends CloudManagerExceptionDecoder {
 
     ErrorType(String message) {
       this.message = message;
-    }
-
-    public String getMessage() {
-      return message;
     }
 
   }
