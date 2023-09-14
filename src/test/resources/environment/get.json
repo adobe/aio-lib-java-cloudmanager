@@ -1,0 +1,61 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/program/1/environment/1",
+      "templated": false
+    },
+    "http://ns.adobe.com/adobecloud/rel/logs": {
+      "href": "/api/program/1/environment/1/logs?service={service}&name={name}&days={days}",
+      "templated": true
+    },
+    "http://ns.adobe.com/adobecloud/rel/variables": {
+      "href": "/api/program/1/environment/1/variables"
+    },
+    "http://ns.adobe.com/adobecloud/rel/developerConsole": {
+      "href": "https://github.com/adobe/aio-cli-plugin-cloudmanager"
+    }
+  },
+  "id": "1",
+  "programId": "1",
+  "name": "TestProgram_prod",
+  "description": "description for TestProgram_prod",
+  "type": "prod",
+  "availableLogOptions": [
+    {
+      "service": "author",
+      "name": "aemerror"
+    },
+    {
+      "service": "author",
+      "name": "aemrequest"
+    },
+    {
+      "service": "author",
+      "name": "aemaccess"
+    },
+    {
+      "service": "publish",
+      "name": "aemerror"
+    },
+    {
+      "service": "publish",
+      "name": "aemrequest"
+    },
+    {
+      "service": "publish",
+      "name": "aemaccess"
+    },
+    {
+      "service": "dispatcher",
+      "name": "httpdaccess"
+    },
+    {
+      "service": "dispatcher",
+      "name": "httpderror"
+    },
+    {
+      "service": "dispatcher",
+      "name": "aemdispatcher"
+    }
+  ]
+}

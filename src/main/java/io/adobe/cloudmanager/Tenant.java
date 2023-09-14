@@ -24,12 +24,4 @@ public interface Tenant {
    * @return git repository organization
    */
   String getOrganizationName();
-
-  /**
-   * List the programs associated with this tenant.
-   *
-   * @return a list of programs
-   * @throws CloudManagerApiException when an error occurs
-   */
-  Collection<Program> listPrograms() throws CloudManagerApiException;
 }

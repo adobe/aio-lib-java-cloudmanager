@@ -1,0 +1,129 @@
+{
+  "_embedded": {
+    "environments": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/program/1/environment/1",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/logs": {
+            "href": "/api/program/1/environment/1/logs?service={service}&name={name}&days={days}",
+            "templated": true
+          },
+          "http://ns.adobe.com/adobecloud/rel/variables": {
+            "href": "/api/program/1/environment/1/variables"
+          },
+          "http://ns.adobe.com/adobecloud/rel/developerConsole": {
+            "href": "https://github.com/adobe/aio-cli-plugin-cloudmanager"
+          }
+        },
+        "id": "1",
+        "programId": "1",
+        "name": "TestProgram_prod",
+        "description": "description for TestProgram_prod",
+        "type": "prod",
+        "availableLogOptions": [
+          {
+            "service": "author",
+            "name": "aemerror"
+          },
+          {
+            "service": "author",
+            "name": "aemrequest"
+          },
+          {
+            "service": "author",
+            "name": "aemaccess"
+          },
+          {
+            "service": "publish",
+            "name": "aemerror"
+          },
+          {
+            "service": "publish",
+            "name": "aemrequest"
+          },
+          {
+            "service": "publish",
+            "name": "aemaccess"
+          },
+          {
+            "service": "dispatcher",
+            "name": "httpdaccess"
+          },
+          {
+            "service": "dispatcher",
+            "name": "httpderror"
+          },
+          {
+            "service": "dispatcher",
+            "name": "aemdispatcher"
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/program/1/environment/2",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/logs": {
+            "href": "/api/program/1/environment/2/logs?service={service}&name={name}&days={days}",
+            "templated": true
+          }
+        },
+        "id": "2",
+        "programId": "1",
+        "name": "TestProgram_stage",
+        "description": "description for TestProgram_stage",
+        "type": "stage",
+        "availableLogs": [
+          {
+            "service": "author",
+            "name": "aemerror"
+          }
+        ],
+        "namespace": "ns",
+        "cluster": "cs"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/program/1/environment/3",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/variables": {
+            "href": "/api/program/1/environment/3/variables"
+          },
+          "http://ns.adobe.com/adobecloud/rel/logs": {
+            "href": "/api/program/1/environment/3/logs?service={service}&name={name}&days={days}",
+            "templated": true
+          }
+        },
+        "id": "3",
+        "programId": "1",
+        "name": "TestProgram_dev",
+        "description": "description for TestProgram_dev",
+        "type": "dev"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/program/1/environment/4",
+            "templated": false
+          },
+          "http://ns.adobe.com/adobecloud/rel/variables": {
+            "href": "/api/program/1/environment/4/variables"
+          }
+        },
+        "id": "4",
+        "programId": "1",
+        "name": "TestProgram_dev2",
+        "description": "description for TestProgram_dev2",
+        "type": "dev"
+      }
+    ]
+  },
+  "_totalNumberOfItems": 4
+}

@@ -26,6 +26,8 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.Getter;
+
 public interface Pipeline {
 
   /**
@@ -110,7 +112,7 @@ public interface Pipeline {
    * @return the variables in this pipeline
    * @throws CloudManagerApiException when any errors occur
    */
-  Set<Variable> listVariables() throws CloudManagerApiException;
+  Set<Variable> getVariables() throws CloudManagerApiException;
 
   /**
    * Sets the specified variables on this pipeline.
@@ -126,19 +128,16 @@ public interface Pipeline {
    *
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
+  @Getter
   enum Status {
     IDLE("IDLE"),
     BUSY("BUSY"),
     WAITING("WAITING");
 
-    private String value;
+    private final String value;
 
     Status(String value) {
       this.value = value;
-    }
-
-    public String getValue() {
-      return value;
     }
 
     @Override

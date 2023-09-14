@@ -20,8 +20,6 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import java.util.Collection;
-
 public interface Program {
 
   /**
@@ -44,20 +42,4 @@ public interface Program {
    * @throws CloudManagerApiException when an error occurs
    */
   void delete() throws CloudManagerApiException;
-
-  /**
-   * Lists any repositories associated with this program
-   *
-   * @return the repositories
-   * @throws CloudManagerApiException when any error occurs
-   */
-  Collection<Repository> listRepositories() throws CloudManagerApiException;
-
-  /**
-   * Lists pipelines associated with this program
-   *
-   * @return list if pipelines
-   * @throws CloudManagerApiException when any error occurs
-   */
-  Collection<Pipeline> listPipelines() throws CloudManagerApiException;
 }

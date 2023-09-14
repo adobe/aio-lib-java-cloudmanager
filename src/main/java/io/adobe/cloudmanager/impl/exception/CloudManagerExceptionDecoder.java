@@ -36,10 +36,10 @@ import feign.Response;
 import feign.codec.ErrorDecoder;
 
 public abstract class CloudManagerExceptionDecoder implements ErrorDecoder {
+  public static final String GENERATE_BODY = "Unable to generate request body: %s.";
 
   private static final String CONTENT_TYPE = "Content-Type";
   private static final String APPLICATION_JSON_TYPE = "application/json";
-
   private static final String DEFAULT_REASON = "Unknown";
 
   private static final Map<Integer, String> phrases = new HashMap<>();

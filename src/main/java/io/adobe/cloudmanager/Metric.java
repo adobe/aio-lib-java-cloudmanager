@@ -72,16 +72,16 @@ public interface Metric {
     IMPORTANT("important"),
     INFORMATIONAL("informational");
 
-    private String value;
+    private final String value;
 
     Severity(String value) {
       this.value = value;
     }
 
     public static Severity fromValue(String text) {
-      for (Severity b : Severity.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
+      for (Severity s : Severity.values()) {
+        if (String.valueOf(s.value).equals(text)) {
+          return s;
         }
       }
       return null;
