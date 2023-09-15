@@ -56,9 +56,15 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
   }
 
   @Override
+  public Type getEnvType() {
+    return Type.valueOf(getType().name());
+  }
+
+  @Override
   public Collection<LogOption> getLogOptions() {
     return getAvailableLogOptions().stream().map(LogOptionImpl::new).collect(Collectors.toList());
   }
+
 
   @Override
   public void delete() throws CloudManagerApiException {
@@ -95,12 +101,21 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
     client.removeRegionDeployments(this, region);
   }
 
+  @Override
   public Set<Variable> getVariables() throws CloudManagerApiException {
     return client.getVariables(this);
   }
 
+  @Override
   public Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException {
     return client.setVariables(this, variables);
+  }
+
+  @Override
+  public void reset() throws CloudManagerApiException {
+    if (getEnvType() == Type.RDE) {
+      client.resetRde(this);
+    }
   }
 
   @Override

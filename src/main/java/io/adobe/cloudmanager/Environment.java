@@ -54,6 +54,13 @@ public interface Environment {
   String getName();
 
   /**
+   * Returns the type of this environment
+   *
+   * @return type
+   */
+  Type getEnvType();
+
+  /**
    * A list of available log options for downloading.
    *
    * @return list of log options
@@ -135,6 +142,13 @@ public interface Environment {
    * @throws CloudManagerApiException when any error occurs.
    */
   Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Resets this environment, if it is of type RDE.
+   *
+   * @throws CloudManagerApiException when any error occurs;
+   */
+  void reset() throws CloudManagerApiException;
 
   /**
    * Retrieve the Developer Console URL for this Environment.

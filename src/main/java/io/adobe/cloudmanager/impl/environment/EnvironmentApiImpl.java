@@ -216,6 +216,16 @@ public class EnvironmentApiImpl implements EnvironmentApi {
     return setVariables(environment.getProgramId(), environment.getId(), variables);
   }
 
+  @Override
+  public void resetRde(String programId, String environmentId) throws CloudManagerApiException {
+    api.reset(programId, environmentId);
+  }
+
+  @Override
+  public void resetRde(Environment environment) throws CloudManagerApiException {
+    resetRde(environment.getProgramId(), environment.getId());
+  }
+
   private interface FeignApi {
 
     @RequestLine("GET /api/program/{programId}/environments")
@@ -255,11 +265,14 @@ public class EnvironmentApiImpl implements EnvironmentApi {
     @Headers("Content-Type: application/json")
     RegionDeploymentList removeDeployments(@Param("programId") String programId, @Param("environmentId") String environmentId, List<io.adobe.cloudmanager.impl.generated.RegionDeployment> deployments) throws CloudManagerApiException;
 
-    @RequestLine("GET api/program/{programId}/environment/{id}/variables")
+    @RequestLine("GET /api/program/{programId}/environment/{id}/variables")
     VariableList getVariables(@Param("programId") String programId, @Param("id") String id) throws CloudManagerApiException;
 
-    @RequestLine("PATCH api/program/{programId}/environment/{id}/variables")
+    @RequestLine("PATCH /api/program/{programId}/environment/{id}/variables")
     @Headers("Content-Type: application/json")
     VariableList setVariables(@Param("programId") String programId, @Param("id") String id, List<io.adobe.cloudmanager.impl.generated.Variable> variables) throws CloudManagerApiException;
+
+    @RequestLine("PUT /api/program/{programId}/environment/{id}/reset")
+    void reset(@Param("programId") String programId, @Param("id") String id) throws CloudManagerApiException;
   }
 }

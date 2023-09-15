@@ -175,7 +175,7 @@ public interface EnvironmentApi {
    * Creates a new deployment in the specified region
    *
    * @param environment the environment to update
-   * @param regions      the regions in which to deploy
+   * @param regions     the regions in which to deploy
    * @throws CloudManagerApiException when any error occurs
    */
   void createRegionDeployments(@NotNull Environment environment, @NotNull Region... regions) throws CloudManagerApiException;
@@ -184,11 +184,10 @@ public interface EnvironmentApi {
    * Removes the deployment from the specified region
    *
    * @param environment the environment to update
-   * @param regions      the regions from which to remove the deployment
+   * @param regions     the regions from which to remove the deployment
    * @throws CloudManagerApiException when any error occurs
    */
   void removeRegionDeployments(@NotNull Environment environment, @NotNull Region... regions) throws CloudManagerApiException;
-
 
   /**
    * Lists all variables associated with the specified environment
@@ -233,6 +232,23 @@ public interface EnvironmentApi {
    */
   @NotNull
   Set<Variable> setVariables(@NotNull Environment environment, Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Resets the specified Rapid Development Environment. If the specified environment is not an RDE, result is undefined.
+   *
+   * @param programId     the program id of the environment
+   * @param environmentId the environment id
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void resetRde(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
+
+  /**
+   * Resets the specified Rapid Development Environment. If the specified environment is not an RDE, result is undefined.
+   *
+   * @param environment the environment
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void resetRde(@NotNull Environment environment) throws CloudManagerApiException;
 
   /**
    * Create a Environment API builder.

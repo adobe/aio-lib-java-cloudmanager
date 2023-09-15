@@ -528,6 +528,38 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
+  void resetRde_failure_404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/reset");
+    client.when(put).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.resetRde("1", "1"), "Exception thrown");
+    assertEquals(String.format("Cannot reset rapid development environment: %s/api/program/1/environment/1/reset (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(put);
+    client.clear(put);
+  }
+
+  @Test
+  void resetRde_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    when(mock.getType()).thenReturn(io.adobe.cloudmanager.impl.generated.Environment.TypeEnum.RDE);
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/reset");
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+    new EnvironmentImpl(mock, underTest).reset();
+    client.verify(put);
+    client.clear(put);
+  }
+
+  @Test
   void listVariables_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);

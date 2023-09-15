@@ -62,6 +62,10 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.SET_VARIABLES;
         break;
       }
+      case "FeignApi#reset(String,String)": {
+        type = ErrorType.RESET;
+        break;
+      }
       default: {
         type = ErrorType.UNKNOWN;
       }
@@ -83,6 +87,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
     REMOVE_DEPLOYMENTS("Cannot remove region deployments: %s."),
     LIST_VARIABLES("Cannot list environment variables: %s."),
     SET_VARIABLES("Cannot set environment variables: %s."),
+    RESET("Cannot reset rapid development environment: %s."),
     UNKNOWN("Environment API Error: %s.");
 
     private final String message;
