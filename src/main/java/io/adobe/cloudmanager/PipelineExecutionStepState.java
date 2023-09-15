@@ -21,6 +21,7 @@ package io.adobe.cloudmanager;
  */
 
 import java.io.OutputStream;
+import java.util.function.Predicate;
 
 import lombok.Getter;
 
@@ -131,4 +132,25 @@ public interface PipelineExecutionStepState {
     }
   }
 
+
+
+  /**
+   * Predicate for pipelines based on they are the current execution.
+   */
+  Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
+      stepState.getStatusState() != PipelineExecutionStepState.Status.FINISHED  );
+
+  /**
+   * Predicate for pipelines that are in a waiting state.
+   */
+  Predicate<PipelineExecutionStepState> IS_WAITING = (stepState ->
+      stepState.getStatusState() == PipelineExecutionStepState.Status.WAITING
+  );
+
+  /**
+   * Predicate for pipelines that are in a waiting state.
+   */
+  Predicate<PipelineExecutionStepState> IS_RUNNING = (stepState ->
+      stepState.getStatusState() == PipelineExecutionStepState.Status.RUNNING
+  );
 }

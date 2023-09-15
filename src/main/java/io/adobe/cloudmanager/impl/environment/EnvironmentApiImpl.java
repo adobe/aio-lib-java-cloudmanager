@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentApi;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
+import io.adobe.cloudmanager.Region;
 import io.adobe.cloudmanager.RegionDeployment;
 import io.adobe.cloudmanager.Variable;
 import io.adobe.cloudmanager.impl.FeignUtil;
@@ -33,6 +35,7 @@ import io.adobe.cloudmanager.impl.exception.CloudManagerExceptionDecoder;
 import io.adobe.cloudmanager.impl.generated.EnvironmentList;
 import io.adobe.cloudmanager.impl.generated.EnvironmentLogs;
 import io.adobe.cloudmanager.impl.generated.Redirect;
+import io.adobe.cloudmanager.impl.generated.RegionDeploymentList;
 import io.adobe.cloudmanager.impl.generated.VariableList;
 
 import static io.adobe.cloudmanager.Constants.*;
@@ -144,28 +147,39 @@ public class EnvironmentApiImpl implements EnvironmentApi {
 
   @Override
   public Collection<RegionDeployment> listRegionDeployments(String programId, String environmentId) throws CloudManagerApiException {
-    return null;
+    RegionDeploymentList list = api.listDeployments(programId, environmentId);
+    return list.getEmbedded() == null ?
+        Collections.emptyList() :
+        list.getEmbedded().getRegionDeployments().stream().map(rd -> new RegionDeploymentImpl(rd, this)).collect(Collectors.toList());
   }
 
   @Override
   public Collection<RegionDeployment> listRegionDeployments(Environment environment) throws CloudManagerApiException {
-    return null;
+    return listRegionDeployments(environment.getProgramId(), environment.getId());
   }
 
   @Override
-  public Collection<RegionDeployment> createRegionDeployment(Environment environment, String region) throws CloudManagerApiException {
-    return null;
-  }
-
-
-  @Override
-  public Collection<RegionDeployment> removeRegionDeployment(Environment environment, String region) throws CloudManagerApiException {
-    return null;
+  public void createRegionDeployments(Environment environment, Region... regions) throws CloudManagerApiException {
+    List<String> list = Arrays.stream(regions).map(Region::getValue).collect(Collectors.toList());
+    api.addDeployments(environment.getProgramId(), environment.getId(), list);
   }
 
   @Override
-  public Collection<RegionDeployment> removeRegionDeployment(RegionDeployment deployment) throws CloudManagerApiException {
-    return null;
+  public void removeRegionDeployments(Environment environment, Region... regions) throws CloudManagerApiException {
+    RegionDeploymentList list = api.listDeployments(environment.getProgramId(), environment.getId());
+    List<io.adobe.cloudmanager.impl.generated.RegionDeployment> toRemove = new ArrayList<>(regions.length);
+
+    for (Region region : regions) {
+      io.adobe.cloudmanager.impl.generated.RegionDeployment deployment =
+          list.getEmbedded().getRegionDeployments()
+              .stream()
+              .filter(r -> r.getRegion().equals(region.getValue()))
+              .findFirst()
+              .orElseThrow(() -> new CloudManagerApiException(String.format("Cannot remove region deployment, Environment %s is not deployed to region '%s'.", environment.getId(), region.getValue())));
+      toRemove.add(deployment);
+    }
+    toRemove.forEach(d -> d.setStatus(io.adobe.cloudmanager.impl.generated.RegionDeployment.StatusEnum.TO_DELETE));
+    api.removeDeployments(environment.getProgramId(), environment.getId(), toRemove);
   }
 
   @Override
@@ -182,7 +196,8 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   }
 
   @Override
-  public Set<Variable> setVariables(String programId, String environmentId, Variable... variables) throws CloudManagerApiException {
+  public Set<Variable> setVariables(String programId, String environmentId, Variable... variables) throws
+      CloudManagerApiException {
     List<io.adobe.cloudmanager.impl.generated.Variable> toSet =
         Arrays.stream(variables).map((v) -> new io.adobe.cloudmanager.impl.generated.Variable()
                 .name(v.getName())
@@ -228,6 +243,17 @@ public class EnvironmentApiImpl implements EnvironmentApi {
 
     @RequestLine("GET /api/program/{programId}/environment/{environmentId}/regionDeployments/{id}")
     io.adobe.cloudmanager.impl.generated.RegionDeployment getDeployment(@Param("programId") String programId, @Param("environmentId") String environmentId, @Param("id") String id) throws CloudManagerApiException;
+
+    @RequestLine("GET /api/program/{programId}/environment/{environmentId}/regionDeployments")
+    RegionDeploymentList listDeployments(@Param("programId") String programId, @Param("environmentId") String environmentId) throws CloudManagerApiException;
+
+    @RequestLine("POST /api/program/{programId}/environment/{environmentId}/regionDeployments")
+    @Headers("Content-Type: application/json")
+    RegionDeploymentList addDeployments(@Param("programId") String programId, @Param("environmentId") String environmentId, List<String> regions) throws CloudManagerApiException;
+
+    @RequestLine("PATCH /api/program/{programId}/environment/{environmentId}/regionDeployments")
+    @Headers("Content-Type: application/json")
+    RegionDeploymentList removeDeployments(@Param("programId") String programId, @Param("environmentId") String environmentId, List<io.adobe.cloudmanager.impl.generated.RegionDeployment> deployments) throws CloudManagerApiException;
 
     @RequestLine("GET api/program/{programId}/environment/{id}/variables")
     VariableList getVariables(@Param("programId") String programId, @Param("id") String id) throws CloudManagerApiException;

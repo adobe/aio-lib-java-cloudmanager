@@ -42,6 +42,18 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.GET_DEPLOYMENT;
         break;
       }
+      case "FeignApi#listDeployments(String,String)": {
+        type = ErrorType.LIST_DEPLOYMENTS;
+        break;
+      }
+      case "FeignApi#addDeployments(String,String,List)": {
+        type = ErrorType.CREATE_DEPLOYMENTS;
+        break;
+      }
+      case "FeignApi#removeDeployments(String,String,List)": {
+        type = ErrorType.REMOVE_DEPLOYMENTS;
+        break;
+      }
       case "FeignApi#getVariables(String,String)": {
         type = ErrorType.LIST_VARIABLES;
         break;
@@ -66,6 +78,9 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
     DELETE_IN_PROGRESS("Cannot delete environment, deletion in progress."),
     GET_LOGS("Cannot get logs: %s."),
     GET_DEPLOYMENT("Cannot get region deployment: %s."),
+    LIST_DEPLOYMENTS("Cannot list region deployments: %s."),
+    CREATE_DEPLOYMENTS("Cannot add region deployments: %s."),
+    REMOVE_DEPLOYMENTS("Cannot remove region deployments: %s."),
     LIST_VARIABLES("Cannot list environment variables: %s."),
     SET_VARIABLES("Cannot set environment variables: %s."),
     UNKNOWN("Environment API Error: %s.");

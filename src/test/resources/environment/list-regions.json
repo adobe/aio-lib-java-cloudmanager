@@ -1,0 +1,21 @@
+{
+  "_totalNumberOfItems": 0,
+  "_embedded": {
+    "regionDeployments": [
+      {
+        "id": "1",
+        "environmentId": "1",
+        "region": "va7",
+        "status": "PENDING",
+        "type": "PRIMARY"
+      },
+      {
+        "id": "2",
+        "environmentId": "1",
+        "region": "gbr9",
+        "status": "PENDING",
+        "type": "SECONDARY"
+      }
+    ]
+  }
+}

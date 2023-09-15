@@ -89,19 +89,35 @@ public interface Environment {
    * Returns the fully qualified URL to the log file for download.
    *
    * @param option the type of logs to download
-   * @param date the date of the logs to download
+   * @param date   the date of the logs to download
    * @return the log file download url
    * @throws CloudManagerApiException when any error occurs
    */
   String getLogDownloadUrl(@NotNull LogOption option, @NotNull LocalDate date) throws CloudManagerApiException;
 
   /**
-   * Retrieve the Developer Console URL for this Environment.
+   * List the deployment regions for this environment
    *
-   * @return the url to the developer console.
+   * @return list of deployments
    * @throws CloudManagerApiException when any error occurs
    */
-  String getDeveloperConsoleUrl() throws CloudManagerApiException;
+  Collection<RegionDeployment> listRegionDeployments() throws CloudManagerApiException;
+
+  /**
+   * Adds a deployment to the specified region
+   *
+   * @param region the region
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void addRegionDeployment(Region region) throws CloudManagerApiException;
+
+  /**
+   * Removes the the the deployment from the specified region
+   *
+   * @param region the region
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void removeRegionDeployment(Region region) throws CloudManagerApiException;
 
   /**
    * Lists the variables configured in this environment.
@@ -119,6 +135,14 @@ public interface Environment {
    * @throws CloudManagerApiException when any error occurs.
    */
   Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Retrieve the Developer Console URL for this Environment.
+   *
+   * @return the url to the developer console.
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String getDeveloperConsoleUrl() throws CloudManagerApiException;
 
   /**
    * Downloads the logs for this environment

@@ -31,6 +31,8 @@ import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentApi;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
+import io.adobe.cloudmanager.Region;
+import io.adobe.cloudmanager.RegionDeployment;
 import io.adobe.cloudmanager.Variable;
 import io.adobe.cloudmanager.impl.generated.HalLink;
 import lombok.EqualsAndHashCode;
@@ -79,13 +81,18 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
   }
 
   @Override
-  public String getDeveloperConsoleUrl() throws CloudManagerApiException {
-    HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
-    if (link == null) {
-      throw new CloudManagerApiException(String.format("Environment %s does not appear to support Developer Console.", getId()));
-    } else {
-      return link.getHref();
-    }
+  public Collection<RegionDeployment> listRegionDeployments() throws CloudManagerApiException {
+    return client.listRegionDeployments(this);
+  }
+
+  @Override
+  public void addRegionDeployment(Region region) throws CloudManagerApiException {
+    client.createRegionDeployments(this, region);
+  }
+
+  @Override
+  public void removeRegionDeployment(Region region) throws CloudManagerApiException {
+    client.removeRegionDeployments(this, region);
   }
 
   public Set<Variable> getVariables() throws CloudManagerApiException {
@@ -96,6 +103,15 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
     return client.setVariables(this, variables);
   }
 
+  @Override
+  public String getDeveloperConsoleUrl() throws CloudManagerApiException {
+    HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
+    if (link == null) {
+      throw new CloudManagerApiException(String.format("Environment %s does not appear to support Developer Console.", getId()));
+    } else {
+      return link.getHref();
+    }
+  }
   @Override
   public Collection<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException {
 //    return client.downloadLogs(this, logOption, days, dir);

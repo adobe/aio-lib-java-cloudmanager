@@ -14,18 +14,19 @@ import feign.Body;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import io.adobe.cloudmanager.Artifact;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionApi;
+import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.StepAction;
 import io.adobe.cloudmanager.impl.FeignUtil;
 import io.adobe.cloudmanager.impl.MetricImpl;
 import io.adobe.cloudmanager.impl.generated.ArtifactList;
 import io.adobe.cloudmanager.impl.generated.PipelineExecutionEmbedded;
 import io.adobe.cloudmanager.impl.generated.PipelineExecutionListRepresentation;
-import io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState;
 import io.adobe.cloudmanager.impl.generated.PipelineStepMetrics;
 import io.adobe.cloudmanager.impl.generated.Redirect;
 
@@ -33,6 +34,7 @@ import static io.adobe.cloudmanager.Constants.*;
 
 public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   private static final String EXECUTION_LOG_REDIRECT_ERROR = "Log redirect for execution %s, action '%s' did not exist.";
+  private static final String ARTIFACT_REDIRECT_ERROR = "Artifact redirect for execution %s, phase %s, step %s did not exist.";
 
   private final FeignApi api;
 
@@ -172,6 +174,24 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
     return list(pipeline.getProgramId(), pipeline.getId(), start, limit);
   }
 
+  @Override
+  public Collection<Artifact> listArtifacts(PipelineExecutionStepState step) throws CloudManagerApiException {
+    ArtifactList list = api.listArtifacts(step.getExecution().getProgramId(), step.getExecution().getPipelineId(), step.getExecution().getId(), step.getPhaseId(), step.getStepId());
+    return list.getEmbedded() == null ?
+        Collections.emptyList() :
+        list.getEmbedded().getArtifacts().stream().map(a -> new ArtifactImpl(a, this, step)).collect(Collectors.toList());
+  }
+
+  @Override
+  public String getArtifactDownloadUrl(PipelineExecutionStepState step, String artifactId) throws CloudManagerApiException {
+    Redirect redirect = api.getArtifact(step.getExecution().getProgramId(), step.getExecution().getPipelineId(), step.getExecution().getId(), step.getPhaseId(), step.getStepId(), artifactId);
+    if (redirect != null && StringUtils.isNotBlank(redirect.getRedirect())) {
+      return redirect.getRedirect();
+    }
+    throw new CloudManagerApiException(String.format(ARTIFACT_REDIRECT_ERROR, step.getExecution().getId(), step.getPhaseId(), step.getStepId()));
+  }
+
+  // Helper methods.
 
   void internalAdvance(PipelineExecutionImpl execution) throws CloudManagerApiException {
     PipelineExecutionStepStateImpl waitingStep = getWaitingStep(execution);
@@ -203,7 +223,6 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
     throw new CloudManagerApiException(String.format(EXECUTION_LOG_REDIRECT_ERROR, execution.getId(), action.name()));
   }
 
-
   private PipelineExecutionStepStateImpl getStepStateDetail(PipelineExecutionImpl execution, StepAction action) throws CloudManagerApiException {
     return getStep(execution,
         s -> s.getAction().equals(action.name()),
@@ -223,12 +242,12 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
     if (embeddeds == null || embeddeds.getStepStates() == null || embeddeds.getStepStates().isEmpty()) {
       throw potential;
     }
-    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState step = embeddeds.getStepStates()
+    return embeddeds.getStepStates()
         .stream()
+        .map(s -> new PipelineExecutionStepStateImpl(s, actual, this))
         .filter(predicate)
         .findFirst()
         .orElseThrow(() -> potential);
-    return new PipelineExecutionStepStateImpl(step, actual, this);
   }
 
   private interface FeignApi {
@@ -266,5 +285,12 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
 
     @RequestLine("GET /api/program/{programId}/pipeline/{pipelineId}/executions?start={start}&limit={limit}")
     PipelineExecutionListRepresentation list(@Param("programId") String programId, @Param("pipelineId") String pipelineId, @Param("start") int start, @Param("limit") int limit) throws CloudManagerApiException;
+
+    @RequestLine("GET /api/program/{programId}/pipeline/{pipelineId}/execution/{executionId}/phase/{phaseId}/step/{stepId}/artifacts")
+    ArtifactList listArtifacts(@Param("programId") String programId, @Param("pipelineId") String pipelineId, @Param("executionId") String executionId, @Param("phaseId") String phaseId, @Param("stepId") String stepId) throws CloudManagerApiException;
+
+    @RequestLine("GET /api/program/{programId}/pipeline/{pipelineId}/execution/{executionId}/phase/{phaseId}/step/{stepId}/artifact/{id}")
+    Redirect getArtifact(@Param("programId") String programId, @Param("pipelineId") String pipelineId, @Param("executionId") String executionId, @Param("phaseId") String phaseId, @Param("stepId") String stepId, @Param("id") String id) throws CloudManagerApiException;
+
   }
 }

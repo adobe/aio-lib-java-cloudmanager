@@ -78,7 +78,7 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
   }
 
   @Override
-  public PipelineExecution getExecution() throws CloudManagerApiException {
+  public PipelineExecution getExecution() {
     return execution;
   }
 
@@ -145,27 +145,6 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
     }
   }
 
-
-  /**
-   * Predicate for pipelines based on they are the current execution.
-   */
-  public static final Predicate<io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState> IS_CURRENT = (stepState ->
-      stepState.getStatus() != io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.FINISHED
-  );
-
-  /**
-   * Predicate for pipelines that are in a waiting state.
-   */
-  public static final Predicate<io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState> IS_WAITING = (stepState ->
-      stepState.getStatus() == io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING
-  );
-
-  /**
-   * Predicate for pipelines that are in a waiting state.
-   */
-  public static final Predicate<io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState> IS_RUNNING = (stepState ->
-      stepState.getStatus() == io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.RUNNING
-  );
 
   /*
    * Builds the body needed to override any blocking metrics for advancing the pipeline.

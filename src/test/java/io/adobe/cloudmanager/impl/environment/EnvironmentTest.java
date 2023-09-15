@@ -12,6 +12,8 @@ import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentApi;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
+import io.adobe.cloudmanager.Region;
+import io.adobe.cloudmanager.RegionDeployment;
 import io.adobe.cloudmanager.Variable;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +36,8 @@ public class EnvironmentTest extends AbstractApiTest {
   private static final JsonBody LIST_BODY = loadBodyJson("environment/list.json");
   private static final JsonBody LIST_DEV_BODY = loadBodyJson("environment/list-dev.json");
   private static final JsonBody LIST_LOGS_BODY = loadBodyJson("environment/list-logs.json");
+  public static final JsonBody LIST_REGIONS_BODY = loadBodyJson("environment/list-regions.json");
+  public static final JsonBody GET_REGION_BODY = loadBodyJson("environment/get-region.json");
   public static final JsonBody LIST_VARIABLES_BODY = loadBodyJson("environment/list-variables.json");
 
   private EnvironmentApi underTest;
@@ -339,6 +343,191 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
+  void getRegionDeployment_success() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environment/1/regionDeployments/1");
+    client.when(get).respond(response().withBody(GET_REGION_BODY));
+
+    assertNotNull(underTest.getRegionDeployment("1", "1", "1"));
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void listRegionDeployments_failure_404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environment/1/regionDeployments");
+    client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listRegionDeployments("1", "1"), "Exception thrown.");
+    assertEquals(String.format("Cannot list region deployments: %s/api/program/1/environment/1/regionDeployments (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void listsRegionDeployments_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environment/1/regionDeployments");
+    client.when(list).respond(response().withBody(LIST_REGIONS_BODY));
+
+    Collection<RegionDeployment> deployments = new EnvironmentImpl(mock, underTest).listRegionDeployments();
+    assertEquals(2, deployments.size(), "Correct list size.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void createRegionDeployment_failure_400(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest post = request()
+        .withMethod("POST")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments")
+        .withBody(json("[\"can2\", \"gbr9\"]"));
+    client.when(post).respond(response().withStatusCode(BAD_REQUEST_400.code()));
+    Environment env = new EnvironmentImpl(mock, underTest);
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.createRegionDeployments(env, Region.CANADA, Region.SOUTH_UK), "Exception thrown.");
+    assertEquals(String.format("Cannot add region deployments: %s/api/program/1/environment/1/regionDeployments (400 Bad Request).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(post);
+    client.clear(post);
+  }
+
+  @Test
+  void createRegionDeployment_success_via_environment(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest post = request()
+        .withMethod("POST")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments")
+        .withBody(json("[\"can2\"]"));
+    client.when(post).respond(response().withBody(LIST_REGIONS_BODY));
+    new EnvironmentImpl(mock, underTest).addRegionDeployment(Region.CANADA);
+    client.verify(post);
+    client.clear(post);
+  }
+
+  @Test
+  void createRegionDeployment_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest post = request()
+        .withMethod("POST")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments")
+        .withBody(json("[\"can2\", \"gbr9\"]"));
+    client.when(post).respond(response().withBody(LIST_REGIONS_BODY));
+    Environment env = new EnvironmentImpl(mock, underTest);
+    underTest.createRegionDeployments(env, Region.CANADA, Region.SOUTH_UK);
+    client.verify(post);
+    client.clear(post);
+  }
+
+  @Test
+  void removeRegionDeployment_failure_no_deployment(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments");
+    client.when(list).respond(response().withBody(LIST_REGIONS_BODY));
+
+    Environment env = new EnvironmentImpl(mock, underTest);
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.removeRegionDeployments(env, Region.CANADA), "Exception thrown.");
+    assertEquals("Cannot remove region deployment, Environment 1 is not deployed to region 'can2'.", exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void removeRegionDeployment_failure_400(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments");
+    client.when(list).respond(response().withBody(LIST_REGIONS_BODY));
+    HttpRequest post = request()
+        .withMethod("PATCH")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments")
+        .withBody(json("[ { \"id\": \"2\", \"status\": \"TO_DELETE\" } ]"));
+    client.when(post).respond(response().withStatusCode(BAD_REQUEST_400.code()));
+    Environment env = new EnvironmentImpl(mock, underTest);
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.removeRegionDeployments(env, Region.SOUTH_UK), "Exception thrown.");
+    assertEquals(String.format("Cannot remove region deployments: %s/api/program/1/environment/1/regionDeployments (400 Bad Request).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list, post);
+    client.clear(list);
+    client.clear(post);
+  }
+
+  @Test
+  void removeRegionDeployment_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments");
+    client.when(list).respond(response().withBody(LIST_REGIONS_BODY));
+    HttpRequest post = request()
+        .withMethod("PATCH")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments")
+        .withBody(json("[ { \"id\": \"1\", \"status\": \"TO_DELETE\" }, { \"id\": \"2\", \"status\": \"TO_DELETE\" } ]"));
+    client.when(post).respond(response().withBody(LIST_REGIONS_BODY));
+    Environment env = new EnvironmentImpl(mock, underTest);
+    underTest.removeRegionDeployments(env, Region.SOUTH_UK, Region.EAST_US);
+    client.verify(list, post);
+    client.clear(list);
+    client.clear(post);
+  }
+
+  @Test
+  void removeRegionDeployment_success_via_environment(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments");
+    client.when(list).respond(response().withBody(LIST_REGIONS_BODY));
+    HttpRequest post = request()
+        .withMethod("PATCH")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/regionDeployments")
+        .withBody(json("[ { \"id\": \"2\", \"status\": \"TO_DELETE\" } ]"));
+    client.when(post).respond(response().withBody(LIST_REGIONS_BODY));
+    new EnvironmentImpl(mock, underTest).removeRegionDeployment(Region.SOUTH_UK);
+    client.verify(list, post);
+    client.clear(list);
+    client.clear(post);
+  }
+
+  @Test
   void listVariables_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -373,7 +562,7 @@ public class EnvironmentTest extends AbstractApiTest {
         .withHeader("Content-Type", "application/json")
         .withPath("/api/program/1/environment/1/variables")
         .withBody(json("[ { " +
-              "\"name\": \"foo\", \"value\": \"bar\", \"type\": \"string\", \"service\": \"author\" }, " +
+            "\"name\": \"foo\", \"value\": \"bar\", \"type\": \"string\", \"service\": \"author\" }, " +
             "{ \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\", \"service\": \"publish\" " +
             "} ]"));
     client.when(patch).respond(response().withStatusCode(NOT_FOUND_404.code()));

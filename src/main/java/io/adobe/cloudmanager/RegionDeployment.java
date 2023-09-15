@@ -22,13 +22,6 @@ public interface RegionDeployment {
    */
   Type getDeployType();
 
-  /**
-   * Delete this region deployment
-   *
-   * @throws CloudManagerApiException when any error occurs
-   */
-  void delete() throws CloudManagerApiException;
-
   enum Type {
     PRIMARY,
     SECONDARY;

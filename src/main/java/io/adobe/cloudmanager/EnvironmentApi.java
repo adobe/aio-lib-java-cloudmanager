@@ -175,30 +175,20 @@ public interface EnvironmentApi {
    * Creates a new deployment in the specified region
    *
    * @param environment the environment to update
-   * @param region      the region in which to deploy
-   * @return the list of current region deployments
+   * @param regions      the regions in which to deploy
    * @throws CloudManagerApiException when any error occurs
    */
-  Collection<RegionDeployment> createRegionDeployment(@NotNull Environment environment, @NotNull String region) throws CloudManagerApiException;
+  void createRegionDeployments(@NotNull Environment environment, @NotNull Region... regions) throws CloudManagerApiException;
 
   /**
    * Removes the deployment from the specified region
    *
    * @param environment the environment to update
-   * @param region      the region from which to remove the deployment
-   * @return the list of current region deployments
+   * @param regions      the regions from which to remove the deployment
    * @throws CloudManagerApiException when any error occurs
    */
-  Collection<RegionDeployment> removeRegionDeployment(@NotNull Environment environment, @NotNull String region) throws CloudManagerApiException;
+  void removeRegionDeployments(@NotNull Environment environment, @NotNull Region... regions) throws CloudManagerApiException;
 
-  /**
-   * Removes the specified region deployment
-   *
-   * @param deployment the deployment to remove
-   * @return the list of current region deployments
-   * @throws CloudManagerApiException when any error occurs
-   */
-  Collection<RegionDeployment> removeRegionDeployment(@NotNull RegionDeployment deployment) throws CloudManagerApiException;
 
   /**
    * Lists all variables associated with the specified environment

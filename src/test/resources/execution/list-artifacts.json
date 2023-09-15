@@ -1,0 +1,15 @@
+{
+  "_totalNumberOfItems": 1,
+  "_embedded": {
+    "artifacts": [
+      {
+        "id": "1",
+        "stepName": "loadTest",
+        "type": "DISPATCHER_CONFIGURATION",
+        "file": "build/mysite.dispatcher.cloud-1.0.0-SNAPSHOT.zip",
+        "format": "zip",
+        "md5": "6c6a2146c4564e4d4d8b34f72fc0e65884f60e3959365a72da31640cfb8fd1903a809fc8ce7f29dbd137eb2153a551e2a82e9013d2d576677f2808506df865f3"
+      }
+    ]
+  }
+}

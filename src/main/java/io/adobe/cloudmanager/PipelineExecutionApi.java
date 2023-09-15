@@ -253,7 +253,26 @@ public interface PipelineExecutionApi {
   @NotNull
   Collection<PipelineExecution> list(@NotNull Pipeline pipeline, int start, int limit) throws CloudManagerApiException;
 
-  //TODO: Add Artifact ID when API is updated with details.
+  /**
+   * Returns a list of all artifacts associated with the Step
+   *
+   * @param step the pipeline step context
+   * @return list of artifacts
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<Artifact> listArtifacts(@NotNull PipelineExecutionStepState step) throws CloudManagerApiException;
+
+  /**
+   * Returns the fully qualified URL to the artifact file for download.
+   *
+   * @param step       the step context for the artifact
+   * @param artifactId the id of the artifact
+   * @return the artifact file download url
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  String getArtifactDownloadUrl(@NotNull PipelineExecutionStepState step, String artifactId) throws CloudManagerApiException;
 
   static Builder builder() {
     return new Builder();
@@ -265,6 +284,7 @@ public interface PipelineExecutionApi {
 
     public Builder() {
     }
+
     public Builder workspace(@NotNull Workspace workspace) {
       this.workspace = workspace;
       return this;

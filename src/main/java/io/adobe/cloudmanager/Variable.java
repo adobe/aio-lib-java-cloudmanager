@@ -103,9 +103,9 @@ public interface Variable {
     }
 
     public static Type fromValue(String text) {
-      for (Type t : Type.values()) {
-        if (t.value.equals(text)) {
-          return t;
+      for (Type b : Type.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
         }
       }
       return null;
@@ -113,7 +113,7 @@ public interface Variable {
 
     @Override
     public String toString() {
-      return this.value;
+      return String.valueOf(this.value);
     }
   }
 }

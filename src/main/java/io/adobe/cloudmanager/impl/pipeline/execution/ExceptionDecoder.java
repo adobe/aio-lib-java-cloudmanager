@@ -49,6 +49,14 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.LIST;
         break;
       }
+      case "FeignApi#listArtifacts(String,String,String,String,String)": {
+        type = ErrorType.LIST_ARTIFACTS;
+        break;
+      }
+      case "FeignApi#getArtifact(String,String,String,String,String,String)": {
+        type = ErrorType.GET_ARTIFACT;
+        break;
+      }
       default: {
         type = ErrorType.UNKNOWN;
       }
@@ -67,7 +75,8 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
     GET_LOGS("Cannot get logs: %s."),
     GET_METRICS("Cannot get metrics: %s."),
     LIST("Cannot list executions: %s."),
-//    FIND_CURRENT_STEP("Cannot find a current step for pipeline %s."),
+    LIST_ARTIFACTS("Cannot list step artifacts: %s."),
+    GET_ARTIFACT("Cannot get step artifact: %s."),
     UNKNOWN("Pipeline Execution API Error: %s.");
 
     private final String message;

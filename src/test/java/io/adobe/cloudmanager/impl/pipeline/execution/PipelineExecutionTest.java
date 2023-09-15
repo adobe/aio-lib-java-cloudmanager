@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.adobe.cloudmanager.Artifact;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineApi;
@@ -17,8 +18,6 @@ import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.StepAction;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
 import io.adobe.cloudmanager.impl.pipeline.PipelineImpl;
-import io.adobe.cloudmanager.impl.pipeline.execution.PipelineExecutionApiImpl;
-import io.adobe.cloudmanager.impl.pipeline.execution.PipelineExecutionImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -56,8 +55,8 @@ public class PipelineExecutionTest extends AbstractApiTest {
     }
   }
 
-  private HttpRequest setupDownloadUrl(String sessionId) {
-    HttpRequest redirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
+  private HttpRequest setupDownloadUrl(String sessionId, String path) {
+    HttpRequest redirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath(path);
     client.when(redirect).respond(
         response()
             .withStatusCode(OK_200.code())
@@ -66,11 +65,11 @@ public class PipelineExecutionTest extends AbstractApiTest {
     return redirect;
   }
 
-  private HttpRequest setupDownloadUrlSpecial(String sessionId) {
+  private HttpRequest setupDownloadUrlSpecial(String sessionId, String path) {
     HttpRequest redirect = request()
         .withMethod("GET")
         .withHeader(API_KEY_HEADER, sessionId)
-        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs")
+        .withPath(path)
         .withQueryStringParameter("file", "somethingspecial");
     client.when(redirect).respond(
         response()
@@ -495,7 +494,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
-  void getExecutionStepLogDownloadUrl_failure_403() {
+  void getStepLogDownloadUrl_failure_403() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -511,7 +510,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
-  void getExecutionStepLogDownloadUrl_no_redirect() {
+  void getStepLogDownloadUrl_no_redirect() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
@@ -527,7 +526,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
-  void getExecutionStepLogDownloadUrl_success(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) throws CloudManagerApiException {
+  void getStepLogDownloadUrl_success(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getProgramId()).thenReturn("1");
@@ -535,7 +534,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     when(mock.getId()).thenReturn("1");
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_BODY));
-    HttpRequest redirect = setupDownloadUrl(sessionId);
+    HttpRequest redirect = setupDownloadUrl(sessionId, "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
 
     PipelineExecution execution = new PipelineExecutionImpl(mock, executionApi);
     assertEquals(String.format("%s/logs/special.txt", baseUrl), executionApi.getStepLogDownloadUrl(execution, StepAction.build));
@@ -545,7 +544,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
-  void getExecutionStepLogDownloadUrl_success_alternateFile(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) throws CloudManagerApiException {
+  void getStepLogDownloadUrl_success_alternateFile(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getProgramId()).thenReturn("1");
@@ -554,7 +553,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
 
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_BODY));
-    HttpRequest redirect = setupDownloadUrlSpecial(sessionId);
+    HttpRequest redirect = setupDownloadUrlSpecial(sessionId, "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
     PipelineExecution execution = new PipelineExecutionImpl(mock, executionApi);
 
     assertEquals(String.format("%s/logs/somethingspecial.txt", baseUrl), executionApi.getStepLogDownloadUrl(execution, StepAction.build, "somethingspecial"));
@@ -663,5 +662,98 @@ public class PipelineExecutionTest extends AbstractApiTest {
 
     client.verify(list);
     client.clear(list);
+  }
+
+  @Test
+  void listArtifacts_failure_403(@Mock PipelineExecution execution, @Mock PipelineExecutionStepState step) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(execution.getProgramId()).thenReturn("1");
+    when(execution.getPipelineId()).thenReturn("1");
+    when(execution.getId()).thenReturn("1");
+    when(step.getExecution()).thenReturn(execution);
+    when(step.getPhaseId()).thenReturn("1");
+    when(step.getStepId()).thenReturn("1");
+
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifacts");
+    client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.listArtifacts(step), "Exception thrown.");
+    assertEquals(String.format("Cannot list step artifacts: %s/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifacts (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void listArtifacts_success(@Mock PipelineExecution execution, @Mock PipelineExecutionStepState step) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(execution.getProgramId()).thenReturn("1");
+    when(execution.getPipelineId()).thenReturn("1");
+    when(execution.getId()).thenReturn("1");
+    when(step.getExecution()).thenReturn(execution);
+    when(step.getPhaseId()).thenReturn("1");
+    when(step.getStepId()).thenReturn("1");
+
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifacts");
+    client.when(list).respond(response().withBody(loadBodyJson("execution/list-artifacts.json")));
+    Collection<Artifact> artifacts = executionApi.listArtifacts(step);
+    assertEquals(1, artifacts.size(), "Collection size correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void getArtifactDownloadUrl_failure_404(@Mock PipelineExecution execution, @Mock PipelineExecutionStepState step) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(execution.getProgramId()).thenReturn("1");
+    when(execution.getPipelineId()).thenReturn("1");
+    when(execution.getId()).thenReturn("1");
+    when(step.getExecution()).thenReturn(execution);
+    when(step.getPhaseId()).thenReturn("1");
+    when(step.getStepId()).thenReturn("1");
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifact/1");
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.getArtifactDownloadUrl(step, "1"), "Exception thrown.");
+    assertEquals(String.format("Cannot get step artifact: %s/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifact/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void getArtifactDownloadUrl_no_redirect(@Mock PipelineExecution execution, @Mock PipelineExecutionStepState step) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(execution.getProgramId()).thenReturn("1");
+    when(execution.getPipelineId()).thenReturn("1");
+    when(execution.getId()).thenReturn("1");
+    when(step.getExecution()).thenReturn(execution);
+    when(step.getPhaseId()).thenReturn("1");
+    when(step.getStepId()).thenReturn("1");
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifact/1");
+    client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(json("{}")));
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.getArtifactDownloadUrl(step, "1"), "Exception thrown");
+    assertEquals("Artifact redirect for execution 1, phase 1, step 1 did not exist.", exception.getMessage(), "Message was correct.");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void getArtifactDownloadUrl_success(@Mock PipelineExecution execution, @Mock PipelineExecutionStepState step) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(execution.getProgramId()).thenReturn("1");
+    when(execution.getPipelineId()).thenReturn("1");
+    when(execution.getId()).thenReturn("1");
+    when(step.getExecution()).thenReturn(execution);
+    when(step.getPhaseId()).thenReturn("1");
+    when(step.getStepId()).thenReturn("1");
+    HttpRequest get = setupDownloadUrl(sessionId, "/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifact/1");
+    client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(json("{}")));
+    String redirect = executionApi.getArtifactDownloadUrl(step, "1");
+    assertEquals(String.format("%s/logs/special.txt", baseUrl), redirect, "Response was correct.");
+    client.verify(get);
+    client.clear(get);
   }
 }

@@ -30,8 +30,4 @@ public class RegionDeploymentImpl extends io.adobe.cloudmanager.impl.generated.R
     return Type.valueOf(delegate.getType().name());
   }
 
-  public void delete() throws CloudManagerApiException {
-    client.removeRegionDeployment(this);
-  }
-
 }
