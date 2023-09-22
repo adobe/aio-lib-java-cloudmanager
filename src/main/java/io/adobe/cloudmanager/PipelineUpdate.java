@@ -28,8 +28,6 @@ import lombok.Value;
  */
 @Value @Builder
 public class PipelineUpdate {
-
     String branch;
     String repositoryId;
-
 }

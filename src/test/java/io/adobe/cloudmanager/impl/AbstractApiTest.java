@@ -70,20 +70,11 @@ public abstract class AbstractApiTest {
   };
 
   @BeforeEach
-  void before(MockServerClient client) throws Exception {
+  void before(MockServerClient client) {
     this.client = client;
     this.baseUrl = String.format("http://localhost:%s", client.getPort());
     when(workspace.getAuthContext()).thenReturn(authContext);
     doNothing().when(authContext).validate();
-
-    try (MockedConstruction<AuthInterceptor.Builder> ignored = mockConstruction(AuthInterceptor.Builder.class,
-        (mock, mockContext) -> {
-          when(mock.workspace(workspace)).thenReturn(mock);
-          when(mock.build()).thenReturn(authInterceptor);
-        }
-    )) {
-      underTest = (CloudManagerApiImpl) CloudManagerApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
-    }
   }
 
 

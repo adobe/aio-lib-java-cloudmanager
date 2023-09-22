@@ -223,7 +223,7 @@ class PipelineTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1");
-    client.when(get).respond(response().withBody(loadBodyJson("pipeline/get_no_build.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("pipeline/get-no-build.json")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.update("1", "1", PipelineUpdate.builder().build()), "Exception thrown");
     assertEquals(String.format("Pipeline %s does not appear to have a build phase.", "1"), exception.getMessage(), "Message was correct");

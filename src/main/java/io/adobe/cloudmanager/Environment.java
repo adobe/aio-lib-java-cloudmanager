@@ -30,6 +30,8 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.Getter;
+
 public interface Environment {
 
   /**
@@ -176,7 +178,29 @@ public interface Environment {
     DEV,
     STAGE,
     PROD,
-    RDE;
+    RDE
+  }
+
+  @Getter
+  enum Tier {
+    AUTHOR("author"),
+    PREVIEW("preview"),
+    PUBLISH("publish");
+
+    private final String value;
+
+    Tier(String value) {
+      this.value = value;
+    }
+
+    public static Tier fromValue(String text) {
+      for (Tier t : Tier.values()) {
+        if (String.valueOf(t.value).equals(text)) {
+          return t;
+        }
+      }
+      return null;
+    }
   }
 
   /**

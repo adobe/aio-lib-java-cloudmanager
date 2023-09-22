@@ -22,11 +22,8 @@ package io.adobe.cloudmanager.impl;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Collection;
 
-import com.adobe.aio.workspace.Workspace;
-import feign.Feign;
 import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
@@ -34,7 +31,6 @@ import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
-import io.adobe.cloudmanager.RegionDeployment;
 import io.adobe.cloudmanager.event.PipelineExecutionEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
@@ -46,18 +42,7 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   static final String GENERATE_BODY = "Unable to generate request body: %s.";
 
 
-  public CloudManagerApiImpl(Workspace workspace, URL url) {
-    Feign.Builder builder = FeignUtil.getBuilder(workspace);
-  }
-
-  @Override
-  public RegionDeployment getRegionDeployment(String programId, String environmentId, String deploymentId) throws CloudManagerApiException {
-    return null;
-  }
-
-  @Override
-  public RegionDeployment getRegionDeployment(Environment environment, String deploymentId) throws CloudManagerApiException {
-    return null;
+  public CloudManagerApiImpl() {
   }
 
 

@@ -1,0 +1,45 @@
+{
+  "_totalNumberOfItems": 0,
+  "_embedded":{
+    "ipAllowlists":[
+      {
+        "id": "1",
+        "name": "NewYork Office",
+        "ipCidrSet": [
+          "11.22.33.44/28",
+          "99.88.77.66/32"
+        ],
+        "programId": "1",
+        "bindings": [
+          {
+            "id": "1",
+            "tier": "publish",
+            "status": "NOT_STARTED",
+            "programId": "1",
+            "ipAllowListId": "1",
+            "environmentId": "1"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "name": "India Office",
+        "ipCidrSet": [
+          "55.55.55.55/28",
+          "11.00.00.11/32"
+        ],
+        "programId": "1",
+        "bindings": [
+          {
+            "id": "2",
+            "tier": "publish",
+            "status": "NOT_STARTED",
+            "programId": "1",
+            "ipAllowListId": "2",
+            "environmentId": "1"
+          }
+        ]
+      }
+    ]
+  }
+}

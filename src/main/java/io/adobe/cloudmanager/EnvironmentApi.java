@@ -250,8 +250,10 @@ public interface EnvironmentApi {
    */
   void resetRde(@NotNull Environment environment) throws CloudManagerApiException;
 
+  // TODO: Need Details about Restore Points
+
   /**
-   * Create a Environment API builder.
+   * Create an Environment API builder.
    *
    * @return a builder.
    */

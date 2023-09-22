@@ -49,73 +49,11 @@ import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
 public interface CloudManagerApi {
 
 
-  /**
-   * Create a CloudManager API builder.
-   *
-   * @return a builder.
-   */
-  static Builder builder() {
-    return new Builder();
-  }
-
-  /**
-   * Builds instances of the CloudManager API.
-   */
-  class Builder {
-    private Workspace workspace;
-    private URL url;
-
-    public Builder() {
-    }
-
-    public Builder workspace(@NotNull Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
-    public Builder url(@NotNull URL url) {
-      this.url = url;
-      return this;
-    }
-
-    public CloudManagerApi build() {
-      if (workspace == null) {
-        throw new IllegalStateException("Workspace must be specified.");
-      }
-      if (workspace.getAuthContext() == null) {
-        throw new IllegalStateException("Workspace must specify AuthContext");
-      }
-      workspace.getAuthContext().validate();
-      return new CloudManagerApiImpl(workspace, url);
-    }
-  }
-
   // Try to keep the APIs in the order they are listed on the Reference Docs
   // Helper APIs come after the associated publicly defined ones
   // Reference: https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/
 
   //TODO: Add the Execution Artifact API
-
-  /**
-   * Returns the region deployment for the deployment with the specified id
-   *
-   * @param programId     the program id context
-   * @param environmentId the environment id context
-   * @param deploymentId  the id of the deployment to retrieve
-   * @return the region deployment details
-   * @throws CloudManagerApiException when any error occurs
-   */
-  RegionDeployment getRegionDeployment(@NotNull String programId, @NotNull String environmentId, @NotNull String deploymentId) throws CloudManagerApiException;
-
-  /**
-   * Returns the region deployment for the deployment with the specified id
-   *
-   * @param environment  the environment context
-   * @param deploymentId the id of the deployment to retrieve
-   * @return the region deployment details
-   * @throws CloudManagerApiException when any error occurs
-   */
-  RegionDeployment getRegionDeployment(@NotNull Environment environment, @NotNull String deploymentId) throws CloudManagerApiException;
 
   // Non-API convenience methods.
 
