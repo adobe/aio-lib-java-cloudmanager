@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.impl.network;
+package io.adobe.cloudmanager.impl.network.ipallow;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.apache.commons.net.util.SubnetUtils;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.IPAllowList;
-import io.adobe.cloudmanager.NetworkApi;
+import io.adobe.cloudmanager.IPAllowApi;
 import io.adobe.cloudmanager.impl.generated.IPAllowedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -28,9 +28,9 @@ public class IPAllowListImpl extends IPAllowedList implements IPAllowList {
   private IPAllowedList delegate;
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
-  private final NetworkApi client;
+  private final IPAllowApi client;
 
-  public IPAllowListImpl(IPAllowedList delegate, NetworkApi client) {
+  public IPAllowListImpl(IPAllowedList delegate, IPAllowApi client) {
     this.delegate = delegate;
     this.client = client;
   }

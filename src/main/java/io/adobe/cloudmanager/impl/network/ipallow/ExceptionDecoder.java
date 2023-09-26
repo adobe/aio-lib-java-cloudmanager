@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.impl.network;
+package io.adobe.cloudmanager.impl.network.ipallow;
 
 import feign.Response;
 import io.adobe.cloudmanager.CloudManagerApiException;

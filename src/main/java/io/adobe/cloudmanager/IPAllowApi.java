@@ -5,10 +5,9 @@ import java.util.Collection;
 import javax.validation.constraints.NotNull;
 
 import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.network.IPAllowListImpl;
-import io.adobe.cloudmanager.impl.network.NetworkApiImpl;
+import io.adobe.cloudmanager.impl.network.ipallow.IPAllowApiImpl;
 
-public interface NetworkApi {
+public interface IPAllowApi {
 
   /**
    * Retrieves the specified IP Allow List
@@ -232,7 +231,7 @@ public interface NetworkApi {
       return this;
     }
 
-    public NetworkApi build() {
+    public IPAllowApi build() {
       if (workspace == null) {
         throw new IllegalStateException("Workspace must be specified.");
       }
@@ -240,7 +239,7 @@ public interface NetworkApi {
         throw new IllegalStateException("Workspace must specify AuthContext");
       }
       workspace.getAuthContext().validate();
-      return new NetworkApiImpl(workspace, url);
+      return new IPAllowApiImpl(workspace, url);
     }
   }
 }

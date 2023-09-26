@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.impl.network;
+package io.adobe.cloudmanager.impl.network.ipallow;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.UUID;
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
+import io.adobe.cloudmanager.IPAllowApi;
 import io.adobe.cloudmanager.IPAllowList;
-import io.adobe.cloudmanager.NetworkApi;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
 import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
 import io.adobe.cloudmanager.impl.generated.IPAllowedList;
@@ -31,13 +31,13 @@ import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
 import static org.mockserver.model.JsonBody.*;
 
-public class NetworkTest extends AbstractApiTest {
-  private static final JsonBody GET_BODY = loadBodyJson("network/get.json");
-  private static final JsonBody LIST_BODY = loadBodyJson("network/list.json");
-  private static final JsonBody GET_BINDING_BODY = loadBodyJson("network/get-binding.json");
-  private static final JsonBody LIST_BINDING_BODY = loadBodyJson("network/list-binding.json");
+public class IPAllowTest extends AbstractApiTest {
+  private static final JsonBody GET_BODY = loadBodyJson("network/ipallow/get.json");
+  private static final JsonBody LIST_BODY = loadBodyJson("network/ipallow/list.json");
+  private static final JsonBody GET_BINDING_BODY = loadBodyJson("network/ipallow/get-binding.json");
+  private static final JsonBody LIST_BINDING_BODY = loadBodyJson("network/ipallow/list-binding.json");
 
-  private NetworkApi underTest;
+  private IPAllowApi underTest;
 
   @BeforeEach
   void before() throws Exception {
@@ -47,7 +47,7 @@ public class NetworkTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = NetworkApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = IPAllowApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 

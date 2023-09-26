@@ -1,9 +1,8 @@
-package io.adobe.cloudmanager.impl.network;
+package io.adobe.cloudmanager.impl.network.ipallow;
 
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.adobe.aio.workspace.Workspace;
@@ -12,7 +11,7 @@ import feign.RequestLine;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.IPAllowList;
-import io.adobe.cloudmanager.NetworkApi;
+import io.adobe.cloudmanager.IPAllowApi;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.impl.FeignUtil;
 import io.adobe.cloudmanager.impl.generated.IPAllowedList;
@@ -22,11 +21,11 @@ import io.adobe.cloudmanager.impl.generated.IPAllowlistList;
 
 import static io.adobe.cloudmanager.Constants.*;
 
-public class NetworkApiImpl implements NetworkApi {
+public class IPAllowApiImpl implements IPAllowApi {
 
-  private FeignApi api;
+  private final FeignApi api;
 
-  public NetworkApiImpl(Workspace workspace, URL url) {
+  public IPAllowApiImpl(Workspace workspace, URL url) {
     String baseUrl = url == null ? CLOUD_MANAGER_URL : url.toString();
     api = FeignUtil.getBuilder(workspace).errorDecoder(new ExceptionDecoder()).target(FeignApi.class, baseUrl);
   }
