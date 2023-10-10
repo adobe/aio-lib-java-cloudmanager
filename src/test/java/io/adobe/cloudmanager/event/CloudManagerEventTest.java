@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CloudManagerEventTest {
 
-  private ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new ObjectMapper();
 
   @Test
   public void parseEventInvalidType() {

@@ -104,7 +104,7 @@ public interface Metric {
     EQ("EQ"),
     NEQ("NEQ");
 
-    private String value;
+    private final String value;
 
     Comparator(String value) {
       this.value = value;

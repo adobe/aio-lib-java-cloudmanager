@@ -1,12 +1,6 @@
 package io.adobe.cloudmanager.impl.tenant;
 
-import java.util.Collection;
-
-import io.adobe.cloudmanager.CloudManagerApi;
-import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Tenant;
-import io.adobe.cloudmanager.TenantApi;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;

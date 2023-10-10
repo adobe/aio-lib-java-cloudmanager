@@ -83,10 +83,10 @@ public class DomainName implements Serializable{
    * Type of the domain name record
    */
   public enum TypeEnum {
-      A("A"),
-      CNAME("CNAME");
+    A("A"),
+    CNAME("CNAME");
 
-      private String value;
+    private String value;
 
     TypeEnum(String value) {
       this.value = value;

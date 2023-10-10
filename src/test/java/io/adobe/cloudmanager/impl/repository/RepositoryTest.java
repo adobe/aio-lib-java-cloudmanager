@@ -12,7 +12,6 @@ import io.adobe.cloudmanager.RepositoryApi;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
 import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
 import io.adobe.cloudmanager.impl.program.ProgramImpl;
-import io.adobe.cloudmanager.impl.repository.RepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

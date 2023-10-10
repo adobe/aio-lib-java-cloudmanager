@@ -6,7 +6,6 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
 import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.pipeline.PipelineApiImpl;
 import io.adobe.cloudmanager.impl.pipeline.execution.PipelineExecutionApiImpl;
 
 public interface PipelineExecutionApi {

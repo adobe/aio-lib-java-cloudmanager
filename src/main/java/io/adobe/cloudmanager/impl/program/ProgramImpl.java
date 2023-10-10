@@ -22,13 +22,10 @@ package io.adobe.cloudmanager.impl.program;
 
 import java.util.Collection;
 
-import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
-import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.ProgramApi;
 import io.adobe.cloudmanager.Region;
-import io.adobe.cloudmanager.Repository;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;

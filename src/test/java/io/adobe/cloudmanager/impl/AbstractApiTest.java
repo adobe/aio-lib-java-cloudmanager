@@ -22,7 +22,6 @@ package io.adobe.cloudmanager.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
@@ -32,12 +31,10 @@ import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.ims.feign.OAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import feign.RequestTemplate;
-import io.adobe.cloudmanager.CloudManagerApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;

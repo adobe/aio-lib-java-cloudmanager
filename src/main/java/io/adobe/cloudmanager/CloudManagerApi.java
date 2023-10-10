@@ -22,21 +22,14 @@ package io.adobe.cloudmanager;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.net.URL;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
-import com.adobe.aio.workspace.Workspace;
 import io.adobe.cloudmanager.event.PipelineExecutionEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.event.PipelineExecutionStepWaitingEvent;
-import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
 
 /**
  * API for interacting with Cloud Manager AdobeIO endpoints.

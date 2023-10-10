@@ -23,7 +23,6 @@ package io.adobe.cloudmanager.impl.pipeline;
 import java.util.Optional;
 import java.util.Set;
 
-import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineApi;

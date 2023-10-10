@@ -2,7 +2,6 @@ package io.adobe.cloudmanager.impl.repository;
 
 import java.util.Collection;
 
-import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Repository;
 import io.adobe.cloudmanager.RepositoryApi;

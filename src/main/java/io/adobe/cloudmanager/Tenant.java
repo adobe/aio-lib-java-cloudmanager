@@ -1,7 +1,5 @@
 package io.adobe.cloudmanager;
 
-import java.util.Collection;
-
 public interface Tenant {
 
   /**

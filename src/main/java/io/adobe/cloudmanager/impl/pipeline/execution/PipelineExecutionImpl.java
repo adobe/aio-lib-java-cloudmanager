@@ -22,8 +22,6 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineExecution;
-import io.adobe.cloudmanager.PipelineExecutionApi;
-import io.adobe.cloudmanager.impl.CloudManagerApiImpl;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;

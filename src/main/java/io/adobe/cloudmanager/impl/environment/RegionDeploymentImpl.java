@@ -1,7 +1,5 @@
 package io.adobe.cloudmanager.impl.environment;
 
-import io.adobe.cloudmanager.CloudManagerApi;
-import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.EnvironmentApi;
 import io.adobe.cloudmanager.RegionDeployment;
 import lombok.EqualsAndHashCode;

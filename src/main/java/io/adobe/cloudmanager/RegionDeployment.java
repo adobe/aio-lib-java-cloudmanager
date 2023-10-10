@@ -24,6 +24,6 @@ public interface RegionDeployment {
 
   enum Type {
     PRIMARY,
-    SECONDARY;
+    SECONDARY
   }
 }
