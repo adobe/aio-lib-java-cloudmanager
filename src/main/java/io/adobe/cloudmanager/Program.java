@@ -20,6 +20,8 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.util.Collection;
+
 public interface Program {
 
   /**
@@ -42,4 +44,12 @@ public interface Program {
    * @throws CloudManagerApiException when an error occurs
    */
   void delete() throws CloudManagerApiException;
+
+  /**
+   * List all regions which can be used to create environments for this program.
+   *
+   * @return the list of regions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Collection<Region> listRegions() throws CloudManagerApiException;
 }

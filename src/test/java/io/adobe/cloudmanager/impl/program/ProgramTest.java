@@ -28,7 +28,9 @@ import com.adobe.aio.ims.feign.AuthInterceptor;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.ProgramApi;
+import io.adobe.cloudmanager.Region;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
+import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
 import io.adobe.cloudmanager.impl.program.ProgramImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -154,6 +156,31 @@ class ProgramTest extends AbstractApiTest {
     client.when(list).respond(response().withBody(LIST_BODY));
     Collection<Program> programs = underTest.list("1");
     assertEquals(7, programs.size(), "Correct length of program list");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void list_regions_failure_404() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/regions");
+    client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listRegions("1"), "Exception thrown for 404");
+    assertEquals(String.format("Cannot retrieve program regions: %s/api/program/1/regions (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void list_regions_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/regions");
+    client.when(list).respond(response().withBody(loadBodyJson("program/regions.json")));
+    Collection<Region> regions =  new ProgramImpl(mock, underTest).listRegions();
+    assertEquals(3, regions.size());
     client.verify(list);
     client.clear(list);
   }

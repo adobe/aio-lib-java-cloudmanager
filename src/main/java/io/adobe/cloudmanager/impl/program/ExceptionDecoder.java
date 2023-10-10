@@ -44,6 +44,10 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.DELETE;
         break;
       }
+      case "FeignApi#listRegions(String)": {
+        type = ErrorType.REGIONS;
+        break;
+      }
       default: {
         type = ErrorType.UNKNOWN;
       }
@@ -57,6 +61,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
     LIST("Cannot retrieve programs: %s."),
     GET("Cannot retrieve program: %s."),
     DELETE("Cannot delete program: %s."),
+    REGIONS("Cannot retrieve program regions: %s."),
     UNKNOWN("Program API Error: %s.");
     private final String message;
 

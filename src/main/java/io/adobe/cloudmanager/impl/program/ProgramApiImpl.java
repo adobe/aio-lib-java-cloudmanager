@@ -11,10 +11,12 @@ import feign.RequestLine;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.ProgramApi;
+import io.adobe.cloudmanager.Region;
 import io.adobe.cloudmanager.Tenant;
 import io.adobe.cloudmanager.impl.FeignUtil;
 import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
 import io.adobe.cloudmanager.impl.generated.ProgramList;
+import io.adobe.cloudmanager.impl.generated.RegionsList;
 
 import static io.adobe.cloudmanager.Constants.*;
 
@@ -55,6 +57,14 @@ public class ProgramApiImpl implements ProgramApi {
     return list(tenant.getId());
   }
 
+  @Override
+  public Collection<Region> listRegions(String programId) throws CloudManagerApiException {
+    RegionsList list = api.listRegions(programId);
+    return list.getEmbedded() == null ?
+        Collections.emptySet() :
+        list.getEmbedded().getRegions().stream().map(r -> Region.fromValue(r.getName())).collect(Collectors.toList());
+  }
+
   private interface FeignApi {
     @RequestLine("GET /api/program/{id}")
     EmbeddedProgram get(@Param("id") String id) throws CloudManagerApiException;
@@ -64,5 +74,8 @@ public class ProgramApiImpl implements ProgramApi {
 
     @RequestLine("GET /api/tenant/{tenantId}/programs")
     ProgramList list(@Param("tenantId") String tenantId) throws CloudManagerApiException;
+
+    @RequestLine("GET /api/program/{id}/regions")
+    RegionsList listRegions(@Param("id") String id) throws CloudManagerApiException;
   }
 }

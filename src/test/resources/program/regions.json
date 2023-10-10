@@ -1,0 +1,16 @@
+{
+  "_totalNumberOfItems": 0,
+  "_embedded": {
+    "regions": [
+      {
+        "name": "va7"
+      },
+      {
+        "name": "sgp5"
+      },
+      {
+        "name": "wa1"
+      }
+    ]
+  }
+}

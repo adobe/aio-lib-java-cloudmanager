@@ -55,6 +55,16 @@ public interface ProgramApi {
   @NotNull
   Collection<Program> list(@NotNull Tenant tenant) throws CloudManagerApiException;
 
+  /**
+   * List all regions which can be used to create environments for the specified program.
+   *
+   * @param programId the id of the program
+   * @return the list of regions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<Region> listRegions(@NotNull String programId) throws CloudManagerApiException;
+
   static Builder builder() {
     return new Builder();
   }
@@ -68,6 +78,7 @@ public interface ProgramApi {
 
     public Builder() {
     }
+
     public Builder workspace(@NotNull Workspace workspace) {
       this.workspace = workspace;
       return this;

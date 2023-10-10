@@ -27,6 +27,7 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.ProgramApi;
+import io.adobe.cloudmanager.Region;
 import io.adobe.cloudmanager.Repository;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,5 +54,10 @@ public class ProgramImpl extends io.adobe.cloudmanager.impl.generated.EmbeddedPr
   }
   public void delete() throws CloudManagerApiException {
     client.delete(this);
+  }
+
+  @Override
+  public Collection<Region> listRegions() throws CloudManagerApiException {
+    return client.listRegions(getId());
   }
 }
