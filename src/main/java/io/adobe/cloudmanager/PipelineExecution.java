@@ -55,16 +55,33 @@ public interface PipelineExecution {
   /**
    * Advances this execution if in a valid state.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   void advance() throws CloudManagerApiException;
 
   /**
    * Cancel this execution, if in a valid state.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   void cancel() throws CloudManagerApiException;
+
+  // Convenience Methods
+
+  /**
+   * Checks if this execution is currently running.
+   *
+   * @return true if this execution is running, false otherwise
+   */
+  boolean isRunning();
+
+  /**
+   * Gets the current/active step for the execution. Same as calling
+   *
+   * @return the current step
+   * @throws CloudManagerApiException when any error occurs
+   */
+  PipelineExecutionStepState getCurrentStep() throws CloudManagerApiException;
 
   /**
    * Pipeline Execution status values

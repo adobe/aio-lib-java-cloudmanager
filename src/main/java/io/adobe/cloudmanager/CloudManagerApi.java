@@ -73,26 +73,6 @@ public interface CloudManagerApi {
   PipelineExecution getExecution(@NotNull PipelineExecutionEndEvent event) throws CloudManagerApiException;
 
   /**
-   * Indicates if the specified pipeline execution is running. No assumptions are made about it's state - only that it has ended.
-   *
-   * @param execution the execution context to check
-   * @return true if the pipeline is running, false if has ended
-   * @throws CloudManagerApiException when any error occurs
-   */
-  boolean isExecutionRunning(@NotNull PipelineExecution execution) throws CloudManagerApiException;
-
-  /**
-   * Indicates if the specified pipeline execution is running. No assumptions are made about it's state - only that it has ended.
-   *
-   * @param programId   the program context for the pipeline execution
-   * @param pipelineId  the pipeline id for the execution
-   * @param executionId the execution id
-   * @return true if the pipeline is running, false if ended
-   * @throws CloudManagerApiException when any error occurs
-   */
-  boolean isExecutionRunning(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
-
-  /**
    * Gets the step state for based on the provided event.
    *
    * @param event the event context
@@ -121,34 +101,6 @@ public interface CloudManagerApi {
    */
   @NotNull
   PipelineExecutionStepState getExecutionStepState(@NotNull PipelineExecutionStepEndEvent event) throws CloudManagerApiException;
-
-  /**
-   * Gets the current step for the execution.
-   *
-   * @param execution the pipeline execution
-   * @return the current step
-   * @throws CloudManagerApiException when any error occurs
-   */
-  @NotNull
-  PipelineExecutionStepState getCurrentStep(@NotNull PipelineExecution execution) throws CloudManagerApiException;
-
-  /**
-   * Advances the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
-   *
-   * @param programId  the program id context of the pipeline
-   * @param pipelineId the id of the pipeline to cancel
-   * @throws CloudManagerApiException when any error occurs
-   */
-  void advanceCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
-
-  /**
-   * Cancels the current execution of the specified pipeline. If no current execution exists, quietly does nothing.
-   *
-   * @param programId  the program id context of the pipeline
-   * @param pipelineId the id of the pipeline to cancel
-   * @throws CloudManagerApiException when any error occurs
-   */
-  void cancelCurrentExecution(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
    * Streams the specified Execution Step log to the provided output stream. This will close the output stream when done.

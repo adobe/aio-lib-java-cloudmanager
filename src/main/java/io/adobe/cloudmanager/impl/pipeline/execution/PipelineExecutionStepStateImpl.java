@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -95,6 +96,13 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
   public void getLog(String name, OutputStream outputStream) throws CloudManagerApiException {
 //    client.downloadExecutionStepLog(this, name, outputStream);
   }
+
+  /**
+   * Predicate for pipelines based on they are the current execution.
+   */
+  public static final Predicate<io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState> IS_CURRENT = (stepState ->
+      stepState.getStatus() != StatusEnum.FINISHED
+  );
 
   protected String getAdvanceBody() throws CloudManagerApiException {
     StringWriter writer = new StringWriter();

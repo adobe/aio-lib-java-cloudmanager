@@ -273,6 +273,8 @@ public interface PipelineExecutionApi {
   @NotNull
   String getArtifactDownloadUrl(@NotNull PipelineExecutionStepState step, String artifactId) throws CloudManagerApiException;
 
+  // Convenience Methods
+
   static Builder builder() {
     return new Builder();
   }

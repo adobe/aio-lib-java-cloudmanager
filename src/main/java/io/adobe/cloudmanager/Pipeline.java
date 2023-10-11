@@ -61,7 +61,7 @@ public interface Pipeline {
   /**
    * Delete this pipeline.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   void delete() throws CloudManagerApiException;
 
@@ -119,7 +119,7 @@ public interface Pipeline {
    *
    * @param variables the variables to set
    * @return the complete list of variables in this pipeline
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
 

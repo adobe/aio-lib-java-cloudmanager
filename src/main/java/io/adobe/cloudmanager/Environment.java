@@ -71,7 +71,7 @@ public interface Environment {
   /**
    * Delete this environment.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   void delete() throws CloudManagerApiException;
 
@@ -79,7 +79,7 @@ public interface Environment {
    * Delete this environment, with option to ignore resource deletion failure.
    *
    * @param ignoreFailure flag to ignore failures
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   void delete(boolean ignoreFailure) throws CloudManagerApiException;
 
@@ -131,7 +131,7 @@ public interface Environment {
    * Lists the variables configured in this environment.
    *
    * @return the list of variables
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   Set<Variable> getVariables() throws CloudManagerApiException;
 
@@ -140,7 +140,7 @@ public interface Environment {
    *
    * @param variables the variables to set
    * @return the complete list of variables in this environment
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
 
@@ -166,7 +166,7 @@ public interface Environment {
    * @param days      the number of days to download
    * @param dir       the directory in which to place the log files
    * @return a list of EnvironmentLogs with details about the downloaded files
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   Collection<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException;
 

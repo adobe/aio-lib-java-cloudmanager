@@ -20,8 +20,12 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
  * #L%
  */
 
+import java.util.Arrays;
+
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineExecution;
+import io.adobe.cloudmanager.PipelineExecutionStepState;
+import io.adobe.cloudmanager.impl.generated.PipelineExecutionEmbedded;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -32,6 +36,8 @@ import lombok.experimental.Delegate;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.PipelineExecution implements PipelineExecution {
+
+  private static final String FIND_CURRENT_ERROR  = "Cannot find a current step for pipeline %s, execution %s.";
 
   private static final long serialVersionUID = 1L;
 
@@ -60,5 +66,24 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
   @Override
   public Status getStatusState() {
     return Status.fromValue(getStatus().getValue());
+  }
+
+  @Override
+  public boolean isRunning() {
+    return Arrays.asList(new Status[] { Status.NOT_STARTED, Status.RUNNING, Status.CANCELLED }).contains(getStatusState());
+  }
+
+  @Override
+  public PipelineExecutionStepState getCurrentStep() throws CloudManagerApiException {
+    PipelineExecutionEmbedded embeddeds = getEmbedded();
+    if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
+      throw new CloudManagerApiException(String.format(FIND_CURRENT_ERROR, getPipelineId(), getId()));
+    }
+    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState step = embeddeds.getStepStates()
+        .stream()
+        .filter(PipelineExecutionStepStateImpl.IS_CURRENT)
+        .findFirst()
+        .orElseThrow(() -> new CloudManagerApiException(String.format(FIND_CURRENT_ERROR, getPipelineId(), getId())));
+    return new PipelineExecutionStepStateImpl(step, this, client);
   }
 }

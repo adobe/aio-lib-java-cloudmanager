@@ -2,7 +2,9 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.JsonBody;
+import org.mockserver.verify.VerificationTimes;
 
 import static com.adobe.aio.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -755,5 +758,48 @@ public class PipelineExecutionTest extends AbstractApiTest {
     assertEquals(String.format("%s/logs/special.txt", baseUrl), redirect, "Response was correct.");
     client.verify(get);
     client.clear(get);
+  }
+
+  @Test
+  void isRunning(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/executions");
+    client.when(list).respond(response().withBody(LIST_BODY));
+
+    List<PipelineExecution> executions = new ArrayList<>(executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi)));
+    assertTrue(executions.get(0).isRunning());
+    assertFalse(executions.get(1).isRunning());
+    client.verify(list, VerificationTimes.once());
+    client.clear(list);
+  }
+
+  @Test
+  void getCurrentStep(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/executions");
+    client.when(list).respond(response().withBody(LIST_BODY));
+
+    List<PipelineExecution> executions = new ArrayList<>(executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi)));
+    PipelineExecution execution = executions.get(0);
+    assertEquals("build",  execution.getCurrentStep().getAction(), "Correct step found.");
+
+    // No running step.
+    execution = executions.get(1);
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, execution::getCurrentStep, "Exception thrown.");
+    assertEquals("Cannot find a current step for pipeline 1, execution 2.", exception.getMessage(), "Message was correct.");
+
+    // No steps
+    execution = executions.get(19);
+    exception = assertThrows(CloudManagerApiException.class, execution::getCurrentStep, "Exception thrown.");
+    assertEquals("Cannot find a current step for pipeline 1, execution 20.", exception.getMessage(), "Message was correct.");
+
+    client.verify(list, VerificationTimes.once());
+    client.clear(list);
   }
 }

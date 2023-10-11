@@ -136,7 +136,7 @@ class ProgramTest extends AbstractApiTest {
   }
 
   @Test
-  void list_successEmpty() throws CloudManagerApiException {
+  void list_success_empty() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
@@ -160,7 +160,7 @@ class ProgramTest extends AbstractApiTest {
   }
 
   @Test
-  void list_regions_failure_404() {
+  void listRegions_failure_404() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/regions");
@@ -172,7 +172,7 @@ class ProgramTest extends AbstractApiTest {
   }
 
   @Test
-  void list_regions_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
+  void listRegions_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getId()).thenReturn("1");

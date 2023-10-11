@@ -60,16 +60,6 @@ public class CloudManagerApiImpl implements CloudManagerApi {
   }
 
   @Override
-  public boolean isExecutionRunning(PipelineExecution execution) throws CloudManagerApiException {
-    return false;
-  }
-
-  @Override
-  public boolean isExecutionRunning(String programId, String pipelineId, String executionId) throws CloudManagerApiException {
-    return false;
-  }
-
-  @Override
   public PipelineExecutionStepState getExecutionStepState(PipelineExecutionStepStartEvent event) throws CloudManagerApiException {
     return null;
   }
@@ -84,20 +74,6 @@ public class CloudManagerApiImpl implements CloudManagerApi {
     return null;
   }
 
-  @Override
-  public PipelineExecutionStepStateImpl getCurrentStep(PipelineExecution execution) throws CloudManagerApiException {
-    return null;
-  }
-
-  @Override
-  public void advanceCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
-
-  }
-
-  @Override
-  public void cancelCurrentExecution(String programId, String pipelineId) throws CloudManagerApiException {
-
-  }
 
   @Override
   public void downloadExecutionStepLog(String programId, String pipelineId, String executionId, String action, OutputStream outputStream) throws CloudManagerApiException {
