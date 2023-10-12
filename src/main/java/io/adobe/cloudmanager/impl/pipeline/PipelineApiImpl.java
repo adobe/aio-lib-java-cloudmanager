@@ -146,7 +146,7 @@ public class PipelineApiImpl implements PipelineApi {
   private Collection<Pipeline> listDetails(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
     PipelineList list = api.list(programId);
     if (list == null || list.getEmbedded() == null || list.getEmbedded().getPipelines() == null) {
-      throw new CloudManagerApiException(String.format(ExceptionDecoder.ErrorType.FIND.getMessage(), programId));
+      throw new CloudManagerApiException(String.format("Cannot find pipelines for program %s.", programId));
     }
 
     return list.getEmbedded().getPipelines().stream().map(p -> new PipelineImpl(p, this, executionApi)).filter(predicate).collect(Collectors.toList());

@@ -15,7 +15,7 @@ public interface PipelineApi {
    * Lists all pipelines within the specified program.
    *
    * @param programId the program id
-   * @return the list of {@link Pipeline}s
+   * @return the list of pipelines
    * @throws CloudManagerApiException when any error occurs
    */
   @NotNull

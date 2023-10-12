@@ -55,6 +55,11 @@ public interface Variable {
    */
   String getService();
 
+  /**
+   * Used to build a Variable definition to pass to API creation operations.
+   *
+   * @return a Variable builder
+   */
   static Builder builder() {
     return new Builder();
   }

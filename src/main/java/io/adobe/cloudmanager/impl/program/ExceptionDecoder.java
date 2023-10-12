@@ -57,7 +57,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   @Getter
-  public enum ErrorType {
+  private enum ErrorType {
     LIST("Cannot retrieve programs: %s."),
     GET("Cannot retrieve program: %s."),
     DELETE("Cannot delete program: %s."),

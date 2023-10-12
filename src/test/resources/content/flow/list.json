@@ -1,0 +1,65 @@
+{
+  "_totalNumberOfItems": 2,
+  "_page": {
+    "start": 0,
+    "limit": 20,
+    "next": 0,
+    "prev": 0
+  },
+  "_embedded": {
+    "contentFlows": [
+      {
+        "contentSetId": "1",
+        "contentSetName": "Test Content Set",
+        "srcEnvironmentId": "1",
+        "srcEnvironmentName": "Prod",
+        "destEnvironmentId": "2",
+        "destEnvironmentName": "Stage",
+        "tier": "author",
+        "status": "Success",
+        "destProgramId": "1",
+        "resultDetails": {
+          "exportResult": {
+            "errorCode": "0",
+            "message": "Success",
+            "details": [
+              "20 Exported"
+            ]
+          },
+          "importResult": {
+            "errorCode": "0",
+            "message": "Success",
+            "details": [
+              "20 Imported"
+            ]
+          }
+        }
+      },
+      {
+        "contentSetId": "1",
+        "contentSetName": "Test Content Set",
+        "srcEnvironmentId": "2",
+        "srcEnvironmentName": "Stage",
+        "destEnvironmentId": "3",
+        "destEnvironmentName": "Dev",
+        "tier": "author",
+        "status": "Running",
+        "destProgramId": "1",
+        "resultDetails": {
+          "exportResult": {
+            "errorCode": "0",
+            "message": "Running",
+            "details": [
+              "5 Exported"
+            ]
+          },
+          "importResult": {
+            "errorCode": "0",
+            "message": "",
+            "details": []
+          }
+        }
+      }
+    ]
+  }
+}

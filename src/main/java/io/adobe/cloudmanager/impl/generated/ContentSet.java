@@ -38,6 +38,9 @@ public class ContentSet implements Serializable{
   @JsonProperty("name")
   private String name = null;
 
+  @JsonProperty("description")
+  private String description = null;
+
   @JsonProperty("paths")
   private List<ContentSetPath> paths = null;
 
@@ -87,6 +90,24 @@ public class ContentSet implements Serializable{
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public ContentSet description(String description) {
+    this.description = description;
+    return this;
+  }
+
+   /**
+   * Optional Description of the content set
+   * @return description
+  **/
+  @Schema(description = "Optional Description of the content set")
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public ContentSet paths(List<ContentSetPath> paths) {
@@ -181,6 +202,7 @@ public class ContentSet implements Serializable{
     ContentSet contentSet = (ContentSet) o;
     return Objects.equals(this.id, contentSet.id) &&
         Objects.equals(this.name, contentSet.name) &&
+        Objects.equals(this.description, contentSet.description) &&
         Objects.equals(this.paths, contentSet.paths) &&
         Objects.equals(this.programId, contentSet.programId) &&
         Objects.equals(this.createdAt, contentSet.createdAt) &&
@@ -190,7 +212,7 @@ public class ContentSet implements Serializable{
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, paths, programId, createdAt, updatedAt, _links);
+    return Objects.hash(id, name, description, paths, programId, createdAt, updatedAt, _links);
   }
 
 
@@ -201,6 +223,7 @@ public class ContentSet implements Serializable{
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    paths: ").append(toIndentedString(paths)).append("\n");
     sb.append("    programId: ").append(toIndentedString(programId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");

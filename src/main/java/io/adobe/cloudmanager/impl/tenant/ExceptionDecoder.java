@@ -28,7 +28,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   @Getter
-  public enum ErrorType {
+  private enum ErrorType {
     LIST("Cannot retrieve tenants: %s."),
     GET("Cannot retrieve tenant: %s."),
     UNKNOWN("Tenant API Error: %s.");

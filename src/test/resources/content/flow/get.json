@@ -1,0 +1,23 @@
+{
+  "contentSetId": "1",
+  "contentSetName": "Test Content Set",
+  "srcEnvironmentId": "1",
+  "srcEnvironmentName": "Prod",
+  "destEnvironmentId": "2",
+  "destEnvironmentName": "Stage",
+  "tier": "author",
+  "status": "Running",
+  "destProgramId": "1",
+  "resultDetails": {
+    "exportResult": {
+      "errorCode": "",
+      "message": "",
+      "details": []
+    },
+    "importResult": {
+      "errorCode": "",
+      "message": "",
+      "details": []
+    }
+  }
+}

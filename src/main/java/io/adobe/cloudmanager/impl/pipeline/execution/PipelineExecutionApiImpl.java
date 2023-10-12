@@ -226,7 +226,7 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   private PipelineExecutionStepStateImpl getStepStateDetail(PipelineExecutionImpl execution, StepAction action) throws CloudManagerApiException {
     return getStep(execution,
         s -> s.getAction().equals(action.name()),
-        String.format(ExceptionDecoder.ErrorType.FIND_STEP_STATE.getMessage(), action, execution.getId()));
+        String.format("Cannot find step state for action '%s' on execution %s.", action, execution.getId()));
   }
 
   private PipelineExecutionStepStateImpl getWaitingStep(PipelineExecutionImpl execution) throws CloudManagerApiException {

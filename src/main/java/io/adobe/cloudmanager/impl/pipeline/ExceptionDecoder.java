@@ -48,9 +48,8 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   @Getter
-  public enum ErrorType {
+  private enum ErrorType {
     LIST("Cannot retrieve pipelines: %s."),
-    FIND("Cannot find pipelines for program %s."),
     GET("Cannot retrieve pipeline: %s."),
     DELETE("Cannot delete pipeline: %s."),
     UPDATE("Cannot update pipeline: %s."),

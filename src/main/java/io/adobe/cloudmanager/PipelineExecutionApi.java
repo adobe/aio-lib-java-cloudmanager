@@ -275,6 +275,11 @@ public interface PipelineExecutionApi {
 
   // Convenience Methods
 
+  /**
+   * Builder to create an instance of this API.
+   *
+   * @return PipelineExecutionApi builder
+   */
   static Builder builder() {
     return new Builder();
   }

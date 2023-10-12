@@ -29,6 +29,9 @@ import java.io.Serializable;
 
 public class ContentFlow implements Serializable{
   private static final long serialVersionUID = 1L;
+  @JsonProperty("id")
+  private String id = null;
+
   @JsonProperty("contentSetId")
   private String contentSetId = null;
 
@@ -61,6 +64,24 @@ public class ContentFlow implements Serializable{
 
   @JsonProperty("_links")
   private ContentFlowLinks _links = null;
+
+  public ContentFlow id(String id) {
+    this.id = id;
+    return this;
+  }
+
+   /**
+   * the id of the content flow
+   * @return id
+  **/
+  @Schema(description = "the id of the content flow")
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public ContentFlow contentSetId(String contentSetId) {
     this.contentSetId = contentSetId;
@@ -270,7 +291,8 @@ public class ContentFlow implements Serializable{
       return false;
     }
     ContentFlow contentFlow = (ContentFlow) o;
-    return Objects.equals(this.contentSetId, contentFlow.contentSetId) &&
+    return Objects.equals(this.id, contentFlow.id) &&
+        Objects.equals(this.contentSetId, contentFlow.contentSetId) &&
         Objects.equals(this.contentSetName, contentFlow.contentSetName) &&
         Objects.equals(this.srcEnvironmentId, contentFlow.srcEnvironmentId) &&
         Objects.equals(this.srcEnvironmentName, contentFlow.srcEnvironmentName) &&
@@ -285,7 +307,7 @@ public class ContentFlow implements Serializable{
 
   @Override
   public int hashCode() {
-    return Objects.hash(contentSetId, contentSetName, srcEnvironmentId, srcEnvironmentName, destEnvironmentId, destEnvironmentName, tier, status, destProgramId, resultDetails, _links);
+    return Objects.hash(id, contentSetId, contentSetName, srcEnvironmentId, srcEnvironmentName, destEnvironmentId, destEnvironmentName, tier, status, destProgramId, resultDetails, _links);
   }
 
 
@@ -294,6 +316,7 @@ public class ContentFlow implements Serializable{
     StringBuilder sb = new StringBuilder();
     sb.append("class ContentFlow {\n");
     
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    contentSetId: ").append(toIndentedString(contentSetId)).append("\n");
     sb.append("    contentSetName: ").append(toIndentedString(contentSetName)).append("\n");
     sb.append("    srcEnvironmentId: ").append(toIndentedString(srcEnvironmentId)).append("\n");

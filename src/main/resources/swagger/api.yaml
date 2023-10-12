@@ -5377,6 +5377,9 @@ definitions:
       name:
         type: string
         description: The name of the content set
+      description:
+        type: string
+        description: Optional Description of the content set
       paths:
         type: array
         description: Included asset paths
@@ -5459,6 +5462,9 @@ definitions:
   ContentFlow:
     type: object
     properties:
+      id:
+        type: string
+        description: the id of the content flow
       contentSetId:
         type: string
         description: The content set id
@@ -7314,6 +7320,9 @@ definitions:
     description: Describes __New Relic Sub-Account User__
   NewContentSet:
     type: object
+    required:
+      - name
+      - paths
     properties:
       name:
         type: string

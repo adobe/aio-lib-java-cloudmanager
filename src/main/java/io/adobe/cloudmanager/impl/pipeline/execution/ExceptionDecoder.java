@@ -65,11 +65,10 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   @Getter
-  public enum ErrorType {
+  private enum ErrorType {
     GET("Cannot get execution: %s."),
     START("Cannot create execution: %s."),
     ALREADY_RUNNING("Cannot create execution. Pipeline already running."),
-    FIND_STEP_STATE("Cannot find step state for action '%s' on execution %s."),
     ADVANCE("Cannot advance execution: %s."),
     CANCEL("Cannot cancel execution: %s."),
     GET_LOGS("Cannot get logs: %s."),

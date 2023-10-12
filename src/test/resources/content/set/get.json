@@ -1,0 +1,15 @@
+{
+  "id": "1",
+  "name": "Test",
+  "description": "Description",
+  "paths": [
+    {
+      "path": "/content/foo",
+      "excluded": [
+        "/content/foo/bar",
+        "/content/foo/foo"
+      ]
+    }
+  ],
+  "programId": "1"
+}

@@ -1,0 +1,42 @@
+{
+  "_totalNumberOfItems": 2,
+  "_page": {
+    "start": 0,
+    "limit": 20,
+    "next": 0,
+    "prev": 0
+  },
+  "_embedded": {
+    "contentSets": [
+      {
+        "id": "1",
+        "name": "Test Content Set",
+        "description": "Test Content Set Description",
+        "paths": [
+          {
+            "path": "/content/foo",
+            "excluded": [
+              "/content/foo/bar"
+            ]
+          }
+        ],
+        "programId": "1"
+      },
+      {
+        "id": "2",
+        "name": "Other Content Set",
+        "description": "Other Content Set Description",
+        "paths": [
+          {
+            "path": "/content/bar",
+            "excluded": [
+              "/content/bar/foo",
+              "/content/bar/bar"
+            ]
+          }
+        ],
+        "programId": "1"
+      }
+    ]
+  }
+}

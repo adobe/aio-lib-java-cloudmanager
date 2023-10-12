@@ -37,7 +37,7 @@ public class NewContentSet implements Serializable{
   private String description = null;
 
   @JsonProperty("paths")
-  private List<ContentSetPath> paths = null;
+  private List<ContentSetPath> paths = new ArrayList<>();
 
   public NewContentSet name(String name) {
     this.name = name;
@@ -48,7 +48,7 @@ public class NewContentSet implements Serializable{
    * The name of this content set.
    * @return name
   **/
-  @Schema(description = "The name of this content set.")
+  @Schema(required = true, description = "The name of this content set.")
   public String getName() {
     return name;
   }
@@ -81,9 +81,6 @@ public class NewContentSet implements Serializable{
   }
 
   public NewContentSet addPathsItem(ContentSetPath pathsItem) {
-    if (this.paths == null) {
-      this.paths = new ArrayList<>();
-    }
     this.paths.add(pathsItem);
     return this;
   }
@@ -92,7 +89,7 @@ public class NewContentSet implements Serializable{
    * Included asset paths
    * @return paths
   **/
-  @Schema(description = "Included asset paths")
+  @Schema(required = true, description = "Included asset paths")
   public List<ContentSetPath> getPaths() {
     return paths;
   }

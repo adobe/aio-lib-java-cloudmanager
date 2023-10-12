@@ -74,7 +74,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   @Getter
-  public enum ErrorType {
+  private enum ErrorType {
     LIST("Cannot list environments: %s."),
     CREATE("Cannot create environment: %s."),
     GET("Cannot get environment: %s"),

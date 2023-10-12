@@ -34,7 +34,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
   }
 
   @Getter
-  public enum ErrorType {
+  private enum ErrorType {
     LIST("Cannot retrieve repositories: %s."),
     GET("Cannot retrieve repository: %s."),
     BRANCHES("Cannot retrieve repository branches: %s."),
