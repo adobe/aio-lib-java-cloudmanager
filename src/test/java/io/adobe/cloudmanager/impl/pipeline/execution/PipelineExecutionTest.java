@@ -1,12 +1,17 @@
 package io.adobe.cloudmanager.impl.pipeline.execution;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.apache.commons.io.FileUtils;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,10 +42,10 @@ import static org.mockserver.model.HttpStatusCode.*;
 import static org.mockserver.model.JsonBody.*;
 
 public class PipelineExecutionTest extends AbstractApiTest {
-  private static final JsonBody GET_BODY = loadBodyJson("execution/get.json");
-  private static final JsonBody GET_WAITING_BODY = loadBodyJson("execution/approval-waiting.json");
-  private static final JsonBody GET_CODE_QUALITY_BODY = loadBodyJson("execution/codeQuality-waiting.json");
-  public static final JsonBody LIST_BODY = loadBodyJson("execution/list.json");
+  private static final JsonBody GET_BODY = loadBodyJson("pipeline/execution/get.json");
+  private static final JsonBody GET_WAITING_BODY = loadBodyJson("pipeline/execution/approval-waiting.json");
+  private static final JsonBody GET_CODE_QUALITY_BODY = loadBodyJson("pipeline/execution/codeQuality-waiting.json");
+  public static final JsonBody LIST_BODY = loadBodyJson("pipeline/execution/list.json");
 
   private PipelineApi pipelineApi;
   private PipelineExecutionApiImpl executionApi;
@@ -263,6 +268,54 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
+  void getStepState_viaExecution() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/executions");
+    client.when(list).respond(response().withBody(LIST_BODY));
+
+    final List<PipelineExecution> executions = new ArrayList<>(executionApi.list("1", "1"));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executions.get(0).getStep(StepAction.deploy));
+    assertEquals("Cannot find step with action 'deploy' for pipeline 1, execution 1.", exception.getMessage(), "Message was correct.");
+
+    exception = assertThrows(CloudManagerApiException.class, () -> executions.get(19).getStep(StepAction.build), "Exception thrown.");
+    assertEquals("Cannot find step with action 'build' for pipeline 1, execution 20.", exception.getMessage(), "Message was correct.");
+
+    PipelineExecution execution = executions.get(0);
+    assertEquals("build",  execution.getStep(StepAction.build).getAction(), "Correct step found.");
+
+    client.verify(list, VerificationTimes.once());
+    client.clear(list);
+  }
+
+  @Test
+  void getCurrentStep(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/executions");
+    client.when(list).respond(response().withBody(LIST_BODY));
+
+    List<PipelineExecution> executions = new ArrayList<>(executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi)));
+    PipelineExecution execution = executions.get(0);
+    assertEquals("build",  execution.getCurrentStep().getAction(), "Correct step found.");
+
+    // No running step.
+    execution = executions.get(1);
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, execution::getCurrentStep, "Exception thrown.");
+    assertEquals("Cannot find a current step for pipeline 1, execution 2.", exception.getMessage(), "Message was correct.");
+
+    // No steps
+    execution = executions.get(19);
+    exception = assertThrows(CloudManagerApiException.class, execution::getCurrentStep, "Exception thrown.");
+    assertEquals("Cannot find a current step for pipeline 1, execution 20.", exception.getMessage(), "Message was correct.");
+
+    client.verify(list, VerificationTimes.once());
+    client.clear(list);
+  }
+
+  @Test
   void advance_failure_403() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -326,12 +379,12 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.when(get).respond(response().withBody(GET_CODE_QUALITY_BODY));
 
     HttpRequest metrics = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
-    client.when(metrics).respond(response().withBody(loadBodyJson("execution/codeQuality-metrics.json")));
+    client.when(metrics).respond(response().withBody(loadBodyJson("pipeline/execution/codeQuality-metrics.json")));
 
     HttpRequest put = request().withMethod("PUT")
         .withHeader(API_KEY_HEADER, sessionId)
         .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/advance")
-        .withBody(loadBodyJson("execution/put-metrics-override.json"));
+        .withBody(loadBodyJson("pipeline/execution/put-metrics-override.json"));
     client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
 
     executionApi.advance(new PipelineExecutionImpl(mock, executionApi));
@@ -347,7 +400,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     ObjectMapper objectMapper = new ObjectMapper();
 
-    try (InputStream is = AbstractApiTest.class.getClassLoader().getResourceAsStream("execution/approval-waiting.json")) {
+    try (InputStream is = AbstractApiTest.class.getClassLoader().getResourceAsStream("pipeline/execution/approval-waiting.json")) {
       io.adobe.cloudmanager.impl.generated.PipelineExecution original = objectMapper.readValue(is, io.adobe.cloudmanager.impl.generated.PipelineExecution.class);
 
       HttpRequest put = request().withMethod("PUT")
@@ -387,7 +440,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("execution/no-active.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("pipeline/execution/no-active.json")));
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.cancel("1", "1", "1"), "Exception thrown");
     assertEquals("Cannot find a cancelable step for pipeline 1, execution 1.", exception.getMessage(), "Message was correct");
@@ -461,7 +514,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
-    client.when(get).respond(response().withBody(loadBodyJson("execution/deploy-waiting.json")));
+    client.when(get).respond(response().withBody(loadBodyJson("pipeline/execution/deploy-waiting.json")));
 
     HttpRequest put = request().withMethod("PUT")
         .withHeader(API_KEY_HEADER, sessionId)
@@ -481,7 +534,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     ObjectMapper objectMapper = new ObjectMapper();
 
-    try (InputStream is = AbstractApiTest.class.getClassLoader().getResourceAsStream("execution/approval-waiting.json")) {
+    try (InputStream is = AbstractApiTest.class.getClassLoader().getResourceAsStream("pipeline/execution/approval-waiting.json")) {
       io.adobe.cloudmanager.impl.generated.PipelineExecution original = objectMapper.readValue(is, io.adobe.cloudmanager.impl.generated.PipelineExecution.class);
 
       HttpRequest put = request().withMethod("PUT")
@@ -698,7 +751,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     when(step.getStepId()).thenReturn("1");
 
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifacts");
-    client.when(list).respond(response().withBody(loadBodyJson("execution/list-artifacts.json")));
+    client.when(list).respond(response().withBody(loadBodyJson("pipeline/execution/list-artifacts.json")));
     Collection<Artifact> artifacts = executionApi.listArtifacts(step);
     assertEquals(1, artifacts.size(), "Collection size correct.");
     client.verify(list);
@@ -777,29 +830,119 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
-  void getCurrentStep(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+  void downloadStepLog_redirect_failure_404() throws CloudManagerApiException, IOException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(mock.getProgramId()).thenReturn("1");
-    when(mock.getId()).thenReturn("1");
-    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/executions");
-    client.when(list).respond(response().withBody(LIST_BODY));
 
-    List<PipelineExecution> executions = new ArrayList<>(executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi)));
-    PipelineExecution execution = executions.get(0);
-    assertEquals("build",  execution.getCurrentStep().getAction(), "Correct step found.");
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
 
-    // No running step.
-    execution = executions.get(1);
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, execution::getCurrentStep, "Exception thrown.");
-    assertEquals("Cannot find a current step for pipeline 1, execution 2.", exception.getMessage(), "Message was correct.");
+    HttpRequest getRedirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
+    client.when(getRedirect).respond(response().withBody(json(String.format("{ \"redirect\": \"%s/logs/build.txt\" }", baseUrl))));
 
-    // No steps
-    execution = executions.get(19);
-    exception = assertThrows(CloudManagerApiException.class, execution::getCurrentStep, "Exception thrown.");
-    assertEquals("Cannot find a current step for pipeline 1, execution 20.", exception.getMessage(), "Message was correct.");
+    HttpRequest getFile = request().withMethod("GET").withPath("/logs/build.txt");
+    client.when(getFile).respond(response().withStatusCode(NOT_FOUND_404.code()));
 
-    client.verify(list, VerificationTimes.once());
-    client.clear(list);
+    final PipelineExecution exec = executionApi.get("1", "1", "1");
+    final PipelineExecutionStepState step = exec.getStep(StepAction.build);
+    final File outputDir = Files.createTempDirectory("log-output").toFile();
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> step.getLog(outputDir), "Exception thrown.");
+    assertEquals(String.format("Cannot download log for pipeline 1, execution 1, step 'build' to %s/pipeline-1-execution-1-build.txt (Cause: java.io.FileNotFoundException).", outputDir, baseUrl), exception.getMessage(), "Message was correct");
+
+    client.verify(get);
+    client.verify(getRedirect);
+    client.verify(getFile);
+    client.clear(get);
+    client.clear(getRedirect);
+    client.clear(getFile);
+  }
+
+  @Test
+  void downloadStepLog_success() throws CloudManagerApiException, IOException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    HttpRequest getRedirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
+    client.when(getRedirect).respond(response().withBody(json(String.format("{ \"redirect\": \"%s/logs/build.txt\" }", baseUrl))));
+
+    HttpRequest getFile = request().withMethod("GET").withPath("/logs/build.txt");
+    client.when(getFile).respond(response().withBody("some log line\nsome other log line\n"));
+
+    final PipelineExecution exec = executionApi.get("1", "1", "1");
+    final PipelineExecutionStepState step = exec.getStep(StepAction.build);
+    final File outputDir = Files.createTempDirectory("log-output").toFile();
+
+    step.getLog(outputDir);
+    assertTrue(FileUtils.sizeOf(new File(outputDir, "pipeline-1-execution-1-build.txt")) > 0, "File is not empty.");
+
+    client.verify(get);
+    client.verify(getRedirect);
+    client.verify(getFile);
+    client.clear(get);
+    client.clear(getRedirect);
+    client.clear(getFile);
+  }
+
+
+  @Test
+  void downloadStepLog_namedFile_redirect_failure_404() throws CloudManagerApiException, IOException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    HttpRequest getRedirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs").withQueryStringParameter("file", "named");
+    client.when(getRedirect).respond(response().withBody(json(String.format("{ \"redirect\": \"%s/logs/build-special.txt\" }", baseUrl))));
+
+    HttpRequest getFile = request().withMethod("GET").withPath("/logs/build-special.txt");
+    client.when(getFile).respond(response().withStatusCode(NOT_FOUND_404.code()));
+
+    final PipelineExecution exec = executionApi.get("1", "1", "1");
+    final PipelineExecutionStepState step = exec.getStep(StepAction.build);
+    final File outputDir = Files.createTempDirectory("log-output").toFile();
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> step.getLog("named", outputDir), "Exception thrown.");
+    assertEquals(String.format("Cannot download 'named' log for pipeline 1, execution 1, step 'build' to %s/pipeline-1-execution-1-build-named.txt (Cause: java.io.FileNotFoundException).", outputDir, baseUrl), exception.getMessage(), "Message was correct");
+
+    client.verify(get);
+    client.verify(getRedirect);
+    client.verify(getFile);
+    client.clear(get);
+    client.clear(getRedirect);
+    client.clear(getFile);
+  }
+
+  @Test
+  void downloadStepLog_named_success() throws CloudManagerApiException, IOException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    HttpRequest getRedirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs").withQueryStringParameter("file", "named");
+    client.when(getRedirect).respond(response().withBody(json(String.format("{ \"redirect\": \"%s/logs/build.txt\" }", baseUrl))));
+
+    HttpRequest getFile = request().withMethod("GET").withPath("/logs/build.txt");
+    client.when(getFile).respond(response().withBody("some log line\nsome other log line\n"));
+
+    final PipelineExecution exec = executionApi.get("1", "1", "1");
+    final PipelineExecutionStepState step = exec.getStep(StepAction.build);
+    final File outputDir = Files.createTempDirectory("log-output").toFile();
+
+    step.getLog("named", outputDir);
+    assertTrue(FileUtils.sizeOf(new File(outputDir, "pipeline-1-execution-1-build-named.txt")) > 0, "File is not empty.");
+
+    client.verify(get);
+    client.verify(getRedirect);
+    client.verify(getFile);
+    client.clear(get);
+    client.clear(getRedirect);
+    client.clear(getFile);
   }
 }

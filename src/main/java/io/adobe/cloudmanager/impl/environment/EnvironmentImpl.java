@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl.environment;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,6 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
   public Collection<LogOption> getLogOptions() {
     return getAvailableLogOptions().stream().map(LogOptionImpl::new).collect(Collectors.toList());
   }
-
 
   @Override
   public void delete() throws CloudManagerApiException {
@@ -122,14 +121,14 @@ public class EnvironmentImpl extends io.adobe.cloudmanager.impl.generated.Enviro
   public String getDeveloperConsoleUrl() throws CloudManagerApiException {
     HalLink link = delegate.getLinks().getHttpnsAdobeComadobecloudreldeveloperConsole();
     if (link == null) {
-      throw new CloudManagerApiException(String.format("Environment %s does not appear to support Developer Console.", getId()));
+      throw new CloudManagerApiException(String.format("Environment %s [%s] does not appear to support Developer Console.", getId(), getName()));
     } else {
       return link.getHref();
     }
   }
+
   @Override
   public Collection<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException {
-//    return client.downloadLogs(this, logOption, days, dir);
-    return null;
+    return client.downloadLogs(this, logOption, days, dir);
   }
 }

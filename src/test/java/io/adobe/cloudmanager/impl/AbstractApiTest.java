@@ -48,7 +48,6 @@ public abstract class AbstractApiTest {
 
   protected MockServerClient client;
   protected String baseUrl;
-  protected CloudManagerApiImpl underTest;
 
   @Mock
   protected Workspace workspace;

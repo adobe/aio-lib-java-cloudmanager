@@ -20,6 +20,7 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.io.File;
 import java.io.OutputStream;
 import java.util.function.Predicate;
 
@@ -78,21 +79,21 @@ public interface PipelineExecutionStepState {
   boolean hasLogs();
 
   /**
-   * Streams the default log, if any, for this step to the specified output stream.
+   * Saves the default log to the specified directory.
    *
-   * @param outputStream the output stream to write to
+   * @param dir the directory in which to save the file
    * @throws CloudManagerApiException when any error occurs
    */
-  void getLog(OutputStream outputStream) throws CloudManagerApiException;
+  void getLog(File dir) throws CloudManagerApiException;
 
   /**
-   * Streams the specified log, if any, for this step to the specified output stream.
+   * Streams the specified log to the specified directory.
    *
-   * @param name         The name of the log to retrieve
-   * @param outputStream the output stream to write to
+   * @param name The name of the log to retrieve
+   * @param dir  the directory in which to save the file
    * @throws CloudManagerApiException when any error occurs
    */
-  void getLog(String name, OutputStream outputStream) throws CloudManagerApiException;
+  void getLog(String name, File dir) throws CloudManagerApiException;
 
   /**
    * Pipeline Execution Step status values
@@ -132,13 +133,11 @@ public interface PipelineExecutionStepState {
     }
   }
 
-
-
   /**
    * Predicate for pipelines based on they are the current execution.
    */
   Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
-      stepState.getStatusState() != PipelineExecutionStepState.Status.FINISHED  );
+      stepState.getStatusState() != PipelineExecutionStepState.Status.FINISHED);
 
   /**
    * Predicate for pipelines that are in a waiting state.

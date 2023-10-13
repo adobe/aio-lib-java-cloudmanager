@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,10 +21,12 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
  */
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
+import io.adobe.cloudmanager.StepAction;
 import io.adobe.cloudmanager.impl.generated.PipelineExecutionEmbedded;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -37,7 +39,8 @@ import lombok.experimental.Delegate;
 @EqualsAndHashCode(callSuper = false)
 public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.PipelineExecution implements PipelineExecution {
 
-  private static final String FIND_CURRENT_ERROR  = "Cannot find a current step for pipeline %s, execution %s.";
+  private static final String FIND_STEP_ERROR = "Cannot find step with action '%s' for pipeline %s, execution %s.";
+  private static final String FIND_CURRENT_ERROR = "Cannot find a current step for pipeline %s, execution %s.";
 
   private static final long serialVersionUID = 1L;
 
@@ -54,23 +57,22 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
   }
 
   @Override
-  public void advance() throws CloudManagerApiException {
-    client.internalAdvance(this);
-  }
-
-  @Override
-  public void cancel() throws CloudManagerApiException {
-    client.internalCancel(this);
-  }
-
-  @Override
   public Status getStatusState() {
     return Status.fromValue(getStatus().getValue());
   }
 
   @Override
-  public boolean isRunning() {
-    return Arrays.asList(new Status[] { Status.NOT_STARTED, Status.RUNNING, Status.CANCELLED }).contains(getStatusState());
+  public PipelineExecutionStepState getStep(StepAction action) throws CloudManagerApiException {
+    PipelineExecutionEmbedded embeddeds = getEmbedded();
+    if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
+      throw new CloudManagerApiException(String.format(FIND_STEP_ERROR, action, getPipelineId(), getId()));
+    }
+    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState step = embeddeds.getStepStates()
+        .stream()
+        .filter(s -> Objects.equals(s.getAction(), action.toString()))
+        .findFirst()
+        .orElseThrow(() -> new CloudManagerApiException(String.format(FIND_STEP_ERROR, action, getPipelineId(), getId())));
+    return new PipelineExecutionStepStateImpl(step, this, client);
   }
 
   @Override
@@ -85,5 +87,20 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
         .findFirst()
         .orElseThrow(() -> new CloudManagerApiException(String.format(FIND_CURRENT_ERROR, getPipelineId(), getId())));
     return new PipelineExecutionStepStateImpl(step, this, client);
+  }
+
+  @Override
+  public void advance() throws CloudManagerApiException {
+    client.internalAdvance(this);
+  }
+
+  @Override
+  public void cancel() throws CloudManagerApiException {
+    client.internalCancel(this);
+  }
+
+  @Override
+  public boolean isRunning() {
+    return Arrays.asList(new Status[] { Status.NOT_STARTED, Status.RUNNING, Status.CANCELLED }).contains(getStatusState());
   }
 }

@@ -1,10 +1,20 @@
 package io.adobe.cloudmanager.impl.environment;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalField;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import io.adobe.cloudmanager.CloudManagerApiException;
@@ -22,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.JsonBody;
+import org.mockserver.verify.VerificationTimes;
 
 import static com.adobe.aio.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -630,4 +641,125 @@ public class EnvironmentTest extends AbstractApiTest {
     client.verify(patch);
     client.clear(patch);
   }
+
+  @Test
+  void downloadLogs_redirect_failure_404(@Mock LogOption option) {
+    LocalDate date = LocalDate.now().withYear(2019).withMonth(9).withDayOfMonth(8);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(option.getService()).thenReturn("author");
+    when(option.getName()).thenReturn("aemerror");
+
+    HttpRequest listLogs = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/logs")
+        .withQueryStringParameter("service", "author")
+        .withQueryStringParameter("name", "aemerror")
+        .withQueryStringParameter("days", "1");
+    client.when(listLogs).respond(response().withBody(LIST_LOGS_BODY));
+
+    HttpRequest getRedirect = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/logs/download")
+        .withQueryStringParameter("service", "author")
+        .withQueryStringParameter("name", "aemerror")
+        .withQueryStringParameter("date", date.toString());
+    client.when(getRedirect).respond(response().withBody(json(String.format("{ \"redirect\": \"%s/logs/author-aemerror-%s.txt\" }", baseUrl, date))));
+
+    HttpRequest getFile = request().withMethod("GET").withPath(String.format("/logs/author-aemerror-%s.txt", date));
+    client.when(getFile).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.downloadLogs("1", "1", option, 1, new File(".")), "Exception thrown.");
+    assertEquals(String.format("Cannot download %s/api/program/1/environment/1/logs/download?service=author&name=aemerror&date=2019-09-08 to ./environment-1-author-aemerror-2019-09-08.log.gz (Cause: java.io.FileNotFoundException).", baseUrl, baseUrl), exception.getMessage(), "Message was correct");
+
+    client.verify(listLogs, VerificationTimes.exactly(1));
+    client.verify(getRedirect, VerificationTimes.exactly(1));
+    client.verify(getFile, VerificationTimes.exactly(1));
+    client.clear(listLogs);
+    client.clear(getRedirect);
+    client.clear(getFile);
+  }
+
+  @Test
+  void downloadLogs_success(@Mock io.adobe.cloudmanager.impl.generated.Environment environment, @Mock LogOption option) throws CloudManagerApiException, IOException {
+    byte[] zipBytes = IOUtils.toByteArray(EnvironmentTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
+    LocalDate firstDate = LocalDate.now().withYear(2019).withMonth(9).withDayOfMonth(8);
+    LocalDate secondDate = LocalDate.now().withYear(2019).withMonth(9).withDayOfMonth(7);
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(option.getService()).thenReturn("author");
+    when(option.getName()).thenReturn("aemerror");
+    when(environment.getId()).thenReturn("1");
+    when(environment.getProgramId()).thenReturn("1");
+
+    HttpRequest listLogs = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/logs")
+        .withQueryStringParameter("service", "author")
+        .withQueryStringParameter("name", "aemerror")
+        .withQueryStringParameter("days", "1");
+    client.when(listLogs).respond(response().withBody(LIST_LOGS_BODY));
+
+    HttpRequest getFirstRedirect = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/logs/download")
+        .withQueryStringParameter("service", "author")
+        .withQueryStringParameter("name", "aemerror")
+        .withQueryStringParameter("date", firstDate.toString());
+    client.when(getFirstRedirect).respond(response().withBody(json(String.format("{ \"redirect\": \"%s/logs/author-aemerror-%s.txt\" }", baseUrl, firstDate))));
+    HttpRequest getSecondRedirect = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/logs/download")
+        .withQueryStringParameter("service", "author")
+        .withQueryStringParameter("name", "aemerror")
+        .withQueryStringParameter("date", secondDate.toString());
+    client.when(getSecondRedirect).respond(response().withBody(json(String.format("{ \"redirect\": \"%s/logs/author-aemerror-%s.txt\" }", baseUrl, secondDate))));
+
+    HttpRequest download1 = request().withMethod("GET").withPath(String.format("/logs/author-aemerror-%s.txt", firstDate));
+    client.when(download1).respond(response().withBody(zipBytes));
+
+    HttpRequest download2 = request().withMethod("GET").withPath(String.format("/logs/author-aemerror-%s.txt", secondDate));
+    client.when(download2).respond(response().withBody(zipBytes));
+
+    File outputDir = Files.createTempDirectory("log-output").toFile();
+    List<EnvironmentLog> logs = new ArrayList<>(new EnvironmentImpl(environment, underTest).downloadLogs(option, 1, outputDir));
+    assertEquals(2, logs.size(), "Correct Object response");
+    assertEquals(outputDir + "/environment-1-author-aemerror-2019-09-08.log.gz", logs.get(0).getDownloadPath(), "Log file exists.");
+    assertTrue(FileUtils.sizeOf(new File(outputDir + "/environment-1-author-aemerror-2019-09-08.log.gz")) > 0, "File is not empty.");
+    assertEquals(outputDir + "/environment-1-author-aemerror-2019-09-07.log.gz", logs.get(1).getDownloadPath(), "Log file exists.");
+    assertTrue(FileUtils.sizeOf(new File(outputDir + "/environment-1-author-aemerror-2019-09-07.log.gz")) > 0, "File is not empty.");
+
+    client.verify(listLogs, VerificationTimes.exactly(1));
+    client.verify(getFirstRedirect, VerificationTimes.exactly(1));
+    client.verify(getSecondRedirect, VerificationTimes.exactly(1));
+    client.verify(download1, VerificationTimes.exactly(1));
+    client.verify(download2, VerificationTimes.exactly(1));
+    client.clear(listLogs);
+    client.clear(getFirstRedirect);
+    client.clear(getSecondRedirect);
+    client.clear(download1);
+    client.clear(download2);
+  }
+
+  @Test
+  void getDeveloperConsoleUrl() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environments");
+    client.when(list).respond(response().withBody(LIST_BODY));
+
+    List<Environment> environments = new ArrayList<>(underTest.list("1"));
+    assertNotNull(environments.get(0).getDeveloperConsoleUrl());
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> environments.get(1).getDeveloperConsoleUrl(),"Exception was thrown");
+    assertEquals("Environment 2 [TestProgram_stage] does not appear to support Developer Console.", exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+
+  }
+
 }

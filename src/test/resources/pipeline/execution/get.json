@@ -9,6 +9,16 @@
         "status": "FINISHED"
       },
       {
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/pipeline/logs": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs",
+            "templated": false
+          },
+          "self": {
+            "href": "/api/program/1/pipeline/1/execution/1/phase/2/step/1",
+            "templated": false
+          }
+        },
         "id": "2",
         "stepId": "1",
         "phaseId": "2",

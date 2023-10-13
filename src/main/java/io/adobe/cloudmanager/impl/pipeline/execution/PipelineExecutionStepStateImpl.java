@@ -20,12 +20,16 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
  * #L%
  */
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import org.apache.commons.io.FileUtils;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -52,7 +56,6 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
   public static final String ACTION_APPROVAL = "approval";
   public static final String ACTION_SCHEDULE = "schedule";
   public static final String ACTION_DEPLOY = "deploy";
-
 
   @Delegate
   private final io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState delegate;
@@ -88,13 +91,29 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
   }
 
   @Override
-  public void getLog(OutputStream outputStream) throws CloudManagerApiException {
-//    client.downloadExecutionStepLog(this, null, outputStream);
+  public void getLog(File dir) throws CloudManagerApiException {
+    String downloadUrl = client.getStepLogDownloadUrl(execution, StepAction.valueOf(getAction()));
+    String filename = String.format("pipeline-%s-execution-%s-%s.txt", execution.getPipelineId(), execution.getId(), getAction());
+
+    try {
+      File downloaded = new File(dir, filename);
+      FileUtils.copyInputStreamToFile(new URL(downloadUrl).openStream(), downloaded);
+    } catch (IOException e) {
+      throw new CloudManagerApiException(String.format("Cannot download log for pipeline %s, execution %s, step '%s' to %s/%s (Cause: %s).", execution.getPipelineId(), execution.getId(), getAction(), dir, filename, e.getClass().getName()));
+    }
   }
 
   @Override
-  public void getLog(String name, OutputStream outputStream) throws CloudManagerApiException {
-//    client.downloadExecutionStepLog(this, name, outputStream);
+  public void getLog(String name, File dir) throws CloudManagerApiException {
+    String downloadUrl = client.getStepLogDownloadUrl(execution, StepAction.valueOf(getAction()), name);
+    String filename = String.format("pipeline-%s-execution-%s-%s-%s.txt", execution.getPipelineId(), execution.getId(), getAction(), name);
+
+    try {
+      File downloaded = new File(dir, filename);
+      FileUtils.copyInputStreamToFile(new URL(downloadUrl).openStream(), downloaded);
+    } catch (IOException e) {
+      throw new CloudManagerApiException(String.format("Cannot download '%s' log for pipeline %s, execution %s, step '%s' to %s/%s (Cause: %s).", name, execution.getPipelineId(), execution.getId(), getAction(), dir, filename, e.getClass().getName()));
+    }
   }
 
   /**

@@ -39,10 +39,10 @@ public class EnvironmentLog implements Serializable{
   private LocalDate date = null;
 
   @JsonProperty("programId")
-  private Long programId = null;
+  private String programId = null;
 
   @JsonProperty("environmentId")
-  private Long environmentId = null;
+  private String environmentId = null;
 
   @JsonProperty("_links")
   private EnvironmentLogLinks _links = null;
@@ -101,7 +101,7 @@ public class EnvironmentLog implements Serializable{
     this.date = date;
   }
 
-  public EnvironmentLog programId(Long programId) {
+  public EnvironmentLog programId(String programId) {
     this.programId = programId;
     return this;
   }
@@ -111,15 +111,15 @@ public class EnvironmentLog implements Serializable{
    * @return programId
   **/
   @Schema(description = "")
-  public Long getProgramId() {
+  public String getProgramId() {
     return programId;
   }
 
-  public void setProgramId(Long programId) {
+  public void setProgramId(String programId) {
     this.programId = programId;
   }
 
-  public EnvironmentLog environmentId(Long environmentId) {
+  public EnvironmentLog environmentId(String environmentId) {
     this.environmentId = environmentId;
     return this;
   }
@@ -129,11 +129,11 @@ public class EnvironmentLog implements Serializable{
    * @return environmentId
   **/
   @Schema(description = "")
-  public Long getEnvironmentId() {
+  public String getEnvironmentId() {
     return environmentId;
   }
 
-  public void setEnvironmentId(Long environmentId) {
+  public void setEnvironmentId(String environmentId) {
     this.environmentId = environmentId;
   }
 

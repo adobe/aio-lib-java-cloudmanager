@@ -20,37 +20,66 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 
 public interface PipelineExecution {
 
   /**
-   * The id of this execution
+   * The id of this execution.
    *
    * @return the id
    */
+  @NotNull
   String getId();
 
   /**
-   * The id of the associated program context
+   * The id of the associated program context.
    *
    * @return the program id
    */
+  @NotNull
   String getProgramId();
 
   /**
-   * The id of the associated pipeline context
+   * The id of the associated pipeline context.
    *
    * @return the pipeline id
    */
+  @NotNull
   String getPipelineId();
 
   /**
-   * The current status of the execution
+   * The current status of the execution.
    *
    * @return the status
    */
+  @NotNull
   Status getStatusState();
+
+  /**
+   * Returns the specified action step for this pipeline execution.
+   * <p>
+   * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
+   *
+   * @param action    the step state action (see {@link StepAction})
+   * @return the step state details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecutionStepState getStep(@NotNull StepAction action) throws CloudManagerApiException;
+
+  /**
+   * Gets the current/active step for the execution.
+   * <p>
+   * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
+   *
+   * @return the current step
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecutionStepState getCurrentStep() throws CloudManagerApiException;
 
   /**
    * Advances this execution if in a valid state.
@@ -66,22 +95,14 @@ public interface PipelineExecution {
    */
   void cancel() throws CloudManagerApiException;
 
-  // Convenience Methods
-
   /**
    * Checks if this execution is currently running.
+   * <p>
+   * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
    *
    * @return true if this execution is running, false otherwise
    */
   boolean isRunning();
-
-  /**
-   * Gets the current/active step for the execution. Same as calling
-   *
-   * @return the current step
-   * @throws CloudManagerApiException when any error occurs
-   */
-  PipelineExecutionStepState getCurrentStep() throws CloudManagerApiException;
 
   /**
    * Pipeline Execution status values

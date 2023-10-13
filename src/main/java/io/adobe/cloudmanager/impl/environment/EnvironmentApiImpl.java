@@ -1,5 +1,6 @@
 package io.adobe.cloudmanager.impl.environment;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.workspace.Workspace;
@@ -21,6 +23,7 @@ import feign.Body;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentApi;
@@ -44,9 +47,10 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   private static final String ENVIRONMENT_LOG_REDIRECT_ERROR = "Log redirect for environment %s, service '%s', log name '%s', date '%s' did not exist.";
 
   private final FeignApi api;
+  private final String baseUrl;
 
   public EnvironmentApiImpl(Workspace workspace, URL url) {
-    String baseUrl = url == null ? CLOUD_MANAGER_URL : url.toString();
+    baseUrl = url == null ? CLOUD_MANAGER_URL : url.toString();
     api = FeignUtil.getBuilder(workspace).errorDecoder(new ExceptionDecoder()).target(FeignApi.class, baseUrl);
   }
 
@@ -224,6 +228,38 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   @Override
   public void resetRde(Environment environment) throws CloudManagerApiException {
     resetRde(environment.getProgramId(), environment.getId());
+  }
+
+  @Override
+  public Collection<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOption logOption, int days, File dir) throws CloudManagerApiException {
+    EnvironmentLogs logs = api.listLogs(programId, environmentId, logOption.getService(), logOption.getName(), days);
+    List<io.adobe.cloudmanager.impl.generated.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
+    if (downloads == null || downloads.isEmpty()) {
+      return Collections.emptyList();
+    }
+    List<EnvironmentLog> downloaded = new ArrayList<>();
+    for (io.adobe.cloudmanager.impl.generated.EnvironmentLog log : downloads) {
+      String logfileName = String.format("environment-%s-%s-%s-%s.log.gz", environmentId, log.getService(), log.getName(), log.getDate());
+      EnvironmentLogImpl impl = new EnvironmentLogImpl(log, String.format("%s/%s", dir.getPath(), logfileName));
+      downloadLog(impl);
+      downloaded.add(impl);
+    }
+    return downloaded;
+  }
+
+  @Override
+  public Collection<EnvironmentLog> downloadLogs(Environment environment, LogOption logOption, int days, File dir) throws CloudManagerApiException {
+    return downloadLogs(environment.getProgramId(), environment.getId(), logOption, days, dir);
+  }
+
+  private void downloadLog(EnvironmentLogImpl log) throws CloudManagerApiException {
+    Redirect redirect = api.getLogs(log.getProgramId(), log.getEnvironmentId(), log.getService(), log.getName(), log.getDate().toString());
+    try {
+      File downloaded = new File(log.getDownloadPath());
+      FileUtils.copyInputStreamToFile(new URL(redirect.getRedirect()).openStream(), downloaded);
+    } catch (IOException e) {
+      throw new CloudManagerApiException(String.format("Cannot download %s%s to %s (Cause: %s).", baseUrl, log.getUrl(), log.getDownloadPath(), e.getClass().getName()));
+    }
   }
 
   private interface FeignApi {

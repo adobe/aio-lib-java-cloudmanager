@@ -22,7 +22,10 @@ package io.adobe.cloudmanager.impl.environment;
 
 import io.adobe.cloudmanager.EnvironmentLog;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.Value;
 import lombok.experimental.Delegate;
 
 @ToString
@@ -31,10 +34,25 @@ public class EnvironmentLogImpl extends io.adobe.cloudmanager.impl.generated.Env
 
   private static final long serialVersionUID = 1L;
 
-  public EnvironmentLogImpl(io.adobe.cloudmanager.impl.generated.EnvironmentLog log) {
-    this.delegate = log;
+  @Delegate
+  private final io.adobe.cloudmanager.impl.generated.EnvironmentLog delegate;
+  private final String path;
+
+  public EnvironmentLogImpl(io.adobe.cloudmanager.impl.generated.EnvironmentLog delegate) {
+    this.delegate = delegate;
+    this.path = null;
   }
 
-  @Delegate
-  io.adobe.cloudmanager.impl.generated.EnvironmentLog delegate;
+  public EnvironmentLogImpl(io.adobe.cloudmanager.impl.generated.EnvironmentLog delegate, String downloadPath) {
+    this.delegate = delegate;
+    this.path = downloadPath;
+  }
+
+  public String getDownloadPath() {
+    return this.path;
+  }
+
+  public String getUrl() {
+    return delegate.getLinks().getHttpnsAdobeComadobecloudrellogsdownload().getHref();
+  }
 }

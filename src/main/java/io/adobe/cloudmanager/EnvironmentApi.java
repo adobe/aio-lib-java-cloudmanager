@@ -1,5 +1,6 @@
 package io.adobe.cloudmanager;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -250,7 +251,39 @@ public interface EnvironmentApi {
    */
   void resetRde(@NotNull Environment environment) throws CloudManagerApiException;
 
+
   // TODO: Need Details about Restore Points
+
+
+  // Convenience Methods
+
+  /**
+   * Downloads the logs for the specified environment.
+   *
+   * @param programId     the program id context for the environment
+   * @param environmentId the environment id
+   * @param logOption     the log file reference
+   * @param days          how many days of log files to retrieve
+   * @param dir           the directory in which to save the files
+   * @return a list of EnvironmentLogs with details about the downloaded files
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<EnvironmentLog> downloadLogs(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
+
+  /**
+   * Downloads the logs for the specified environment.
+   *
+   * @param environment the environment context
+   * @param logOption   the log file reference
+   * @param days        how many days of log files to retrieve
+   * @param dir         the directory in which to save the files
+   * @return a list of EnvironmentLogs with details about the downloaded files
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<EnvironmentLog> downloadLogs(@NotNull Environment environment, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
+
 
   /**
    * Create an Environment API builder.

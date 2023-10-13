@@ -24,11 +24,11 @@
       {
         "_links": {
           "http://ns.adobe.com/adobecloud/rel/logs/download": {
-            "href": "/api/program/1/environment/1/logs/download?service=author&name=aemerror&date=2019-09-8",
+            "href": "/api/program/1/environment/1/logs/download?service=author&name=aemerror&date=2019-09-08",
             "templated": false
           },
           "http://ns.adobe.com/adobecloud/rel/logs/tail": {
-            "href": "https://filestore/logs/author_aemerror_2019-09-8.log"
+            "href": "https://filestore/logs/author_aemerror_2019-09-08.log"
           }
         },
         "service": "author",
@@ -40,7 +40,7 @@
       {
         "_links": {
           "http://ns.adobe.com/adobecloud/rel/logs/download": {
-            "href": "/api/program/1/environment/1/logs/download?service=author&name=aemerror&date=2019-09-7",
+            "href": "/api/program/1/environment/1/logs/download?service=author&name=aemerror&date=2019-09-07",
             "templated": false
           }
         },

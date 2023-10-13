@@ -24,24 +24,18 @@ import java.time.LocalDate;
 
 public interface EnvironmentLog {
 
-  /**
-   * The service name for this environment log file.
-   *
-   * @return the service name
-   */
-  String getService();
 
   /**
-   * The name of this log file.
+   * The path to the downloaded file.
    *
-   * @return the log file name
+   * @return the path
    */
-  String getName();
+  String getDownloadPath();
 
   /**
-   * The date of this log file.
+   * The URL of the original log file.
    *
-   * @return the date of the file
+   * @return the url
    */
-  LocalDate getDate();
+  String getUrl();
 }

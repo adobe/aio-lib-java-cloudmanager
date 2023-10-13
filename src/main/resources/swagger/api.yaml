@@ -5139,11 +5139,9 @@ definitions:
         description: date of the Log
         format: date
       programId:
-        type: integer
-        format: int64
+        type: string
       environmentId:
-        type: integer
-        format: int64
+        type: string
       _links:
         type: object
         readOnly: true
