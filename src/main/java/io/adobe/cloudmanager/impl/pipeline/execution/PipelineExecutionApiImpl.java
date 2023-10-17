@@ -3,13 +3,22 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.adobe.aio.event.webhook.service.EventVerifier;
 import com.adobe.aio.workspace.Workspace;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import feign.Body;
 import feign.Headers;
 import feign.Param;
@@ -20,6 +29,7 @@ import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionApi;
+import io.adobe.cloudmanager.PipelineExecutionEvent;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
 import io.adobe.cloudmanager.StepAction;
 import io.adobe.cloudmanager.impl.FeignUtil;
@@ -29,16 +39,36 @@ import io.adobe.cloudmanager.impl.generated.PipelineExecutionEmbedded;
 import io.adobe.cloudmanager.impl.generated.PipelineExecutionListRepresentation;
 import io.adobe.cloudmanager.impl.generated.PipelineStepMetrics;
 import io.adobe.cloudmanager.impl.generated.Redirect;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionEndEvent;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStartEvent;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepEndEvent;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepStartEvent;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepWaitingEvent;
 
 import static io.adobe.cloudmanager.Constants.*;
 
 public class PipelineExecutionApiImpl implements PipelineExecutionApi {
+
+
+  private static final String STARTED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/started";
+  private static final String WAITING_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/waiting";
+  private static final String ENDED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/ended";
+  private static final String PIPELINE_EXECUTION_TYPE = "https://ns.adobe.com/experience/cloudmanager/pipeline-execution";
+  private static final String PIPELINE_STEP_STATE_TYPE = "https://ns.adobe.com/experience/cloudmanager/execution-step-state";
+
   private static final String EXECUTION_LOG_REDIRECT_ERROR = "Log redirect for execution %s, action '%s' did not exist.";
   private static final String ARTIFACT_REDIRECT_ERROR = "Artifact redirect for execution %s, phase %s, step %s did not exist.";
 
+  private final Workspace workspace;
+  private final EventVerifier verifier;
+  private final ObjectMapper mapper;
   private final FeignApi api;
 
+
   public PipelineExecutionApiImpl(Workspace workspace, URL url) {
+    this.workspace = workspace;
+    mapper = FeignUtil.getMapper();
+    verifier = new EventVerifier();
     String baseUrl = url == null ? CLOUD_MANAGER_URL : url.toString();
     api = FeignUtil.getBuilder(workspace).errorDecoder(new ExceptionDecoder()).target(FeignApi.class, baseUrl);
   }
@@ -191,6 +221,39 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
     throw new CloudManagerApiException(String.format(ARTIFACT_REDIRECT_ERROR, step.getExecution().getId(), step.getPhaseId(), step.getStepId()));
   }
 
+  @Override
+  public PipelineExecutionEvent parseEvent(String eventBody) throws CloudManagerApiException {
+    String eventType = JsonPath.read(eventBody, "$.event.@type");
+    String objType = JsonPath.read(eventBody, "$.event.xdmEventEnvelope:objectType");
+    PipelineExecutionEvent event;
+    try {
+      if (Objects.equals(objType, PIPELINE_EXECUTION_TYPE) && Objects.equals(eventType, STARTED_EVENT_TYPE)) {
+        event = new PipelineExecutionStartEventImpl(mapper.readValue(eventBody, PipelineExecutionStartEvent.class).getEvent(), this);
+      } else if (Objects.equals(objType, PIPELINE_EXECUTION_TYPE) && Objects.equals(eventType, ENDED_EVENT_TYPE)) {
+        event = new PipelineExecutionEndEventImpl(mapper.readValue(eventBody, PipelineExecutionEndEvent.class).getEvent(), this);
+      } else if (Objects.equals(objType, PIPELINE_STEP_STATE_TYPE) && Objects.equals(eventType, STARTED_EVENT_TYPE)) {
+        event = new PipelineExecutionStepStartEventImpl(mapper.readValue(eventBody, PipelineExecutionStepStartEvent.class).getEvent(), this);
+      } else if (Objects.equals(objType, PIPELINE_STEP_STATE_TYPE) && Objects.equals(eventType, WAITING_EVENT_TYPE)) {
+        event = new PipelineExecutionStepWaitingEventImpl(mapper.readValue(eventBody, PipelineExecutionStepWaitingEvent.class).getEvent(), this);
+      } else if (Objects.equals(objType, PIPELINE_STEP_STATE_TYPE) && Objects.equals(eventType, ENDED_EVENT_TYPE)) {
+        event = new PipelineExecutionStepEndEventImpl(mapper.readValue(eventBody, PipelineExecutionStepEndEvent.class).getEvent(), this);
+      } else {
+        throw new CloudManagerApiException(String.format("Unknown event/object types (Event: '%s', Object: '%s').", eventType, objType));
+      }
+    } catch (JsonProcessingException e) {
+      throw new CloudManagerApiException(String.format("Unable to process event: %s", e.getLocalizedMessage()));
+    }
+
+    return event;
+  }
+  @Override
+  public PipelineExecutionEvent parseEvent(String eventBody, Map<String, String> requestHeaders) throws CloudManagerApiException {
+    if (!verifier.verify(eventBody, workspace.getApiKey(), requestHeaders)) {
+      throw new CloudManagerApiException("Cannot parse event, did not pass signature validation.");
+    }
+    return parseEvent(eventBody);
+  }
+
   // Helper methods.
 
   void internalAdvance(PipelineExecutionImpl execution) throws CloudManagerApiException {
@@ -207,6 +270,30 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
       step = getStep(execution, PipelineExecutionStepStateImpl.IS_WAITING, err);
     }
     api.cancel(execution.getProgramId(), execution.getPipelineId(), execution.getId(), step.getPhaseId(), step.getStepId(), step.getCancelBody());
+  }
+
+  @NotNull
+  PipelineExecutionImpl get(io.adobe.cloudmanager.impl.generated.event.PipelineExecution pe) throws CloudManagerApiException {
+    String path = pe.getAtId();
+    Matcher matcher = Pattern.compile("^.*(/api.*)$").matcher(path);
+    if (!matcher.matches()) {
+      throw new CloudManagerApiException(String.format("Unable to parse Event Object ID: %s.", path));
+    }
+    return new PipelineExecutionImpl(api.get(matcher.group(1)), this);
+  }
+
+  @NotNull
+  PipelineExecutionStepStateImpl getStepState(io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepState pes) throws CloudManagerApiException {
+    String path = pes.getAtId();
+    Matcher matcher = Pattern.compile("^.*(/api.*)$").matcher(path);
+    if (!matcher.matches()) {
+      throw new CloudManagerApiException(String.format("Unable to parse Event Object ID: %s.", path));
+    }
+
+    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState delegate = api.getStepState(matcher.group(1));
+    io.adobe.cloudmanager.PipelineExecution execution = new PipelineExecutionImpl(api.get(delegate.getLinks().getHttpnsAdobeComadobecloudrelexecution().getHref()), this);
+
+    return new PipelineExecutionStepStateImpl(delegate, execution, this);
   }
 
   String getStepLogDownloadUrlDetail(PipelineExecutionImpl execution, StepAction action, String file) throws CloudManagerApiException {
@@ -291,6 +378,12 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
 
     @RequestLine("GET /api/program/{programId}/pipeline/{pipelineId}/execution/{executionId}/phase/{phaseId}/step/{stepId}/artifact/{id}")
     Redirect getArtifact(@Param("programId") String programId, @Param("pipelineId") String pipelineId, @Param("executionId") String executionId, @Param("phaseId") String phaseId, @Param("stepId") String stepId, @Param("id") String id) throws CloudManagerApiException;
+
+    @RequestLine("GET {path}")
+    io.adobe.cloudmanager.impl.generated.PipelineExecution get(@Param("path") String url) throws CloudManagerApiException;
+
+    @RequestLine("GET {path}")
+    io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState getStepState(@Param("path") String url) throws CloudManagerApiException;
 
   }
 }

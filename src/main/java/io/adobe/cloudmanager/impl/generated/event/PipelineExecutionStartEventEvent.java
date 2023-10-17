@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -37,18 +37,19 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.adobe.cloudmanager.event.Organization;
-import io.adobe.cloudmanager.event.PipelineExecution;
+import io.adobe.cloudmanager.impl.generated.event.Organization;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecution;
+import io.adobe.cloudmanager.impl.generated.event.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.io.Serializable;
 /**
- * PipelineExecutionEndEventEvent
+ * PipelineExecutionStartEventEvent
  */
 
 
 
-public class PipelineExecutionEndEventEvent implements Serializable{
+public class PipelineExecutionStartEventEvent implements Serializable{
   private static final long serialVersionUID = 1L;
   @JsonProperty("@id")
   private String _atId = null;
@@ -65,10 +66,13 @@ public class PipelineExecutionEndEventEvent implements Serializable{
   @JsonProperty("activitystreams:to")
   private Organization activitystreamsto = null;
 
+  @JsonProperty("activitystreams:actor")
+  private User activitystreamsactor = null;
+
   @JsonProperty("activitystreams:object")
   private PipelineExecution activitystreamsobject = null;
 
-  public PipelineExecutionEndEventEvent _atId(String _atId) {
+  public PipelineExecutionStartEventEvent _atId(String _atId) {
     this._atId = _atId;
     return this;
   }
@@ -86,7 +90,7 @@ public class PipelineExecutionEndEventEvent implements Serializable{
     this._atId = _atId;
   }
 
-  public PipelineExecutionEndEventEvent _atType(String _atType) {
+  public PipelineExecutionStartEventEvent _atType(String _atType) {
     this._atType = _atType;
     return this;
   }
@@ -104,7 +108,7 @@ public class PipelineExecutionEndEventEvent implements Serializable{
     this._atType = _atType;
   }
 
-  public PipelineExecutionEndEventEvent xdmEventEnvelopeobjectType(String xdmEventEnvelopeobjectType) {
+  public PipelineExecutionStartEventEvent xdmEventEnvelopeobjectType(String xdmEventEnvelopeobjectType) {
     this.xdmEventEnvelopeobjectType = xdmEventEnvelopeobjectType;
     return this;
   }
@@ -122,7 +126,7 @@ public class PipelineExecutionEndEventEvent implements Serializable{
     this.xdmEventEnvelopeobjectType = xdmEventEnvelopeobjectType;
   }
 
-  public PipelineExecutionEndEventEvent activitystreamspublished(OffsetDateTime activitystreamspublished) {
+  public PipelineExecutionStartEventEvent activitystreamspublished(OffsetDateTime activitystreamspublished) {
     this.activitystreamspublished = activitystreamspublished;
     return this;
   }
@@ -140,7 +144,7 @@ public class PipelineExecutionEndEventEvent implements Serializable{
     this.activitystreamspublished = activitystreamspublished;
   }
 
-  public PipelineExecutionEndEventEvent activitystreamsto(Organization activitystreamsto) {
+  public PipelineExecutionStartEventEvent activitystreamsto(Organization activitystreamsto) {
     this.activitystreamsto = activitystreamsto;
     return this;
   }
@@ -158,7 +162,25 @@ public class PipelineExecutionEndEventEvent implements Serializable{
     this.activitystreamsto = activitystreamsto;
   }
 
-  public PipelineExecutionEndEventEvent activitystreamsobject(PipelineExecution activitystreamsobject) {
+  public PipelineExecutionStartEventEvent activitystreamsactor(User activitystreamsactor) {
+    this.activitystreamsactor = activitystreamsactor;
+    return this;
+  }
+
+   /**
+   * Get activitystreamsactor
+   * @return activitystreamsactor
+  **/
+  @Schema(description = "")
+  public User getActivitystreamsactor() {
+    return activitystreamsactor;
+  }
+
+  public void setActivitystreamsactor(User activitystreamsactor) {
+    this.activitystreamsactor = activitystreamsactor;
+  }
+
+  public PipelineExecutionStartEventEvent activitystreamsobject(PipelineExecution activitystreamsobject) {
     this.activitystreamsobject = activitystreamsobject;
     return this;
   }
@@ -185,31 +207,33 @@ public class PipelineExecutionEndEventEvent implements Serializable{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PipelineExecutionEndEventEvent pipelineExecutionEndEventEvent = (PipelineExecutionEndEventEvent) o;
-    return Objects.equals(this._atId, pipelineExecutionEndEventEvent._atId) &&
-        Objects.equals(this._atType, pipelineExecutionEndEventEvent._atType) &&
-        Objects.equals(this.xdmEventEnvelopeobjectType, pipelineExecutionEndEventEvent.xdmEventEnvelopeobjectType) &&
-        Objects.equals(this.activitystreamspublished, pipelineExecutionEndEventEvent.activitystreamspublished) &&
-        Objects.equals(this.activitystreamsto, pipelineExecutionEndEventEvent.activitystreamsto) &&
-        Objects.equals(this.activitystreamsobject, pipelineExecutionEndEventEvent.activitystreamsobject);
+    PipelineExecutionStartEventEvent pipelineExecutionStartEventEvent = (PipelineExecutionStartEventEvent) o;
+    return Objects.equals(this._atId, pipelineExecutionStartEventEvent._atId) &&
+        Objects.equals(this._atType, pipelineExecutionStartEventEvent._atType) &&
+        Objects.equals(this.xdmEventEnvelopeobjectType, pipelineExecutionStartEventEvent.xdmEventEnvelopeobjectType) &&
+        Objects.equals(this.activitystreamspublished, pipelineExecutionStartEventEvent.activitystreamspublished) &&
+        Objects.equals(this.activitystreamsto, pipelineExecutionStartEventEvent.activitystreamsto) &&
+        Objects.equals(this.activitystreamsactor, pipelineExecutionStartEventEvent.activitystreamsactor) &&
+        Objects.equals(this.activitystreamsobject, pipelineExecutionStartEventEvent.activitystreamsobject);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(_atId, _atType, xdmEventEnvelopeobjectType, activitystreamspublished, activitystreamsto, activitystreamsobject);
+    return Objects.hash(_atId, _atType, xdmEventEnvelopeobjectType, activitystreamspublished, activitystreamsto, activitystreamsactor, activitystreamsobject);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PipelineExecutionEndEventEvent {\n");
+    sb.append("class PipelineExecutionStartEventEvent {\n");
     
     sb.append("    _atId: ").append(toIndentedString(_atId)).append("\n");
     sb.append("    _atType: ").append(toIndentedString(_atType)).append("\n");
     sb.append("    xdmEventEnvelopeobjectType: ").append(toIndentedString(xdmEventEnvelopeobjectType)).append("\n");
     sb.append("    activitystreamspublished: ").append(toIndentedString(activitystreamspublished)).append("\n");
     sb.append("    activitystreamsto: ").append(toIndentedString(activitystreamsto)).append("\n");
+    sb.append("    activitystreamsactor: ").append(toIndentedString(activitystreamsactor)).append("\n");
     sb.append("    activitystreamsobject: ").append(toIndentedString(activitystreamsobject)).append("\n");
     sb.append("}");
     return sb.toString();

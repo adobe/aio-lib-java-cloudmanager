@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -37,7 +37,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.adobe.cloudmanager.event.PipelineExecutionStepStartEventEvent;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepStartEventEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 /**

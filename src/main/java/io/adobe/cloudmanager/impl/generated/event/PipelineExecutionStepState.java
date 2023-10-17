@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -40,12 +40,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 /**
- * PipelineExecution
+ * PipelineExecutionStepState
  */
 
 
 
-public class PipelineExecution implements Serializable{
+public class PipelineExecutionStepState implements Serializable{
   private static final long serialVersionUID = 1L;
   @JsonProperty("@id")
   private String _atId = null;
@@ -53,16 +53,16 @@ public class PipelineExecution implements Serializable{
   @JsonProperty("@type")
   private String _atType = null;
 
-  public PipelineExecution _atId(String _atId) {
+  public PipelineExecutionStepState _atId(String _atId) {
     this._atId = _atId;
     return this;
   }
 
    /**
-   * The identifier of the pipeline execution. Will always be a URL to the execution endpoint.
+   * The identifier of the pipeline execution. Will always be a URL to the step state endpoint.
    * @return _atId
   **/
-  @Schema(description = "The identifier of the pipeline execution. Will always be a URL to the execution endpoint.")
+  @Schema(description = "The identifier of the pipeline execution. Will always be a URL to the step state endpoint.")
   public String getAtId() {
     return _atId;
   }
@@ -71,7 +71,7 @@ public class PipelineExecution implements Serializable{
     this._atId = _atId;
   }
 
-  public PipelineExecution _atType(String _atType) {
+  public PipelineExecutionStepState _atType(String _atType) {
     this._atType = _atType;
     return this;
   }
@@ -98,9 +98,9 @@ public class PipelineExecution implements Serializable{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PipelineExecution pipelineExecution = (PipelineExecution) o;
-    return Objects.equals(this._atId, pipelineExecution._atId) &&
-        Objects.equals(this._atType, pipelineExecution._atType);
+    PipelineExecutionStepState pipelineExecutionStepState = (PipelineExecutionStepState) o;
+    return Objects.equals(this._atId, pipelineExecutionStepState._atId) &&
+        Objects.equals(this._atType, pipelineExecutionStepState._atType);
   }
 
   @Override
@@ -112,7 +112,7 @@ public class PipelineExecution implements Serializable{
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PipelineExecution {\n");
+    sb.append("class PipelineExecutionStepState {\n");
     
     sb.append("    _atId: ").append(toIndentedString(_atId)).append("\n");
     sb.append("    _atType: ").append(toIndentedString(_atType)).append("\n");

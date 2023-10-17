@@ -4,15 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
+import com.adobe.aio.event.webhook.service.EventVerifier;
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.Artifact;
@@ -21,7 +26,12 @@ import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineApi;
 import io.adobe.cloudmanager.PipelineExecution;
 import io.adobe.cloudmanager.PipelineExecutionApi;
+import io.adobe.cloudmanager.PipelineExecutionEndEvent;
+import io.adobe.cloudmanager.PipelineExecutionStartEvent;
+import io.adobe.cloudmanager.PipelineExecutionStepEndEvent;
+import io.adobe.cloudmanager.PipelineExecutionStepStartEvent;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
+import io.adobe.cloudmanager.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.StepAction;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
 import io.adobe.cloudmanager.impl.pipeline.PipelineImpl;
@@ -43,6 +53,7 @@ import static org.mockserver.model.JsonBody.*;
 
 public class PipelineExecutionTest extends AbstractApiTest {
   private static final JsonBody GET_BODY = loadBodyJson("pipeline/execution/get.json");
+  private static final JsonBody GET_STEP_BODY = loadBodyJson("pipeline/execution/get-step.json");
   private static final JsonBody GET_WAITING_BODY = loadBodyJson("pipeline/execution/approval-waiting.json");
   private static final JsonBody GET_CODE_QUALITY_BODY = loadBodyJson("pipeline/execution/codeQuality-waiting.json");
   public static final JsonBody LIST_BODY = loadBodyJson("pipeline/execution/list.json");
@@ -282,7 +293,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     assertEquals("Cannot find step with action 'build' for pipeline 1, execution 20.", exception.getMessage(), "Message was correct.");
 
     PipelineExecution execution = executions.get(0);
-    assertEquals("build",  execution.getStep(StepAction.build).getAction(), "Correct step found.");
+    assertEquals("build", execution.getStep(StepAction.build).getAction(), "Correct step found.");
 
     client.verify(list, VerificationTimes.once());
     client.clear(list);
@@ -299,7 +310,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
 
     List<PipelineExecution> executions = new ArrayList<>(executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi)));
     PipelineExecution execution = executions.get(0);
-    assertEquals("build",  execution.getCurrentStep().getAction(), "Correct step found.");
+    assertEquals("build", execution.getCurrentStep().getAction(), "Correct step found.");
 
     // No running step.
     execution = executions.get(1);
@@ -887,7 +898,6 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.clear(getFile);
   }
 
-
   @Test
   void downloadStepLog_namedFile_redirect_failure_404() throws CloudManagerApiException, IOException {
     String sessionId = UUID.randomUUID().toString();
@@ -945,4 +955,182 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.clear(getRedirect);
     client.clear(getFile);
   }
+
+  @Test
+  void parseEvent_invalid() {
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.parseEvent("", new HashMap<>()), "Exception thrown.");
+    assertEquals("Cannot parse event, did not pass signature validation.", exception.getMessage(), "Message was correct.");
+  }
+
+  @Test
+  void parseEvent_valid() throws CloudManagerApiException, IOException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    String body = IOUtils.resourceToString("pipeline/execution/event/pipeline-start.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    Map<String, String> headers = new HashMap<>();
+
+    try (
+        MockedConstruction<AuthInterceptor.Builder> builder = mockConstruction(AuthInterceptor.Builder.class,
+            (mock, mockContext) -> {
+              when(mock.workspace(workspace)).thenReturn(mock);
+              when(mock.build()).thenReturn(authInterceptor);
+            }
+        );
+        MockedConstruction<EventVerifier> verifier = mockConstruction(EventVerifier.class, (mock, mockContext) -> {
+              when(mock.verify(body, sessionId, headers)).thenReturn(true);
+            }
+        )) {
+      PipelineExecutionApi api = PipelineExecutionApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      PipelineExecutionStartEvent event = (PipelineExecutionStartEvent) api.parseEvent(body, headers);
+      assertNotNull(event);
+    }
+  }
+
+  @Test
+  void parseEvent_unknown() throws IOException {
+    String body = IOUtils.resourceToString("pipeline/execution/event/unknown.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.parseEvent(body), "Exception thrown.");
+    assertEquals("Unknown event/object types (Event: 'https://ns.adobe.com/experience/cloudmanager/event/unknown', Object: 'https://ns.adobe.com/experience/cloudmanager/pipeline').", exception.getMessage(), "Message was correct.");
+  }
+
+  @Test
+  void parseEvent_pipelineStart() throws IOException, CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    // Parse
+    String body = IOUtils.resourceToString("pipeline/execution/event/pipeline-start.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    PipelineExecutionStartEvent event = (PipelineExecutionStartEvent) executionApi.parseEvent(body);
+    assertNotNull(event);
+
+    // Execution Detail Fetch
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+    assertNotNull(event.getExecution());
+    client.verify(get);
+    client.clear(get);
+
+    // Execution detail not found
+    client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, event::getExecution, "Exception thrown.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/1/pipeline/1/execution/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void parseEvent_pipelineStepStart() throws IOException, CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    // Parse
+    String body = IOUtils.resourceToString("pipeline/execution/event/pipeline-step-start.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    PipelineExecutionStepStartEvent event = (PipelineExecutionStepStartEvent) executionApi.parseEvent(body);
+    assertNotNull(event);
+
+    // Step State detail fetch
+    HttpRequest getStep = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1");
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(getStep).respond(response().withBody(GET_STEP_BODY));
+    client.when(get).respond(response().withBody(GET_BODY));
+    assertNotNull(event.getStepState());
+    client.verify(getStep, VerificationTimes.once());
+    client.verify(get, VerificationTimes.once());
+    client.clear(getStep);
+    client.clear(get);
+
+    // Step State not found
+    getStep = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1");
+    client.when(getStep).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, event::getStepState, "Exception thrown.");
+    assertEquals(String.format("Cannot get execution step state: %s/api/program/1/pipeline/1/execution/1/phase/1/step/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+
+    client.verify(getStep, VerificationTimes.once());
+    client.verify(get, VerificationTimes.never());
+    client.clear(getStep);
+    client.clear(get);
+  }
+
+  @Test
+  void parseEvent_pipelineStepWaiting() throws IOException, CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    // Parse
+    String body = IOUtils.resourceToString("pipeline/execution/event/pipeline-step-waiting.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    PipelineExecutionStepWaitingEvent event = (PipelineExecutionStepWaitingEvent) executionApi.parseEvent(body);
+    assertNotNull(event);
+
+    // Step State detail fetch
+    HttpRequest getStep = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1");
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(getStep).respond(response().withBody(GET_STEP_BODY));
+    client.when(get).respond(response().withBody(GET_BODY));
+    assertNotNull(event.getStepState());
+    client.verify(getStep, VerificationTimes.once());
+    client.verify(get, VerificationTimes.once());
+    client.clear(getStep);
+    client.clear(get);
+
+    // Step State not found
+    getStep = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1");
+    client.when(getStep).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, event::getStepState, "Exception thrown.");
+    assertEquals(String.format("Cannot get execution step state: %s/api/program/1/pipeline/1/execution/1/phase/1/step/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+
+    client.verify(getStep, VerificationTimes.once());
+    client.verify(get, VerificationTimes.never());
+    client.clear(getStep);
+    client.clear(get);
+  }
+
+  @Test
+  void parseEvent_pipelineStepEnd() throws IOException, CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    // Parse
+    String body = IOUtils.resourceToString("pipeline/execution/event/pipeline-step-end.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    PipelineExecutionStepEndEvent event = (PipelineExecutionStepEndEvent) executionApi.parseEvent(body);
+    assertNotNull(event);
+
+    // Step State detail fetch
+    HttpRequest getStep = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1");
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(getStep).respond(response().withBody(GET_STEP_BODY));
+    client.when(get).respond(response().withBody(GET_BODY));
+    assertNotNull(event.getStepState());
+    client.verify(getStep, VerificationTimes.once());
+    client.verify(get, VerificationTimes.once());
+    client.clear(getStep);
+    client.clear(get);
+
+    // Step State not found
+    getStep = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1");
+    client.when(getStep).respond(response().withStatusCode(NOT_FOUND_404.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, event::getStepState, "Exception thrown.");
+    assertEquals(String.format("Cannot get execution step state: %s/api/program/1/pipeline/1/execution/1/phase/1/step/1 (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+
+    client.verify(getStep, VerificationTimes.once());
+    client.verify(get, VerificationTimes.never());
+    client.clear(getStep);
+    client.clear(get);
+  }
+
+  @Test
+  void parseEvent_pipelineEnd() throws IOException, CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    String body = IOUtils.resourceToString("pipeline/execution/event/pipeline-end.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    PipelineExecutionEndEvent event = (PipelineExecutionEndEvent) executionApi.parseEvent(body);
+    assertNotNull(event);
+    assertNotNull(event.getExecution());
+    client.verify(get);
+    client.clear(get);
+  }
+
 }

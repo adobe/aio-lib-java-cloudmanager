@@ -28,8 +28,8 @@ public class FeignUtil {
 
   }
 
-  public static Feign.Builder getBuilder(Workspace workspace) {
-    ObjectMapper mapper = JsonMapper.builder()
+  public static ObjectMapper getMapper() {
+    return JsonMapper.builder()
         .serializationInclusion(JsonInclude.Include.NON_NULL)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         .disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
@@ -38,6 +38,10 @@ public class FeignUtil {
         .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
         .addModule(new JavaTimeModule())
         .build();
+  }
+
+  public static Feign.Builder getBuilder(Workspace workspace) {
+    ObjectMapper mapper = getMapper();
 
     RequestInterceptor authInterceptor = AuthInterceptor.builder().workspace(workspace).build();
     RequestInterceptor aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();

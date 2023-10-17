@@ -56,7 +56,7 @@ public interface LogOption {
   class Builder {
     private final LogOptionRepresentation delegate;
 
-    public Builder() {
+    private Builder() {
       delegate = new LogOptionRepresentation();
     }
 

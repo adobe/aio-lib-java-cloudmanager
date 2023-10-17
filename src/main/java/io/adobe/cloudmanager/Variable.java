@@ -67,7 +67,7 @@ public interface Variable {
   class Builder {
     private final io.adobe.cloudmanager.impl.generated.Variable delegate;
 
-    public Builder() {
+    private Builder() {
       delegate = new io.adobe.cloudmanager.impl.generated.Variable();
     }
 

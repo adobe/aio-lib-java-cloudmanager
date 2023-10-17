@@ -15,7 +15,8 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
     ErrorType type;
     switch (methodKey) {
       case "FeignApi#current(String,String)":       // Current
-      case "FeignApi#get(String,String,String)": {  // Specific
+      case "FeignApi#get(String,String,String)":    // Specific
+      case "FeignApi#get(String)": {                // via Event
         type = ErrorType.GET;
         break;
       }
@@ -57,6 +58,10 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.GET_ARTIFACT;
         break;
       }
+      case "FeignApi#getStepState(String)": {   // via Event
+        type = ErrorType.GET_STEP_STATE;
+        break;
+      }
       default: {
         type = ErrorType.UNKNOWN;
       }
@@ -76,6 +81,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
     LIST("Cannot list executions: %s."),
     LIST_ARTIFACTS("Cannot list step artifacts: %s."),
     GET_ARTIFACT("Cannot get step artifact: %s."),
+    GET_STEP_STATE("Cannot get execution step state: %s."),
     UNKNOWN("Pipeline Execution API Error: %s.");
 
     private final String message;

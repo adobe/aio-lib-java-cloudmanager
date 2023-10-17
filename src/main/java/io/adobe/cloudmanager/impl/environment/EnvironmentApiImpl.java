@@ -23,7 +23,6 @@ import feign.Body;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
-import io.adobe.cloudmanager.CloudManagerApi;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentApi;

@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -40,38 +40,38 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 /**
- * Organization
+ * PipelineExecution
  */
 
 
 
-public class Organization implements Serializable{
+public class PipelineExecution implements Serializable{
   private static final long serialVersionUID = 1L;
-  @JsonProperty("xdmImsOrg:id")
-  private String xdmImsOrgid = null;
+  @JsonProperty("@id")
+  private String _atId = null;
 
   @JsonProperty("@type")
   private String _atType = null;
 
-  public Organization xdmImsOrgid(String xdmImsOrgid) {
-    this.xdmImsOrgid = xdmImsOrgid;
+  public PipelineExecution _atId(String _atId) {
+    this._atId = _atId;
     return this;
   }
 
    /**
-   * An Adobe Organization Id
-   * @return xdmImsOrgid
+   * The identifier of the pipeline execution. Will always be a URL to the execution endpoint.
+   * @return _atId
   **/
-  @Schema(description = "An Adobe Organization Id")
-  public String getXdmImsOrgid() {
-    return xdmImsOrgid;
+  @Schema(description = "The identifier of the pipeline execution. Will always be a URL to the execution endpoint.")
+  public String getAtId() {
+    return _atId;
   }
 
-  public void setXdmImsOrgid(String xdmImsOrgid) {
-    this.xdmImsOrgid = xdmImsOrgid;
+  public void setAtId(String _atId) {
+    this._atId = _atId;
   }
 
-  public Organization _atType(String _atType) {
+  public PipelineExecution _atType(String _atType) {
     this._atType = _atType;
     return this;
   }
@@ -98,23 +98,23 @@ public class Organization implements Serializable{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Organization organization = (Organization) o;
-    return Objects.equals(this.xdmImsOrgid, organization.xdmImsOrgid) &&
-        Objects.equals(this._atType, organization._atType);
+    PipelineExecution pipelineExecution = (PipelineExecution) o;
+    return Objects.equals(this._atId, pipelineExecution._atId) &&
+        Objects.equals(this._atType, pipelineExecution._atType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(xdmImsOrgid, _atType);
+    return Objects.hash(_atId, _atType);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Organization {\n");
+    sb.append("class PipelineExecution {\n");
     
-    sb.append("    xdmImsOrgid: ").append(toIndentedString(xdmImsOrgid)).append("\n");
+    sb.append("    _atId: ").append(toIndentedString(_atId)).append("\n");
     sb.append("    _atType: ").append(toIndentedString(_atType)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -1,0 +1,21 @@
+{
+  "event_id": "1",
+  "event": {
+    "@id": "1",
+    "@type": "https://ns.adobe.com/experience/cloudmanager/event/started",
+    "xdmEventEnvelope:objectType": "https://ns.adobe.com/experience/cloudmanager/pipeline-execution",
+    "activitystreams:published": "2019-07-08T22:50:54.175+0000",
+    "activitystreams:to": {
+      "xdmImsOrg:id": "1234567890@AdobeOrg",
+      "@type": "xdmImsOrg"
+    },
+    "activitystreams:actor": {
+      "xdmImsUser:id": "userid",
+      "@type": "xdmImsUser"
+    },
+    "activitystreams:object": {
+      "@id": "https://cloudmanager.adobe.io/api/program/1/pipeline/1/execution/1",
+      "@type": "https://ns.adobe.com/experience/cloudmanager/pipeline-execution"
+    }
+  }
+}

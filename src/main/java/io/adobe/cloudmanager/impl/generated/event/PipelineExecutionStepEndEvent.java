@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -37,56 +37,57 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepStartEventEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 /**
- * PipelineExecutionStepState
+ * PipelineExecutionStepEndEvent
  */
 
 
 
-public class PipelineExecutionStepState implements Serializable{
+public class PipelineExecutionStepEndEvent implements Serializable{
   private static final long serialVersionUID = 1L;
-  @JsonProperty("@id")
-  private String _atId = null;
+  @JsonProperty("event_id")
+  private String eventId = null;
 
-  @JsonProperty("@type")
-  private String _atType = null;
+  @JsonProperty("event")
+  private PipelineExecutionStepStartEventEvent event = null;
 
-  public PipelineExecutionStepState _atId(String _atId) {
-    this._atId = _atId;
+  public PipelineExecutionStepEndEvent eventId(String eventId) {
+    this.eventId = eventId;
     return this;
   }
 
    /**
-   * The identifier of the pipeline execution. Will always be a URL to the step state endpoint.
-   * @return _atId
+   * Unique identifier for the event.
+   * @return eventId
   **/
-  @Schema(description = "The identifier of the pipeline execution. Will always be a URL to the step state endpoint.")
-  public String getAtId() {
-    return _atId;
+  @Schema(description = "Unique identifier for the event.")
+  public String getEventId() {
+    return eventId;
   }
 
-  public void setAtId(String _atId) {
-    this._atId = _atId;
+  public void setEventId(String eventId) {
+    this.eventId = eventId;
   }
 
-  public PipelineExecutionStepState _atType(String _atType) {
-    this._atType = _atType;
+  public PipelineExecutionStepEndEvent event(PipelineExecutionStepStartEventEvent event) {
+    this.event = event;
     return this;
   }
 
    /**
-   * Get _atType
-   * @return _atType
+   * Get event
+   * @return event
   **/
   @Schema(description = "")
-  public String getAtType() {
-    return _atType;
+  public PipelineExecutionStepStartEventEvent getEvent() {
+    return event;
   }
 
-  public void setAtType(String _atType) {
-    this._atType = _atType;
+  public void setEvent(PipelineExecutionStepStartEventEvent event) {
+    this.event = event;
   }
 
 
@@ -98,24 +99,24 @@ public class PipelineExecutionStepState implements Serializable{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PipelineExecutionStepState pipelineExecutionStepState = (PipelineExecutionStepState) o;
-    return Objects.equals(this._atId, pipelineExecutionStepState._atId) &&
-        Objects.equals(this._atType, pipelineExecutionStepState._atType);
+    PipelineExecutionStepEndEvent pipelineExecutionStepEndEvent = (PipelineExecutionStepEndEvent) o;
+    return Objects.equals(this.eventId, pipelineExecutionStepEndEvent.eventId) &&
+        Objects.equals(this.event, pipelineExecutionStepEndEvent.event);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(_atId, _atType);
+    return Objects.hash(eventId, event);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PipelineExecutionStepState {\n");
+    sb.append("class PipelineExecutionStepEndEvent {\n");
     
-    sb.append("    _atId: ").append(toIndentedString(_atId)).append("\n");
-    sb.append("    _atType: ").append(toIndentedString(_atType)).append("\n");
+    sb.append("    eventId: ").append(toIndentedString(eventId)).append("\n");
+    sb.append("    event: ").append(toIndentedString(event)).append("\n");
     sb.append("}");
     return sb.toString();
   }

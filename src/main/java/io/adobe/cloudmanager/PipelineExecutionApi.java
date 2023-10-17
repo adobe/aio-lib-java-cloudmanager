@@ -2,6 +2,7 @@ package io.adobe.cloudmanager;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
@@ -275,6 +276,26 @@ public interface PipelineExecutionApi {
 
   // Convenience Methods
 
+  /**
+   * Parses the provided string into an Event instance. Use this API when polling the journal events.
+   *
+   * @param eventBody the body to parse into the event
+   * @return an instance of a {@link PipelineExecutionEvent}
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecutionEvent parseEvent(@NotNull String eventBody) throws CloudManagerApiException;
+
+  /**
+   * Parses the provided body into an Event instance, validating the event as part of the parsing process. Use this API when receiving webhook events.
+   *
+   * @param eventBody     the body to parse into the event
+   * @param requestHeader the request headers sent with the Event
+   * @return an instance of a {@link PipelineExecutionEvent}
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecutionEvent parseEvent(@NotNull String eventBody, @NotNull Map<String, String> requestHeader) throws CloudManagerApiException;
 
   /**
    * Builder to create an instance of this API.
@@ -289,7 +310,7 @@ public interface PipelineExecutionApi {
     private Workspace workspace;
     private URL url;
 
-    public Builder() {
+    private Builder() {
     }
 
     public Builder workspace(@NotNull Workspace workspace) {

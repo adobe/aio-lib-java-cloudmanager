@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -37,57 +37,56 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.adobe.cloudmanager.event.PipelineExecutionStepStartEventEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 /**
- * PipelineExecutionStepEndEvent
+ * Organization
  */
 
 
 
-public class PipelineExecutionStepEndEvent implements Serializable{
+public class Organization implements Serializable{
   private static final long serialVersionUID = 1L;
-  @JsonProperty("event_id")
-  private String eventId = null;
+  @JsonProperty("xdmImsOrg:id")
+  private String xdmImsOrgid = null;
 
-  @JsonProperty("event")
-  private PipelineExecutionStepStartEventEvent event = null;
+  @JsonProperty("@type")
+  private String _atType = null;
 
-  public PipelineExecutionStepEndEvent eventId(String eventId) {
-    this.eventId = eventId;
+  public Organization xdmImsOrgid(String xdmImsOrgid) {
+    this.xdmImsOrgid = xdmImsOrgid;
     return this;
   }
 
    /**
-   * Unique identifier for the event.
-   * @return eventId
+   * An Adobe Organization Id
+   * @return xdmImsOrgid
   **/
-  @Schema(description = "Unique identifier for the event.")
-  public String getEventId() {
-    return eventId;
+  @Schema(description = "An Adobe Organization Id")
+  public String getXdmImsOrgid() {
+    return xdmImsOrgid;
   }
 
-  public void setEventId(String eventId) {
-    this.eventId = eventId;
+  public void setXdmImsOrgid(String xdmImsOrgid) {
+    this.xdmImsOrgid = xdmImsOrgid;
   }
 
-  public PipelineExecutionStepEndEvent event(PipelineExecutionStepStartEventEvent event) {
-    this.event = event;
+  public Organization _atType(String _atType) {
+    this._atType = _atType;
     return this;
   }
 
    /**
-   * Get event
-   * @return event
+   * Get _atType
+   * @return _atType
   **/
   @Schema(description = "")
-  public PipelineExecutionStepStartEventEvent getEvent() {
-    return event;
+  public String getAtType() {
+    return _atType;
   }
 
-  public void setEvent(PipelineExecutionStepStartEventEvent event) {
-    this.event = event;
+  public void setAtType(String _atType) {
+    this._atType = _atType;
   }
 
 
@@ -99,24 +98,24 @@ public class PipelineExecutionStepEndEvent implements Serializable{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PipelineExecutionStepEndEvent pipelineExecutionStepEndEvent = (PipelineExecutionStepEndEvent) o;
-    return Objects.equals(this.eventId, pipelineExecutionStepEndEvent.eventId) &&
-        Objects.equals(this.event, pipelineExecutionStepEndEvent.event);
+    Organization organization = (Organization) o;
+    return Objects.equals(this.xdmImsOrgid, organization.xdmImsOrgid) &&
+        Objects.equals(this._atType, organization._atType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(eventId, event);
+    return Objects.hash(xdmImsOrgid, _atType);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PipelineExecutionStepEndEvent {\n");
+    sb.append("class Organization {\n");
     
-    sb.append("    eventId: ").append(toIndentedString(eventId)).append("\n");
-    sb.append("    event: ").append(toIndentedString(event)).append("\n");
+    sb.append("    xdmImsOrgid: ").append(toIndentedString(xdmImsOrgid)).append("\n");
+    sb.append("    _atType: ").append(toIndentedString(_atType)).append("\n");
     sb.append("}");
     return sb.toString();
   }

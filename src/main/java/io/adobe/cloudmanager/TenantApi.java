@@ -39,7 +39,7 @@ public interface TenantApi {
     private Workspace workspace;
     private URL url;
 
-    public Builder() {
+    private Builder() {
     }
 
     public Builder workspace(@NotNull Workspace workspace) {

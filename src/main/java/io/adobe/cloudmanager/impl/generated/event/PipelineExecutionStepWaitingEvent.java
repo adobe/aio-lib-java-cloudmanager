@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -37,24 +37,24 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.adobe.cloudmanager.event.PipelineExecutionStartEventEvent;
+import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepStartEventEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 /**
- * PipelineExecutionStartEvent
+ * PipelineExecutionStepWaitingEvent
  */
 
 
 
-public class PipelineExecutionStartEvent implements Serializable{
+public class PipelineExecutionStepWaitingEvent implements Serializable{
   private static final long serialVersionUID = 1L;
   @JsonProperty("event_id")
   private String eventId = null;
 
   @JsonProperty("event")
-  private PipelineExecutionStartEventEvent event = null;
+  private PipelineExecutionStepStartEventEvent event = null;
 
-  public PipelineExecutionStartEvent eventId(String eventId) {
+  public PipelineExecutionStepWaitingEvent eventId(String eventId) {
     this.eventId = eventId;
     return this;
   }
@@ -72,7 +72,7 @@ public class PipelineExecutionStartEvent implements Serializable{
     this.eventId = eventId;
   }
 
-  public PipelineExecutionStartEvent event(PipelineExecutionStartEventEvent event) {
+  public PipelineExecutionStepWaitingEvent event(PipelineExecutionStepStartEventEvent event) {
     this.event = event;
     return this;
   }
@@ -82,11 +82,11 @@ public class PipelineExecutionStartEvent implements Serializable{
    * @return event
   **/
   @Schema(description = "")
-  public PipelineExecutionStartEventEvent getEvent() {
+  public PipelineExecutionStepStartEventEvent getEvent() {
     return event;
   }
 
-  public void setEvent(PipelineExecutionStartEventEvent event) {
+  public void setEvent(PipelineExecutionStepStartEventEvent event) {
     this.event = event;
   }
 
@@ -99,9 +99,9 @@ public class PipelineExecutionStartEvent implements Serializable{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PipelineExecutionStartEvent pipelineExecutionStartEvent = (PipelineExecutionStartEvent) o;
-    return Objects.equals(this.eventId, pipelineExecutionStartEvent.eventId) &&
-        Objects.equals(this.event, pipelineExecutionStartEvent.event);
+    PipelineExecutionStepWaitingEvent pipelineExecutionStepWaitingEvent = (PipelineExecutionStepWaitingEvent) o;
+    return Objects.equals(this.eventId, pipelineExecutionStepWaitingEvent.eventId) &&
+        Objects.equals(this.event, pipelineExecutionStepWaitingEvent.event);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class PipelineExecutionStartEvent implements Serializable{
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PipelineExecutionStartEvent {\n");
+    sb.append("class PipelineExecutionStepWaitingEvent {\n");
     
     sb.append("    eventId: ").append(toIndentedString(eventId)).append("\n");
     sb.append("    event: ").append(toIndentedString(event)).append("\n");

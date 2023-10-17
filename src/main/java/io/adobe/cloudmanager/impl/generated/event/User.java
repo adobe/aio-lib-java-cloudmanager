@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package io.adobe.cloudmanager.event;
+package io.adobe.cloudmanager.impl.generated.event;
 
 /*-
  * #%L
@@ -37,57 +37,56 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.adobe.cloudmanager.event.PipelineExecutionStepStartEventEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 /**
- * PipelineExecutionStepWaitingEvent
+ * User
  */
 
 
 
-public class PipelineExecutionStepWaitingEvent implements Serializable{
+public class User implements Serializable{
   private static final long serialVersionUID = 1L;
-  @JsonProperty("event_id")
-  private String eventId = null;
+  @JsonProperty("xdmImsUser:id")
+  private String xdmImsUserid = null;
 
-  @JsonProperty("event")
-  private PipelineExecutionStepStartEventEvent event = null;
+  @JsonProperty("@type")
+  private String _atType = null;
 
-  public PipelineExecutionStepWaitingEvent eventId(String eventId) {
-    this.eventId = eventId;
+  public User xdmImsUserid(String xdmImsUserid) {
+    this.xdmImsUserid = xdmImsUserid;
     return this;
   }
 
    /**
-   * Unique identifier for the event.
-   * @return eventId
+   * An Adobe User Id
+   * @return xdmImsUserid
   **/
-  @Schema(description = "Unique identifier for the event.")
-  public String getEventId() {
-    return eventId;
+  @Schema(description = "An Adobe User Id")
+  public String getXdmImsUserid() {
+    return xdmImsUserid;
   }
 
-  public void setEventId(String eventId) {
-    this.eventId = eventId;
+  public void setXdmImsUserid(String xdmImsUserid) {
+    this.xdmImsUserid = xdmImsUserid;
   }
 
-  public PipelineExecutionStepWaitingEvent event(PipelineExecutionStepStartEventEvent event) {
-    this.event = event;
+  public User _atType(String _atType) {
+    this._atType = _atType;
     return this;
   }
 
    /**
-   * Get event
-   * @return event
+   * Get _atType
+   * @return _atType
   **/
   @Schema(description = "")
-  public PipelineExecutionStepStartEventEvent getEvent() {
-    return event;
+  public String getAtType() {
+    return _atType;
   }
 
-  public void setEvent(PipelineExecutionStepStartEventEvent event) {
-    this.event = event;
+  public void setAtType(String _atType) {
+    this._atType = _atType;
   }
 
 
@@ -99,24 +98,24 @@ public class PipelineExecutionStepWaitingEvent implements Serializable{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PipelineExecutionStepWaitingEvent pipelineExecutionStepWaitingEvent = (PipelineExecutionStepWaitingEvent) o;
-    return Objects.equals(this.eventId, pipelineExecutionStepWaitingEvent.eventId) &&
-        Objects.equals(this.event, pipelineExecutionStepWaitingEvent.event);
+    User user = (User) o;
+    return Objects.equals(this.xdmImsUserid, user.xdmImsUserid) &&
+        Objects.equals(this._atType, user._atType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(eventId, event);
+    return Objects.hash(xdmImsUserid, _atType);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PipelineExecutionStepWaitingEvent {\n");
+    sb.append("class User {\n");
     
-    sb.append("    eventId: ").append(toIndentedString(eventId)).append("\n");
-    sb.append("    event: ").append(toIndentedString(event)).append("\n");
+    sb.append("    xdmImsUserid: ").append(toIndentedString(xdmImsUserid)).append("\n");
+    sb.append("    _atType: ").append(toIndentedString(_atType)).append("\n");
     sb.append("}");
     return sb.toString();
   }

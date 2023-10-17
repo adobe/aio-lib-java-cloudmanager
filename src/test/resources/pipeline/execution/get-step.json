@@ -1,0 +1,22 @@
+{
+  "id": "1",
+  "stepId": "1",
+  "phaseId": "1",
+  "action": "build",
+  "repository": "test",
+  "branch": "main",
+  "environmentId": "1",
+  "environmentType": "stage",
+  "commitId": "string",
+  "status": "RUNNING",
+  "_links": {
+    "http://ns.adobe.com/adobecloud/rel/execution": {
+      "href": "/api/program/1/pipeline/1/execution/1",
+      "templated": false
+    },
+    "http://ns.adobe.com/adobecloud/rel/pipeline": {
+      "href": "/api/program/1/pipeline/1",
+      "templated": false
+    }
+  }
+}x

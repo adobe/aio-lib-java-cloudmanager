@@ -40,6 +40,7 @@ public class PipelineApiImpl implements PipelineApi {
     try {
       executionApi = PipelineExecutionApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
     } catch (MalformedURLException e) {
+      // This shouldn't be possible to reach.
       throw new RuntimeException(e);
     }
   }
