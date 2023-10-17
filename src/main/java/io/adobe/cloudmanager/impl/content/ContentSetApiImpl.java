@@ -129,7 +129,7 @@ public class ContentSetApiImpl implements ContentSetApi {
         .contentSetId(id)
         .destProgramId(programId)
         .destEnvironmentId(destEnvironmentId)
-        .tier(Environment.Tier.AUTHOR.getValue())
+        .tier(Environment.Tier.AUTHOR.name().toLowerCase())
         .includeACL(includeAcl);
     return new ContentFlowImpl(api.createFlow(programId, srcEnvironmentId, cfi), this);
   }

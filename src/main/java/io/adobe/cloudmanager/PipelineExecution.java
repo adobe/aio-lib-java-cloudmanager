@@ -122,33 +122,12 @@ public interface PipelineExecution {
    */
   @Getter
   enum Status {
-    NOT_STARTED("NOT_STARTED"),
-    RUNNING("RUNNING"),
-    CANCELLING("CANCELLING"),
-    CANCELLED("CANCELLED"),
-    FINISHED("FINISHED"),
-    ERROR("ERROR"),
-    FAILED("FAILED");
-
-    private final String value;
-
-    Status(String value) {
-      this.value = value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static Status fromValue(String text) {
-      for (Status b : Status.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
+    NOT_STARTED,
+    RUNNING,
+    CANCELLING,
+    CANCELLED,
+    FINISHED,
+    ERROR,
+    FAILED
   }
 }

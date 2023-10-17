@@ -38,11 +38,11 @@ public class MetricImpl extends io.adobe.cloudmanager.impl.generated.Metric impl
 
   @Override
   public Severity getSev() {
-    return Severity.fromValue(getSeverity().getValue());
+    return Severity.valueOf(getSeverity().name());
   }
 
   @Override
   public Comparator getComp() {
-    return Comparator.fromValue(getComparator().getValue());
+    return Comparator.valueOf(getComparator().name());
   }
 }

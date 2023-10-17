@@ -421,9 +421,8 @@ class PipelineTest extends AbstractApiTest {
 
   @Test
   void status() {
-    assertEquals(Pipeline.Status.fromValue("WAITING"), Pipeline.Status.WAITING);
-    assertNull(Pipeline.Status.fromValue("foo"));
-    assertEquals(Pipeline.Status.IDLE.getValue(), Pipeline.Status.IDLE.toString());
+    assertEquals(Pipeline.Status.valueOf("WAITING"), Pipeline.Status.WAITING);
+    assertEquals(Pipeline.Status.IDLE.name(), Pipeline.Status.IDLE.toString());
   }
 
   @Test

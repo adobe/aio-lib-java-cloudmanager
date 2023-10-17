@@ -130,29 +130,9 @@ public interface Pipeline {
    */
   @Getter
   enum Status {
-    IDLE("IDLE"),
-    BUSY("BUSY"),
-    WAITING("WAITING");
-
-    private final String value;
-
-    Status(String value) {
-      this.value = value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static Status fromValue(String text) {
-      for (Status b : Status.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
+    IDLE,
+    BUSY,
+    WAITING
   }
 
   /**

@@ -180,26 +180,10 @@ public interface Environment {
     RDE
   }
 
-  @Getter
   enum Tier {
-    AUTHOR("author"),
-    PREVIEW("preview"),
-    PUBLISH("publish");
-
-    private final String value;
-
-    Tier(String value) {
-      this.value = value;
-    }
-
-    public static Tier fromValue(String text) {
-      for (Tier t : Tier.values()) {
-        if (String.valueOf(t.value).equals(text)) {
-          return t;
-        }
-      }
-      return null;
-    }
+    AUTHOR,
+    PREVIEW,
+    PUBLISH
   }
 
   /**

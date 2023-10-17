@@ -69,58 +69,21 @@ public interface Metric {
   /**
    * Represents the severity of the metric.
    */
-  @Getter
   enum Severity {
-    CRITICAL("critical"),
-    IMPORTANT("important"),
-    INFORMATIONAL("informational");
-
-    private final String value;
-
-    Severity(String value) {
-      this.value = value;
-    }
-
-    public static Severity fromValue(String text) {
-      for (Severity s : Severity.values()) {
-        if (String.valueOf(s.value).equals(text)) {
-          return s;
-        }
-      }
-      return null;
-    }
-
-    @Override
-    public String toString() { return String.valueOf(value); }
+    CRITICAL,
+    IMPORTANT,
+    INFORMATIONAL
   }
 
   /**
    * The comparator to use for the metric.
    */
-  @Getter
   enum Comparator {
-    GT("GT"),
-    GTE("GTE"),
-    LT("LT"),
-    LTE("LTE"),
-    EQ("EQ"),
-    NEQ("NEQ");
-
-    private final String value;
-
-    Comparator(String value) {
-      this.value = value;
-    }
-
-    public static Comparator fromValue(String text) {
-      for (Comparator b : Comparator.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public String toString() { return String.valueOf(value); }
+    GT,
+    GTE,
+    LT,
+    LTE,
+    EQ,
+    NEQ
   }
 }

@@ -101,35 +101,15 @@ public interface PipelineExecutionStepState {
    */
   @Getter
   enum Status {
-    NOT_STARTED("NOT_STARTED"),
-    RUNNING("RUNNING"),
-    FINISHED("FINISHED"),
-    ERROR("ERROR"),
-    ROLLING_BACK("ROLLING_BACK"),
-    ROLLED_BACK("ROLLED_BACK"),
-    WAITING("WAITING"),
-    CANCELLED("CANCELLED"),
-    FAILED("FAILED");
-
-    private final String value;
-
-    Status(String value) {
-      this.value = value;
-    }
-
-    public static Status fromValue(String text) {
-      for (Status b : Status.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
+    NOT_STARTED,
+    RUNNING,
+    FINISHED,
+    ERROR,
+    ROLLING_BACK,
+    ROLLED_BACK,
+    WAITING,
+    CANCELLED,
+    FAILED
   }
 
   /**

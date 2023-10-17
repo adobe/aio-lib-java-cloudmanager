@@ -61,7 +61,7 @@ public class PipelineImpl extends io.adobe.cloudmanager.impl.generated.Pipeline 
 
   @Override
   public Status getStatusState() {
-    return Status.fromValue(getStatus().getValue());
+    return Status.valueOf(getStatus().getValue());
   }
 
   @Override

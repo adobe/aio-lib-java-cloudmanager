@@ -51,7 +51,7 @@ public class ContentFlowImpl extends io.adobe.cloudmanager.impl.generated.Conten
 
   @Override
   public Tier getEnvironmentTier() {
-    return Tier.fromValue(delegate.getTier());
+    return Tier.valueOf(delegate.getTier().toUpperCase());
   }
 
   @Override
