@@ -128,7 +128,6 @@ public interface Pipeline {
    *
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
-  @Getter
   enum Status {
     IDLE,
     BUSY,
