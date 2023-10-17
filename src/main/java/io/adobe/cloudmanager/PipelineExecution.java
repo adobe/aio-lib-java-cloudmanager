@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,8 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.util.Optional;
+import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -63,7 +65,7 @@ public interface PipelineExecution {
    * <p>
    * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
    *
-   * @param action    the step state action (see {@link StepAction})
+   * @param action the step state action (see {@link StepAction})
    * @return the step state details
    * @throws CloudManagerApiException when any error occurs
    */
@@ -80,6 +82,15 @@ public interface PipelineExecution {
    */
   @NotNull
   PipelineExecutionStepState getCurrentStep() throws CloudManagerApiException;
+
+  /**
+   * Finds the first step in the execution that matches the predicate.
+   *
+   * @param predicate the filter criteria
+   * @return the step state if it exists
+   */
+  @NotNull
+  Optional<PipelineExecutionStepState> getStep(@NotNull Predicate<PipelineExecutionStepState> predicate);
 
   /**
    * Advances this execution if in a valid state.

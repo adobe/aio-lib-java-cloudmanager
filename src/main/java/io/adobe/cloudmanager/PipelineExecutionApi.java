@@ -291,7 +291,6 @@ public interface PipelineExecutionApi {
   String getArtifactDownloadUrl(@NotNull PipelineExecutionStepState step, String artifactId) throws CloudManagerApiException;
 
   // Convenience Methods
-
   /**
    * Parses the provided string into an Event instance. Use this API when polling the journal events.
    *

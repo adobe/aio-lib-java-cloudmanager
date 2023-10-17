@@ -223,26 +223,4 @@ public interface Environment {
       return String.format("Name='%s'", name);
     }
   }
-
-  /**
-   * Predicate to use for retrieving an environment based on its id.
-   */
-  final class IdPredicate implements Predicate<Environment> {
-
-    private final String id;
-
-    public IdPredicate(String id) {
-      this.id = id;
-    }
-
-    @Override
-    public boolean test(Environment environment) {
-      return StringUtils.equals(id, environment.getId());
-    }
-
-    @Override
-    public String toString() {
-      return String.format("Id='%s'", id);
-    }
-  }
 }

@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,8 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineExecution;
@@ -83,10 +85,19 @@ public class PipelineExecutionImpl extends io.adobe.cloudmanager.impl.generated.
     }
     io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState step = embeddeds.getStepStates()
         .stream()
-        .filter(PipelineExecutionStepStateImpl.IS_CURRENT)
+        .filter(stepState -> stepState.getStatus() != io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.FINISHED)
         .findFirst()
         .orElseThrow(() -> new CloudManagerApiException(String.format(FIND_CURRENT_ERROR, getPipelineId(), getId())));
     return new PipelineExecutionStepStateImpl(step, this, client);
+  }
+
+  @Override
+  public Optional<PipelineExecutionStepState> getStep(Predicate<PipelineExecutionStepState> predicate) {
+    PipelineExecutionEmbedded embeddeds = getEmbedded();
+    if (embeddeds == null || embeddeds.getStepStates().isEmpty()) {
+      return Optional.empty();
+    }
+    return embeddeds.getStepStates().stream().map(s -> (PipelineExecutionStepState) new PipelineExecutionStepStateImpl(s, this, client)).filter(predicate).findFirst();
   }
 
   @Override

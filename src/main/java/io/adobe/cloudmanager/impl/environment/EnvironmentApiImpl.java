@@ -30,7 +30,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -247,6 +249,14 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   @Override
   public void resetRde(Environment environment) throws CloudManagerApiException {
     resetRde(environment.getProgramId(), environment.getId());
+  }
+
+  @Override
+  public Optional<Environment> get(String programId, Predicate<Environment> predicate) throws CloudManagerApiException {
+    EnvironmentList list = api.list(programId);
+    return list.getEmbedded() == null ?
+        Optional.empty() :
+        list.getEmbedded().getEnvironments().stream().map(e -> (Environment) new EnvironmentImpl(e, this)).filter(predicate).findFirst();
   }
 
   @Override

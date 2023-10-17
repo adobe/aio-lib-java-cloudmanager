@@ -20,6 +20,8 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import lombok.Getter;
+
 public interface Metric {
 
   /**
@@ -67,6 +69,7 @@ public interface Metric {
   /**
    * Represents the severity of the metric.
    */
+  @Getter
   enum Severity {
     CRITICAL("critical"),
     IMPORTANT("important"),
@@ -87,8 +90,6 @@ public interface Metric {
       return null;
     }
 
-    public String getValue() { return value; }
-
     @Override
     public String toString() { return String.valueOf(value); }
   }
@@ -96,6 +97,7 @@ public interface Metric {
   /**
    * The comparator to use for the metric.
    */
+  @Getter
   enum Comparator {
     GT("GT"),
     GTE("GTE"),
@@ -118,8 +120,6 @@ public interface Metric {
       }
       return null;
     }
-
-    public String getValue() { return value; }
 
     public String toString() { return String.valueOf(value); }
   }

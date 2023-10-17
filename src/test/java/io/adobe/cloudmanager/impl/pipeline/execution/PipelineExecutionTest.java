@@ -105,11 +105,11 @@ public class PipelineExecutionTest extends AbstractApiTest {
     return redirect;
   }
 
-  private HttpRequest setupDownloadUrlSpecial(String sessionId, String path) {
+  private HttpRequest setupDownloadUrlSpecial(String sessionId) {
     HttpRequest redirect = request()
         .withMethod("GET")
         .withHeader(API_KEY_HEADER, sessionId)
-        .withPath(path)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs")
         .withQueryStringParameter("file", "somethingspecial");
     client.when(redirect).respond(
         response()
@@ -300,7 +300,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
-  void getStepState_viaExecution() throws CloudManagerApiException {
+  void getStepState_via_execution() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/executions");
@@ -320,8 +320,9 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.clear(list);
   }
 
+
   @Test
-  void getCurrentStep(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+  void getCurrentStep_via_execution(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getProgramId()).thenReturn("1");
@@ -641,7 +642,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
 
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_BODY));
-    HttpRequest redirect = setupDownloadUrlSpecial(sessionId, "/api/program/1/pipeline/1/execution/1/phase/2/step/1/logs");
+    HttpRequest redirect = setupDownloadUrlSpecial(sessionId);
     PipelineExecution execution = new PipelineExecutionImpl(mock, executionApi);
 
     assertEquals(String.format("%s/logs/somethingspecial.txt", baseUrl), executionApi.getStepLogDownloadUrl(execution, StepAction.build, "somethingspecial"));
@@ -880,7 +881,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
     final File outputDir = Files.createTempDirectory("log-output").toFile();
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> step.getLog(outputDir), "Exception thrown.");
-    assertEquals(String.format("Cannot download log for pipeline 1, execution 1, step 'build' to %s/pipeline-1-execution-1-build.txt (Cause: java.io.FileNotFoundException).", outputDir, baseUrl), exception.getMessage(), "Message was correct");
+    assertEquals(String.format("Cannot download log for pipeline 1, execution 1, step 'build' to %s/pipeline-1-execution-1-build.txt (Cause: java.io.FileNotFoundException).", outputDir), exception.getMessage(), "Message was correct");
 
     client.verify(get);
     client.verify(getRedirect);
@@ -1153,5 +1154,29 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.verify(get);
     client.clear(get);
   }
+
+  @Test
+  void getStepState_via_predicate() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(GET_BODY));
+
+    PipelineExecution execution = executionApi.get("1", "1", "1");
+    Optional<PipelineExecutionStepState> step = execution.getStep((s) -> StepAction.deploy.name().equals(s.getAction()));
+    assertTrue(step.isEmpty());
+
+    step = execution.getStep(PipelineExecutionStepState.IS_CURRENT);
+    assertTrue(step.isPresent());
+    assertEquals(StepAction.build.name(), step.get().getAction());
+
+    step = execution.getStep(PipelineExecutionStepState.IS_RUNNING);
+    assertTrue(step.isPresent());
+    assertEquals(StepAction.build.name(), step.get().getAction());
+
+    client.verify(get);
+    client.clear(get);
+  }
+
 
 }

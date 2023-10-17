@@ -115,13 +115,6 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
     }
   }
 
-  /**
-   * Predicate for pipelines based on they are the current execution.
-   */
-  public static final Predicate<io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState> IS_CURRENT = (stepState ->
-      stepState.getStatus() != StatusEnum.FINISHED
-  );
-
   protected String getAdvanceBody() throws CloudManagerApiException {
     StringWriter writer = new StringWriter();
     JsonFactory jsonFactory = new JsonFactory();

@@ -133,20 +133,20 @@ public interface PipelineExecutionStepState {
   }
 
   /**
-   * Predicate for pipelines based on they are the current execution.
+   * Predicate for pipelines for the current step in the execution.
    */
   Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
       stepState.getStatusState() != PipelineExecutionStepState.Status.FINISHED);
 
   /**
-   * Predicate for pipelines that are in a waiting state.
+   * Predicate for the step that is waiting.
    */
   Predicate<PipelineExecutionStepState> IS_WAITING = (stepState ->
       stepState.getStatusState() == PipelineExecutionStepState.Status.WAITING
   );
 
   /**
-   * Predicate for pipelines that are in a waiting state.
+   * Predicate for the step that is in the running state.
    */
   Predicate<PipelineExecutionStepState> IS_RUNNING = (stepState ->
       stepState.getStatusState() == PipelineExecutionStepState.Status.RUNNING

@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,9 @@ package io.adobe.cloudmanager;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
 public interface EnvironmentApi {
@@ -267,11 +269,19 @@ public interface EnvironmentApi {
    */
   void resetRde(@NotNull Environment environment) throws CloudManagerApiException;
 
-
   // TODO: Need Details about Restore Points
 
-
   // Convenience Methods
+
+  /**
+   * Returns the first environment which matches the predicate, within the program context
+   *
+   * @param programId the program id
+   * @param predicate environment filter
+   * @return the environment
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Optional<Environment> get(@NotNull String programId, @NotNull Predicate<Environment> predicate) throws CloudManagerApiException;
 
   /**
    * Downloads the logs for the specified environment.

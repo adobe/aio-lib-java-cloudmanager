@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -71,6 +72,9 @@ public class EnvironmentTest extends AbstractApiTest {
   public static final JsonBody LIST_VARIABLES_BODY = loadBodyJson("environment/list-variables.json");
 
   private EnvironmentApi underTest;
+
+  private final LogOption option = LogOption.builder().service("author").name("aemerror").build();
+
 
   @BeforeEach
   void before() throws Exception {
@@ -253,11 +257,9 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
-  void list_logs_failure_400(@Mock LogOption option) {
+  void list_logs_failure_400() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(option.getService()).thenReturn("author");
-    when(option.getName()).thenReturn("aemerror");
     HttpRequest list = request()
         .withMethod("GET")
         .withHeader(API_KEY_HEADER, sessionId)
@@ -273,11 +275,9 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
-  void list_logs_success(@Mock LogOption option, @Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+  void list_logs_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(option.getService()).thenReturn("author");
-    when(option.getName()).thenReturn("aemerror");
     when(mock.getProgramId()).thenReturn("1");
     when(mock.getId()).thenReturn("1");
     HttpRequest list = request()
@@ -295,12 +295,10 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
-  void getLogDownloadUrl_failure_400(@Mock LogOption option) {
+  void getLogDownloadUrl_failure_400() {
     LocalDate date = LocalDate.now();
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(option.getService()).thenReturn("author");
-    when(option.getName()).thenReturn("aemerror");
     HttpRequest get = request()
         .withMethod("GET")
         .withHeader(API_KEY_HEADER, sessionId)
@@ -316,12 +314,10 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
-  void getLogDownloadUrl_no_redirect(@Mock LogOption option) {
+  void getLogDownloadUrl_no_redirect() {
     LocalDate date = LocalDate.now();
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(option.getService()).thenReturn("author");
-    when(option.getName()).thenReturn("aemerror");
     HttpRequest get = request()
         .withMethod("GET")
         .withHeader(API_KEY_HEADER, sessionId)
@@ -337,12 +333,10 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
-  void getLogDownloadUrl_success(@Mock LogOption option, @Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+  void getLogDownloadUrl_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
     LocalDate date = LocalDate.now();
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(option.getService()).thenReturn("author");
-    when(option.getName()).thenReturn("aemerror");
     when(mock.getProgramId()).thenReturn("1");
     when(mock.getId()).thenReturn("1");
 
@@ -662,12 +656,10 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
-  void downloadLogs_redirect_failure_404(@Mock LogOption option) {
+  void downloadLogs_redirect_failure_404() {
     LocalDate date = LocalDate.now().withYear(2019).withMonth(9).withDayOfMonth(8);
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(option.getService()).thenReturn("author");
-    when(option.getName()).thenReturn("aemerror");
 
     HttpRequest listLogs = request()
         .withMethod("GET")
@@ -701,14 +693,12 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
-  void downloadLogs_success(@Mock io.adobe.cloudmanager.impl.generated.Environment environment, @Mock LogOption option) throws CloudManagerApiException, IOException {
+  void downloadLogs_success(@Mock io.adobe.cloudmanager.impl.generated.Environment environment) throws CloudManagerApiException, IOException {
     byte[] zipBytes = IOUtils.toByteArray(EnvironmentTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
     LocalDate firstDate = LocalDate.now().withYear(2019).withMonth(9).withDayOfMonth(8);
     LocalDate secondDate = LocalDate.now().withYear(2019).withMonth(9).withDayOfMonth(7);
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
-    when(option.getService()).thenReturn("author");
-    when(option.getName()).thenReturn("aemerror");
     when(environment.getId()).thenReturn("1");
     when(environment.getProgramId()).thenReturn("1");
 
@@ -779,6 +769,21 @@ public class EnvironmentTest extends AbstractApiTest {
     client.verify(list);
     client.clear(list);
 
+  }
+
+
+  @Test
+  void get_via_predicate() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environments");
+    client.when(get).respond(response().withBody(LIST_BODY));
+    Optional<Environment> env = underTest.get("1", (e) -> false);
+    assertTrue(env.isEmpty());
+    env = underTest.get("1", new Environment.NamePredicate("TestProgram_prod"));
+    assertTrue(env.isPresent());
+    client.verify(get);
+    client.clear(get);
   }
 
 }

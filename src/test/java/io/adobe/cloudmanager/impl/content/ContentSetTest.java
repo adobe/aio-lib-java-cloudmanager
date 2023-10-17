@@ -274,6 +274,31 @@ public class ContentSetTest extends AbstractApiTest {
   }
 
   @Test
+  void update_success() throws CloudManagerApiException {
+    List<PathDefinition> pds = new ArrayList<>();
+    Set<String> exclusions = new HashSet<>();
+    exclusions.add("/content/foo/bar");
+    exclusions.add("/content/foo/foo");
+    pds.add(new PathDefinition("/content/foo", exclusions));
+
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/contentSet/1");
+    client.when(get).respond(response().withBody(GET_SET_BODY));
+    HttpRequest put = request()
+        .withMethod("PUT")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/contentSet/1")
+        .withBody(json("{ \"name\": \"Test\", \"description\":  \"Description\", \"paths\": [ { \"path\": \"/content/foo\", \"excluded\": [\"/content/foo/bar\", \"/content/foo/foo\"] } ] }"));
+    client.when(put).respond(response().withBody(GET_SET_BODY));
+    ContentSet updated = underTest.update("1", "1", "Test", "Description", pds);
+    assertEquals(2, updated.getPathDefinitions().stream().findFirst().get().getExcluded().size());
+    client.verify(get, put);
+    client.clear(get);
+    client.clear(put);
+  }
+
+  @Test
   void update_success_name(@Mock io.adobe.cloudmanager.impl.generated.ContentSet mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
