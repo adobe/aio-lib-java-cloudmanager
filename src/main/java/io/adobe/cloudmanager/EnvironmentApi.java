@@ -1,14 +1,10 @@
 package io.adobe.cloudmanager;
 
 import java.io.File;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
-
-import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.environment.EnvironmentApiImpl;
 
 public interface EnvironmentApi {
 
@@ -283,46 +279,4 @@ public interface EnvironmentApi {
    */
   @NotNull
   Collection<EnvironmentLog> downloadLogs(@NotNull Environment environment, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
-
-
-  /**
-   * Create an Environment API builder.
-   *
-   * @return a builder.
-   */
-  static Builder builder() {
-    return new Builder();
-  }
-
-  /**
-   * Builds instances of the CloudManager API.
-   */
-  class Builder {
-    private Workspace workspace;
-    private URL url;
-
-    private Builder() {
-    }
-
-    public Builder workspace(@NotNull Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
-    public Builder url(@NotNull URL url) {
-      this.url = url;
-      return this;
-    }
-
-    public EnvironmentApi build() {
-      if (workspace == null) {
-        throw new IllegalStateException("Workspace must be specified.");
-      }
-      if (workspace.getAuthContext() == null) {
-        throw new IllegalStateException("Workspace must specify AuthContext");
-      }
-      workspace.getAuthContext().validate();
-      return new EnvironmentApiImpl(workspace, url);
-    }
-  }
 }

@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 import com.adobe.aio.event.webhook.service.EventVerifier;
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.Artifact;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
@@ -69,8 +70,8 @@ public class PipelineExecutionTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      pipelineApi = PipelineApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
-      executionApi = (PipelineExecutionApiImpl) PipelineExecutionApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      pipelineApi = new ApiBuilder<>(PipelineApi.class).workspace(workspace).url(new URL(baseUrl)).build();
+      executionApi = (PipelineExecutionApiImpl) new ApiBuilder<>(PipelineExecutionApi.class).workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 
@@ -981,7 +982,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
               when(mock.verify(body, sessionId, headers)).thenReturn(true);
             }
         )) {
-      PipelineExecutionApi api = PipelineExecutionApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      PipelineExecutionApi api = new ApiBuilder<>(PipelineExecutionApi.class).workspace(workspace).url(new URL(baseUrl)).build();
       PipelineExecutionStartEvent event = (PipelineExecutionStartEvent) api.parseEvent(body, headers);
       assertNotNull(event);
     }

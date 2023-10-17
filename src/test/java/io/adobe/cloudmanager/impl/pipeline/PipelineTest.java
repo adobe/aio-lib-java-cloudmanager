@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineApi;
@@ -68,7 +69,7 @@ class PipelineTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = PipelineApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = new ApiBuilder<>(PipelineApi.class).workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 

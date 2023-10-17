@@ -5,7 +5,6 @@ import java.time.OffsetDateTime;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.PipelineExecutionStepEndEvent;
 import io.adobe.cloudmanager.PipelineExecutionStepState;
-import io.adobe.cloudmanager.PipelineExecutionStepWaitingEvent;
 import io.adobe.cloudmanager.impl.generated.event.PipelineExecutionStepStartEventEvent;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentApi;
@@ -59,7 +60,7 @@ public class EnvironmentTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = EnvironmentApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = new ApiBuilder<>(EnvironmentApi.class).workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 

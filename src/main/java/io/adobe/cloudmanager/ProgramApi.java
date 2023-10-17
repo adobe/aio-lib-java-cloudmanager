@@ -1,11 +1,7 @@
 package io.adobe.cloudmanager;
 
-import java.net.URL;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-
-import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.program.ProgramApiImpl;
 
 public interface ProgramApi {
 
@@ -64,40 +60,4 @@ public interface ProgramApi {
    */
   @NotNull
   Collection<Region> listRegions(@NotNull String programId) throws CloudManagerApiException;
-
-  static Builder builder() {
-    return new Builder();
-  }
-
-  /**
-   * Builds instances of the Program API.
-   */
-  class Builder {
-    private Workspace workspace;
-    private URL url;
-
-    private Builder() {
-    }
-
-    public Builder workspace(@NotNull Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
-    public Builder url(@NotNull URL url) {
-      this.url = url;
-      return this;
-    }
-
-    public ProgramApi build() {
-      if (workspace == null) {
-        throw new IllegalStateException("Workspace must be specified.");
-      }
-      if (workspace.getAuthContext() == null) {
-        throw new IllegalStateException("Workspace must specify AuthContext");
-      }
-      workspace.getAuthContext().validate();
-      return new ProgramApiImpl(workspace, url);
-    }
-  }
 }

@@ -1,13 +1,9 @@
 package io.adobe.cloudmanager;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
-
-import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.pipeline.execution.PipelineExecutionApiImpl;
 
 public interface PipelineExecutionApi {
 
@@ -296,42 +292,4 @@ public interface PipelineExecutionApi {
    */
   @NotNull
   PipelineExecutionEvent parseEvent(@NotNull String eventBody, @NotNull Map<String, String> requestHeader) throws CloudManagerApiException;
-
-  /**
-   * Builder to create an instance of this API.
-   *
-   * @return PipelineExecutionApi builder
-   */
-  static Builder builder() {
-    return new Builder();
-  }
-
-  class Builder {
-    private Workspace workspace;
-    private URL url;
-
-    private Builder() {
-    }
-
-    public Builder workspace(@NotNull Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
-    public Builder url(@NotNull URL url) {
-      this.url = url;
-      return this;
-    }
-
-    public PipelineExecutionApi build() {
-      if (workspace == null) {
-        throw new IllegalStateException("Workspace must be specified.");
-      }
-      if (workspace.getAuthContext() == null) {
-        throw new IllegalStateException("Workspace must specify AuthContext");
-      }
-      workspace.getAuthContext().validate();
-      return new PipelineExecutionApiImpl(workspace, url);
-    }
-  }
 }

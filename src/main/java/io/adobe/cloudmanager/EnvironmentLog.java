@@ -20,8 +20,6 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import java.time.LocalDate;
-
 public interface EnvironmentLog {
 
 

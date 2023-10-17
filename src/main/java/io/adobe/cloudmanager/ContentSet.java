@@ -2,7 +2,6 @@ package io.adobe.cloudmanager;
 
 import java.util.Collection;
 import java.util.Set;
-
 import javax.validation.constraints.NotNull;
 
 import lombok.Value;

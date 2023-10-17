@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Repository;
@@ -41,7 +42,7 @@ public class RepositoryTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = RepositoryApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = new ApiBuilder<>(RepositoryApi.class).workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
   @Test

@@ -1,11 +1,7 @@
 package io.adobe.cloudmanager;
 
-import java.net.URL;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-
-import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.repository.RepositoryApiImpl;
 
 public interface RepositoryApi {
 
@@ -107,36 +103,4 @@ public interface RepositoryApi {
    */
   @NotNull
   Collection<String> listBranches(@NotNull Repository repository) throws CloudManagerApiException;
-
-  static Builder builder() {
-    return new Builder();
-  }
-
-  class Builder {
-    private Workspace workspace;
-    private URL url;
-
-    private Builder() {
-    }
-    public Builder workspace(@NotNull Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
-    public Builder url(@NotNull URL url) {
-      this.url = url;
-      return this;
-    }
-
-    public RepositoryApi build() {
-      if (workspace == null) {
-        throw new IllegalStateException("Workspace must be specified.");
-      }
-      if (workspace.getAuthContext() == null) {
-        throw new IllegalStateException("Workspace must specify AuthContext");
-      }
-      workspace.getAuthContext().validate();
-      return new RepositoryApiImpl(workspace, url);
-    }
-  }
 }

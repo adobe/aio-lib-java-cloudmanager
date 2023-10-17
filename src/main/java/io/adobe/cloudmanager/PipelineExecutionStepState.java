@@ -21,7 +21,6 @@ package io.adobe.cloudmanager;
  */
 
 import java.io.File;
-import java.io.OutputStream;
 import java.util.function.Predicate;
 
 import lombok.Getter;

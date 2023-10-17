@@ -14,6 +14,7 @@ import com.adobe.aio.workspace.Workspace;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineApi;
@@ -38,8 +39,8 @@ public class PipelineApiImpl implements PipelineApi {
     String baseUrl = url == null ? CLOUD_MANAGER_URL : url.toString();
     api = FeignUtil.getBuilder(workspace).errorDecoder(new ExceptionDecoder()).target(FeignApi.class, baseUrl);
     try {
-      executionApi = PipelineExecutionApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
-    } catch (MalformedURLException e) {
+      executionApi = new ApiBuilder<>(PipelineExecutionApi.class).workspace(workspace).url(new URL(baseUrl)).build();
+    } catch (CloudManagerApiException|MalformedURLException e) {
       // This shouldn't be possible to reach.
       throw new RuntimeException(e);
     }

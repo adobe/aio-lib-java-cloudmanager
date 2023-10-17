@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.ProgramApi;
@@ -59,7 +60,7 @@ class ProgramTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = ProgramApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = new ApiBuilder<>(ProgramApi.class).workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 
@@ -178,7 +179,7 @@ class ProgramTest extends AbstractApiTest {
     when(mock.getId()).thenReturn("1");
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/regions");
     client.when(list).respond(response().withBody(loadBodyJson("program/regions.json")));
-    Collection<Region> regions =  new ProgramImpl(mock, underTest).listRegions();
+    Collection<Region> regions = new ProgramImpl(mock, underTest).listRegions();
     assertEquals(3, regions.size());
     client.verify(list);
     client.clear(list);

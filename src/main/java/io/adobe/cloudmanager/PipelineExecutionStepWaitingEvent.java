@@ -1,6 +1,5 @@
 package io.adobe.cloudmanager;
 
-import java.time.OffsetDateTime;
 import javax.validation.constraints.NotNull;
 
 public interface PipelineExecutionStepWaitingEvent extends PipelineExecutionEvent {

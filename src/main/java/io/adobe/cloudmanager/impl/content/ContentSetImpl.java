@@ -3,13 +3,10 @@ package io.adobe.cloudmanager.impl.content;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.ContentFlow;
 import io.adobe.cloudmanager.ContentSet;
-import io.adobe.cloudmanager.ContentSetApi;
-import io.adobe.cloudmanager.impl.generated.ContentSetPath;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Delegate;

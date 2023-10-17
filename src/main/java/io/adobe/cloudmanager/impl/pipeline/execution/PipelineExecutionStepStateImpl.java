@@ -22,7 +22,6 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;

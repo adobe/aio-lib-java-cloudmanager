@@ -1,13 +1,9 @@
 package io.adobe.cloudmanager;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
-
-import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.pipeline.PipelineApiImpl;
 
 public interface PipelineApi {
 
@@ -153,37 +149,4 @@ public interface PipelineApi {
    */
   @NotNull
   Set<Variable> setVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
-
-
-  static Builder builder() {
-    return new Builder();
-  }
-
-  class Builder {
-    private Workspace workspace;
-    private URL url;
-
-    private Builder() {
-    }
-    public Builder workspace(@NotNull Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
-    public Builder url(@NotNull URL url) {
-      this.url = url;
-      return this;
-    }
-
-    public PipelineApi build() {
-      if (workspace == null) {
-        throw new IllegalStateException("Workspace must be specified.");
-      }
-      if (workspace.getAuthContext() == null) {
-        throw new IllegalStateException("Workspace must specify AuthContext");
-      }
-      workspace.getAuthContext().validate();
-      return new PipelineApiImpl(workspace, url);
-    }
-  }
 }

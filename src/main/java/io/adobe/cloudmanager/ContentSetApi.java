@@ -1,11 +1,7 @@
 package io.adobe.cloudmanager;
 
-import java.net.URL;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-
-import com.adobe.aio.workspace.Workspace;
-import io.adobe.cloudmanager.impl.content.ContentSetApiImpl;
 
 import static io.adobe.cloudmanager.ContentSet.*;
 
@@ -159,39 +155,4 @@ public interface ContentSetApi {
    */
   @NotNull
   ContentFlow cancelFlow(@NotNull String programId, @NotNull String id) throws CloudManagerApiException;
-
-  /**
-   * Builder to create an instance of this API.
-   *
-   * @return ContentSetApi builder
-   */
-  static Builder builder() {
-    return new Builder();
-  }
-
-  class Builder {
-    private Workspace workspace;
-    private URL url;
-
-    public Builder workspace(@NotNull Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
-    public Builder url(@NotNull URL url) {
-      this.url = url;
-      return this;
-    }
-
-    public ContentSetApi build() {
-      if (workspace == null) {
-        throw new IllegalStateException("Workspace must be specified.");
-      }
-      if (workspace.getAuthContext() == null) {
-        throw new IllegalStateException("Workspace must specify AuthContext");
-      }
-      workspace.getAuthContext().validate();
-      return new ContentSetApiImpl(workspace, url);
-    }
-  }
 }

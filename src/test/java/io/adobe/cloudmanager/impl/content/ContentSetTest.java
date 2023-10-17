@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager.content;
+package io.adobe.cloudmanager.impl.content;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.ContentFlow;
 import io.adobe.cloudmanager.ContentSet;
@@ -49,7 +50,7 @@ public class ContentSetTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = (ContentSetApiImpl) ContentSetApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = (ContentSetApiImpl) new ApiBuilder<>(ContentSetApi.class).workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 

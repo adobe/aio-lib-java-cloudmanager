@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
+import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.Tenant;
 import io.adobe.cloudmanager.TenantApi;
@@ -34,7 +35,7 @@ public class TenantTest extends AbstractApiTest {
           when(mock.build()).thenReturn(authInterceptor);
         }
     )) {
-      underTest = TenantApi.builder().workspace(workspace).url(new URL(baseUrl)).build();
+      underTest = new ApiBuilder<>(TenantApi.class).workspace(workspace).url(new URL(baseUrl)).build();
     }
   }
 
