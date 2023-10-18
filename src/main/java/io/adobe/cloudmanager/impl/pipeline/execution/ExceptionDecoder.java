@@ -22,19 +22,26 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
 
 import feign.Response;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.exception.PipelineRunningException;
 import io.adobe.cloudmanager.impl.exception.CloudManagerExceptionDecoder;
 import lombok.Getter;
 
 public class ExceptionDecoder extends CloudManagerExceptionDecoder {
 
+  private static final int NOT_FOUND = 404;
   private static final int BUSY = 412;
+
 
   @Override
   public Exception decode(String methodKey, Response response) {
     final int status = response.status();
-    ErrorType type;
+    ErrorType type = ErrorType.UNKNOWN;
     switch (methodKey) {
-      case "FeignApi#current(String,String)":       // Current
+      case "FeignApi#current(String,String)": {      // Current
+         if (status == NOT_FOUND) {
+           return new CurrentNotFoundException("Current execution not found.");
+         }
+      } // Intentional fall through.
       case "FeignApi#get(String,String,String)":    // Specific
       case "FeignApi#get(String)": {                // via Event
         type = ErrorType.GET;
@@ -42,7 +49,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
       }
       case "FeignApi#start(String,String)": {
         if (status == BUSY) {
-          type = ErrorType.ALREADY_RUNNING;
+          return new PipelineRunningException("Cannot create execution. Pipeline already running.");
         } else {
           type = ErrorType.START;
         }
@@ -82,18 +89,14 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.GET_STEP_STATE;
         break;
       }
-      default: {
-        type = ErrorType.UNKNOWN;
-      }
     }
-    return new CloudManagerApiException(String.format(type.message, getError(response)), status);
+    return new CloudManagerApiException(String.format(type.message, getError(response)));
   }
 
   @Getter
   private enum ErrorType {
     GET("Cannot get execution: %s."),
     START("Cannot create execution: %s."),
-    ALREADY_RUNNING("Cannot create execution. Pipeline already running."),
     ADVANCE("Cannot advance execution: %s."),
     CANCEL("Cannot cancel execution: %s."),
     GET_LOGS("Cannot get logs: %s."),

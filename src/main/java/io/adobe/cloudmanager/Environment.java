@@ -29,6 +29,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.adobe.cloudmanager.exception.DeleteInProgressException;
 import lombok.Getter;
 
 public interface Environment {
@@ -71,17 +72,19 @@ public interface Environment {
   /**
    * Delete this environment.
    *
+   * @throws DeleteInProgressException if the delete operation is already active
    * @throws CloudManagerApiException when any error occurs
    */
-  void delete() throws CloudManagerApiException;
+  void delete() throws DeleteInProgressException, CloudManagerApiException;
 
   /**
    * Delete this environment, with option to ignore resource deletion failure.
    *
    * @param ignoreFailure flag to ignore failures
+   * @throws DeleteInProgressException if the delete operation is already active
    * @throws CloudManagerApiException when any error occurs
    */
-  void delete(boolean ignoreFailure) throws CloudManagerApiException;
+  void delete(boolean ignoreFailure) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
    * Lists available logs of the specified type, for the number of days.

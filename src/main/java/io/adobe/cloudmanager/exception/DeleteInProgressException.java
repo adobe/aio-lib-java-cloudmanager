@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager;
+package io.adobe.cloudmanager.exception;
 
 /*-
  * #%L
@@ -20,29 +20,14 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import io.adobe.cloudmanager.CloudManagerApiException;
+
 /**
- * Represents exception states that may occur during interactions with the AdobeIO API.
+ * Specific exception type to represent the attempt to initiate a delete operation, which is already running.
  */
-public class CloudManagerApiException extends Exception {
-
-//  private int code;
-  private final String message;
-
-  public CloudManagerApiException(String message) {
-    this.message = message;
+public class DeleteInProgressException extends CloudManagerApiException {
+  public DeleteInProgressException(String message) {
+    super(message);
   }
-//
-//  public CloudManagerApiException(String message, int code) {
-//    this.message = message;
-//    this.code = code;
-//  }
-//
-//  public int getErrorCode() {
-//    return code;
-//  }
 
-  @Override
-  public String getMessage() {
-    return message;
-  }
 }

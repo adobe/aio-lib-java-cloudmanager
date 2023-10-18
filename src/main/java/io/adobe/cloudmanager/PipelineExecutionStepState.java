@@ -53,7 +53,7 @@ public interface PipelineExecutionStepState {
    *
    * @return the action
    */
-  String getAction();
+  StepAction getStepAction();
 
   /**
    * The current status of the pipeline execution step

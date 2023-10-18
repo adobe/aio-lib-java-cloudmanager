@@ -51,7 +51,7 @@ public class RepositoryApiImpl implements RepositoryApi {
   @Override
   public Collection<Repository> list(String programId) throws CloudManagerApiException {
     RepositoryList list = api.list(programId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getRepositories() == null ?
         Collections.emptyList() :
         list.getEmbedded().getRepositories().stream().map(r -> new RepositoryImpl(r, this)).collect(Collectors.toList());
   }
@@ -74,7 +74,7 @@ public class RepositoryApiImpl implements RepositoryApi {
   @Override
   public Collection<Repository> list(String programId, int start, int limit) throws CloudManagerApiException {
     RepositoryList list = api.list(programId, start, limit);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getRepositories() == null ?
         Collections.emptyList() :
         list.getEmbedded().getRepositories().stream().map(r -> new RepositoryImpl(r, this)).collect(Collectors.toList());
   }
@@ -97,7 +97,7 @@ public class RepositoryApiImpl implements RepositoryApi {
   @Override
   public Collection<String> listBranches(Repository repository) throws CloudManagerApiException {
     BranchList list = api.listBranches(repository.getProgramId(), repository.getId());
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getBranches() == null ?
         Collections.emptyList() :
         list.getEmbedded().getBranches().stream().map(RepositoryBranch::getName).collect(Collectors.toList());
   }

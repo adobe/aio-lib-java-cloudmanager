@@ -29,8 +29,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
 
   @Override
   public Exception decode(String methodKey, Response response) {
-    final int status = response.status();
-    ErrorType type;
+    ErrorType type = ErrorType.UNKNOWN;
     switch (methodKey) {
       case "FeignApi#list(String)":
       case "FeignApi#list(String,int,int)":{
@@ -45,12 +44,9 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.BRANCHES;
         break;
       }
-      default: {
-        type = ErrorType.UNKNOWN;
-      }
     }
 
-    return new CloudManagerApiException(String.format(type.message, getError(response)), status);
+    return new CloudManagerApiException(String.format(type.message, getError(response)));
   }
 
   @Getter

@@ -23,6 +23,7 @@ package io.adobe.cloudmanager.impl.pipeline.execution;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Executable;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -43,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adobe.cloudmanager.ApiBuilder;
 import io.adobe.cloudmanager.Artifact;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.Metric;
 import io.adobe.cloudmanager.Pipeline;
 import io.adobe.cloudmanager.PipelineApi;
 import io.adobe.cloudmanager.PipelineExecution;
@@ -127,6 +129,18 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.when(get).respond(response().withStatusCode(NOT_FOUND_404.code()));
 
     assertFalse(executionApi.getCurrent("1", "1").isPresent(), "Correct state");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void current_failure_500() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution");
+    client.when(get).respond(response().withStatusCode(INTERNAL_SERVER_ERROR_500.code()));
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.getCurrent("1", "1"), "Exception was thrown.");
+    assertEquals(String.format("Cannot get execution: %s/api/program/1/pipeline/1/execution (500 Unknown).", baseUrl), exception.getMessage(), "Message was correct.");
     client.verify(get);
     client.clear(get);
   }
@@ -283,6 +297,31 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
+  void getStepState_empty(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getPipelineId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(json("{}")));
+    assertThrows(CloudManagerApiException.class, () -> executionApi.getStepState(new PipelineExecutionImpl(mock, executionApi), StepAction.codeQuality), "Exception thrown.");
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertThrows(CloudManagerApiException.class, () -> executionApi.getStepState(new PipelineExecutionImpl(mock, executionApi), StepAction.codeQuality), "Exception thrown.");
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{ \"_embedded\": { \"stepStates\": [] } }")));
+    assertThrows(CloudManagerApiException.class, () -> executionApi.getStepState(new PipelineExecutionImpl(mock, executionApi), StepAction.codeQuality), "Exception thrown.");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
   void getStepState_success(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -314,12 +353,11 @@ public class PipelineExecutionTest extends AbstractApiTest {
     assertEquals("Cannot find step with action 'build' for pipeline 1, execution 20.", exception.getMessage(), "Message was correct.");
 
     PipelineExecution execution = executions.get(0);
-    assertEquals("build", execution.getStep(StepAction.build).getAction(), "Correct step found.");
+    assertEquals(StepAction.build, execution.getStep(StepAction.build).getStepAction(), "Correct step found.");
 
     client.verify(list, VerificationTimes.once());
     client.clear(list);
   }
-
 
   @Test
   void getCurrentStep_via_execution(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
@@ -332,7 +370,7 @@ public class PipelineExecutionTest extends AbstractApiTest {
 
     List<PipelineExecution> executions = new ArrayList<>(executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi)));
     PipelineExecution execution = executions.get(0);
-    assertEquals("build", execution.getCurrentStep().getAction(), "Correct step found.");
+    assertEquals(StepAction.build, execution.getCurrentStep().getStepAction(), "Correct step found.");
 
     // No running step.
     execution = executions.get(1);
@@ -543,6 +581,25 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
+  void cancel_schedule_waiting() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(get).respond(response().withBody(loadBodyJson("pipeline/execution/schedule-waiting.json")));
+
+    HttpRequest put = request().withMethod("PUT")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/pipeline/1/execution/1/phase/4/step/2/cancel")
+        .withBody(json("{ \"cancel\": true }"));
+    client.when(put).respond(response().withStatusCode(ACCEPTED_202.code()));
+
+    executionApi.cancel("1", "1", "1");
+    client.verify(get, put);
+    client.clear(get);
+    client.clear(put);
+  }
+
+  @Test
   void cancel_deploy_waiting() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -604,14 +661,24 @@ public class PipelineExecutionTest extends AbstractApiTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
     client.when(get).respond(response().withBody(GET_BODY));
-    HttpRequest redirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/logs");
-    client.when(redirect).respond(response().withStatusCode(OK_200.code()).withBody(json("{}")));
 
+    HttpRequest redirect = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/logs");
+    client.when(redirect).respond(response().withStatusCode(OK_200.code()).withBody(""));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.getStepLogDownloadUrl("1", "1", "1", StepAction.validate), "Exception thrown");
     assertEquals("Log redirect for execution 1, action 'validate' did not exist.", exception.getMessage(), "Message was correct.");
-    client.verify(get, redirect);
-    client.clear(get);
+    client.verify(redirect);
     client.clear(redirect);
+
+    client.when(redirect).respond(response().withStatusCode(OK_200.code()).withBody(json("{}")));
+    exception = assertThrows(CloudManagerApiException.class, () -> executionApi.getStepLogDownloadUrl("1", "1", "1", StepAction.validate), "Exception thrown");
+    assertEquals("Log redirect for execution 1, action 'validate' did not exist.", exception.getMessage(), "Message was correct.");
+    client.verify(redirect);
+    client.clear(redirect);
+
+
+    client.verify(get, VerificationTimes.exactly(2));
+    client.clear(get);
+
   }
 
   @Test
@@ -673,6 +740,54 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
+  void getMetrics_empty(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getPipelineId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest exec = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(exec).respond(response().withBody(GET_BODY));
+
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
+    client.when(get).respond(response().withBody(json("{}")));
+    Collection<Metric> metrics = executionApi.getQualityGateResults(new PipelineExecutionImpl(mock, executionApi), StepAction.codeQuality);
+    assertTrue(metrics.isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{ \"metrics\": [] }")));
+    metrics = executionApi.getQualityGateResults(new PipelineExecutionImpl(mock, executionApi), StepAction.codeQuality);
+    assertTrue(metrics.isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.verify(exec, VerificationTimes.exactly(2));
+    client.clear(exec);
+  }
+
+  @Test
+  void getMetrics_success(@Mock io.adobe.cloudmanager.impl.generated.PipelineExecution mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getPipelineId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest exec = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1");
+    client.when(exec).respond(response().withBody(GET_BODY));
+
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/2/step/2/metrics");
+    client.when(get).respond(response().withBody(loadBodyJson("pipeline/execution/codeQuality-metrics.json")));
+
+    Collection<Metric> metrics = executionApi.getQualityGateResults(new PipelineExecutionImpl(mock, executionApi), StepAction.codeQuality);
+    assertEquals(8, metrics.size());
+
+    client.verify(exec, get);
+    client.clear(exec);
+    client.clear(get);
+  }
+
+  @Test
   void list_failure_403() {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -680,6 +795,33 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.list("1", "1"), "Exception thrown.");
     assertEquals(String.format("Cannot list executions: %s/api/program/1/pipeline/1/executions (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void list_empty(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/executions");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    Collection<PipelineExecution> executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi));
+    assertTrue(executions.isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi));
+    assertTrue(executions.isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"executions\": [] } }")));
+    executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi));
+    assertTrue(executions.isEmpty());
     client.verify(list);
     client.clear(list);
   }
@@ -716,6 +858,37 @@ public class PipelineExecutionTest extends AbstractApiTest {
   }
 
   @Test
+  void list_limit_empty(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/pipeline/1/executions")
+        .withQueryStringParameter("start", "0")
+        .withQueryStringParameter("limit", "30");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    Collection<PipelineExecution> executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi), 30);
+    assertTrue(executions.isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi), 30);
+    assertTrue(executions.isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"executions\": [] } }")));
+    executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi), 30);
+    assertTrue(executions.isEmpty());
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
   void list_limit_success(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -730,6 +903,37 @@ public class PipelineExecutionTest extends AbstractApiTest {
     Collection<PipelineExecution> executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi), 30);
     assertEquals(20, executions.size(), "Correct length.");
 
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void list_start_limit_empty(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/pipeline/1/executions")
+        .withQueryStringParameter("start", "10")
+        .withQueryStringParameter("limit", "10");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    Collection<PipelineExecution> executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi), 10, 10);
+    assertTrue(executions.isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi), 10, 10);
+    assertTrue(executions.isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"executions\": [] } }")));
+    executions = executionApi.list(new PipelineImpl(mock, pipelineApi, executionApi), 10, 10);
+    assertTrue(executions.isEmpty());
     client.verify(list);
     client.clear(list);
   }
@@ -768,6 +972,32 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.when(list).respond(response().withStatusCode(FORBIDDEN_403.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.listArtifacts(step), "Exception thrown.");
     assertEquals(String.format("Cannot list step artifacts: %s/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifacts (403 Forbidden).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void listArtifacts_empty(@Mock PipelineExecution execution, @Mock PipelineExecutionStepState step) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(execution.getProgramId()).thenReturn("1");
+    when(execution.getPipelineId()).thenReturn("1");
+    when(execution.getId()).thenReturn("1");
+    when(step.getExecution()).thenReturn(execution);
+    when(step.getPhaseId()).thenReturn("1");
+    when(step.getStepId()).thenReturn("1");
+
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/execution/1/phase/1/step/1/artifacts");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    Collection<Artifact> artifacts = executionApi.listArtifacts(step);
+    assertTrue(artifacts.isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    artifacts = executionApi.listArtifacts(step);
+    assertTrue(artifacts.isEmpty());
     client.verify(list);
     client.clear(list);
   }
@@ -1011,9 +1241,17 @@ public class PipelineExecutionTest extends AbstractApiTest {
 
   @Test
   void parseEvent_unknown() throws IOException {
-    String body = IOUtils.resourceToString("pipeline/execution/event/unknown.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.parseEvent(body), "Exception thrown.");
+    String unknown = IOUtils.resourceToString("pipeline/execution/event/unknown.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> executionApi.parseEvent(unknown), "Exception thrown.");
     assertEquals("Unknown event/object types (Event: 'https://ns.adobe.com/experience/cloudmanager/event/unknown', Object: 'https://ns.adobe.com/experience/cloudmanager/pipeline').", exception.getMessage(), "Message was correct.");
+
+    String unknownObj = IOUtils.resourceToString("pipeline/execution/event/unknown-object.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    exception = assertThrows(CloudManagerApiException.class, () -> executionApi.parseEvent(unknownObj), "Exception thrown.");
+    assertEquals("Unknown event/object types (Event: 'https://ns.adobe.com/experience/cloudmanager/event/started', Object: 'https://ns.adobe.com/experience/cloudmanager/pipeline').", exception.getMessage(), "Message was correct.");
+
+    String unknownEvent = IOUtils.resourceToString("pipeline/execution/event/unknown-event.json", Charset.defaultCharset(), PipelineExecutionTest.class.getClassLoader());
+    exception = assertThrows(CloudManagerApiException.class, () -> executionApi.parseEvent(unknownEvent), "Exception thrown.");
+    assertEquals("Unknown event/object types (Event: 'https://ns.adobe.com/experience/cloudmanager/event/unknown', Object: 'https://ns.adobe.com/experience/cloudmanager/execution-step-state').", exception.getMessage(), "Message was correct.");
   }
 
   @Test
@@ -1163,20 +1401,19 @@ public class PipelineExecutionTest extends AbstractApiTest {
     client.when(get).respond(response().withBody(GET_BODY));
 
     PipelineExecution execution = executionApi.get("1", "1", "1");
-    Optional<PipelineExecutionStepState> step = execution.getStep((s) -> StepAction.deploy.name().equals(s.getAction()));
+    Optional<PipelineExecutionStepState> step = execution.getStep((s) -> StepAction.deploy == s.getStepAction());
     assertTrue(step.isEmpty());
 
     step = execution.getStep(PipelineExecutionStepState.IS_CURRENT);
     assertTrue(step.isPresent());
-    assertEquals(StepAction.build.name(), step.get().getAction());
+    assertEquals(StepAction.build, step.get().getStepAction());
 
     step = execution.getStep(PipelineExecutionStepState.IS_RUNNING);
     assertTrue(step.isPresent());
-    assertEquals(StepAction.build.name(), step.get().getAction());
+    assertEquals(StepAction.build, step.get().getStepAction());
 
     client.verify(get);
     client.clear(get);
   }
-
 
 }

@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager;
+package io.adobe.cloudmanager.impl.pipeline.execution;
 
 /*-
  * #%L
@@ -20,29 +20,10 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-/**
- * Represents exception states that may occur during interactions with the AdobeIO API.
- */
-public class CloudManagerApiException extends Exception {
+import io.adobe.cloudmanager.CloudManagerApiException;
 
-//  private int code;
-  private final String message;
-
-  public CloudManagerApiException(String message) {
-    this.message = message;
-  }
-//
-//  public CloudManagerApiException(String message, int code) {
-//    this.message = message;
-//    this.code = code;
-//  }
-//
-//  public int getErrorCode() {
-//    return code;
-//  }
-
-  @Override
-  public String getMessage() {
-    return message;
+public class CurrentNotFoundException extends CloudManagerApiException {
+  public CurrentNotFoundException(String message) {
+    super(message);
   }
 }

@@ -75,6 +75,11 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
   }
 
   @Override
+  public StepAction getStepAction() {
+    return StepAction.valueOf(delegate.getAction());
+  }
+
+  @Override
   public Status getStatusState() {
     return Status.valueOf(getStatus().getValue());
   }
@@ -91,27 +96,27 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
 
   @Override
   public void getLog(File dir) throws CloudManagerApiException {
-    String downloadUrl = client.getStepLogDownloadUrl(execution, StepAction.valueOf(getAction()));
-    String filename = String.format("pipeline-%s-execution-%s-%s.txt", execution.getPipelineId(), execution.getId(), getAction());
+    String downloadUrl = client.getStepLogDownloadUrl(execution, getStepAction());
+    String filename = String.format("pipeline-%s-execution-%s-%s.txt", execution.getPipelineId(), execution.getId(), getStepAction());
 
     try {
       File downloaded = new File(dir, filename);
       FileUtils.copyInputStreamToFile(new URL(downloadUrl).openStream(), downloaded);
     } catch (IOException e) {
-      throw new CloudManagerApiException(String.format("Cannot download log for pipeline %s, execution %s, step '%s' to %s/%s (Cause: %s).", execution.getPipelineId(), execution.getId(), getAction(), dir, filename, e.getClass().getName()));
+      throw new CloudManagerApiException(String.format("Cannot download log for pipeline %s, execution %s, step '%s' to %s/%s (Cause: %s).", execution.getPipelineId(), execution.getId(), getStepAction(), dir, filename, e.getClass().getName()));
     }
   }
 
   @Override
   public void getLog(String name, File dir) throws CloudManagerApiException {
-    String downloadUrl = client.getStepLogDownloadUrl(execution, StepAction.valueOf(getAction()), name);
-    String filename = String.format("pipeline-%s-execution-%s-%s-%s.txt", execution.getPipelineId(), execution.getId(), getAction(), name);
+    String downloadUrl = client.getStepLogDownloadUrl(execution, getStepAction(), name);
+    String filename = String.format("pipeline-%s-execution-%s-%s-%s.txt", execution.getPipelineId(), execution.getId(), getStepAction(), name);
 
     try {
       File downloaded = new File(dir, filename);
       FileUtils.copyInputStreamToFile(new URL(downloadUrl).openStream(), downloaded);
     } catch (IOException e) {
-      throw new CloudManagerApiException(String.format("Cannot download '%s' log for pipeline %s, execution %s, step '%s' to %s/%s (Cause: %s).", name, execution.getPipelineId(), execution.getId(), getAction(), dir, filename, e.getClass().getName()));
+      throw new CloudManagerApiException(String.format("Cannot download '%s' log for pipeline %s, execution %s, step '%s' to %s/%s (Cause: %s).", name, execution.getPipelineId(), execution.getId(), getStepAction(), dir, filename, e.getClass().getName()));
     }
   }
 
@@ -121,7 +126,7 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
     try {
       JsonGenerator gen = jsonFactory.createGenerator(writer);
       gen.writeStartObject();
-      if (ACTION_APPROVAL.equals(getAction())) {
+      if (StepAction.approval == getStepAction()) {
         gen.writeBooleanField("approved", true);
       } else {
         gen.writeFieldName("metrics");
@@ -144,13 +149,13 @@ public class PipelineExecutionStepStateImpl extends io.adobe.cloudmanager.impl.g
     try {
       JsonGenerator gen = jsonFactory.createGenerator(writer);
       gen.writeStartObject();
-      if (ACTION_APPROVAL.equals(getAction())) {
+      if (StepAction.approval == getStepAction()) {
         gen.writeBooleanField("approved", false);
       } else if (io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING.equals(getStatus()) &&
-          !ACTION_SCHEDULE.equals(getAction()) && !ACTION_DEPLOY.equals(getAction())) {
+          StepAction.schedule != getStepAction() && StepAction.deploy != getStepAction()) {
         gen.writeBooleanField("override", false);
       } else if (io.adobe.cloudmanager.impl.generated.PipelineExecutionStepState.StatusEnum.WAITING.equals(getStatus()) &&
-          ACTION_DEPLOY.equals(getAction())) {
+          StepAction.deploy == getStepAction()) {
         gen.writeBooleanField("resume", false);
       } else {
         gen.writeBooleanField("cancel", true);

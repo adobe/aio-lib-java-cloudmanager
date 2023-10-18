@@ -68,7 +68,7 @@ public class ProgramApiImpl implements ProgramApi {
   @Override
   public Collection<Program> list(String tenantId) throws CloudManagerApiException {
     ProgramList list = api.list(tenantId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getPrograms() == null ?
         Collections.emptyList() :
         list.getEmbedded().getPrograms().stream().map(p -> new ProgramImpl(p, this)).collect(Collectors.toList());
   }
@@ -80,7 +80,7 @@ public class ProgramApiImpl implements ProgramApi {
   @Override
   public Collection<Region> listRegions(String programId) throws CloudManagerApiException {
     RegionsList list = api.listRegions(programId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getRegions() == null ?
         Collections.emptySet() :
         list.getEmbedded().getRegions().stream().map(r -> Region.fromValue(r.getName())).collect(Collectors.toList());
   }

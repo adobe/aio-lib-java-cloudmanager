@@ -9,9 +9,9 @@ package io.adobe.cloudmanager.impl.pipeline;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,9 @@ import io.adobe.cloudmanager.PipelineApi;
 import io.adobe.cloudmanager.PipelineUpdate;
 import io.adobe.cloudmanager.Variable;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
+import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
 import io.adobe.cloudmanager.impl.generated.PipelinePhase;
+import io.adobe.cloudmanager.impl.program.ProgramImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -114,7 +116,7 @@ class PipelineTest extends AbstractApiTest {
     when(workspace.getApiKey()).thenReturn(sessionId);
 
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipelines");
-    client.when(list).respond(response().withStatusCode(OK_200.code()).withBody(""));
+    client.when(list).respond(response().withStatusCode(OK_200.code()).withBody("{}"));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.list("1"), "Exception thrown.");
     assertEquals("Cannot find pipelines for program 1.", exception.getMessage(), "Message was correct");
 
@@ -137,19 +139,19 @@ class PipelineTest extends AbstractApiTest {
   }
 
   @Test
-  void list_success() throws CloudManagerApiException {
+  void list_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getId()).thenReturn("1");
 
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipelines");
     client.when(list).respond(response().withStatusCode(OK_200.code()).withBody(LIST_BODY));
-    Collection<Pipeline> pipelines = underTest.list("1");
+    Collection<Pipeline> pipelines = underTest.list(new ProgramImpl(mock, null));
     assertEquals(4, pipelines.size(), "Correct pipelines list length");
 
     client.verify(list);
     client.clear(list);
   }
-
 
   @Test
   void get_failure_404() {
@@ -366,6 +368,31 @@ class PipelineTest extends AbstractApiTest {
   }
 
   @Test
+  void listVariables_empty(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipeline/1/variables");
+
+    Pipeline pipeline = new PipelineImpl(mock, underTest, null);
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(pipeline.getVariables().isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(pipeline.getVariables().isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"variables\": [] } }")));
+    assertTrue(pipeline.getVariables().isEmpty());
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
   void listVariables_success(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -377,6 +404,30 @@ class PipelineTest extends AbstractApiTest {
     assertEquals(2, variables.size(), "Correct response");
     client.verify(list);
     client.clear(list);
+  }
+
+  @Test
+  void setVariables_failure_400() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest patch = request().withMethod("PATCH")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withHeader("Content-Type", "application/json")
+        .withPath("/api/program/1/pipeline/1/variables")
+        .withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\", \"type\": \"string\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
+    client.when(patch).respond(
+        response()
+            .withStatusCode(BAD_REQUEST_400.code())
+            .withHeader("Content-Type", "application/problem+json")
+            .withBody(json("{ \"type\" : \"http://ns.adobe.com/adobecloud/validation-exception\", \"errors\": [ \"some error\" ] }"))
+    );
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).build();
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setVariables("1", "1", var1, var2), "Exception thrown.");
+    assertEquals(String.format("Cannot set pipeline variables: %s/api/program/1/pipeline/1/variables (400 Bad Request) - Validation Error(s): some error.", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(patch);
+    client.clear(patch);
   }
 
   @Test
@@ -394,6 +445,38 @@ class PipelineTest extends AbstractApiTest {
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setVariables("1", "1", var1, var2), "Exception thrown.");
     assertEquals(String.format("Cannot set pipeline variables: %s/api/program/1/pipeline/1/variables (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(patch);
+    client.clear(patch);
+  }
+
+  // I have no idea how this case would be possible, but it was in the original impl, so i'm keeping it, and therefore need a test for it.
+  @Test
+  void setVariables_empty(@Mock io.adobe.cloudmanager.impl.generated.Pipeline mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest patch = request().withMethod("PATCH")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withHeader("Content-Type", "application/json")
+        .withPath("/api/program/1/pipeline/1/variables")
+        .withBody(json("[ { \"name\": \"foo\", \"value\": \"bar\", \"type\": \"string\" }, { \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\" } ]"));
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).build();
+
+    Pipeline pipeline = new PipelineImpl(mock, underTest, null);
+    client.when(patch).respond(response().withBody(json("{}")));
+    assertTrue(pipeline.setVariables(var1, var2).isEmpty());
+    client.verify(patch);
+    client.clear(patch);
+
+    client.when(patch).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(pipeline.setVariables(var1, var2).isEmpty());
+    client.verify(patch);
+    client.clear(patch);
+
+    client.when(patch).respond(response().withBody(json("{ \"_embedded\": { \"variables\": [] } }")));
+    assertTrue(pipeline.setVariables(var1, var2).isEmpty());
     client.verify(patch);
     client.clear(patch);
   }
@@ -426,7 +509,7 @@ class PipelineTest extends AbstractApiTest {
   }
 
   @Test
-  void predicates() throws CloudManagerApiException {
+  void list_predicates() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/pipelines");

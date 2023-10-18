@@ -32,6 +32,8 @@ import io.adobe.cloudmanager.ProgramApi;
 import io.adobe.cloudmanager.Region;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
 import io.adobe.cloudmanager.impl.generated.EmbeddedProgram;
+import io.adobe.cloudmanager.impl.generated.Tenant;
+import io.adobe.cloudmanager.impl.tenant.TenantImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -45,6 +47,7 @@ import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
+import static org.mockserver.model.JsonBody.*;
 
 class ProgramTest extends AbstractApiTest {
   private static final JsonBody GET_BODY = loadBodyJson("program/get.json");
@@ -141,20 +144,32 @@ class ProgramTest extends AbstractApiTest {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
-    client.when(list).respond(response().withBody("{}"));
-    Collection<Program> programs = underTest.list("1");
-    assertTrue(programs.isEmpty(), "Empty body returns zero length list");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"programs\": [] } }")));
+    assertTrue(underTest.list("1").isEmpty());
     client.verify(list);
     client.clear(list);
   }
 
   @Test
-  void list_success() throws CloudManagerApiException {
+  void list_success(@Mock Tenant mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getId()).thenReturn("1");
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/tenant/1/programs");
     client.when(list).respond(response().withBody(LIST_BODY));
-    Collection<Program> programs = underTest.list("1");
+    Collection<Program> programs = underTest.list(new TenantImpl(mock));
     assertEquals(7, programs.size(), "Correct length of program list");
     client.verify(list);
     client.clear(list);
@@ -168,6 +183,28 @@ class ProgramTest extends AbstractApiTest {
     client.when(list).respond(response().withStatusCode(NOT_FOUND_404.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listRegions("1"), "Exception thrown for 404");
     assertEquals(String.format("Cannot retrieve program regions: %s/api/program/1/regions (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(list);
+    client.clear(list);
+  }
+
+
+  @Test
+  void listRegions_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/regions");
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(underTest.listRegions("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.listRegions("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"regions\": [] } }")));
+    assertTrue(underTest.listRegions("1").isEmpty());
     client.verify(list);
     client.clear(list);
   }

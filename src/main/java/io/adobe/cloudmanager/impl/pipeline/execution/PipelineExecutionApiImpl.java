@@ -69,7 +69,6 @@ import static io.adobe.cloudmanager.Constants.*;
 
 public class PipelineExecutionApiImpl implements PipelineExecutionApi {
 
-
   private static final String STARTED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/started";
   private static final String WAITING_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/waiting";
   private static final String ENDED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/ended";
@@ -84,7 +83,6 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   private final ObjectMapper mapper;
   private final FeignApi api;
 
-
   public PipelineExecutionApiImpl(Workspace workspace, URL url) {
     this.workspace = workspace;
     mapper = FeignUtil.getMapper();
@@ -98,11 +96,8 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
     try {
       io.adobe.cloudmanager.impl.generated.PipelineExecution current = api.current(programId, pipelineId);
       return Optional.of(new PipelineExecutionImpl(current, this));
-    } catch (CloudManagerApiException ex) {
-      if (ex.getErrorCode() == 404) {
-        return Optional.empty();
-      }
-      throw ex;
+    } catch (CurrentNotFoundException ex) {
+      return Optional.empty();
     }
   }
 
@@ -182,7 +177,7 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   public Collection<Metric> getQualityGateResults(PipelineExecution execution, StepAction action) throws CloudManagerApiException {
     PipelineExecutionStepStateImpl step = getStepState(execution, action);
     PipelineStepMetrics psm = api.getStepMetrics(execution.getProgramId(), execution.getPipelineId(), execution.getId(), step.getPhaseId(), step.getStepId());
-    return psm.getMetrics().isEmpty() ?
+    return psm.getMetrics() == null || psm.getMetrics().isEmpty() ?
         Collections.emptyList() :
         psm.getMetrics().stream().map(MetricImpl::new).collect(Collectors.toList());
   }
@@ -191,7 +186,7 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   public Collection<PipelineExecution> list(String programId, String pipelineId) throws CloudManagerApiException {
     PipelineExecutionListRepresentation list = api.list(programId, pipelineId);
 
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getExecutions() == null ?
         Collections.emptyList() :
         list.getEmbedded().getExecutions().stream().map(pe -> new PipelineExecutionImpl(pe, this)).collect(Collectors.toList());
   }
@@ -214,7 +209,7 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   @Override
   public Collection<PipelineExecution> list(String programId, String pipelineId, int start, int limit) throws CloudManagerApiException {
     PipelineExecutionListRepresentation list = api.list(programId, pipelineId, start, limit);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getExecutions() == null ?
         Collections.emptyList() :
         list.getEmbedded().getExecutions().stream().map(pe -> new PipelineExecutionImpl(pe, this)).collect(Collectors.toList());
   }
@@ -227,7 +222,7 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   @Override
   public Collection<Artifact> listArtifacts(PipelineExecutionStepState step) throws CloudManagerApiException {
     ArtifactList list = api.listArtifacts(step.getExecution().getProgramId(), step.getExecution().getPipelineId(), step.getExecution().getId(), step.getPhaseId(), step.getStepId());
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getArtifacts() == null ?
         Collections.emptyList() :
         list.getEmbedded().getArtifacts().stream().map(a -> new ArtifactImpl(a, this, step)).collect(Collectors.toList());
   }
@@ -266,6 +261,7 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
 
     return event;
   }
+
   @Override
   public PipelineExecutionEvent parseEvent(String eventBody, Map<String, String> requestHeaders) throws CloudManagerApiException {
     if (!verifier.verify(eventBody, workspace.getApiKey(), requestHeaders)) {
@@ -332,7 +328,7 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
 
   private PipelineExecutionStepStateImpl getStepStateDetail(PipelineExecutionImpl execution, StepAction action) throws CloudManagerApiException {
     return getStep(execution,
-        s -> s.getAction().equals(action.name()),
+        s -> s.getStepAction() == action,
         String.format("Cannot find step state for action '%s' on execution %s.", action, execution.getId()));
   }
 

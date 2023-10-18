@@ -47,6 +47,7 @@ import static org.mockito.Mockito.*;
 import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 import static org.mockserver.model.HttpStatusCode.*;
+import static org.mockserver.model.JsonBody.*;
 
 public class RepositoryTest extends AbstractApiTest {
   private static final JsonBody GET_BODY = loadBodyJson("repository/get.json");
@@ -79,13 +80,38 @@ public class RepositoryTest extends AbstractApiTest {
     client.clear(list);
   }
 
+
   @Test
-  void list_success() throws CloudManagerApiException {
+  void list_empty() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/repositories");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"repositories\": [] } }")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+  }
+
+
+  @Test
+  void list_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/repositories");
     client.when(list).respond(response().withBody(LIST_BODY));
-    Collection<Repository> repositories = underTest.list("1");
+    Collection<Repository> repositories = underTest.list(new ProgramImpl(mock, null));
     assertEquals(3, repositories.size());
     client.verify(list);
     client.clear(list);
@@ -110,7 +136,7 @@ public class RepositoryTest extends AbstractApiTest {
   }
 
   @Test
-  void list_with_limit_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
+  void list_limit_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getId()).thenReturn("1");
@@ -130,8 +156,38 @@ public class RepositoryTest extends AbstractApiTest {
     client.clear(list);
   }
 
+
   @Test
-  void list_with_start_limit_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
+  void list_start_limit_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+
+    HttpRequest list = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/repositories")
+        .withQueryStringParameter("start", "10")
+        .withQueryStringParameter("limit", "10");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(underTest.list("1", 10, 10).isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.list("1", 10, 10).isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"repositories\": [] } }")));
+    assertTrue(underTest.list("1", 10, 10).isEmpty());
+    client.verify(list);
+    client.clear(list);
+  }
+
+
+  @Test
+  void list_start_limit_success(@Mock EmbeddedProgram mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getId()).thenReturn("1");
@@ -194,6 +250,31 @@ public class RepositoryTest extends AbstractApiTest {
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listBranches(mock), "Exception thrown.");
     assertEquals(String.format("Cannot retrieve repository branches: %s/api/program/1/repository/1/branches (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+
+  @Test
+  void listBranches_empty(@Mock Repository mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/repository/1/branches");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(underTest.listBranches(mock).isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.listBranches(mock).isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"branches\": [] } }")));
+    assertTrue(underTest.listBranches(mock).isEmpty());
     client.verify(list);
     client.clear(list);
   }

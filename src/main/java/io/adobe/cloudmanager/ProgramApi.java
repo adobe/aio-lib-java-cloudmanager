@@ -51,6 +51,8 @@ public interface ProgramApi {
    */
   void delete(@NotNull Program program) throws CloudManagerApiException;
 
+  // TODO: Add NewRelic API?
+
   /**
    * List all programs for a Tenant
    *
@@ -80,4 +82,6 @@ public interface ProgramApi {
    */
   @NotNull
   Collection<Region> listRegions(@NotNull String programId) throws CloudManagerApiException;
+
+  // TODO: Add Creation Operation?
 }

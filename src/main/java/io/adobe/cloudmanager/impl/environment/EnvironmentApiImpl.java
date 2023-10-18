@@ -50,6 +50,7 @@ import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.EnvironmentApi;
 import io.adobe.cloudmanager.EnvironmentLog;
 import io.adobe.cloudmanager.LogOption;
+import io.adobe.cloudmanager.Program;
 import io.adobe.cloudmanager.Region;
 import io.adobe.cloudmanager.RegionDeployment;
 import io.adobe.cloudmanager.Variable;
@@ -78,7 +79,7 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   @Override
   public Collection<Environment> list(String programId) throws CloudManagerApiException {
     EnvironmentList list = api.list(programId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getEnvironments() == null ?
         Collections.emptyList() :
         list.getEmbedded().getEnvironments().stream().map(e -> new EnvironmentImpl(e, this)).collect(Collectors.toList());
   }
@@ -86,7 +87,7 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   @Override
   public Collection<Environment> list(String programId, Environment.Type type) throws CloudManagerApiException {
     EnvironmentList list = api.list(programId, type.name().toLowerCase());
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getEnvironments() == null ?
         Collections.emptyList() :
         list.getEmbedded().getEnvironments().stream().map(e -> new EnvironmentImpl(e, this)).collect(Collectors.toList());
   }
@@ -173,7 +174,7 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   @Override
   public Collection<RegionDeployment> listRegionDeployments(String programId, String environmentId) throws CloudManagerApiException {
     RegionDeploymentList list = api.listDeployments(programId, environmentId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getRegionDeployments() == null ?
         Collections.emptyList() :
         list.getEmbedded().getRegionDeployments().stream().map(rd -> new RegionDeploymentImpl(rd, this)).collect(Collectors.toList());
   }
@@ -210,7 +211,7 @@ public class EnvironmentApiImpl implements EnvironmentApi {
   @Override
   public Set<Variable> getVariables(String programId, String environmentId) throws CloudManagerApiException {
     VariableList list = api.getVariables(programId, environmentId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getVariables() == null ?
         Collections.emptySet() :
         list.getEmbedded().getVariables().stream().map(VariableImpl::new).collect(Collectors.toSet());
   }
@@ -231,8 +232,8 @@ public class EnvironmentApiImpl implements EnvironmentApi {
                 .service(v.getService()))
             .collect(Collectors.toList());
     VariableList list = api.setVariables(programId, environmentId, toSet);
-    return list.getEmbedded() == null ?
-        Collections.emptySet() :
+    return list.getEmbedded() == null || list.getEmbedded().getVariables() == null ?
+        Collections.emptySet() : // How did creating a variable result in none returned?
         list.getEmbedded().getVariables().stream().map(VariableImpl::new).collect(Collectors.toSet());
   }
 
@@ -253,19 +254,16 @@ public class EnvironmentApiImpl implements EnvironmentApi {
 
   @Override
   public Optional<Environment> get(String programId, Predicate<Environment> predicate) throws CloudManagerApiException {
-    EnvironmentList list = api.list(programId);
-    return list.getEmbedded() == null ?
-        Optional.empty() :
-        list.getEmbedded().getEnvironments().stream().map(e -> (Environment) new EnvironmentImpl(e, this)).filter(predicate).findFirst();
+    return list(programId).stream().filter(predicate).findFirst();
   }
 
   @Override
   public Collection<EnvironmentLog> downloadLogs(String programId, String environmentId, LogOption logOption, int days, File dir) throws CloudManagerApiException {
     EnvironmentLogs logs = api.listLogs(programId, environmentId, logOption.getService(), logOption.getName(), days);
-    List<io.adobe.cloudmanager.impl.generated.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
-    if (downloads == null || downloads.isEmpty()) {
+    if (logs.getEmbedded() == null || logs.getEmbedded().getDownloads() == null || logs.getEmbedded().getDownloads().isEmpty()) {
       return Collections.emptyList();
     }
+    List<io.adobe.cloudmanager.impl.generated.EnvironmentLog> downloads = logs.getEmbedded().getDownloads();
     List<EnvironmentLog> downloaded = new ArrayList<>();
     for (io.adobe.cloudmanager.impl.generated.EnvironmentLog log : downloads) {
       String logfileName = String.format("environment-%s-%s-%s-%s.log.gz", environmentId, log.getService(), log.getName(), log.getDate());

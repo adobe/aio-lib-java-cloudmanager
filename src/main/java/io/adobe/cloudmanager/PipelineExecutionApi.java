@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
+import io.adobe.cloudmanager.exception.PipelineRunningException;
+
 public interface PipelineExecutionApi {
 
   /**
@@ -68,10 +70,11 @@ public interface PipelineExecutionApi {
    *
    * @param pipeline the {@link Pipeline} to start
    * @return the new execution
+   * @throws PipelineRunningException if the pipeline is already running
    * @throws CloudManagerApiException when any error occurs
    */
   @NotNull
-  PipelineExecution start(@NotNull Pipeline pipeline) throws CloudManagerApiException;
+  PipelineExecution start(@NotNull Pipeline pipeline) throws PipelineRunningException, CloudManagerApiException;
 
   /**
    * Returns the specified execution of the pipeline.

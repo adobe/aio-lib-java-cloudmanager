@@ -33,10 +33,8 @@ import io.adobe.cloudmanager.CloudManagerApiException;
 import io.adobe.cloudmanager.ContentFlow;
 import io.adobe.cloudmanager.ContentSet;
 import io.adobe.cloudmanager.ContentSetApi;
+import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.impl.AbstractApiTest;
-import io.adobe.cloudmanager.impl.content.ContentFlowImpl;
-import io.adobe.cloudmanager.impl.content.ContentSetApiImpl;
-import io.adobe.cloudmanager.impl.content.ContentSetImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -82,6 +80,28 @@ public class ContentSetTest extends AbstractApiTest {
     client.when(get).respond(response().withStatusCode(BAD_REQUEST_400.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.list("1"), "Exception thrown");
     assertEquals(String.format("Cannot list content sets: %s/api/program/1/contentSets (400 Bad Request).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void list_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/contentSets");
+
+    client.when(get).respond(response().withBody(json("{}")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{ \"_embedded\": { \"contentSets\": [] } }")));
+    assertTrue(underTest.list("1").isEmpty());
     client.verify(get);
     client.clear(get);
   }
@@ -158,6 +178,31 @@ public class ContentSetTest extends AbstractApiTest {
     client.when(get).respond(response().withStatusCode(BAD_REQUEST_400.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.list("1", 10, 10), "Exception thrown");
     assertEquals(String.format("Cannot list content sets: %s/api/program/1/contentSets?start=10&limit=10 (400 Bad Request).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void list_start_limit_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/contentSets")
+        .withQueryStringParameter("start", "10")
+        .withQueryStringParameter("limit", "10");
+    client.when(get).respond(response().withBody(json("{}")));
+    assertTrue(underTest.list("1", 10, 10).isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.list("1", 10, 10).isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{ \"_embedded\": { \"contentSets\": [] } }")));
+    assertTrue(underTest.list("1", 10, 10).isEmpty());
     client.verify(get);
     client.clear(get);
   }
@@ -415,6 +460,28 @@ public class ContentSetTest extends AbstractApiTest {
   }
 
   @Test
+  void listFlows_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/contentFlows");
+
+    client.when(get).respond(response().withBody(json("{}")));
+    assertTrue(underTest.listFlows("1").isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{\"_embedded\": {} }")));
+    assertTrue(underTest.listFlows("1").isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{\"_embedded\": { \"contentFlows\": [] } }")));
+    assertTrue(underTest.listFlows("1").isEmpty());
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
   void listFlows_success() throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -423,15 +490,26 @@ public class ContentSetTest extends AbstractApiTest {
     List<ContentFlow> list = (List<ContentFlow>) underTest.listFlows("1");
     assertEquals(2, list.size(), "List correct.");
     ContentFlow cf = list.get(0);
-    ContentFlow.Results results = cf.getExportResults();
-    assertEquals("0", results.getErrorCode());
-    assertEquals("Success", results.getMessage());
-    assertEquals("20 Exported", results.getDetails().get(0));
+
+    assertEquals(Environment.Tier.AUTHOR, cf.getEnvironmentTier());
+    ContentFlow.Results exportResults = cf.getExportResults();
+    assertEquals("0", exportResults.getErrorCode());
+    assertEquals("Success", exportResults.getMessage());
+    assertEquals("20 Exported", exportResults.getDetails().get(0));
+    assertEquals(exportResults, cf.getExportResults());
+
+
+    ContentFlow.Results importResults = cf.getImportResults();
+    assertEquals("0", importResults.getErrorCode());
+    assertEquals("Success", importResults.getMessage());
+    assertEquals("20 Imported", importResults.getDetails().get(0));
+    assertEquals(importResults, cf.getImportResults());
+
     cf = list.get(1);
-    results = cf.getExportResults();
-    assertEquals("0", results.getErrorCode());
-    assertEquals("Running", results.getMessage());
-    assertEquals("5 Exported", results.getDetails().get(0));
+    exportResults = cf.getExportResults();
+    assertEquals("0", exportResults.getErrorCode());
+    assertEquals("Running", exportResults.getMessage());
+    assertEquals("5 Exported", exportResults.getDetails().get(0));
     client.verify(get);
     client.clear(get);
   }
@@ -483,6 +561,33 @@ public class ContentSetTest extends AbstractApiTest {
     client.when(get).respond(response().withStatusCode(BAD_REQUEST_400.code()));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.listFlows("1", 10, 10), "Exception thrown");
     assertEquals(String.format("Cannot list content flows: %s/api/program/1/contentFlows?start=10&limit=10 (400 Bad Request).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(get);
+    client.clear(get);
+  }
+
+  @Test
+  void listFlows_start_limit_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest get = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/contentFlows")
+        .withQueryStringParameter("start", "10")
+        .withQueryStringParameter("limit", "10");
+
+    client.when(get).respond(response().withBody(json("{}")));
+    assertTrue(underTest.listFlows("1", 10, 10).isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{\"_embedded\": {} }")));
+    assertTrue(underTest.listFlows("1", 10, 10).isEmpty());
+    client.verify(get);
+    client.clear(get);
+
+    client.when(get).respond(response().withBody(json("{\"_embedded\": { \"contentFlows\": [] } }")));
+    assertTrue(underTest.listFlows("1", 10, 10).isEmpty());
     client.verify(get);
     client.clear(get);
   }

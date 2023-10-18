@@ -75,7 +75,6 @@ public class EnvironmentTest extends AbstractApiTest {
 
   private final LogOption option = LogOption.builder().service("author").name("aemerror").build();
 
-
   @BeforeEach
   void before() throws Exception {
     try (MockedConstruction<AuthInterceptor.Builder> ignored = mockConstruction(AuthInterceptor.Builder.class,
@@ -97,6 +96,28 @@ public class EnvironmentTest extends AbstractApiTest {
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.list("1"), "Exception thrown.");
     assertEquals(String.format("Cannot list environments: %s/api/program/1/environments (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void list_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environments");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.list("1").isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"embedded\": { \"environments\": [] } }")));
+    assertTrue(underTest.list("1").isEmpty());
     client.verify(list);
     client.clear(list);
   }
@@ -126,6 +147,28 @@ public class EnvironmentTest extends AbstractApiTest {
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.list("1", Environment.Type.DEV), "Exception thrown.");
     assertEquals(String.format("Cannot list environments: %s/api/program/1/environments?type=dev (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct.");
+    client.verify(list);
+    client.clear(list);
+  }
+
+  @Test
+  void list_type_empty() throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environments").withQueryStringParameter("type", "dev");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(underTest.list("1", Environment.Type.DEV).isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(underTest.list("1", Environment.Type.DEV).isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"embedded\": { \"environments\": [] } }")));
+    assertTrue(underTest.list("1", Environment.Type.DEV).isEmpty());
     client.verify(list);
     client.clear(list);
   }
@@ -233,8 +276,9 @@ public class EnvironmentTest extends AbstractApiTest {
         .withQueryStringParameter("ignoreResourcesDeletionResult", "false");
     client.when(del).respond(response().withBody(GET_BODY));
 
+    underTest.delete("1", "1");
     underTest.delete(new EnvironmentImpl(mock, underTest));
-    client.verify(del);
+    client.verify(del, VerificationTimes.exactly(2));
     client.clear(del);
   }
 
@@ -325,7 +369,7 @@ public class EnvironmentTest extends AbstractApiTest {
         .withQueryStringParameter("service", "author")
         .withQueryStringParameter("name", "aemerror")
         .withQueryStringParameter("date", date.toString());
-    client.when(get).respond(response().withStatusCode(OK_200.code()).withBody("{}"));
+    client.when(get).respond(response().withStatusCode(OK_200.code()).withBody(json("{}")));
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.getLogDownloadUrl("1", "1", option, date), "Exception thrown.");
     assertEquals(String.format("Log redirect for environment 1, service 'author', log name 'aemerror', date '%s' did not exist.", date), exception.getMessage(), "Message was correct.");
     client.verify(get);
@@ -390,6 +434,33 @@ public class EnvironmentTest extends AbstractApiTest {
     client.verify(list);
     client.clear(list);
   }
+
+
+  @Test
+  void listsRegionDeployments_empty(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    Environment environment = new EnvironmentImpl(mock, underTest);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environment/1/regionDeployments");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(environment.listRegionDeployments().isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(environment.listRegionDeployments().isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"regionDeployments\": [] } }")));
+    assertTrue(environment.listRegionDeployments().isEmpty());
+    client.verify(list);
+    client.clear(list);
+  }
+
 
   @Test
   void listsRegionDeployments_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
@@ -596,6 +667,32 @@ public class EnvironmentTest extends AbstractApiTest {
   }
 
   @Test
+  void listVariables_empty(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+    Environment environment = new EnvironmentImpl(mock, underTest);
+    HttpRequest list = request().withMethod("GET").withHeader(API_KEY_HEADER, sessionId).withPath("/api/program/1/environment/1/variables");
+
+    client.when(list).respond(response().withBody(json("{}")));
+    assertTrue(environment.getVariables().isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(environment.getVariables().isEmpty());
+    client.verify(list);
+    client.clear(list);
+
+    client.when(list).respond(response().withBody(json("{ \"_embedded\": { \"variables\": [] } }")));
+    assertTrue(environment.getVariables().isEmpty());
+    client.verify(list);
+    client.clear(list);
+  }
+
+
+  @Test
   void listVariables_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
@@ -607,6 +704,34 @@ public class EnvironmentTest extends AbstractApiTest {
     assertEquals(2, variables.size(), "Correct response");
     client.verify(list);
     client.clear(list);
+  }
+
+
+  @Test
+  void setVariables_failure_400() {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    HttpRequest patch = request().withMethod("PATCH")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withHeader("Content-Type", "application/json")
+        .withPath("/api/program/1/environment/1/variables")
+        .withBody(json("[ { " +
+            "\"name\": \"foo\", \"value\": \"bar\", \"type\": \"string\", \"service\": \"author\" }, " +
+            "{ \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\", \"service\": \"publish\" " +
+            "} ]"));
+    client.when(patch).respond(
+        response()
+            .withStatusCode(BAD_REQUEST_400.code())
+            .withHeader("Content-Type", "application/problem+json")
+            .withBody(json("{ \"type\" : \"http://ns.adobe.com/adobecloud/validation-exception\", \"errors\": [ \"some error\" ] }"))
+    );
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service("author").build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service("publish").build();
+
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setVariables("1", "1", var1, var2), "Exception thrown.");
+    assertEquals(String.format("Cannot set environment variables: %s/api/program/1/environment/1/variables (400 Bad Request) - Validation Error(s): some error.", baseUrl), exception.getMessage(), "Message was correct");
+    client.verify(patch);
+    client.clear(patch);
   }
 
   @Test
@@ -631,8 +756,44 @@ public class EnvironmentTest extends AbstractApiTest {
     client.clear(patch);
   }
 
+  // I have no idea how this case would be possible, but it was in the original impl, so i'm keeping it, and therefore need a test for it.
   @Test
-  void setVariables_failure_404(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+  void setVariables_empty(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(mock.getProgramId()).thenReturn("1");
+    when(mock.getId()).thenReturn("1");
+
+    Environment environment = new EnvironmentImpl(mock, underTest);
+    HttpRequest patch = request().withMethod("PATCH")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withHeader("Content-Type", "application/json")
+        .withPath("/api/program/1/environment/1/variables")
+        .withBody(json("[ { " +
+            "\"name\": \"foo\", \"value\": \"bar\", \"type\": \"string\", \"service\": \"author\" }, " +
+            "{ \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\", \"service\": \"publish\" " +
+            "} ]"));
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service("author").build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service("publish").build();
+
+    client.when(patch).respond(response().withBody(json("{}")));
+    assertTrue(environment.setVariables(var1, var2).isEmpty());
+    client.verify(patch);
+    client.clear(patch);
+
+    client.when(patch).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(environment.setVariables(var1, var2).isEmpty());
+    client.verify(patch);
+    client.clear(patch);
+
+    client.when(patch).respond(response().withBody(json("{ \"_embedded\": { \"variables\": [] } }")));
+    assertTrue(environment.setVariables(var1, var2).isEmpty());
+    client.verify(patch);
+    client.clear(patch);
+  }
+
+  @Test
+  void setVariables_success(@Mock io.adobe.cloudmanager.impl.generated.Environment mock) throws CloudManagerApiException {
     String sessionId = UUID.randomUUID().toString();
     when(workspace.getApiKey()).thenReturn(sessionId);
     when(mock.getProgramId()).thenReturn("1");
@@ -692,7 +853,39 @@ public class EnvironmentTest extends AbstractApiTest {
     client.clear(getFile);
   }
 
+
   @Test
+  void downloadLogs_empty(@Mock io.adobe.cloudmanager.impl.generated.Environment environment) throws CloudManagerApiException, IOException {
+    File outputDir = Files.createTempDirectory("log-output").toFile();
+    String sessionId = UUID.randomUUID().toString();
+    when(workspace.getApiKey()).thenReturn(sessionId);
+    when(environment.getId()).thenReturn("1");
+    when(environment.getProgramId()).thenReturn("1");
+
+    HttpRequest listLogs = request()
+        .withMethod("GET")
+        .withHeader(API_KEY_HEADER, sessionId)
+        .withPath("/api/program/1/environment/1/logs")
+        .withQueryStringParameter("service", "author")
+        .withQueryStringParameter("name", "aemerror")
+        .withQueryStringParameter("days", "1");
+    client.when(listLogs).respond(response().withBody(json("{}")));
+    assertTrue(new EnvironmentImpl(environment, underTest).downloadLogs(option, 1, outputDir).isEmpty());
+    client.verify(listLogs);
+    client.clear(listLogs);
+
+    client.when(listLogs).respond(response().withBody(json("{ \"_embedded\": {} }")));
+    assertTrue(new EnvironmentImpl(environment, underTest).downloadLogs(option, 1, outputDir).isEmpty());
+    client.verify(listLogs);
+    client.clear(listLogs);
+
+    client.when(listLogs).respond(response().withBody(json("{ \"_embedded\": { \"downloads\": [] } }")));
+    assertTrue(new EnvironmentImpl(environment, underTest).downloadLogs(option, 1, outputDir).isEmpty());
+    client.verify(listLogs);
+    client.clear(listLogs);
+  }
+
+    @Test
   void downloadLogs_success(@Mock io.adobe.cloudmanager.impl.generated.Environment environment) throws CloudManagerApiException, IOException {
     byte[] zipBytes = IOUtils.toByteArray(EnvironmentTest.class.getClassLoader().getResourceAsStream("file.log.gz"));
     LocalDate firstDate = LocalDate.now().withYear(2019).withMonth(9).withDayOfMonth(8);
@@ -764,13 +957,11 @@ public class EnvironmentTest extends AbstractApiTest {
     List<Environment> environments = new ArrayList<>(underTest.list("1"));
     assertNotNull(environments.get(0).getDeveloperConsoleUrl());
 
-    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> environments.get(1).getDeveloperConsoleUrl(),"Exception was thrown");
+    CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> environments.get(1).getDeveloperConsoleUrl(), "Exception was thrown");
     assertEquals("Environment 2 [TestProgram_stage] does not appear to support Developer Console.", exception.getMessage(), "Message was correct.");
     client.verify(list);
     client.clear(list);
-
   }
-
 
   @Test
   void get_via_predicate() throws CloudManagerApiException {

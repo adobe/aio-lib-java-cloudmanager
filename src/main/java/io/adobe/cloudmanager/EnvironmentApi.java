@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
+
+import io.adobe.cloudmanager.exception.DeleteInProgressException;
 
 public interface EnvironmentApi {
 
@@ -80,17 +82,19 @@ public interface EnvironmentApi {
    *
    * @param programId     the program id of the environment context
    * @param environmentId the environment to delete
+   * @throws DeleteInProgressException if the delete operation is already active
    * @throws CloudManagerApiException when any error occurs
    */
-  void delete(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
+  void delete(@NotNull String programId, @NotNull String environmentId) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
    * Delete the specified environment.
    *
    * @param environment the environment to delete
+   * @throws DeleteInProgressException if the delete operation is already active
    * @throws CloudManagerApiException when any error occurs
    */
-  void delete(@NotNull Environment environment) throws CloudManagerApiException;
+  void delete(@NotNull Environment environment) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
    * Delete the specified environment, with option to ignore resource deletion failure.
@@ -98,18 +102,20 @@ public interface EnvironmentApi {
    * @param programId     the program id of the environment context
    * @param environmentId the environment to delete
    * @param ignoreFailure flag to ignore failures
+   * @throws DeleteInProgressException if the delete operation is already active
    * @throws CloudManagerApiException when any error occurs
    */
-  void delete(@NotNull String programId, @NotNull String environmentId, boolean ignoreFailure) throws CloudManagerApiException;
+  void delete(@NotNull String programId, @NotNull String environmentId, boolean ignoreFailure) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
    * Delete the specified environment.
    *
    * @param environment   the environment to delete
    * @param ignoreFailure flag to ignore failures
+   * @throws DeleteInProgressException if the delete operation is already active
    * @throws CloudManagerApiException when any error occurs
    */
-  void delete(@NotNull Environment environment, boolean ignoreFailure) throws CloudManagerApiException;
+  void delete(@NotNull Environment environment, boolean ignoreFailure) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
    * Lists logs of the specified type for the environment

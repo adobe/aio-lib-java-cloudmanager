@@ -22,6 +22,7 @@ package io.adobe.cloudmanager.impl.environment;
 
 import feign.Response;
 import io.adobe.cloudmanager.CloudManagerApiException;
+import io.adobe.cloudmanager.exception.DeleteInProgressException;
 import io.adobe.cloudmanager.impl.exception.CloudManagerExceptionDecoder;
 import lombok.Getter;
 
@@ -30,7 +31,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
   @Override
   public Exception decode(String methodKey, Response response) {
     final int status = response.status();
-    ErrorType type;
+    ErrorType type = ErrorType.UNKNOWN;
     switch (methodKey) {
       case "FeignApi#list(String)":
       case "FeignApi#list(String,String)": {
@@ -47,7 +48,7 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
       }
       case "FeignApi#delete(String,String,boolean)": {
         if (status == 400) {
-          type = ErrorType.DELETE_IN_PROGRESS;
+          return new DeleteInProgressException("Cannot delete environment, deletion in progress.");
         } else {
           type = ErrorType.DELETE;
         }
@@ -86,11 +87,8 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
         type = ErrorType.RESET;
         break;
       }
-      default: {
-        type = ErrorType.UNKNOWN;
-      }
     }
-    return new CloudManagerApiException(String.format(type.message, getError(response)), status);
+    return new CloudManagerApiException(String.format(type.message, getError(response)));
   }
 
   @Getter
@@ -99,7 +97,6 @@ public class ExceptionDecoder extends CloudManagerExceptionDecoder {
     CREATE("Cannot create environment: %s."),
     GET("Cannot get environment: %s"),
     DELETE("Cannot delete environment: %s."),
-    DELETE_IN_PROGRESS("Cannot delete environment, deletion in progress."),
     GET_LOGS("Cannot get logs: %s."),
     GET_DEPLOYMENT("Cannot get region deployment: %s."),
     LIST_DEPLOYMENTS("Cannot list region deployments: %s."),

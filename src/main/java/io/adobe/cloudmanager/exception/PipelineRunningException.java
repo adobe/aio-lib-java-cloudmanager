@@ -1,4 +1,4 @@
-package io.adobe.cloudmanager;
+package io.adobe.cloudmanager.exception;
 
 /*-
  * #%L
@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,29 +20,15 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import io.adobe.cloudmanager.CloudManagerApiException;
+
 /**
- * Represents exception states that may occur during interactions with the AdobeIO API.
+ * Specific exception type to represent the attempt to start a Pipeline, which is already running.
  */
-public class CloudManagerApiException extends Exception {
+public class PipelineRunningException extends CloudManagerApiException {
 
-//  private int code;
-  private final String message;
-
-  public CloudManagerApiException(String message) {
-    this.message = message;
+  public PipelineRunningException(String message) {
+    super(message);
   }
-//
-//  public CloudManagerApiException(String message, int code) {
-//    this.message = message;
-//    this.code = code;
-//  }
-//
-//  public int getErrorCode() {
-//    return code;
-//  }
 
-  @Override
-  public String getMessage() {
-    return message;
-  }
 }

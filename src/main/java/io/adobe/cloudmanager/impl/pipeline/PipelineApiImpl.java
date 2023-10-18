@@ -77,11 +77,6 @@ public class PipelineApiImpl implements PipelineApi {
   }
 
   @Override
-  public Collection<Pipeline> list(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
-    return listDetails(programId, predicate);
-  }
-
-  @Override
   public PipelineImpl get(String programId, String pipelineId) throws CloudManagerApiException {
     return new PipelineImpl(api.get(programId, pipelineId), this, executionApi);
   }
@@ -135,7 +130,7 @@ public class PipelineApiImpl implements PipelineApi {
   @Override
   public Set<Variable> getVariables(String programId, String pipelineId) throws CloudManagerApiException {
     VariableList list = api.getVariables(programId, pipelineId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getVariables() == null ?
         Collections.emptySet() :
         list.getEmbedded().getVariables().stream().map(VariableImpl::new).collect(Collectors.toSet());
   }
@@ -155,7 +150,7 @@ public class PipelineApiImpl implements PipelineApi {
                 .service(v.getService()))
             .collect(Collectors.toList());
     VariableList list = api.setVariables(programId, pipelineId, toSet);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getVariables() == null ?
         Collections.emptySet() :
         list.getEmbedded().getVariables().stream().map(VariableImpl::new).collect(Collectors.toSet());
   }
@@ -165,9 +160,14 @@ public class PipelineApiImpl implements PipelineApi {
     return setVariables(pipeline.getProgramId(), pipeline.getId(), variables);
   }
 
+  @Override
+  public Collection<Pipeline> list(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
+    return listDetails(programId, predicate);
+  }
+
   private Collection<Pipeline> listDetails(String programId, Predicate<Pipeline> predicate) throws CloudManagerApiException {
     PipelineList list = api.list(programId);
-    if (list == null || list.getEmbedded() == null || list.getEmbedded().getPipelines() == null) {
+    if (list.getEmbedded() == null || list.getEmbedded().getPipelines() == null) {
       throw new CloudManagerApiException(String.format("Cannot find pipelines for program %s.", programId));
     }
 

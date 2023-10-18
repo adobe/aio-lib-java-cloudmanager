@@ -56,7 +56,7 @@ public class ContentSetApiImpl implements ContentSetApi {
   @Override
   public Collection<ContentSet> list(String programId) throws CloudManagerApiException {
     ContentSetList list = api.list(programId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getContentSets() == null ?
         Collections.emptyList() :
         list.getEmbedded().getContentSets().stream().map(cs -> new ContentSetImpl(cs, this)).collect(Collectors.toList());
   }
@@ -69,7 +69,7 @@ public class ContentSetApiImpl implements ContentSetApi {
   @Override
   public Collection<ContentSet> list(String programId, int start, int limit) throws CloudManagerApiException {
     ContentSetList list = api.list(programId, start, limit);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getContentSets() == null ?
         Collections.emptyList() :
         list.getEmbedded().getContentSets().stream().map(cs -> new ContentSetImpl(cs, this)).collect(Collectors.toList());
   }
@@ -105,7 +105,7 @@ public class ContentSetApiImpl implements ContentSetApi {
   @Override
   public Collection<ContentFlow> listFlows(String programId) throws CloudManagerApiException {
     ContentFlowList list = api.listFlows(programId);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getContentFlows() == null ?
         Collections.emptyList() :
         list.getEmbedded().getContentFlows().stream().map(cf -> new ContentFlowImpl(cf, this)).collect(Collectors.toList());
   }
@@ -118,7 +118,7 @@ public class ContentSetApiImpl implements ContentSetApi {
   @Override
   public Collection<ContentFlow> listFlows(String programId, int start, int limit) throws CloudManagerApiException {
     ContentFlowList list = api.listFlows(programId, start, limit);
-    return list.getEmbedded() == null ?
+    return list.getEmbedded() == null || list.getEmbedded().getContentFlows() == null ?
         Collections.emptyList() :
         list.getEmbedded().getContentFlows().stream().map(cf -> new ContentFlowImpl(cf, this)).collect(Collectors.toList());
   }

@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,17 +46,6 @@ public interface PipelineApi {
    */
   @NotNull
   Collection<Pipeline> list(@NotNull Program program) throws CloudManagerApiException;
-
-  /**
-   * Lists all pipelines in the program that meet the predicate clause.
-   *
-   * @param programId the program id
-   * @param predicate a predicate used to filter the pipelines
-   * @return a list of pipelines
-   * @throws CloudManagerApiException when any error occurs
-   */
-  @NotNull
-  Collection<Pipeline> list(@NotNull String programId, @NotNull Predicate<Pipeline> predicate) throws CloudManagerApiException;
 
   /**
    * Returns the pipeline within the specified program, with the specified id.
@@ -169,4 +158,15 @@ public interface PipelineApi {
    */
   @NotNull
   Set<Variable> setVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Lists all pipelines in the program that meet the predicate clause.
+   *
+   * @param programId the program id
+   * @param predicate a predicate used to filter the pipelines
+   * @return a list of pipelines
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  Collection<Pipeline> list(@NotNull String programId, @NotNull Predicate<Pipeline> predicate) throws CloudManagerApiException;
 }
