@@ -20,47 +20,48 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import lombok.Getter;
-
+/**
+ * Code Quality Metric
+ */
 public interface Metric {
 
   /**
-   * Severity of the metric
+   * Severity of the metric.
    *
    * @return severity
    **/
   Severity getSev();
 
   /**
-   * Whether metric is considered passed
+   * Whether metric is considered passed.
    *
    * @return passed
    **/
   Boolean isPassed();
 
   /**
-   * Whether user override the failed metric
+   * Whether user override the failed metric.
    *
    * @return override
    **/
   Boolean isOverride();
 
   /**
-   * Expected value for the metric
+   * Expected value for the metric.
    *
    * @return actualValue
    **/
   String getActualValue();
 
   /**
-   * The metrics comparator
+   * The metrics comparator.
    *
    * @return the comparator
    */
   Comparator getComp();
 
   /**
-   * KPI identifier
+   * KPI identifier.
    *
    * @return kpi
    **/

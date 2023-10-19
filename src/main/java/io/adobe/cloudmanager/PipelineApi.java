@@ -9,9 +9,9 @@ package io.adobe.cloudmanager;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,13 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Pipeline API
+ */
 public interface PipelineApi {
 
   /**
-   * Lists all pipelines within the specified program.
+   * List all pipelines within the specified program.
    *
    * @param programId the program id
    * @return the list of pipelines
@@ -38,7 +41,7 @@ public interface PipelineApi {
   Collection<Pipeline> list(@NotNull String programId) throws CloudManagerApiException;
 
   /**
-   * Lists all pipelines within the specified program.
+   * List all pipelines within the specified program.
    *
    * @param program the program
    * @return the list of pipelines
@@ -48,7 +51,7 @@ public interface PipelineApi {
   Collection<Pipeline> list(@NotNull Program program) throws CloudManagerApiException;
 
   /**
-   * Returns the pipeline within the specified program, with the specified id.
+   * Get the pipeline within the specified program.
    *
    * @param programId  the program id
    * @param pipelineId the pipeline id
@@ -59,7 +62,7 @@ public interface PipelineApi {
   Pipeline get(@NotNull String programId, String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Delete the specified pipeline.
+   * Delete the pipeline.
    *
    * @param programId  the program context for the pipeline
    * @param pipelineId the id of the pipeline to delete
@@ -68,7 +71,7 @@ public interface PipelineApi {
   void delete(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Delete the specified pipeline.
+   * Delete the pipeline.
    *
    * @param pipeline the pipeline to delete.
    * @throws CloudManagerApiException when any error occurs
@@ -76,7 +79,7 @@ public interface PipelineApi {
   void delete(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
-   * Changes details about a pipeline.
+   * Change details about a pipeline.
    *
    * @param programId  the program id for pipeline context
    * @param pipelineId the id of the pipeline to change
@@ -88,7 +91,7 @@ public interface PipelineApi {
   Pipeline update(@NotNull String programId, @NotNull String pipelineId, @NotNull PipelineUpdate updates) throws CloudManagerApiException;
 
   /**
-   * Changes details about a pipeline.
+   * Change details about a pipeline.
    *
    * @param pipeline the pipeline to update
    * @param updates  the updates to make to the pipeline
@@ -99,7 +102,7 @@ public interface PipelineApi {
   Pipeline update(@NotNull Pipeline pipeline, @NotNull PipelineUpdate updates) throws CloudManagerApiException;
 
   /**
-   * Invalidates the build cache for the specified pipeline.
+   * Invalidate the build cache for the pipeline.
    *
    * @param programId  the program id for the pipeline context
    * @param pipelineId the id of the pipeline
@@ -108,7 +111,7 @@ public interface PipelineApi {
   void invalidateCache(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Invalidates the build cache for the specified pipeline.
+   * Invalidate the build cache for the pipeline.
    *
    * @param pipeline the pipeline
    * @throws CloudManagerApiException when any error occurs
@@ -116,7 +119,7 @@ public interface PipelineApi {
   void invalidateCache(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
-   * Lists all variables associated with the specified pipeline
+   * List all variables associated with the pipeline
    *
    * @param programId  the program id of the pipeline
    * @param pipelineId the pipeline id
@@ -127,7 +130,7 @@ public interface PipelineApi {
   Set<Variable> getVariables(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Lists all variables associated with the specified pipeline
+   * List all variables associated with the pipeline
    *
    * @param pipeline the pipeline context
    * @return set of variables in the pipeline
@@ -137,7 +140,7 @@ public interface PipelineApi {
   Set<Variable> getVariables(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
-   * Sets the specified variables in the pipeline
+   * Set the variables in the pipeline
    *
    * @param programId  the program context for the pipeline
    * @param pipelineId the pipeline id
@@ -149,7 +152,7 @@ public interface PipelineApi {
   Set<Variable> setVariables(@NotNull String programId, @NotNull String pipelineId, Variable... variables) throws CloudManagerApiException;
 
   /**
-   * Sets the specified variables in the pipeline
+   * Set the variables in the pipeline
    *
    * @param pipeline  the pipeline context
    * @param variables the variables to set
@@ -160,7 +163,7 @@ public interface PipelineApi {
   Set<Variable> setVariables(@NotNull Pipeline pipeline, Variable... variables) throws CloudManagerApiException;
 
   /**
-   * Lists all pipelines in the program that meet the predicate clause.
+   * List all pipelines in the program that meet the predicate clause.
    *
    * @param programId the program id
    * @param predicate a predicate used to filter the pipelines

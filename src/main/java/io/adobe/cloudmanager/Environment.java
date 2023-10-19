@@ -32,6 +32,9 @@ import org.apache.commons.lang3.StringUtils;
 import io.adobe.cloudmanager.exception.DeleteInProgressException;
 import lombok.Getter;
 
+/**
+ * An Environment definition.
+ */
 public interface Environment {
 
   /**
@@ -42,7 +45,7 @@ public interface Environment {
   String getId();
 
   /**
-   * The id of the program context for the environment.
+   * The id of the program context of this environment.
    *
    * @return the program id
    */
@@ -56,7 +59,7 @@ public interface Environment {
   String getName();
 
   /**
-   * Returns the type of this environment
+   * The type of this environment
    *
    * @return type
    */
@@ -87,7 +90,7 @@ public interface Environment {
   void delete(boolean ignoreFailure) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
-   * Lists available logs of the specified type, for the number of days.
+   * List available logs of the specified type, for the number of days.
    *
    * @param option the log option details
    * @param days   number of days of logs to list
@@ -97,7 +100,7 @@ public interface Environment {
   Collection<EnvironmentLog> listLogs(@NotNull LogOption option, int days) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the log file for download.
+   * Retrieve the fully qualified URL to the log file for download.
    *
    * @param option the type of logs to download
    * @param date   the date of the logs to download
@@ -115,7 +118,7 @@ public interface Environment {
   Collection<RegionDeployment> listRegionDeployments() throws CloudManagerApiException;
 
   /**
-   * Adds a deployment to the specified region
+   * Add a deployment to the specified region.
    *
    * @param region the region
    * @throws CloudManagerApiException when any error occurs
@@ -123,7 +126,7 @@ public interface Environment {
   void addRegionDeployment(Region region) throws CloudManagerApiException;
 
   /**
-   * Removes the the the deployment from the specified region
+   * Remove the the the deployment from the specified region.
    *
    * @param region the region
    * @throws CloudManagerApiException when any error occurs
@@ -131,15 +134,15 @@ public interface Environment {
   void removeRegionDeployment(Region region) throws CloudManagerApiException;
 
   /**
-   * Lists the variables configured in this environment.
+   * List the variables configured in this environment.
    *
-   * @return the list of variables
+   * @return the set of variables
    * @throws CloudManagerApiException when any error occurs
    */
   Set<Variable> getVariables() throws CloudManagerApiException;
 
   /**
-   * Sets the specified variables on this environment.
+   * Set the variables on this environment.
    *
    * @param variables the variables to set
    * @return the complete list of variables in this environment
@@ -148,9 +151,9 @@ public interface Environment {
   Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
 
   /**
-   * Resets this environment, if it is of type RDE.
+   * Reset this environment, if it is of type RDE. Any other type of environment results in a NOOP
    *
-   * @throws CloudManagerApiException when any error occurs;
+   * @throws CloudManagerApiException when any error occurs
    */
   void reset() throws CloudManagerApiException;
 
@@ -163,7 +166,7 @@ public interface Environment {
   String getDeveloperConsoleUrl() throws CloudManagerApiException;
 
   /**
-   * Downloads the logs for this environment
+   * Download the logs for this environment, to the specified directory.
    *
    * @param logOption the log file reference
    * @param days      the number of days to download
@@ -183,6 +186,9 @@ public interface Environment {
     RDE
   }
 
+  /**
+   * Tiers within an Environment
+   */
   enum Tier {
     AUTHOR,
     PREVIEW,
@@ -190,7 +196,7 @@ public interface Environment {
   }
 
   /**
-   * Predicate to use for retrieving an environment based on its name.
+   * Predicate to use for retrieving an environment based on its name. Match is exact.
    */
   final class NamePredicate implements Predicate<Environment> {
 

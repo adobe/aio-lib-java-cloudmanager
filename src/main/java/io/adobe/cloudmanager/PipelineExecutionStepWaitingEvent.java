@@ -22,12 +22,15 @@ package io.adobe.cloudmanager;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Event representing that a Pipeline Execution Step has entered a waiting state.
+ */
 public interface PipelineExecutionStepWaitingEvent extends PipelineExecutionEvent {
 
   /**
-   * The Pipeline Execution associated with the event.
+   * Get the Pipeline Execution Step associated with the event.
    *
-   * @return the pipeline execution
+   * @return the pipeline execution step
    * @throws CloudManagerApiException when any error occurs
    */
   @NotNull

@@ -25,38 +25,41 @@ import javax.validation.constraints.NotNull;
 import io.adobe.cloudmanager.impl.VariableImpl;
 import lombok.Getter;
 
+/**
+ * A Variable definition.
+ */
 public interface Variable {
 
   /**
-   * Returns the name of this variable.
+   * The name of this variable.
    *
    * @return variable name
    */
   String getName();
 
   /**
-   * Returns the value of this variable, if not a secret. Secrets are always blank when fetch from remote system.
+   * The value of this variable, if not a secret. Secrets are always blank when fetch from remote system.
    *
    * @return the value or blank
    */
   String getValue();
 
   /**
-   * Returns the variable type
+   * The variable type
    *
    * @return the variable type
    */
   Type getVarType();
 
   /**
-   * Returns the service associated with the variable
+   * The Tier associated with the variable. Only valid when in the context of an {@link Environment}.
    *
-   * @return the service
+   * @return the tier
    */
-  String getService();
+  Environment.Tier getTier();
 
   /**
-   * Used to build a Variable definition to pass to API creation operations.
+   * Build a Variable definition to pass to API creation operations.
    *
    * @return a Variable builder
    */
@@ -86,8 +89,8 @@ public interface Variable {
       return this;
     }
 
-    public Builder service(@NotNull String service) {
-      delegate.service(service);
+    public Builder service(@NotNull Environment.Tier tier) {
+      delegate.service(tier.name().toLowerCase());
       return this;
     }
 

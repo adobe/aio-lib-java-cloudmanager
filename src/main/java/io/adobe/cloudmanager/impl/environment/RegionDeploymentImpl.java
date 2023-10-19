@@ -20,27 +20,33 @@ package io.adobe.cloudmanager.impl.environment;
  * #L%
  */
 
-import io.adobe.cloudmanager.EnvironmentApi;
+import java.io.Serializable;
+
+import io.adobe.cloudmanager.Region;
 import io.adobe.cloudmanager.RegionDeployment;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import lombok.experimental.Delegate;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class RegionDeploymentImpl extends io.adobe.cloudmanager.impl.generated.RegionDeployment implements RegionDeployment {
+public class RegionDeploymentImpl implements RegionDeployment, Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @Delegate
   private final io.adobe.cloudmanager.impl.generated.RegionDeployment delegate;
-  @ToString.Exclude
-  @EqualsAndHashCode.Exclude
-  private final EnvironmentApi client;
 
-  public RegionDeploymentImpl(io.adobe.cloudmanager.impl.generated.RegionDeployment delegate, EnvironmentApi client) {
+  public RegionDeploymentImpl(io.adobe.cloudmanager.impl.generated.RegionDeployment delegate) {
     this.delegate = delegate;
-    this.client = client;
+  }
+
+  @Override
+  public String getId() {
+    return delegate.getId();
+  }
+
+  @Override
+  public Region getRegion() {
+    return Region.valueOf(delegate.getRegion());
   }
 
   @Override

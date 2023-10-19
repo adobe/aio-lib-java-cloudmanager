@@ -37,7 +37,7 @@ public class PipelineExecutionStepEndEventImpl implements PipelineExecutionStepE
 
   private final PipelineExecutionApiImpl client;
 
-  PipelineExecutionStepEndEventImpl(PipelineExecutionStepStartEventEvent delegate, PipelineExecutionApiImpl client) {
+  public PipelineExecutionStepEndEventImpl(PipelineExecutionStepStartEventEvent delegate, PipelineExecutionApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }

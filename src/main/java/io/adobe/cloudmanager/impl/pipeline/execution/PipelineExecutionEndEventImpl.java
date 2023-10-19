@@ -39,7 +39,7 @@ public class PipelineExecutionEndEventImpl implements PipelineExecutionEndEvent 
   @EqualsAndHashCode.Exclude
   private final PipelineExecutionApiImpl client;
 
-  PipelineExecutionEndEventImpl(PipelineExecutionEndEventEvent delegate, PipelineExecutionApiImpl client) {
+  public PipelineExecutionEndEventImpl(PipelineExecutionEndEventEvent delegate, PipelineExecutionApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }

@@ -55,6 +55,11 @@ public class ContentFlowImpl extends io.adobe.cloudmanager.impl.generated.Conten
   }
 
   @Override
+  public Status getFlowStatus() {
+    return Status.valueOf(getStatus().toUpperCase().replaceAll(" ", "_"));
+  }
+
+  @Override
   public Results getExportResults() {
     if (exportResults == null) {
       ContentFlowResultDetails cfrd = delegate.getResultDetails().getExportResult();

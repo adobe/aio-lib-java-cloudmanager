@@ -24,6 +24,8 @@ import lombok.Getter;
 
 /**
  * Represents possible regions for deployments, network, and other configurations.
+ * <p>
+ * See <a href="https://developer.adobe.com/experience-cloud/cloud-manager/guides/api-usage/creating-programs-and-environments/#creating-aem-cloud-service-environments">the documentation</a>.
  */
 @Getter
 public enum Region {

@@ -22,24 +22,16 @@ package io.adobe.cloudmanager;
 
 /**
  * Represents exception states that may occur during interactions with the AdobeIO API.
+ * <p>
+ * Special case exceptions exist for consumers to handle specific, potentially recoverable, errors.
  */
 public class CloudManagerApiException extends Exception {
 
-//  private int code;
   private final String message;
 
   public CloudManagerApiException(String message) {
     this.message = message;
   }
-//
-//  public CloudManagerApiException(String message, int code) {
-//    this.message = message;
-//    this.code = code;
-//  }
-//
-//  public int getErrorCode() {
-//    return code;
-//  }
 
   @Override
   public String getMessage() {

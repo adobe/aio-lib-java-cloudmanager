@@ -22,20 +22,25 @@ package io.adobe.cloudmanager;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.adobe.cloudmanager.impl.environment.LogOptionImpl;
 import io.adobe.cloudmanager.impl.generated.LogOptionRepresentation;
 
+/**
+ * Log Option used to identify log files for retrieval.
+ */
 public interface LogOption {
 
   /**
-   * Name of the service in environment. Example: author
+   * Name of the service in environment. Example: 'author'
    *
    * @return service
    **/
   String getService();
 
   /**
-   * Name of the log for service in environment. Example: aemerror
+   * Name of the log for service in environment. Example: 'aemerror'
    *
    * @return name
    **/
@@ -51,7 +56,7 @@ public interface LogOption {
   }
 
   /**
-   * Builds new instances of LogOptions
+   * Builds new instances of LogOptions.
    */
   class Builder {
     private final LogOptionRepresentation delegate;
@@ -70,7 +75,15 @@ public interface LogOption {
       return this;
     }
 
+    /**
+     * Create a new LogOption instance. Both Service and Name must be provided to this builder before calling this method.
+     *
+     * @return the LogOption
+     */
     public LogOption build() {
+      if (StringUtils.isBlank(delegate.getService()) || StringUtils.isBlank(delegate.getName())) {
+        throw new IllegalStateException("Log option must specify both Service and Name");
+      }
       return new LogOptionImpl(delegate);
     }
   }

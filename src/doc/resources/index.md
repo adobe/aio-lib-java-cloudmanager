@@ -14,8 +14,8 @@ Include via Maven:
 Example:
 ```
 <dependency>
-    <groupId>io.adobe.cloudmanager</groupId>
-    <artifactId>aio-lib-cloudmanager</artifactId>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
     <version>${project.version}</version>
 </dependency>
 ```
@@ -25,8 +25,8 @@ Example:
 The default library is Java11, to use the Java8 library, use the classifier.
 ```
 <dependency>
-    <groupId>io.adobe.cloudmanager</groupId>
-    <artifactId>aio-lib-cloudmanager</artifactId>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
     <version>${project.version}</version>
     <classifier>java8</classifier>
 </dependency>
@@ -52,25 +52,6 @@ Workspace workspace = Workspace.builder()
     .build();
 
 CloudManagerApi api = CloudManagerApi.builder().workspace(workspace).build();
-```
-
-
-#### JWT Access Token (Deprecated)
-
-JWT Access Tokens have been deprecated by AIO. They will continue to work until Jan 1, 2025. If you need to, you can create one using the now deprecated `IdentityManagementApi`. For example:
-
-```java
-PrivateKey privateKey;
-
-// Load the private key...
-
-// Values are from the API Integration configuration.
-AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
-IdentityManagementApi imApi = IdentityManagementApi.create();
-String token = imApi.authenticate(org);
-
-CloudManagerApi api = CloudManagerApi.create("Org Id", "API Key", token);
-List<EmbeddedProgram> programs = api.listPrograms();
 ```
 
 See the [JavaDocs](https://opensource.adobe.com/aio-lib-java-cloudmanager/apidocs/) for the API.

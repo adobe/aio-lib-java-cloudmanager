@@ -24,6 +24,9 @@ import java.util.List;
 
 import lombok.Value;
 
+/**
+ * A Content Flow operation.
+ */
 public interface ContentFlow {
 
   /**
@@ -41,35 +44,35 @@ public interface ContentFlow {
   String getContentSetId();
 
   /**
-   * The id of the Environment from which content is copied
+   * The id of the Environment from which content is copied.
    *
    * @return the source environment id
    */
   String getSrcEnvironmentId();
 
   /**
-   * The name of the Environment from which content is copied
+   * The name of the Environment from which content is copied.
    *
    * @return the source environment name
    */
   String getSrcEnvironmentName();
 
   /**
-   * The id of the Environment to which content is copied
+   * The id of the Environment to which content is copied.
    *
    * @return the source environment id
    */
   String getDestEnvironmentId();
 
   /**
-   * The name of the Environment to which content is copied
+   * The name of the Environment to which content is copied.
    *
    * @return the source environment name
    */
   String getDestEnvironmentName();
 
   /**
-   * The tier of the source and destination environments
+   * The tier of the source and destination environments. (At this time, always `AUTHOR`)
    *
    * @return the environment tier
    */
@@ -82,7 +85,7 @@ public interface ContentFlow {
    *
    * @return the status
    */
-  String getStatus();
+  Status getFlowStatus();
 
   /**
    * The results of the content flow export process.
@@ -99,12 +102,25 @@ public interface ContentFlow {
   Results getImportResults();
 
   /**
-   * Cancels this content flow
+   * Cancel this content flow.
    *
    * @throws CloudManagerApiException when any error occurs
    */
   void cancel() throws CloudManagerApiException;
 
+  /**
+   * Potential states for Content Flow process.
+   */
+  enum Status {
+    IN_PROGRESS,
+    FAILED,
+    COMPLETED,
+    CANCELLED
+  }
+
+  /**
+   * Representation of Export/Import results.
+   */
   @Value
   class Results {
     String errorCode;

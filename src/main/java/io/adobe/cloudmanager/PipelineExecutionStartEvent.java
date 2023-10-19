@@ -22,9 +22,13 @@ package io.adobe.cloudmanager;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Event representing that a Pipeline Execution has started.
+ */
 public interface PipelineExecutionStartEvent extends PipelineExecutionEvent {
+
   /**
-   * The Pipeline Execution associated with the event.
+   * Get the Pipeline Execution associated with the event.
    *
    * @return the pipeline execution
    * @throws CloudManagerApiException when any error occurs

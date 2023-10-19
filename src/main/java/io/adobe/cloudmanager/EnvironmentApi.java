@@ -30,10 +30,13 @@ import javax.validation.constraints.NotNull;
 
 import io.adobe.cloudmanager.exception.DeleteInProgressException;
 
+/**
+ * Environment API
+ */
 public interface EnvironmentApi {
 
   /**
-   * Lists all environments in the specified program.
+   * List all environments in the program.
    *
    * @param programId the program id
    * @return list of environments
@@ -43,7 +46,7 @@ public interface EnvironmentApi {
   Collection<Environment> list(@NotNull String programId) throws CloudManagerApiException;
 
   /**
-   * Lists all environments in the specified program, of the specified type
+   * List all environments in the program, of the specified type.
    *
    * @param programId the program id
    * @param type      the type of environments to list
@@ -54,7 +57,7 @@ public interface EnvironmentApi {
   Collection<Environment> list(@NotNull String programId, Environment.Type type) throws CloudManagerApiException;
 
   /**
-   * Creates a new environment in the specified program.
+   * Create a new environment in the program.
    *
    * @param programId   the program in which to create the environment
    * @param name        the name of the new environment
@@ -68,7 +71,7 @@ public interface EnvironmentApi {
   Environment create(@NotNull String programId, @NotNull String name, @NotNull Environment.Type type, @NotNull String region, String description) throws CloudManagerApiException;
 
   /**
-   * Returns the specified environment in the program context
+   * Retrieve the environment within the program context.
    *
    * @param programId     the program id
    * @param environmentId the environment id
@@ -88,7 +91,7 @@ public interface EnvironmentApi {
   void delete(@NotNull String programId, @NotNull String environmentId) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
-   * Delete the specified environment.
+   * Delete the environment.
    *
    * @param environment the environment to delete
    * @throws DeleteInProgressException if the delete operation is already active
@@ -97,7 +100,7 @@ public interface EnvironmentApi {
   void delete(@NotNull Environment environment) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
-   * Delete the specified environment, with option to ignore resource deletion failure.
+   * Delete the environment, with option to ignore resource deletion failure.
    *
    * @param programId     the program id of the environment context
    * @param environmentId the environment to delete
@@ -108,7 +111,7 @@ public interface EnvironmentApi {
   void delete(@NotNull String programId, @NotNull String environmentId, boolean ignoreFailure) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
-   * Delete the specified environment.
+   * Delete the environment.
    *
    * @param environment   the environment to delete
    * @param ignoreFailure flag to ignore failures
@@ -118,7 +121,7 @@ public interface EnvironmentApi {
   void delete(@NotNull Environment environment, boolean ignoreFailure) throws DeleteInProgressException, CloudManagerApiException;
 
   /**
-   * Lists logs of the specified type for the environment
+   * List logs of the specified type for the environment.
    *
    * @param programId     the program id for the environment
    * @param environmentId the environment id
@@ -130,7 +133,7 @@ public interface EnvironmentApi {
   Collection<EnvironmentLog> listLogs(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption option, int days) throws CloudManagerApiException;
 
   /**
-   * Lists logs of the specified type for the environment
+   * List logs of the specified type for the environment.
    *
    * @param environment the environment
    * @param option      the type of logs to list
@@ -141,7 +144,7 @@ public interface EnvironmentApi {
   Collection<EnvironmentLog> listLogs(@NotNull Environment environment, @NotNull LogOption option, int days) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the log file for download.
+   * Get the fully qualified URL to the log file for download.
    *
    * @param programId     the program id for the environment
    * @param environmentId the environment id
@@ -153,7 +156,7 @@ public interface EnvironmentApi {
   String getLogDownloadUrl(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption option, @NotNull LocalDate date) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the log file for download.
+   * Get the fully qualified URL to the log file for download.
    *
    * @param environment the environment
    * @param option      the type of logs to download
@@ -164,7 +167,7 @@ public interface EnvironmentApi {
   String getLogDownloadUrl(@NotNull Environment environment, @NotNull LogOption option, @NotNull LocalDate date) throws CloudManagerApiException;
 
   /**
-   * Returns the specified region deployment
+   * Get the region deployment.
    *
    * @param programId     the program id of the deployment
    * @param environmentId the environment id of the deployment
@@ -176,7 +179,7 @@ public interface EnvironmentApi {
   RegionDeployment getRegionDeployment(@NotNull String programId, @NotNull String environmentId, @NotNull String deploymentId) throws CloudManagerApiException;
 
   /**
-   * Returns the specified region deployment.
+   * Get the region deployment.
    *
    * @param programId     the program id context
    * @param environmentId the environment id context
@@ -187,7 +190,7 @@ public interface EnvironmentApi {
   Collection<RegionDeployment> listRegionDeployments(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
 
   /**
-   * Returns the specified region deployment.
+   * Get the region deployment.
    *
    * @param environment the environment context
    * @return the region deployment details
@@ -197,7 +200,7 @@ public interface EnvironmentApi {
   Collection<RegionDeployment> listRegionDeployments(@NotNull Environment environment) throws CloudManagerApiException;
 
   /**
-   * Creates a new deployment in the specified region
+   * Create a new deployment in the specified region.
    *
    * @param environment the environment to update
    * @param regions     the regions in which to deploy
@@ -206,7 +209,7 @@ public interface EnvironmentApi {
   void createRegionDeployments(@NotNull Environment environment, @NotNull Region... regions) throws CloudManagerApiException;
 
   /**
-   * Removes the deployment from the specified region
+   * Remove the deployment from the specified region.
    *
    * @param environment the environment to update
    * @param regions     the regions from which to remove the deployment
@@ -215,7 +218,7 @@ public interface EnvironmentApi {
   void removeRegionDeployments(@NotNull Environment environment, @NotNull Region... regions) throws CloudManagerApiException;
 
   /**
-   * Lists all variables associated with the specified environment
+   * List all variables associated with the environment.
    *
    * @param programId     the program id of the environment
    * @param environmentId the environment id
@@ -226,7 +229,7 @@ public interface EnvironmentApi {
   Set<Variable> getVariables(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
 
   /**
-   * Lists all variables associated with the specified environment
+   * List all variables associated with the environment.
    *
    * @param environment the environment
    * @return set of variables in the environment
@@ -236,7 +239,7 @@ public interface EnvironmentApi {
   Set<Variable> getVariables(@NotNull Environment environment) throws CloudManagerApiException;
 
   /**
-   * Sets the specified variables in the environment.
+   * Set the variables in the environment.
    *
    * @param programId     the program id of the environment
    * @param environmentId the environment id
@@ -248,7 +251,7 @@ public interface EnvironmentApi {
   Set<Variable> setVariables(@NotNull String programId, @NotNull String environmentId, Variable... variables) throws CloudManagerApiException;
 
   /**
-   * Sets the specified variables in the environment.
+   * Set the variables in the environment.
    *
    * @param environment the environment context
    * @param variables   the variables to set
@@ -259,7 +262,7 @@ public interface EnvironmentApi {
   Set<Variable> setVariables(@NotNull Environment environment, Variable... variables) throws CloudManagerApiException;
 
   /**
-   * Resets the specified Rapid Development Environment. If the specified environment is not an RDE, result is undefined.
+   * Reset the Rapid Development Environment. If the environment is not an RDE, result is undefined.
    *
    * @param programId     the program id of the environment
    * @param environmentId the environment id
@@ -268,7 +271,7 @@ public interface EnvironmentApi {
   void resetRde(@NotNull String programId, @NotNull String environmentId) throws CloudManagerApiException;
 
   /**
-   * Resets the specified Rapid Development Environment. If the specified environment is not an RDE, result is undefined.
+   * Reset the Rapid Development Environment. If the environment is not an RDE, result is undefined.
    *
    * @param environment the environment
    * @throws CloudManagerApiException when any error occurs
@@ -280,7 +283,7 @@ public interface EnvironmentApi {
   // Convenience Methods
 
   /**
-   * Returns the first environment which matches the predicate, within the program context
+   * Returns the first environment which matches the predicate, within the program context.
    *
    * @param programId the program id
    * @param predicate environment filter
@@ -290,7 +293,7 @@ public interface EnvironmentApi {
   Optional<Environment> get(@NotNull String programId, @NotNull Predicate<Environment> predicate) throws CloudManagerApiException;
 
   /**
-   * Downloads the logs for the specified environment.
+   * Downloads the logs for the environment, to the specified folder.
    *
    * @param programId     the program id context for the environment
    * @param environmentId the environment id
@@ -304,7 +307,7 @@ public interface EnvironmentApi {
   Collection<EnvironmentLog> downloadLogs(@NotNull String programId, @NotNull String environmentId, @NotNull LogOption logOption, int days, @NotNull File dir) throws CloudManagerApiException;
 
   /**
-   * Downloads the logs for the specified environment.
+   * Downloads the logs for the environment, to the specified folder.
    *
    * @param environment the environment context
    * @param logOption   the log file reference

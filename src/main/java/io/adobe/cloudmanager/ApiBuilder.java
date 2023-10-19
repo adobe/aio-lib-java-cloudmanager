@@ -44,7 +44,7 @@ public class ApiBuilder<A> {
   private URL url;
 
   /**
-   * Create new instance of an API Builder.
+   * Create new instance of an API Builder, scoped to the desired interface.
    *
    * @param clazz the type of API desired.
    */
@@ -64,7 +64,8 @@ public class ApiBuilder<A> {
   }
 
   /**
-   * (Optional) API base url for this API.
+   * (Optional) Base url for this API. Can be used to change destination for requests, to the Stage environment for example.
+   * If not provided, then the default production value will be used.wqa9]
    *
    * @param url the url context for requests
    * @return this builder

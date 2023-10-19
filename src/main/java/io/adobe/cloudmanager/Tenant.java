@@ -20,6 +20,9 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+/**
+ * A Tenant representation.
+ */
 public interface Tenant {
 
   /**
@@ -30,7 +33,7 @@ public interface Tenant {
   String getId();
 
   /**
-   * The description for the tenant
+   * The description for the tenant.
    *
    * @return description
    */

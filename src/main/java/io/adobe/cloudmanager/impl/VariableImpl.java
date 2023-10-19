@@ -20,6 +20,7 @@ package io.adobe.cloudmanager.impl;
  * #L%
  */
 
+import io.adobe.cloudmanager.Environment;
 import io.adobe.cloudmanager.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -37,8 +38,14 @@ public class VariableImpl extends io.adobe.cloudmanager.impl.generated.Variable 
     this.delegate = delegate;
   }
 
+
   @Override
   public Type getVarType() {
     return Type.fromValue(delegate.getType().getValue());
+  }
+
+  @Override
+  public Environment.Tier getTier() {
+    return Environment.Tier.valueOf(delegate.getService().toUpperCase());
   }
 }

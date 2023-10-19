@@ -20,6 +20,9 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+/**
+ * A Log file within an Environment.
+ */
 public interface EnvironmentLog {
 
 
@@ -31,7 +34,7 @@ public interface EnvironmentLog {
   String getDownloadPath();
 
   /**
-   * The URL of the original log file.
+   * The API URL of the original log file.
    *
    * @return the url
    */

@@ -25,6 +25,9 @@ import lombok.Value;
 
 /**
  * Used to make updates to a Pipeline definition.
+ * <p>
+ * Only the properties available on this class can be modified on a Pipeline definition. Undefined ({@code null}) values are left unchanged.
+ *
  */
 @Value @Builder
 public class PipelineUpdate {

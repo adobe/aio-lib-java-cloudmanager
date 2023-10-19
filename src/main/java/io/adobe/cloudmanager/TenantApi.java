@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 
 public interface TenantApi {
   /**
-   * Lists the tenants associated with the IMS Org in the API Context
+   * List the tenants associated with the IMS Org in the API Context
    *
    * @return list of tenants
    * @throws CloudManagerApiException when any error occurs

@@ -725,8 +725,8 @@ public class EnvironmentTest extends AbstractApiTest {
             .withHeader("Content-Type", "application/problem+json")
             .withBody(json("{ \"type\" : \"http://ns.adobe.com/adobecloud/validation-exception\", \"errors\": [ \"some error\" ] }"))
     );
-    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service("author").build();
-    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service("publish").build();
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service(Environment.Tier.AUTHOR).build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service(Environment.Tier.PUBLISH).build();
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setVariables("1", "1", var1, var2), "Exception thrown.");
     assertEquals(String.format("Cannot set environment variables: %s/api/program/1/environment/1/variables (400 Bad Request) - Validation Error(s): some error.", baseUrl), exception.getMessage(), "Message was correct");
@@ -747,8 +747,8 @@ public class EnvironmentTest extends AbstractApiTest {
             "{ \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\", \"service\": \"publish\" " +
             "} ]"));
     client.when(patch).respond(response().withStatusCode(NOT_FOUND_404.code()));
-    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service("author").build();
-    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service("publish").build();
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service(Environment.Tier.AUTHOR).build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service(Environment.Tier.PUBLISH).build();
 
     CloudManagerApiException exception = assertThrows(CloudManagerApiException.class, () -> underTest.setVariables("1", "1", var1, var2), "Exception thrown.");
     assertEquals(String.format("Cannot set environment variables: %s/api/program/1/environment/1/variables (404 Not Found).", baseUrl), exception.getMessage(), "Message was correct");
@@ -773,8 +773,8 @@ public class EnvironmentTest extends AbstractApiTest {
             "\"name\": \"foo\", \"value\": \"bar\", \"type\": \"string\", \"service\": \"author\" }, " +
             "{ \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\", \"service\": \"publish\" " +
             "} ]"));
-    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service("author").build();
-    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service("publish").build();
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service(Environment.Tier.AUTHOR).build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service(Environment.Tier.PUBLISH).build();
 
     client.when(patch).respond(response().withBody(json("{}")));
     assertTrue(environment.setVariables(var1, var2).isEmpty());
@@ -807,8 +807,8 @@ public class EnvironmentTest extends AbstractApiTest {
             "{ \"name\": \"secretFoo\", \"value\": \"secretBar\", \"type\": \"secretString\", \"service\": \"publish\" " +
             "} ]"));
     client.when(patch).respond(response().withBody(LIST_VARIABLES_BODY));
-    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service("author").build();
-    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service("publish").build();
+    Variable var1 = Variable.builder().name("foo").value("bar").type(Variable.Type.STRING).service(Environment.Tier.AUTHOR).build();
+    Variable var2 = Variable.builder().name("secretFoo").value("secretBar").type(Variable.Type.SECRET).service(Environment.Tier.PUBLISH).build();
 
     Set<Variable> variables = new EnvironmentImpl(mock, underTest).setVariables(var1, var2);
     assertEquals(2, variables.size(), "Correct response");

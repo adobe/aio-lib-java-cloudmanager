@@ -21,13 +21,19 @@ package io.adobe.cloudmanager;
  */
 
 import java.time.OffsetDateTime;
+import javax.validation.constraints.NotNull;
 
+/**
+ * Root interface that represents all Pipeline Execution events that may be published.
+ */
 public interface PipelineExecutionEvent {
+
   /**
    * The id of this event.
    *
    * @return the id
    */
+  @NotNull
   String getId();
 
   /**
@@ -35,5 +41,6 @@ public interface PipelineExecutionEvent {
    *
    * @return the event published time
    */
+  @NotNull
   OffsetDateTime getPublished();
 }

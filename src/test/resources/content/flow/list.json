@@ -16,7 +16,7 @@
         "destEnvironmentId": "2",
         "destEnvironmentName": "Stage",
         "tier": "author",
-        "status": "Success",
+        "status": "Completed",
         "destProgramId": "1",
         "resultDetails": {
           "exportResult": {
@@ -43,7 +43,7 @@
         "destEnvironmentId": "3",
         "destEnvironmentName": "Dev",
         "tier": "author",
-        "status": "Running",
+        "status": "In progress",
         "destProgramId": "1",
         "resultDetails": {
           "exportResult": {

@@ -24,6 +24,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import javax.validation.constraints.NotNull;
 
+/**
+ * A Pipeline Execution representation - an instance of a Pipeline run.
+ */
 public interface PipelineExecution {
 
   /**
@@ -59,7 +62,7 @@ public interface PipelineExecution {
   Status getStatusState();
 
   /**
-   * Returns the specified action step for this pipeline execution.
+   * Get the specified action step.
    * <p>
    * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
    *
@@ -71,7 +74,7 @@ public interface PipelineExecution {
   PipelineExecutionStepState getStep(@NotNull StepAction action) throws CloudManagerApiException;
 
   /**
-   * Gets the current/active step for the execution.
+   * Get the current/active step.
    * <p>
    * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
    *
@@ -82,7 +85,7 @@ public interface PipelineExecution {
   PipelineExecutionStepState getCurrentStep() throws CloudManagerApiException;
 
   /**
-   * Finds the first step in the execution that matches the predicate.
+   * Find the first step that matches the predicate.
    *
    * @param predicate the filter criteria
    * @return the step state if it exists
@@ -91,7 +94,7 @@ public interface PipelineExecution {
   Optional<PipelineExecutionStepState> getStep(@NotNull Predicate<PipelineExecutionStepState> predicate);
 
   /**
-   * Advances this execution if in a valid state.
+   * Advance this execution, if in a valid state.
    *
    * @throws CloudManagerApiException when any error occurs
    */
@@ -105,7 +108,7 @@ public interface PipelineExecution {
   void cancel() throws CloudManagerApiException;
 
   /**
-   * Checks if this execution is currently running.
+   * Check if this execution is currently running.
    * <p>
    * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
    *
@@ -115,8 +118,6 @@ public interface PipelineExecution {
 
   /**
    * Pipeline Execution status values
-   *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
   enum Status {
     NOT_STARTED,

@@ -20,6 +20,13 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+/**
+ * Constants field values used across the various APIs.
+ */
 public interface Constants {
+
+  /**
+   * Default production host.
+   */
   String CLOUD_MANAGER_URL = "https://cloudmanager.adobe.io";
 }

@@ -26,10 +26,13 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Value;
 
+/**
+ * A Content Set definition
+ */
 public interface ContentSet {
 
   /**
-   * The ID of this Content Set.
+   * The id of this Content Set.
    *
    * @return the id
    */
@@ -64,7 +67,7 @@ public interface ContentSet {
   Collection<PathDefinition> getPathDefinitions();
 
   /**
-   * Updates this content set with the specified changes
+   * Update this content set with the changes. Any parameters not specified will be left in their current state.
    *
    * @param name        the new name, or {@code null} to leave unchanged
    * @param description the new description, or {@code null} to leave unchanged
@@ -74,20 +77,25 @@ public interface ContentSet {
   void update(String name, String description, Collection<PathDefinition> definitions) throws CloudManagerApiException;
 
   /**
-   * Deletes this content set definition
+   * Delete this content set definition.
    *
    * @throws CloudManagerApiException when any error occurs
    */
   void delete() throws CloudManagerApiException;
 
   /**
-   * Creates a Content Flow with this content set, between the specified environments.
+   * Create a content flow with this content set, between the specified environments.
    *
    * @return the content flow
    */
   @NotNull
   ContentFlow startFlow(@NotNull String srcEnvironmentId, @NotNull String destEnvironment, boolean includeAcl) throws CloudManagerApiException;
 
+  /**
+   * A path definition for a content set, containing a root path definition, and excluded sub paths.
+   * <p>
+   * These are literal paths, not regex or glob patterns.
+   */
   @Value
   class PathDefinition {
     String path;

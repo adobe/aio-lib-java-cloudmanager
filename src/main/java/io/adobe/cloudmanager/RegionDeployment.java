@@ -20,28 +20,35 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+/**
+ * A Region Deployment representation.
+ */
 public interface RegionDeployment {
+
   /**
-   * Returns the id of this deployment.
+   * The id of this deployment.
    *
    * @return the id
    */
   String getId();
 
   /**
-   * Returns the region name for this deployment
+   * The region for this deployment
    *
    * @return the region
    */
-  String getRegion();
+  Region getRegion();
 
   /**
-   * Return the type of deployment
+   * The type of deployment
    *
    * @return the deployment type
    */
   Type getDeployType();
 
+  /**
+   * Possible region deployment types.
+   */
   enum Type {
     PRIMARY,
     SECONDARY

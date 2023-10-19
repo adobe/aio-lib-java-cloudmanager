@@ -74,7 +74,6 @@ public class PipelineExecutionApiImpl implements PipelineExecutionApi {
   private static final String ENDED_EVENT_TYPE = "https://ns.adobe.com/experience/cloudmanager/event/ended";
   private static final String PIPELINE_EXECUTION_TYPE = "https://ns.adobe.com/experience/cloudmanager/pipeline-execution";
   private static final String PIPELINE_STEP_STATE_TYPE = "https://ns.adobe.com/experience/cloudmanager/execution-step-state";
-
   private static final String EXECUTION_LOG_REDIRECT_ERROR = "Log redirect for execution %s, action '%s' did not exist.";
   private static final String ARTIFACT_REDIRECT_ERROR = "Artifact redirect for execution %s, phase %s, step %s did not exist.";
 

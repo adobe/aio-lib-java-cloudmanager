@@ -28,6 +28,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import lombok.Getter;
 
+/**
+ * A Pipeline definition.
+ */
 public interface Pipeline {
 
   /**
@@ -66,7 +69,7 @@ public interface Pipeline {
   void delete() throws CloudManagerApiException;
 
   /**
-   * Updates this pipeline with the specified changes.
+   * Update this pipeline with the specified changes.
    *
    * @param update the updates to make to this pipeline
    * @return the updated Pipeline.
@@ -75,14 +78,14 @@ public interface Pipeline {
   Pipeline update(PipelineUpdate update) throws CloudManagerApiException;
 
   /**
-   * Invalidates the build cache for this pipeline.
+   * Invalidate the build cache for this pipeline.
    *
    * @throws CloudManagerApiException when any error occurs
    */
   void invalidateCache() throws CloudManagerApiException;
 
   /**
-   * Returns an optional current execution of the specified pipeline.
+   * Get the current execution of this pipeline, if it exists.
    *
    * @return An optional containing the execution details of the pipeline
    * @throws CloudManagerApiException when any error occurs
@@ -90,7 +93,7 @@ public interface Pipeline {
   Optional<PipelineExecution> getCurrentExecution() throws CloudManagerApiException;
 
   /**
-   * Starts this pipeline.
+   * Start this pipeline.
    *
    * @return the new execution.
    * @throws CloudManagerApiException when any errors occur.
@@ -98,7 +101,7 @@ public interface Pipeline {
   PipelineExecution startExecution() throws CloudManagerApiException;
 
   /**
-   * Returns the specified execution.
+   * Get the execution.
    *
    * @param executionId the id of the execution to retrieve
    * @return the execution details
@@ -115,7 +118,7 @@ public interface Pipeline {
   Set<Variable> getVariables() throws CloudManagerApiException;
 
   /**
-   * Sets the specified variables on this pipeline.
+   * Set the variables on this pipeline.
    *
    * @param variables the variables to set
    * @return the complete list of variables in this pipeline
@@ -125,8 +128,6 @@ public interface Pipeline {
 
   /**
    * Pipeline status values
-   *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
   enum Status {
     IDLE,
@@ -135,7 +136,7 @@ public interface Pipeline {
   }
 
   /**
-   * Predicate for pipelines based on BUSY status.
+   * Predicate for pipelines which are BUSY.
    */
   Predicate<Pipeline> IS_BUSY = (pipeline -> Status.BUSY == pipeline.getStatusState());
 

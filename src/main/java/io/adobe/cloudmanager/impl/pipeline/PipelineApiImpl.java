@@ -146,8 +146,7 @@ public class PipelineApiImpl implements PipelineApi {
         Arrays.stream(variables).map((v) -> new io.adobe.cloudmanager.impl.generated.Variable()
                 .name(v.getName())
                 .value(v.getValue())
-                .type(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.fromValue(v.getVarType().getValue()))
-                .service(v.getService()))
+                .type(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.fromValue(v.getVarType().getValue())))
             .collect(Collectors.toList());
     VariableList list = api.setVariables(programId, pipelineId, toSet);
     return list.getEmbedded() == null || list.getEmbedded().getVariables() == null ?

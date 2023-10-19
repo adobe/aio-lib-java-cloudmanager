@@ -22,6 +22,9 @@ package io.adobe.cloudmanager;
 
 import java.util.Collection;
 
+/**
+ * A Repository definition.
+ */
 public interface Repository {
 
   /**
@@ -60,11 +63,10 @@ public interface Repository {
   String getUrl();
 
   /**
-   * Lists all the branches associated with the repository.
+   * List all the branches associated with the repository.
    *
    * @return branches
    * @throws CloudManagerApiException when any error occurs
-   * @see <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#operation/getBranches">List Branches API</a>
    */
   Collection<String> listBranches() throws CloudManagerApiException;
 }

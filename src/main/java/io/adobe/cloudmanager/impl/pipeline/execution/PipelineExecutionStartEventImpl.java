@@ -39,7 +39,6 @@ public class PipelineExecutionStartEventImpl implements PipelineExecutionStartEv
   @EqualsAndHashCode.Exclude
   private final PipelineExecutionApiImpl client;
 
-  // TODO: Change all these scopes
   public PipelineExecutionStartEventImpl(PipelineExecutionStartEventEvent delegate, PipelineExecutionApiImpl client) {
     this.delegate = delegate;
     this.client = client;

@@ -25,10 +25,13 @@ import javax.validation.constraints.NotNull;
 
 import static io.adobe.cloudmanager.ContentSet.*;
 
+/**
+ * Content Set API
+ */
 public interface ContentSetApi {
 
   /**
-   * Lists content sets within the specified program
+   * List content sets within the specified program.
    *
    * @param programId the id of the program context
    * @return list of content sets
@@ -38,7 +41,7 @@ public interface ContentSetApi {
   Collection<ContentSet> list(@NotNull String programId) throws CloudManagerApiException;
 
   /**
-   * Lists content sets within the specified program, using the specified limit and starting at 0.
+   * List content sets within the specified program, using the specified limit and starting at 0.
    *
    * @param programId the id of the program context
    * @param limit     the number of flows to return
@@ -49,7 +52,7 @@ public interface ContentSetApi {
   Collection<ContentSet> list(@NotNull String programId, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists content sets within the specified program, using the specified limit and starting at the specified position.
+   * List content sets within the specified program, using the specified limit and starting at the specified position.
    *
    * @param programId the id of the program context
    * @param start     the starting position of the results
@@ -61,7 +64,7 @@ public interface ContentSetApi {
   Collection<ContentSet> list(@NotNull String programId, int start, int limit) throws CloudManagerApiException;
 
   /**
-   * Creates a new ContentSet in the specified program.
+   * Create a new ContentSet in the specified program.
    *
    * @param programId   the id of the program context
    * @param name        name of the content set
@@ -74,7 +77,7 @@ public interface ContentSetApi {
   ContentSet create(@NotNull String programId, @NotNull String name, String description, @NotNull Collection<PathDefinition> definitions) throws CloudManagerApiException;
 
   /**
-   * Retrieves the specified content set
+   * Get the content set.
    *
    * @param programId the id of the program context
    * @param id        the content set id
@@ -85,7 +88,7 @@ public interface ContentSetApi {
   ContentSet get(@NotNull String programId, @NotNull String id) throws CloudManagerApiException;
 
   /**
-   * Updates the specified content set with the provided details.
+   * Update the content set with the provided details.
    *
    * @param programId   the id of the program context
    * @param id          the content set id
@@ -99,7 +102,7 @@ public interface ContentSetApi {
   ContentSet update(@NotNull String programId, @NotNull String id, String name, String description, Collection<PathDefinition> definitions) throws CloudManagerApiException;
 
   /**
-   * Deletes the specified content set.
+   * Delete the content set.
    *
    * @param programId the id of the program context
    * @param id        the content set id
@@ -108,7 +111,7 @@ public interface ContentSetApi {
   void delete(@NotNull String programId, @NotNull String id) throws CloudManagerApiException;
 
   /**
-   * Lists the content flows which have run in the specified program
+   * List the content flows which exist in the specified program.
    *
    * @param programId the id of the program context
    * @return a list of content flows
@@ -118,7 +121,7 @@ public interface ContentSetApi {
   Collection<ContentFlow> listFlows(@NotNull String programId) throws CloudManagerApiException;
 
   /**
-   * Lists the content flows which have run in the specified program, using the specified limit and starting at 0.
+   * List the content flows which exist in the specified program, using the specified limit and starting at 0.
    *
    * @param programId the id of the program context
    * @param limit     the number of flows to return
@@ -129,7 +132,7 @@ public interface ContentSetApi {
   Collection<ContentFlow> listFlows(@NotNull String programId, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists the content flows which have run in the specified program, using the specified limit and starting at the specified position.
+   * List the content flows which exist in the specified program, using the specified limit and starting at the specified position.
    *
    * @param programId the id of the program context
    * @param start     the starting position of the results
@@ -141,7 +144,7 @@ public interface ContentSetApi {
   Collection<ContentFlow> listFlows(@NotNull String programId, int start, int limit) throws CloudManagerApiException;
 
   /**
-   * Starts a content flow between the specified environments, using the specified content set.
+   * Start a content flow between the specified environments, using the specified content set.
    *
    * @param programId         the id of the program context
    * @param id                the id of the content set to use
@@ -155,7 +158,7 @@ public interface ContentSetApi {
   ContentFlow startFlow(@NotNull String programId, @NotNull String id, @NotNull String srcEnvironmentId, @NotNull String destEnvironmentId, boolean includeAcl) throws CloudManagerApiException;
 
   /**
-   * Retrieves the specified content flow.
+   * Retrieve the content flow.
    *
    * @param programId the id of the program context
    * @param id        the id of the content flow
@@ -166,7 +169,7 @@ public interface ContentSetApi {
   ContentFlow getFlow(@NotNull String programId, @NotNull String id) throws CloudManagerApiException;
 
   /**
-   * Cancels the specified content flow.
+   * Cancel the content flow.
    *
    * @param programId the id of the program context
    * @param id        the id of the content flow

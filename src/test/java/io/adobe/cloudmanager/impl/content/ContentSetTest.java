@@ -492,6 +492,7 @@ public class ContentSetTest extends AbstractApiTest {
     ContentFlow cf = list.get(0);
 
     assertEquals(Environment.Tier.AUTHOR, cf.getEnvironmentTier());
+    assertEquals(ContentFlow.Status.COMPLETED, cf.getFlowStatus());
     ContentFlow.Results exportResults = cf.getExportResults();
     assertEquals("0", exportResults.getErrorCode());
     assertEquals("Success", exportResults.getMessage());
@@ -506,6 +507,7 @@ public class ContentSetTest extends AbstractApiTest {
     assertEquals(importResults, cf.getImportResults());
 
     cf = list.get(1);
+    assertEquals(ContentFlow.Status.IN_PROGRESS, cf.getFlowStatus());
     exportResults = cf.getExportResults();
     assertEquals("0", exportResults.getErrorCode());
     assertEquals("Running", exportResults.getMessage());

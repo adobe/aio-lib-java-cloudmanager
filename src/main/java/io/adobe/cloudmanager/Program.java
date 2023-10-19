@@ -22,6 +22,9 @@ package io.adobe.cloudmanager;
 
 import java.util.Collection;
 
+/**
+ * A Program definition.
+ */
 public interface Program {
 
   /**
@@ -32,7 +35,7 @@ public interface Program {
   String getId();
 
   /**
-   * Name of the program
+   * Name of the program.
    *
    * @return name
    **/

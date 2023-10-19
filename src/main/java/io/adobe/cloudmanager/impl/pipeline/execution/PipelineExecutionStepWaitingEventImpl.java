@@ -37,7 +37,7 @@ public class PipelineExecutionStepWaitingEventImpl implements PipelineExecutionS
 
   private final PipelineExecutionApiImpl client;
 
-  PipelineExecutionStepWaitingEventImpl(PipelineExecutionStepStartEventEvent delegate, PipelineExecutionApiImpl client) {
+  public PipelineExecutionStepWaitingEventImpl(PipelineExecutionStepStartEventEvent delegate, PipelineExecutionApiImpl client) {
     this.delegate = delegate;
     this.client = client;
   }

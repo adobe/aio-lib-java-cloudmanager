@@ -23,10 +23,13 @@ package io.adobe.cloudmanager;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Program API
+ */
 public interface ProgramApi {
 
   /**
-   * Returns the program with the specified id
+   * Get the program with the specified id.
    *
    * @param programId the id of the program
    * @return the program
@@ -36,7 +39,7 @@ public interface ProgramApi {
   Program get(@NotNull String programId) throws CloudManagerApiException;
 
   /**
-   * Delete the specified program.
+   * Delete the program.
    *
    * @param programId the id of the program to delete.
    * @throws CloudManagerApiException when any error occurs
@@ -44,7 +47,7 @@ public interface ProgramApi {
   void delete(@NotNull String programId) throws CloudManagerApiException;
 
   /**
-   * Delete the specified program.
+   * Delete the program.
    *
    * @param program the program to delete
    * @throws CloudManagerApiException when any error occurs
@@ -54,7 +57,7 @@ public interface ProgramApi {
   // TODO: Add NewRelic API?
 
   /**
-   * List all programs for a Tenant
+   * List all programs for the specified tenant.
    *
    * @param tenantId the id tenant
    * @return a list of {@link Program}s
@@ -64,7 +67,7 @@ public interface ProgramApi {
   Collection<Program> list(@NotNull String tenantId) throws CloudManagerApiException;
 
   /**
-   * List all programs for the Tenant
+   * List all programs for the specified tenant.
    *
    * @param tenant the tenant
    * @return a list of {@link Program}s

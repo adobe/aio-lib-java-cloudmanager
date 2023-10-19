@@ -25,6 +25,9 @@ import java.util.function.Predicate;
 
 import lombok.Getter;
 
+/**
+ * A Pipeline Execution Step representation - an instance of an action/step within a Pipeline Execution.
+ */
 public interface PipelineExecutionStepState {
 
   /**
@@ -49,21 +52,23 @@ public interface PipelineExecutionStepState {
   String getPhaseId();
 
   /**
-   * The name of the step action, see {@link StepAction}
+   * The action of the step.
    *
    * @return the action
+   * @see StepAction
    */
   StepAction getStepAction();
 
   /**
-   * The current status of the pipeline execution step
+   * The current status of the pipeline execution step.
    *
    * @return the status
+   * @see Status
    */
   Status getStatusState();
 
   /**
-   * Return the execution associated with this step state.
+   * Get the execution associated with this step state.
    *
    * @return pipeline execution
    * @throws CloudManagerApiException when any error occurs
@@ -71,14 +76,14 @@ public interface PipelineExecutionStepState {
   PipelineExecution getExecution() throws CloudManagerApiException;
 
   /**
-   * Indicates if this step has a log which can be downloaded.
+   * Indicates if this step has a log which can be retrieved.
    *
    * @return {@code true} if a log exists, {@code false} otherwise.
    */
   boolean hasLogs();
 
   /**
-   * Saves the default log to the specified directory.
+   * Download the default log associated with this step, to the specified directory.
    *
    * @param dir the directory in which to save the file
    * @throws CloudManagerApiException when any error occurs
@@ -86,7 +91,7 @@ public interface PipelineExecutionStepState {
   void getLog(File dir) throws CloudManagerApiException;
 
   /**
-   * Streams the specified log to the specified directory.
+   * Download the named log associated with this step, to the specified directory.
    *
    * @param name The name of the log to retrieve
    * @param dir  the directory in which to save the file
@@ -112,20 +117,20 @@ public interface PipelineExecutionStepState {
   }
 
   /**
-   * Predicate for pipelines for the current step in the execution.
+   * Predicate for finding the current step in the execution.
    */
   Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
       stepState.getStatusState() != PipelineExecutionStepState.Status.FINISHED);
 
   /**
-   * Predicate for the step that is waiting.
+   * Predicate for finding a step within the execution which is waiting.
    */
   Predicate<PipelineExecutionStepState> IS_WAITING = (stepState ->
       stepState.getStatusState() == PipelineExecutionStepState.Status.WAITING
   );
 
   /**
-   * Predicate for the step that is in the running state.
+   * Predicate for the step that within the execution which is currently running.
    */
   Predicate<PipelineExecutionStepState> IS_RUNNING = (stepState ->
       stepState.getStatusState() == PipelineExecutionStepState.Status.RUNNING

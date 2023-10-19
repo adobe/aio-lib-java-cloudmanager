@@ -168,7 +168,7 @@ public class EnvironmentApiImpl implements EnvironmentApi {
 
   @Override
   public RegionDeployment getRegionDeployment(String programId, String environmentId, String deploymentId) throws CloudManagerApiException {
-    return new RegionDeploymentImpl(api.getDeployment(programId, environmentId, deploymentId), this);
+    return new RegionDeploymentImpl(api.getDeployment(programId, environmentId, deploymentId));
   }
 
   @Override
@@ -176,7 +176,7 @@ public class EnvironmentApiImpl implements EnvironmentApi {
     RegionDeploymentList list = api.listDeployments(programId, environmentId);
     return list.getEmbedded() == null || list.getEmbedded().getRegionDeployments() == null ?
         Collections.emptyList() :
-        list.getEmbedded().getRegionDeployments().stream().map(rd -> new RegionDeploymentImpl(rd, this)).collect(Collectors.toList());
+        list.getEmbedded().getRegionDeployments().stream().map(rd -> new RegionDeploymentImpl(rd)).collect(Collectors.toList());
   }
 
   @Override
@@ -229,7 +229,7 @@ public class EnvironmentApiImpl implements EnvironmentApi {
                 .name(v.getName())
                 .value(v.getValue())
                 .type(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.fromValue(v.getVarType().getValue()))
-                .service(v.getService()))
+                .service(v.getTier().name().toLowerCase()))
             .collect(Collectors.toList());
     VariableList list = api.setVariables(programId, environmentId, toSet);
     return list.getEmbedded() == null || list.getEmbedded().getVariables() == null ?

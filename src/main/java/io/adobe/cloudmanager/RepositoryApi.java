@@ -23,10 +23,13 @@ package io.adobe.cloudmanager;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Repository API
+ */
 public interface RepositoryApi {
 
   /**
-   * Lists all repositories for the specified program.
+   * List all repositories for the specified program.
    *
    * @param programId the program id
    * @return list of repositories
@@ -36,7 +39,7 @@ public interface RepositoryApi {
   Collection<Repository> list(@NotNull String programId) throws CloudManagerApiException;
 
   /**
-   * Lists all repositories for the specified program.
+   * List all repositories for the specified program.
    *
    * @param program the program
    * @return list of repositories
@@ -46,7 +49,7 @@ public interface RepositoryApi {
   Collection<Repository> list(@NotNull Program program) throws CloudManagerApiException;
 
   /**
-   * Lists all repositories for the specified program, up to the defined limit.
+   * List all repositories for the specified program, up to the defined limit.
    *
    * @param programId the program id
    * @param limit     the maximum number of repositories to retrieve
@@ -57,7 +60,7 @@ public interface RepositoryApi {
   Collection<Repository> list(@NotNull String programId, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists all repositories for the specified program, up to the defined limit.
+   * List all repositories for the specified program, up to the defined limit.
    *
    * @param program the program
    * @param limit   the maximum number of repositories to retrieve
@@ -68,7 +71,7 @@ public interface RepositoryApi {
   Collection<Repository> list(@NotNull Program program, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists all repositories for the specified program, from the starting position, up to the defined limit.
+   * List all repositories for the specified program, from the starting position, up to the defined limit.
    *
    * @param programId the program id
    * @param start     the starting position in the list to retrieve
@@ -80,7 +83,7 @@ public interface RepositoryApi {
   Collection<Repository> list(@NotNull String programId, int start, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists all repositories for the specified program, from the starting position, up to the defined limit.
+   * List all repositories for the specified program, from the starting position, up to the defined limit.
    *
    * @param program the program
    * @param start   the starting position in the list to retrieve
@@ -114,7 +117,7 @@ public interface RepositoryApi {
   Repository get(@NotNull Program program, @NotNull String repositoryId) throws CloudManagerApiException;
 
   /**
-   * Lists all the branches associated with the repository.
+   * List all the branches associated with the repository.
    *
    * @param repository the repository
    * @return list of branch names

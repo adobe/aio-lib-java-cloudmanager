@@ -27,10 +27,13 @@ import javax.validation.constraints.NotNull;
 
 import io.adobe.cloudmanager.exception.PipelineRunningException;
 
+/**
+ * Pipeline Execution API
+ */
 public interface PipelineExecutionApi {
 
   /**
-   * Returns an optional current execution of the specified pipeline.
+   * Get the current execution of the specified pipeline, if one exists.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the pipeline id of to find the execution
@@ -41,7 +44,7 @@ public interface PipelineExecutionApi {
   Optional<PipelineExecution> getCurrent(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Returns an optional current execution of the specified pipeline.
+   * Get the current execution of the specified pipeline, if one exists.
    *
    * @param pipeline the pipeline reference
    * @return An optional containing the execution details of the pipeline
@@ -51,7 +54,7 @@ public interface PipelineExecutionApi {
   Optional<PipelineExecution> getCurrent(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
-   * Starts the specified pipeline.
+   * Start the specified pipeline.
    * <p>
    * Note: This API call may return before the requested action takes effect. i.e. The Pipelines are <i>scheduled</i> to start once called. However, an immediate subsequent call to {@link #getCurrent(String, String)} may not return a result.
    *
@@ -64,7 +67,7 @@ public interface PipelineExecutionApi {
   PipelineExecution start(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Starts the specified pipeline.
+   * Start the specified pipeline.
    * <p>
    * Note: This API call may return before the requested action takes effect. i.e. The Pipelines are <i>scheduled</i> to start once called. However, an immediate subsequent call to {@link #getCurrent(String, String)} may not return a result.
    *
@@ -77,7 +80,7 @@ public interface PipelineExecutionApi {
   PipelineExecution start(@NotNull Pipeline pipeline) throws PipelineRunningException, CloudManagerApiException;
 
   /**
-   * Returns the specified execution of the pipeline.
+   * Get the specified execution of the pipeline.
    *
    * @param programId   the program id context of the pipeline
    * @param pipelineId  the pipeline id
@@ -100,7 +103,7 @@ public interface PipelineExecutionApi {
   PipelineExecution get(@NotNull Pipeline pipeline, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
-   * Returns the specified action step for the pipeline execution
+   * Get the specified action step for the pipeline execution.
    *
    * @param execution the execution context
    * @param action    the step state action (see {@link StepAction})
@@ -111,7 +114,7 @@ public interface PipelineExecutionApi {
   PipelineExecutionStepState getStepState(@NotNull PipelineExecution execution, @NotNull StepAction action) throws CloudManagerApiException;
 
   /**
-   * Advances the execution of the specified pipeline execution, if in an appropriate state.
+   * Advance the execution of the specified pipeline execution, if in an appropriate state.
    *
    * @param programId   the program id context of the pipeline
    * @param pipelineId  the id of the pipeline to cancel
@@ -121,7 +124,7 @@ public interface PipelineExecutionApi {
   void advance(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
-   * Advances the execution of the specified pipeline execution, if in an appropriate state.
+   * Advance the execution of the specified pipeline execution, if in an appropriate state.
    *
    * @param execution the execution to be advanced
    * @throws CloudManagerApiException when any error occurs
@@ -129,7 +132,7 @@ public interface PipelineExecutionApi {
   void advance(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
-   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
+   * Cancel the execution of the specified pipeline execution, if in an appropriate state.
    *
    * @param programId   the program id context of the pipeline
    * @param pipelineId  the id of the pipeline to cancel
@@ -139,7 +142,7 @@ public interface PipelineExecutionApi {
   void cancel(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId) throws CloudManagerApiException;
 
   /**
-   * Cancels the execution of the specified pipeline execution, if in an appropriate state.
+   * Cancel the execution of the specified pipeline execution, if in an appropriate state.
    *
    * @param execution the execution to be canceled
    * @throws CloudManagerApiException when any error occurs
@@ -147,45 +150,45 @@ public interface PipelineExecutionApi {
   void cancel(@NotNull PipelineExecution execution) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the log file for download.
+   * Get the fully qualified URL to the specified step's log file.
    *
    * @param programId   the program id of the pipeline context
    * @param pipelineId  the pipeline id for the execution context
-   * @param executionId the execution id for the logs
+   * @param executionId the execution id
    * @param action      the execution step action for the log
-   * @return the log file download URL
+   * @return the log file URL
    * @throws CloudManagerApiException when any error occurs
    */
   String getStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull StepAction action) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the log file for download.
+   * Get the fully qualified URL to the specified step's log file.
    *
    * @param programId   the program id of the pipeline context
    * @param pipelineId  the pipeline id for the execution context
-   * @param executionId the execution id for the logs
-   * @param action      the execution step action for the log
+   * @param executionId the execution id
+   * @param action      the execution step action context
    * @param name        custom log file name
-   * @return the log file download URL
+   * @return the log file URL
    * @throws CloudManagerApiException when any error occurs
    */
   String getStepLogDownloadUrl(@NotNull String programId, @NotNull String pipelineId, @NotNull String executionId, @NotNull StepAction action, @NotNull String name) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the log file for download.
+   * Get the fully qualified URL to the specified step's log file.
    *
-   * @param execution the execution for the log
-   * @param action    the execution step action for the log
+   * @param execution the execution context
+   * @param action    the execution step action context
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs
    */
   String getStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull StepAction action) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the log file for download.
+   * Get the fully qualified URL to the specified log file referenced by name, within the step.
    *
-   * @param execution the execution for the log
-   * @param action    the execution step action for the log
+   * @param execution the execution context
+   * @param action    the execution step action context
    * @param name      custom log file name
    * @return the log file download URL
    * @throws CloudManagerApiException when any error occurs
@@ -193,10 +196,10 @@ public interface PipelineExecutionApi {
   String getStepLogDownloadUrl(@NotNull PipelineExecution execution, @NotNull StepAction action, @NotNull String name) throws CloudManagerApiException;
 
   /**
-   * Retrieves the metrics for the specified execution and step, if any.
+   * Get the metrics for the specified execution and step, if any.
    *
-   * @param execution the execution step
-   * @param action    the action step for which quality metrics are desired
+   * @param execution the execution context
+   * @param action    the action step context
    * @return the metrics for the execution
    * @throws CloudManagerApiException when any error occurs
    */
@@ -204,7 +207,7 @@ public interface PipelineExecutionApi {
   Collection<Metric> getQualityGateResults(@NotNull PipelineExecution execution, @NotNull StepAction action) throws CloudManagerApiException;
 
   /**
-   * Lists executions of the specified pipeline, using the default limit and starting at 0.
+   * List executions of the specified pipeline, using the default limit and starting at 0.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the pipeline id
@@ -215,9 +218,9 @@ public interface PipelineExecutionApi {
   Collection<PipelineExecution> list(@NotNull String programId, @NotNull String pipelineId) throws CloudManagerApiException;
 
   /**
-   * Lists executions of the specified pipeline, using the default limit and starting at 0.
+   * List executions of the specified pipeline, using the default limit and starting at 0.
    *
-   * @param pipeline the pipeline for the execution search
+   * @param pipeline the pipeline context
    * @return list of executions
    * @throws CloudManagerApiException when any error occurs
    */
@@ -225,7 +228,7 @@ public interface PipelineExecutionApi {
   Collection<PipelineExecution> list(@NotNull Pipeline pipeline) throws CloudManagerApiException;
 
   /**
-   * Lists executions of the specified pipeline, using the specified limit and starting at 0.
+   * List executions of the specified pipeline, using the specified limit and starting at 0.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the pipeline id
@@ -237,9 +240,9 @@ public interface PipelineExecutionApi {
   Collection<PipelineExecution> list(@NotNull String programId, @NotNull String pipelineId, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists executions of the specified pipeline, using the specified limit and starting at 0.
+   * List executions of the specified pipeline, using the specified limit and starting at 0.
    *
-   * @param pipeline the pipeline for the execution search
+   * @param pipeline the pipeline context
    * @param limit    the number of executions to return
    * @return list of executions, if any
    * @throws CloudManagerApiException when any error occurs
@@ -248,7 +251,7 @@ public interface PipelineExecutionApi {
   Collection<PipelineExecution> list(@NotNull Pipeline pipeline, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists executions of the specified pipeline, using the specified limit and starting at the specified position.
+   * List executions of the specified pipeline, using the specified limit and starting at the specified position.
    *
    * @param programId  the program id context of the pipeline
    * @param pipelineId the pipeline id
@@ -261,9 +264,9 @@ public interface PipelineExecutionApi {
   Collection<PipelineExecution> list(@NotNull String programId, @NotNull String pipelineId, int start, int limit) throws CloudManagerApiException;
 
   /**
-   * Lists executions of the specified pipeline, using the specified limit and starting at the specified position.
+   * List executions of the specified pipeline, using the specified limit and starting at the specified position.
    *
-   * @param pipeline the pipeline for the execution search
+   * @param pipeline the pipeline context
    * @param start    the starting position of the results
    * @param limit    the number of executions to return
    * @return list of executions
@@ -273,9 +276,9 @@ public interface PipelineExecutionApi {
   Collection<PipelineExecution> list(@NotNull Pipeline pipeline, int start, int limit) throws CloudManagerApiException;
 
   /**
-   * Returns a list of all artifacts associated with the Step
+   * List all artifacts associated with the specified step.
    *
-   * @param step the pipeline step context
+   * @param step the pipeline execution step context
    * @return list of artifacts
    * @throws CloudManagerApiException when any error occurs
    */
@@ -283,9 +286,9 @@ public interface PipelineExecutionApi {
   Collection<Artifact> listArtifacts(@NotNull PipelineExecutionStepState step) throws CloudManagerApiException;
 
   /**
-   * Returns the fully qualified URL to the artifact file for download.
+   * Get the fully qualified URL to the artifact file.
    *
-   * @param step       the step context for the artifact
+   * @param step       the pipeline execution step context
    * @param artifactId the id of the artifact
    * @return the artifact file download url
    * @throws CloudManagerApiException when any error occurs
@@ -294,8 +297,9 @@ public interface PipelineExecutionApi {
   String getArtifactDownloadUrl(@NotNull PipelineExecutionStepState step, String artifactId) throws CloudManagerApiException;
 
   // Convenience Methods
+
   /**
-   * Parses the provided string into an Event instance. Use this API when polling the journal events.
+   * Parse the provided string into an Event instance. Use this API when polling the journal events.
    *
    * @param eventBody the body to parse into the event
    * @return an instance of a {@link PipelineExecutionEvent}
@@ -305,7 +309,7 @@ public interface PipelineExecutionApi {
   PipelineExecutionEvent parseEvent(@NotNull String eventBody) throws CloudManagerApiException;
 
   /**
-   * Parses the provided body into an Event instance, validating the event as part of the parsing process. Use this API when receiving webhook events.
+   * Parse the provided body into an Event instance, validating the event as part of the parsing process. Use this API when receiving webhook events.
    *
    * @param eventBody     the body to parse into the event
    * @param requestHeader the request headers sent with the Event

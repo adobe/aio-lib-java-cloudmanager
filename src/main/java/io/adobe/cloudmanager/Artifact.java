@@ -20,40 +20,44 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+/**
+ * An Artifact for a build step.
+ */
 public interface Artifact {
 
   /**
-   * Returns the id for this artifact;
+   * The unique identifier for this artifact.
    *
    * @return the id
    */
   String getId();
 
   /**
-   * Returns the file name for this artifacts
+   * The original file name for this artifact, as referenced in the Adobe systems.
    *
    * @return the file name
    */
   String getFileName();
 
   /**
-   * Returns the type of this artifact
+   * The type of this artifact. See the <a href="https://developer.adobe.com/experience-cloud/cloud-manager/reference/api/#tag/Execution-Artifacts/operation/listStepArtifacts">List Step API</a> for possible values.
    *
    * @return the type
    */
   String getType();
 
   /**
-   * Returns the md5 hash for the artifact.
+   * The md5 hash for the artifact.
    *
    * @return the md5
    */
   String getMd5();
 
   /**
-   * Returns the fully qualified download url for this artifact
+   * The fully qualified download url for this artifact.
    *
    * @return the download url
+   * @throws CloudManagerApiException when any error occurs
    */
   String getDownloadUrl() throws CloudManagerApiException;
 }
