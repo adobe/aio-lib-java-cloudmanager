@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,20 @@ package io.adobe.cloudmanager;
  */
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Predicate;
+import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
+
+import io.adobe.cloudmanager.exception.DeleteInProgressException;
+import lombok.Getter;
+
+/**
+ * An Environment definition.
+ */
 public interface Environment {
 
   /**
@@ -34,7 +45,7 @@ public interface Environment {
   String getId();
 
   /**
-   * The id of the program context for the environment.
+   * The id of the program context of this environment.
    *
    * @return the program id
    */
@@ -48,11 +59,11 @@ public interface Environment {
   String getName();
 
   /**
-   * Link to this environment.
+   * The type of this environment
    *
-   * @return the link to this environment.
+   * @return type
    */
-  String getSelfLink();
+  Type getEnvType();
 
   /**
    * A list of available log options for downloading.
@@ -62,11 +73,89 @@ public interface Environment {
   Collection<LogOption> getLogOptions();
 
   /**
-   * Delete this program.
+   * Delete this environment.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws DeleteInProgressException if the delete operation is already active
+   * @throws CloudManagerApiException when any error occurs
    */
-  void delete() throws CloudManagerApiException;
+  void delete() throws DeleteInProgressException, CloudManagerApiException;
+
+  /**
+   * Delete this environment, with option to ignore resource deletion failure.
+   *
+   * @param ignoreFailure flag to ignore failures
+   * @throws DeleteInProgressException if the delete operation is already active
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void delete(boolean ignoreFailure) throws DeleteInProgressException, CloudManagerApiException;
+
+  /**
+   * List available logs of the specified type, for the number of days.
+   *
+   * @param option the log option details
+   * @param days   number of days of logs to list
+   * @return the list of logs
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Collection<EnvironmentLog> listLogs(@NotNull LogOption option, int days) throws CloudManagerApiException;
+
+  /**
+   * Retrieve the fully qualified URL to the log file for download.
+   *
+   * @param option the type of logs to download
+   * @param date   the date of the logs to download
+   * @return the log file download url
+   * @throws CloudManagerApiException when any error occurs
+   */
+  String getLogDownloadUrl(@NotNull LogOption option, @NotNull LocalDate date) throws CloudManagerApiException;
+
+  /**
+   * List the deployment regions for this environment
+   *
+   * @return list of deployments
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Collection<RegionDeployment> listRegionDeployments() throws CloudManagerApiException;
+
+  /**
+   * Add a deployment to the specified region.
+   *
+   * @param region the region
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void addRegionDeployment(Region region) throws CloudManagerApiException;
+
+  /**
+   * Remove the the the deployment from the specified region.
+   *
+   * @param region the region
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void removeRegionDeployment(Region region) throws CloudManagerApiException;
+
+  /**
+   * List the variables configured in this environment.
+   *
+   * @return the set of variables
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Set<Variable> getVariables() throws CloudManagerApiException;
+
+  /**
+   * Set the variables on this environment.
+   *
+   * @param variables the variables to set
+   * @return the complete list of variables in this environment
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
+
+  /**
+   * Reset this environment, if it is of type RDE. Any other type of environment results in a NOOP
+   *
+   * @throws CloudManagerApiException when any error occurs
+   */
+  void reset() throws CloudManagerApiException;
 
   /**
    * Retrieve the Developer Console URL for this Environment.
@@ -77,31 +166,54 @@ public interface Environment {
   String getDeveloperConsoleUrl() throws CloudManagerApiException;
 
   /**
-   * Lists the variables configured in this environment.
-   *
-   * @return the list of variables
-   * @throws CloudManagerApiException when any error occurs.
-   */
-  Set<Variable> getVariables() throws CloudManagerApiException;
-
-  /**
-   * Sets the specified variables on this environment.
-   *
-   * @param variables the variables to set
-   * @return the complete list of variables in this environment
-   * @throws CloudManagerApiException when any error occurs.
-   */
-  Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
-
-  /**
-   * Downloads the logs for this environment
+   * Download the logs for this environment, to the specified directory.
    *
    * @param logOption the log file reference
    * @param days      the number of days to download
    * @param dir       the directory in which to place the log files
    * @return a list of EnvironmentLogs with details about the downloaded files
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   Collection<EnvironmentLog> downloadLogs(LogOption logOption, int days, File dir) throws CloudManagerApiException;
 
+  /**
+   * Representation of the different environment types.
+   */
+  enum Type {
+    DEV,
+    STAGE,
+    PROD,
+    RDE
+  }
+
+  /**
+   * Tiers within an Environment
+   */
+  enum Tier {
+    AUTHOR,
+    PREVIEW,
+    PUBLISH
+  }
+
+  /**
+   * Predicate to use for retrieving an environment based on its name. Match is exact.
+   */
+  final class NamePredicate implements Predicate<Environment> {
+
+    private final String name;
+
+    public NamePredicate(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public boolean test(Environment environment) {
+      return StringUtils.equals(name, environment.getName());
+    }
+
+    @Override
+    public String toString() {
+      return String.format("Name='%s'", name);
+    }
+  }
 }

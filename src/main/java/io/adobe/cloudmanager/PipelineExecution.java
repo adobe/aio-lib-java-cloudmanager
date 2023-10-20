@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,102 +20,112 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.util.Optional;
+import java.util.function.Predicate;
+import javax.validation.constraints.NotNull;
+
+/**
+ * A Pipeline Execution representation - an instance of a Pipeline run.
+ */
 public interface PipelineExecution {
 
   /**
-   * The id of this execution
+   * The id of this execution.
    *
    * @return the id
    */
+  @NotNull
   String getId();
 
   /**
-   * The id of the associated program context
+   * The id of the associated program context.
    *
    * @return the program id
    */
+  @NotNull
   String getProgramId();
 
   /**
-   * The id of the associated pipeline context
+   * The id of the associated pipeline context.
    *
    * @return the pipeline id
    */
+  @NotNull
   String getPipelineId();
 
   /**
-   * The current status of the execution
+   * The current status of the execution.
    *
    * @return the status
    */
+  @NotNull
   Status getStatusState();
 
   /**
-   * Advances this execution if in a valid state.
+   * Get the specified action step.
+   * <p>
+   * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @param action the step state action (see {@link StepAction})
+   * @return the step state details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecutionStepState getStep(@NotNull StepAction action) throws CloudManagerApiException;
+
+  /**
+   * Get the current/active step.
+   * <p>
+   * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
+   *
+   * @return the current step
+   * @throws CloudManagerApiException when any error occurs
+   */
+  @NotNull
+  PipelineExecutionStepState getCurrentStep() throws CloudManagerApiException;
+
+  /**
+   * Find the first step that matches the predicate.
+   *
+   * @param predicate the filter criteria
+   * @return the step state if it exists
+   */
+  @NotNull
+  Optional<PipelineExecutionStepState> getStep(@NotNull Predicate<PipelineExecutionStepState> predicate);
+
+  /**
+   * Advance this execution, if in a valid state.
+   *
+   * @throws CloudManagerApiException when any error occurs
    */
   void advance() throws CloudManagerApiException;
 
   /**
    * Cancel this execution, if in a valid state.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   void cancel() throws CloudManagerApiException;
 
   /**
-   * Get the url to advance this pipeline.
+   * Check if this execution is currently running.
+   * <p>
+   * Note: This does not check the <i>current</i> remote state. It only checks the state of this object. To check current state, retrieve a new PipelineExecution instance.
    *
-   * @return the URL to the Advance API endpoint
-   * @throws CloudManagerApiException when any error occurs
+   * @return true if this execution is running, false otherwise
    */
-  String getAdvanceLink() throws CloudManagerApiException;
-
-  /**
-   * Get the url to cancel this pipeline.
-   *
-   * @return the URL to the Cancel API endpoint
-   * @throws CloudManagerApiException when any error occurs
-   */
-  String getCancelLink() throws CloudManagerApiException;
+  boolean isRunning();
 
   /**
    * Pipeline Execution status values
-   *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
   enum Status {
-    NOT_STARTED("NOT_STARTED"),
-    RUNNING("RUNNING"),
-    CANCELLING("CANCELLING"),
-    CANCELLED("CANCELLED"),
-    FINISHED("FINISHED"),
-    ERROR("ERROR"),
-    FAILED("FAILED");
-
-    private String value;
-
-    Status(String value) {
-      this.value = value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static Status fromValue(String text) {
-      for (Status b : Status.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public String getValue() {
-      return value;
-    }
+    NOT_STARTED,
+    RUNNING,
+    CANCELLING,
+    CANCELLED,
+    FINISHED,
+    ERROR,
+    FAILED
   }
 }

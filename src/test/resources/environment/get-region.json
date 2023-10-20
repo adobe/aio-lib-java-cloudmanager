@@ -1,0 +1,16 @@
+{
+  "cluster": "ethos13stageva7",
+  "namespace": "ns-team-aem",
+  "createdAt": "2019-08-24T14:15:22Z",
+  "updatedAt": "2019-08-24T14:15:22Z",
+  "id": "string",
+  "environmentId": "string",
+  "region": "va7",
+  "integrations": {
+    "blobStorage": {
+      "type": "azure_blob"
+    }
+  },
+  "status": "PENDING",
+  "type": "primary"
+}

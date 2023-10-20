@@ -4,7 +4,7 @@ package io.adobe.cloudmanager.impl;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,23 +26,23 @@ import lombok.ToString;
 import lombok.experimental.Delegate;
 
 @ToString
-@EqualsAndHashCode
-public class MetricImpl extends io.adobe.cloudmanager.generated.model.Metric implements Metric {
+@EqualsAndHashCode(callSuper = false)
+public class MetricImpl extends io.adobe.cloudmanager.impl.generated.Metric implements Metric {
 
   @Delegate
-  private final io.adobe.cloudmanager.generated.model.Metric delegate;
+  private final io.adobe.cloudmanager.impl.generated.Metric delegate;
 
-  public MetricImpl(io.adobe.cloudmanager.generated.model.Metric delegate) {
+  public MetricImpl(io.adobe.cloudmanager.impl.generated.Metric delegate) {
     this.delegate = delegate;
   }
 
   @Override
   public Severity getSev() {
-    return Severity.fromValue(getSeverity().getValue());
+    return Severity.valueOf(getSeverity().name());
   }
 
   @Override
   public Comparator getComp() {
-    return Comparator.fromValue(getComparator().getValue());
+    return Comparator.valueOf(getComparator().name());
   }
 }

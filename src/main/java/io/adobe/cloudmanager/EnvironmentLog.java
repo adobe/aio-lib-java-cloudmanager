@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,21 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+/**
+ * A Log file within an Environment.
+ */
 public interface EnvironmentLog {
 
-  /**
-   * The index of the log file.
-   *
-   * @return the index
-   */
-  int getIndex();
 
   /**
-   * The path to the downlaoded file.
+   * The path to the downloaded file.
    *
    * @return the path
    */
-  String getPath();
+  String getDownloadPath();
 
   /**
-   * The URL of the original log file.
+   * The API URL of the original log file.
    *
    * @return the url
    */

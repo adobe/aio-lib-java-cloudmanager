@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,108 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Delegate;
+import io.adobe.cloudmanager.impl.VariableImpl;
+import lombok.Getter;
 
-@ToString
-@EqualsAndHashCode
-public class Variable implements Serializable {
+/**
+ * A Variable definition.
+ */
+public interface Variable {
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * The name of this variable.
+   *
+   * @return variable name
+   */
+  String getName();
 
-  public Variable() {
-    this.delegate = new io.adobe.cloudmanager.generated.model.Variable();
+  /**
+   * The value of this variable, if not a secret. Secrets are always blank when fetch from remote system.
+   *
+   * @return the value or blank
+   */
+  String getValue();
+
+  /**
+   * The variable type
+   *
+   * @return the variable type
+   */
+  Type getVarType();
+
+  /**
+   * The Tier associated with the variable. Only valid when in the context of an {@link Environment}.
+   *
+   * @return the tier
+   */
+  Environment.Tier getTier();
+
+  /**
+   * Build a Variable definition to pass to API creation operations.
+   *
+   * @return a Variable builder
+   */
+  static Builder builder() {
+    return new Builder();
   }
 
-  public Variable(io.adobe.cloudmanager.generated.model.Variable delegate) {
-    this.delegate = delegate;
+  class Builder {
+    private final io.adobe.cloudmanager.impl.generated.Variable delegate;
+
+    private Builder() {
+      delegate = new io.adobe.cloudmanager.impl.generated.Variable();
+    }
+
+    public Builder name(@NotNull String name) {
+      delegate.name(name);
+      return this;
+    }
+
+    public Builder value(@NotNull String value) {
+      delegate.value(value);
+      return this;
+    }
+
+    public Builder type(@NotNull Type type) {
+      delegate.type(io.adobe.cloudmanager.impl.generated.Variable.TypeEnum.fromValue(type.value));
+      return this;
+    }
+
+    public Builder service(@NotNull Environment.Tier tier) {
+      delegate.service(tier.name().toLowerCase());
+      return this;
+    }
+
+    public Variable build() {
+      return new VariableImpl(delegate);
+    }
   }
 
-  @Delegate
-  private final io.adobe.cloudmanager.generated.model.Variable delegate;
+  @Getter
+  enum Type {
+    STRING("string"),
+    SECRET("secretString");
 
+    private final String value;
+
+    Type(String value) {
+      this.value = value;
+    }
+
+    public static Type fromValue(String text) {
+      for (Type b : Type.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(this.value);
+    }
+  }
 }

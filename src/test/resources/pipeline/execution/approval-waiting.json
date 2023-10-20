@@ -1,0 +1,116 @@
+{
+  "_embedded": {
+    "stepStates": [
+      {
+        "id": "1",
+        "stepId": "1",
+        "phaseId": "1",
+        "action": "validate",
+        "status": "FINISHED"
+      },
+      {
+        "id": "2",
+        "stepId": "1",
+        "phaseId": "2",
+        "action": "build",
+        "repository": "weretail",
+        "branch": "main",
+        "status": "FINISHED"
+      },
+      {
+        "id": "3",
+        "stepId": "2",
+        "phaseId": "2",
+        "action": "codeQuality",
+        "repository": "weretail",
+        "branch": "main",
+        "details": {
+          "input": {
+            "override": true
+          }
+        },
+        "status": "FINISHED"
+      },
+      {
+        "id": "4",
+        "stepId": "3",
+        "phaseId": "2",
+        "action": "deploy",
+        "environment": "stage",
+        "environmentType": "stage",
+        "environmentId": "1",
+        "status": "FINISHED"
+      },
+      {
+        "id": "5",
+        "stepId": "1",
+        "phaseId": "3",
+        "action": "securityTest",
+        "environment": "stage",
+        "environmentType": "stage",
+        "environmentId": "1",
+        "status": "FINISHED"
+      },
+      {
+        "id": "6",
+        "stepId": "2",
+        "phaseId": "3",
+        "action": "loadTest",
+        "environment": "stage",
+        "environmentType": "stage",
+        "environmentId": "1",
+        "details": {},
+        "status": "FINISHED"
+      },
+      {
+        "id": "7",
+        "stepId": "3",
+        "phaseId": "3",
+        "action": "assetsTest",
+        "environment": "stage",
+        "environmentType": "stage",
+        "environmentId": "1",
+        "details": {},
+        "status": "FINISHED"
+      },
+      {
+        "id": "7",
+        "stepId": "4",
+        "phaseId": "3",
+        "action": "reportPerformanceTest",
+        "environment": "stage",
+        "environmentType": "stage",
+        "environmentId": "1",
+        "details": {},
+        "status": "FINISHED"
+      },
+      {
+        "id": "8",
+        "stepId": "3",
+        "phaseId": "4",
+        "action": "approval",
+        "environment": "prod",
+        "environmentType": "prod",
+        "environmentId": "1",
+        "details": {},
+        "status": "WAITING"
+      },
+      {
+        "id": "9",
+        "stepId": "1",
+        "phaseId": "4",
+        "action": "deploy",
+        "environment": "prod",
+        "environmentType": "prod",
+        "environmentId": "1",
+        "status": "NOT_STARTED"
+      }
+    ]
+  },
+  "id": "1",
+  "programId": "1",
+  "pipelineId": "1",
+  "artifactsVersion": "2019.708.234050.000001007",
+  "trigger": "MANUAL",
+  "status": "RUNNING"
+}

@@ -1,0 +1,32 @@
+{
+  "_links": {
+    "http://ns.adobe.com/adobecloud/rel/pipeline": {
+      "href": "/api/program/1/pipeline/1",
+      "templated": false
+    },
+    "http://ns.adobe.com/adobecloud/rel/program": {
+      "href": "/api/program/1",
+      "templated": false
+    },
+    "self": {
+      "href": "/api/program/1/pipeline/1/variables",
+      "templated": false
+    }
+  },
+  "_embedded": {
+    "variables": [
+      {
+        "name": "foo",
+        "value": "bar",
+        "type": "string"
+      },
+      {
+        "name": "secretFoo",
+        "type": "secretString"
+      }
+    ]
+  },
+  "_totalNumberOfItems": 2
+}
+   
+

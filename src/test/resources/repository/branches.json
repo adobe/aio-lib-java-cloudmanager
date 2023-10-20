@@ -1,0 +1,66 @@
+{
+  "_totalNumberOfItems": 0,
+  "_embedded": {
+    "branches": [
+      {
+        "programId": "1",
+        "repositoryId": "1",
+        "name": "main",
+        "_links": {
+          "http://ns.adobe.com/adobecloud/rel/program": {
+            "href": "string",
+            "templated": false,
+            "type": "string",
+            "deprecation": "string",
+            "profile": "string",
+            "title": "string",
+            "hreflang": "string",
+            "name": "string"
+          },
+          "http://ns.adobe.com/adobecloud/rel/repository": {
+            "href": "string",
+            "templated": false,
+            "type": "string",
+            "deprecation": "string",
+            "profile": "string",
+            "title": "string",
+            "hreflang": "string",
+            "name": "string"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "next": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "prev": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    },
+    "self": {
+      "href": "string",
+      "templated": false,
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "title": "string",
+      "hreflang": "string",
+      "name": "string"
+    }
+  }
+}

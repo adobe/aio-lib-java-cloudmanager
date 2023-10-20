@@ -4,7 +4,7 @@
 
     <groupId>io.adobe.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <name>Adobe Cloud Manager Client Library</name>
     <description>Library for accessing AdobeIO Cloud Manager endpoints.</description>
@@ -62,80 +62,30 @@
     </distributionManagement>
 
     <properties>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <ims.api>${project.basedir}/src/main/resources/swagger/ims.yaml</ims.api>
-        <cm.api>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml</cm.api>
-        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/master/swagger-specs/events.yaml</cm.events>
+        <aio.lib.version>1.1.4</aio.lib.version>
+        <feign.version>12.5</feign.version>
+        <jackson-version>2.15.3</jackson-version>
 
-        <jjwt.version>0.11.5</jjwt.version>
+        <!-- Use this temporary file with Repository ID fix until CMGR-36102 is closed -->
+        <cm.api>${project.basedir}/src/main/resources/swagger/api.yaml</cm.api>
+        <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/events.yaml</cm.events>
+
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
+        <mockito.version>5.6.0</mockito.version>
+        <mockserver.version>5.15.0</mockserver.version>
 
         <swagger.codegen.version>3.0.46</swagger.codegen.version>
 
         <!-- START Generated Properties -->
-        <swagger-core-version>2.2.15</swagger-core-version>
-        <jersey-version>2.40</jersey-version>
-        <jackson-version>2.15.2</jackson-version>
-        <jackson-databind-version>2.15.2</jackson-databind-version>
+        <swagger-core-version>2.2.17</swagger-core-version>
         <!-- END Generated Properties -->
-
     </properties>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>io.swagger.codegen.v3</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-swagger-ims</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${ims.api}</inputSpec>
-                            <modelPackage>${project.groupId}.ims.generated.model</modelPackage>
-                            <apiPackage>${project.groupId}.ims.generated.api</apiPackage>
-                            <invokerPackage>${project.groupId}.ims.generated.invoker</invokerPackage>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generate-swagger-cm-api</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${cm.api}</inputSpec>
-                            <modelPackage>${project.groupId}.generated.model</modelPackage>
-                            <apiPackage>${project.groupId}.generated.api</apiPackage>
-                            <invokerPackage>${project.groupId}.generated.invoker</invokerPackage>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <language>java</language>
-                            <configOptions>
-                                <serializableModel>true</serializableModel>
-                                <dateLibrary>java8</dateLibrary>
-                            </configOptions>
-                            <library>jersey2</library>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -170,19 +120,9 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <configuration>
-                    <dryRun>true</dryRun>
-                    <verbose>false</verbose>
-                    <canUpdateCopyright>false</canUpdateCopyright>
-                    <canUpdateDescription>false</canUpdateDescription>
-                    <canUpdateLicense>false</canUpdateLicense>
-                    <failOnMissingHeader>true</failOnMissingHeader>
-                    <failOnNotUptodateHeader>true</failOnNotUptodateHeader>
-                    <excludes>**/*.json,**/swagger/**</excludes>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>add-license-headers</id>
+                        <id>check-license-headers</id>
                         <goals>
                             <goal>update-file-header</goal>
                         </goals>
@@ -224,7 +164,6 @@
                 <configuration>
                     <excludes>
                         io/adobe/cloudmanager/**/generated/**/*.class,
-                        io/adobe/cloudmanager/event/*.class
                     </excludes>
                 </configuration>
                 <executions>
@@ -261,11 +200,6 @@
                     <version>${swagger.codegen.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                    <version>2.2.0</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.3.1</version>
@@ -295,12 +229,17 @@
                         <quiet>true</quiet>
                         <doctitle>${project.name} API</doctitle>
                         <windowtitle>${project.name} API</windowtitle>
-                        <excludePackageNames>*.impl:*.model:*.generated.*</excludePackageNames>
+                        <excludePackageNames>*.impl:*.impl.*:*.generated.*</excludePackageNames>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
                     <version>3.3.0</version>
                 </plugin>
                 <plugin>
@@ -317,6 +256,33 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.1.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.2.0</version>
+                    <configuration>
+                        <dryRun>true</dryRun>
+                        <verbose>false</verbose>
+                        <canUpdateCopyright>false</canUpdateCopyright>
+                        <canUpdateDescription>false</canUpdateDescription>
+                        <canUpdateLicense>false</canUpdateLicense>
+                        <failOnMissingHeader>true</failOnMissingHeader>
+                        <failOnNotUptodateHeader>true</failOnNotUptodateHeader>
+                        <excludes>**/*.json,**/generated/**/*.java</excludes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>add-license-headers</id>
+                            <goals>
+                                <goal>update-file-header</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <licenseName>apache_v2</licenseName>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -392,7 +358,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
-                        <version>3.3.0</version>
                         <configuration>
                             <classifier>java8</classifier>
                         </configuration>
@@ -492,6 +457,7 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <phase>compile</phase>
                                 <configuration>
                                     <outputDirectory>${project.basedir}/docs/apidocs</outputDirectory>
                                 </configuration>
@@ -502,7 +468,7 @@
             </build>
         </profile>
         <profile>
-            <id>generate-event-model</id>
+            <id>generate-api-model</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -521,7 +487,7 @@
                                 </goals>
                                 <configuration>
                                     <inputSpec>${cm.events}</inputSpec>
-                                    <modelPackage>${project.groupId}.event</modelPackage>
+                                    <modelPackage>${project.groupId}.impl.generated.event</modelPackage>
                                     <output>${project.basedir}</output>
                                     <generateApis>false</generateApis>
                                     <generateModelTests>false</generateModelTests>
@@ -530,21 +496,82 @@
                                     <generateModelDocumentation>false</generateModelDocumentation>
                                     <!-- override the default library to retrofit2 -->
                                     <language>java</language>
+                                    <library>feign</library>
                                     <configOptions>
                                         <serializableModel>true</serializableModel>
                                         <dateLibrary>java8</dateLibrary>
+                                        <java8>true</java8>
                                         <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                     </configOptions>
-                                    <library>jersey2</library>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>generate-swagger-cm-model</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpec>${cm.api}</inputSpec>
+                                    <modelPackage>${project.groupId}.impl.generated</modelPackage>
+                                    <output>${project.basedir}</output>
+                                    <generateApis>false</generateApis>
+                                    <generateModelTests>false</generateModelTests>
+                                    <generateSupportingFiles>false</generateSupportingFiles>
+                                    <generateApiDocumentation>false</generateApiDocumentation>
+                                    <generateModelDocumentation>false</generateModelDocumentation>
+                                    <!-- override the default library to retrofit2 -->
+                                    <language>java</language>
+                                    <library>feign</library>
+                                    <configOptions>
+                                        <serializableModel>true</serializableModel>
+                                        <dateLibrary>java8</dateLibrary>
+                                        <java8>true</java8>
+                                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                    </configOptions>
+                                </configuration>
+                            </execution>
+
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>update-license-headers</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <configuration>
+                            <dryRun>false</dryRun>
+                            <verbose>true</verbose>
+                            <canUpdateCopyright>true</canUpdateCopyright>
+                            <canUpdateDescription>true</canUpdateDescription>
+                            <canUpdateLicense>true</canUpdateLicense>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
 
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <!-- START Generated Dependencies -->
         <dependency>
@@ -552,32 +579,27 @@
             <artifactId>swagger-annotations</artifactId>
             <version>${swagger-core-version}</version>
         </dependency>
+        <!-- END Generated Dependencies -->
 
-        <!-- HTTP client: jersey-client -->
         <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>${feign.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+            <version>${feign.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jackson</artifactId>
+            <version>${feign.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>${jersey-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1.1</version>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-slf4j</artifactId>
+            <version>${feign.version}</version>
         </dependency>
 
         <!-- JSON processing: jackson -->
@@ -594,14 +616,48 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind-version}</version>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson-version}</version>
         </dependency>
-        <!-- END Generated Dependencies -->
+
+        <dependency>
+            <groupId>com.adobe.aio</groupId>
+            <artifactId>aio-lib-java-core</artifactId>
+            <version>${aio.lib.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.aio</groupId>
+            <artifactId>aio-lib-java-ims</artifactId>
+            <version>${aio.lib.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.aio</groupId>
+            <artifactId>aio-lib-java-events-webhook</artifactId>
+            <version>${aio.lib.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 
         <dependency>
             <groupId>javax.validation</groupId>
@@ -610,27 +666,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>${jjwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -639,40 +677,57 @@
             <version>3.13.0</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.10.0</version>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.13.0</version>
+            <version>2.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.8.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-core</artifactId>
+            <version>${mockserver.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-client-java</artifactId>
+            <version>${mockserver.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-junit-jupiter</artifactId>
-            <version>5.15.0</version>
+            <version>${mockserver.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.70</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.7</version>
+            <version>2.0.9</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

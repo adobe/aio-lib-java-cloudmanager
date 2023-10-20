@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,11 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.util.Collection;
+
+/**
+ * A Program definition.
+ */
 public interface Program {
 
   /**
@@ -30,18 +35,11 @@ public interface Program {
   String getId();
 
   /**
-   * Name of the program
+   * Name of the program.
    *
    * @return name
    **/
   String getName();
-
-  /**
-   * Link to this program.
-   *
-   * @return the link to this program.
-   */
-  String getSelfLink();
 
   /**
    * Delete this program.
@@ -50,4 +48,11 @@ public interface Program {
    */
   void delete() throws CloudManagerApiException;
 
+  /**
+   * List all regions which can be used to create environments for this program.
+   *
+   * @return the list of regions
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Collection<Region> listRegions() throws CloudManagerApiException;
 }

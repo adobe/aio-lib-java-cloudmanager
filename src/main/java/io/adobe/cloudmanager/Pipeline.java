@@ -4,7 +4,7 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,17 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.Getter;
+
+/**
+ * A Pipeline definition.
+ */
 public interface Pipeline {
 
   /**
@@ -56,24 +62,14 @@ public interface Pipeline {
   Status getStatusState();
 
   /**
-   * Starts this pipeline.
+   * Delete this pipeline.
    *
-   * @return the new execution.
-   * @throws CloudManagerApiException when any errors occur.
-   */
-  PipelineExecution startExecution() throws CloudManagerApiException;
-
-  /**
-   * Returns the specified execution.
-   *
-   * @param executionId the id of the execution to retrieve
-   * @return the execution details
    * @throws CloudManagerApiException when any error occurs
    */
-  PipelineExecution getExecution(String executionId) throws CloudManagerApiException;
+  void delete() throws CloudManagerApiException;
 
   /**
-   * Updates this pipeline with the specified changes.
+   * Update this pipeline with the specified changes.
    *
    * @param update the updates to make to this pipeline
    * @return the updated Pipeline.
@@ -82,11 +78,36 @@ public interface Pipeline {
   Pipeline update(PipelineUpdate update) throws CloudManagerApiException;
 
   /**
-   * Delete this pipeline.
+   * Invalidate the build cache for this pipeline.
    *
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
-  void delete() throws CloudManagerApiException;
+  void invalidateCache() throws CloudManagerApiException;
+
+  /**
+   * Get the current execution of this pipeline, if it exists.
+   *
+   * @return An optional containing the execution details of the pipeline
+   * @throws CloudManagerApiException when any error occurs
+   */
+  Optional<PipelineExecution> getCurrentExecution() throws CloudManagerApiException;
+
+  /**
+   * Start this pipeline.
+   *
+   * @return the new execution.
+   * @throws CloudManagerApiException when any errors occur.
+   */
+  PipelineExecution startExecution() throws CloudManagerApiException;
+
+  /**
+   * Get the execution.
+   *
+   * @param executionId the id of the execution to retrieve
+   * @return the execution details
+   * @throws CloudManagerApiException when any error occurs
+   */
+  PipelineExecution getExecution(String executionId) throws CloudManagerApiException;
 
   /**
    * Retrieve the variables associated with this pipeline.
@@ -94,61 +115,28 @@ public interface Pipeline {
    * @return the variables in this pipeline
    * @throws CloudManagerApiException when any errors occur
    */
-  Set<Variable> listVariables() throws CloudManagerApiException;
+  Set<Variable> getVariables() throws CloudManagerApiException;
 
   /**
-   * Sets the specified variables on this pipeline.
+   * Set the variables on this pipeline.
    *
    * @param variables the variables to set
    * @return the complete list of variables in this pipeline
-   * @throws CloudManagerApiException when any error occurs.
+   * @throws CloudManagerApiException when any error occurs
    */
   Set<Variable> setVariables(Variable... variables) throws CloudManagerApiException;
 
   /**
-   * Link to this pipeline.
-   *
-   * @return the link to this pipeline.
-   */
-  String getSelfLink();
-
-  /**
    * Pipeline status values
-   *
-   * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
   enum Status {
-    IDLE("IDLE"),
-    BUSY("BUSY"),
-    WAITING("WAITING");
-
-    private String value;
-
-    Status(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    public static Status fromValue(String text) {
-      for (Status b : Status.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
+    IDLE,
+    BUSY,
+    WAITING
   }
 
   /**
-   * Predicate for pipelines based on BUSY status.
+   * Predicate for pipelines which are BUSY.
    */
   Predicate<Pipeline> IS_BUSY = (pipeline -> Status.BUSY == pipeline.getStatusState());
 
@@ -164,7 +152,9 @@ public interface Pipeline {
     }
 
     @Override
-    public boolean test(Pipeline pipeline) { return StringUtils.equals(name, pipeline.getName()); }
+    public boolean test(Pipeline pipeline) {
+      return StringUtils.equals(name, pipeline.getName());
+    }
   }
 
   /**
@@ -174,7 +164,9 @@ public interface Pipeline {
 
     private final String id;
 
-    public IdPredicate(String id) { this.id = id; }
+    public IdPredicate(String id) {
+      this.id = id;
+    }
 
     @Override
     public boolean test(Pipeline pipeline) {

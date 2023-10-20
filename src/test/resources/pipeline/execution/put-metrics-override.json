@@ -1,0 +1,20 @@
+{
+  "metrics": [
+    {
+      "kpi": "coverage",
+      "override": true
+    },
+    {
+      "kpi": "security_rating",
+      "override": true
+    },
+    {
+      "kpi": "sqale_rating",
+      "override": true
+    },
+    {
+      "kpi": "reliability_rating",
+      "override": true
+    }
+  ]
+}

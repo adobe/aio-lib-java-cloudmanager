@@ -1,0 +1,48 @@
+{
+  "_embedded": {
+    "stepStates": [
+      {
+        "id": "1",
+        "stepId": "1",
+        "phaseId": "1",
+        "action": "validate",
+        "status": "FINISHED"
+      },
+      {
+        "id": "2",
+        "stepId": "1",
+        "phaseId": "2",
+        "action": "build",
+        "repository": "weretail",
+        "branch": "main",
+        "status": "FINISHED"
+      },
+      {
+        "id": "3",
+        "stepId": "2",
+        "phaseId": "2",
+        "action": "codeQuality",
+        "repository": "weretail",
+        "branch": "main",
+        "status": "FINISHED"
+      },
+      {
+        "id": "4",
+        "stepId": "3",
+        "phaseId": "2",
+        "action": "deploy",
+        "environment": "dev",
+        "environmentType": "dev",
+        "environmentId": "1885",
+        "assetCollectionId": "1",
+        "status": "FINISHED"
+      }
+    ]
+  },
+  "id": "1",
+  "programId": "1",
+  "pipelineId": "1",
+  "trigger": "MANUAL",
+  "user": "AB1234567C8D90123E466EAB@AdobeID",
+  "status": "FINISHED",
+}

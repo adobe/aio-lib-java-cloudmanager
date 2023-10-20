@@ -4,14 +4,14 @@ package io.adobe.cloudmanager;
  * #%L
  * Adobe Cloud Manager Client Library
  * %%
- * Copyright (C) 2020 - 2021 Adobe Inc.
+ * Copyright (C) 2020 - 2023 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +20,14 @@ package io.adobe.cloudmanager;
  * #L%
  */
 
-import java.io.OutputStream;
+import java.io.File;
+import java.util.function.Predicate;
 
+import lombok.Getter;
+
+/**
+ * A Pipeline Execution Step representation - an instance of an action/step within a Pipeline Execution.
+ */
 public interface PipelineExecutionStepState {
 
   /**
@@ -46,21 +52,23 @@ public interface PipelineExecutionStepState {
   String getPhaseId();
 
   /**
-   * The name of the step action.
+   * The action of the step.
    *
    * @return the action
+   * @see StepAction
    */
-  String getAction();
+  StepAction getStepAction();
 
   /**
-   * The current status of the pipeline execution step
+   * The current status of the pipeline execution step.
    *
    * @return the status
+   * @see Status
    */
   Status getStatusState();
 
   /**
-   * Return the execution associated with this step state.
+   * Get the execution associated with this step state.
    *
    * @return pipeline execution
    * @throws CloudManagerApiException when any error occurs
@@ -68,28 +76,28 @@ public interface PipelineExecutionStepState {
   PipelineExecution getExecution() throws CloudManagerApiException;
 
   /**
-   * Indicates whether or not this step has a log which can be downloaded.
+   * Indicates if this step has a log which can be retrieved.
    *
    * @return {@code true} if a log exists, {@code false} otherwise.
    */
   boolean hasLogs();
 
   /**
-   * Streams the default log, if any, for this step to the specified output stream.
+   * Download the default log associated with this step, to the specified directory.
    *
-   * @param outputStream the output stream to write to
+   * @param dir the directory in which to save the file
    * @throws CloudManagerApiException when any error occurs
    */
-  void getLog(OutputStream outputStream) throws CloudManagerApiException;
+  void getLog(File dir) throws CloudManagerApiException;
 
   /**
-   * Streams the specified log, if any, for this step to the specified output stream.
+   * Download the named log associated with this step, to the specified directory.
    *
-   * @param name         The name of the log to retrieve
-   * @param outputStream the output stream to write to
+   * @param name The name of the log to retrieve
+   * @param dir  the directory in which to save the file
    * @throws CloudManagerApiException when any error occurs
    */
-  void getLog(String name, OutputStream outputStream) throws CloudManagerApiException;
+  void getLog(String name, File dir) throws CloudManagerApiException;
 
   /**
    * Pipeline Execution Step status values
@@ -97,39 +105,34 @@ public interface PipelineExecutionStepState {
    * @see <a href="https://www.adobe.io/apis/experiencecloud/cloud-manager/api-reference.html#!AdobeDocs/cloudmanager-api-docs/master/swagger-specs/api.yaml">Cloud Manager Pipeline Model</a>
    */
   enum Status {
-    NOT_STARTED("NOT_STARTED"),
-    RUNNING("RUNNING"),
-    FINISHED("FINISHED"),
-    ERROR("ERROR"),
-    ROLLING_BACK("ROLLING_BACK"),
-    ROLLED_BACK("ROLLED_BACK"),
-    WAITING("WAITING"),
-    CANCELLED("CANCELLED"),
-    FAILED("FAILED");
-
-    private String value;
-
-    Status(String value) {
-      this.value = value;
-    }
-
-    public static Status fromValue(String text) {
-      for (Status b : Status.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
+    NOT_STARTED,
+    RUNNING,
+    FINISHED,
+    ERROR,
+    ROLLING_BACK,
+    ROLLED_BACK,
+    WAITING,
+    CANCELLED,
+    FAILED
   }
 
+  /**
+   * Predicate for finding the current step in the execution.
+   */
+  Predicate<PipelineExecutionStepState> IS_CURRENT = (stepState ->
+      stepState.getStatusState() != PipelineExecutionStepState.Status.FINISHED);
+
+  /**
+   * Predicate for finding a step within the execution which is waiting.
+   */
+  Predicate<PipelineExecutionStepState> IS_WAITING = (stepState ->
+      stepState.getStatusState() == PipelineExecutionStepState.Status.WAITING
+  );
+
+  /**
+   * Predicate for the step that within the execution which is currently running.
+   */
+  Predicate<PipelineExecutionStepState> IS_RUNNING = (stepState ->
+      stepState.getStatusState() == PipelineExecutionStepState.Status.RUNNING
+  );
 }
