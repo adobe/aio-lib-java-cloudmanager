@@ -84,12 +84,16 @@ public interface ContentSet {
   void delete() throws CloudManagerApiException;
 
   /**
-   * Create a content flow with this content set, between the specified environments.
+   * Start a content flow between the specified environments, using the specified content set.
    *
+   * @param srcEnvironmentId  the id of the source environment
+   * @param destEnvironmentId the id of the destination environment
+   * @param includeAcl        whether to include the content's ACL definitions
    * @return the content flow
+   * @throws CloudManagerApiException when any error occurs
    */
   @NotNull
-  ContentFlow startFlow(@NotNull String srcEnvironmentId, @NotNull String destEnvironment, boolean includeAcl) throws CloudManagerApiException;
+  ContentFlow startFlow(@NotNull String srcEnvironmentId, @NotNull String destEnvironmentId, boolean includeAcl) throws CloudManagerApiException;
 
   /**
    * A path definition for a content set, containing a root path definition, and excluded sub paths.
