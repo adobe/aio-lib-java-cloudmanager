@@ -10,13 +10,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 -->
 [![Maven Central](https://img.shields.io/maven-central/v/io.adobe.cloudmanager/aio-lib-cloudmanager)](https://search.maven.org/artifact/io.adobe.cloudmanager/aio-lib-cloudmanager)
-[![Build](https://github.com/adobe/aio-lib-java-cloudmanager/workflows/Build/badge.svg)](https://github.com/adobe/aio-lib-java-cloudmanager/actions?query=workflow%3ABuild)
+[![Build](https://github.com/adobe/aio-lib-java-cloudmanager/actions/workflows/snapshot-deploy.yaml/badge.svg)](https://github.com/adobe/aio-lib-java-cloudmanager/actions/workflows/snapshot-deploy.yaml)
 [![Codecov](https://img.shields.io/codecov/c/github/adobe/aio-lib-java-cloudmanager)](https://codecov.io/gh/adobe/aio-lib-java-cloudmanager)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # Adobe I/O Java Cloud Manager Library
 
-This is a Java Library wrapping the [Adobe Cloud Manager API](https://www.adobe.io/apis/experiencecloud/cloud-manager/docs.html).
+This is a Java Library wrapping the [Adobe Cloud Manager API](https://developer.adobe.com/experience-cloud/cloud-manager/).
 
 ## Goals
 

@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.adobe.cloudmanager</groupId>
+    <groupId>com.adobe.aio.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 
@@ -136,34 +136,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>process-readme</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/docs</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <filtering>true</filtering>
-                                    <directory>${project.basedir}/src/doc/resources</directory>
-                                    <includes>
-                                        <include>index.md</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        io/adobe/cloudmanager/**/generated/**/*.class,
+                        com/adobe/aio/cloudmanager/**/generated/**/*.class,
                     </excludes>
                 </configuration>
                 <executions>
@@ -207,7 +186,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -222,7 +201,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                     <configuration>
                         <source>11</source>
                         <notimestamp>true</notimestamp>
@@ -435,7 +414,7 @@
             </build>
         </profile>
         <profile>
-            <id>generate-site-javadoc</id>
+            <id>generate-site-docs</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -447,6 +426,31 @@
                         <configuration>
                             <directory>docs/apidocs</directory>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>process-readme</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/docs</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <filtering>true</filtering>
+                                            <directory>${project.basedir}/src/doc/resources</directory>
+                                            <includes>
+                                                <include>index.md</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
