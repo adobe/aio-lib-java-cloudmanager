@@ -77,7 +77,7 @@
         <mockito.version>5.6.0</mockito.version>
         <mockserver.version>5.15.0</mockserver.version>
 
-        <swagger.codegen.version>3.0.46</swagger.codegen.version>
+        <swagger.codegen.version>3.0.48</swagger.codegen.version>
 
         <!-- START Generated Properties -->
         <swagger-core-version>2.2.17</swagger-core-version>
