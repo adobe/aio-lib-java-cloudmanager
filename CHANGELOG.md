@@ -10,6 +10,7 @@
 
 ### 📦 Uncategorized
 
+- Bump org.apache.maven.plugins:maven-clean-plugin from 3.3.1 to 3.3.2 [#82](https://github.com/adobe/aio-lib-java-cloudmanager/pull/82) (dependabot[bot])
 - Align Package and Group ID with upstream AIO Library [#77](https://github.com/adobe/aio-lib-java-cloudmanager/pull/77) (bstopp)
 - Change Issue templates. [#66](https://github.com/adobe/aio-lib-java-cloudmanager/pull/66) (bstopp)
 - Update Dependencies and clean up workflows. [#65](https://github.com/adobe/aio-lib-java-cloudmanager/pull/65) (bstopp)
