@@ -10,6 +10,7 @@
 
 ### 📦 Uncategorized
 
+- Bump actions/checkout from 3 to 4 [#71](https://github.com/adobe/aio-lib-java-cloudmanager/pull/71) (dependabot[bot])
 - Bump org.jacoco:jacoco-maven-plugin from 0.8.10 to 0.8.11 [#81](https://github.com/adobe/aio-lib-java-cloudmanager/pull/81) (dependabot[bot])
 - Bump aio.lib.version from 1.1.4 to 1.1.8 [#78](https://github.com/adobe/aio-lib-java-cloudmanager/pull/78) (dependabot[bot])
 - Bump org.apache.maven.plugins:maven-clean-plugin from 3.3.1 to 3.3.2 [#82](https://github.com/adobe/aio-lib-java-cloudmanager/pull/82) (dependabot[bot])
