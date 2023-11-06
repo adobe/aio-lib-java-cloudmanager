@@ -74,7 +74,7 @@
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/events.yaml</cm.events>
 
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
-        <mockito.version>5.6.0</mockito.version>
+        <mockito.version>5.7.0</mockito.version>
         <mockserver.version>5.15.0</mockserver.version>
 
         <swagger.codegen.version>3.0.50</swagger.codegen.version>
