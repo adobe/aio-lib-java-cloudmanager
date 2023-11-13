@@ -80,7 +80,7 @@
         <swagger.codegen.version>3.0.50</swagger.codegen.version>
 
         <!-- START Generated Properties -->
-        <swagger-core-version>2.2.17</swagger-core-version>
+        <swagger-core-version>2.2.19</swagger-core-version>
         <!-- END Generated Properties -->
     </properties>
 
