@@ -4,9 +4,13 @@
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-1.0.1...HEAD)
 
-### 📦 Uncategorized
+### 🚀 Enhancements
 
 - Change implementation to Feign to align with AIO Lilb [#76](https://github.com/adobe/aio-lib-java-cloudmanager/pull/76) (bstopp)
+
+### 📦 Uncategorized
+
+- Align Package and Group ID with upstream AIO Library [#77](https://github.com/adobe/aio-lib-java-cloudmanager/pull/77) (bstopp)
 - Change Issue templates. [#66](https://github.com/adobe/aio-lib-java-cloudmanager/pull/66) (bstopp)
 - Update Dependencies and clean up workflows. [#65](https://github.com/adobe/aio-lib-java-cloudmanager/pull/65) (bstopp)
 - Changelog history is getting lost. [#64](https://github.com/adobe/aio-lib-java-cloudmanager/pull/64) (bstopp)
