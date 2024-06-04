@@ -65,22 +65,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <aio.lib.version>1.1.8</aio.lib.version>
-        <feign.version>12.5</feign.version>
-        <jackson-version>2.15.3</jackson-version>
+        <aio.lib.version>1.1.26</aio.lib.version>
+        <feign.version>13.2.1</feign.version>
+        <jackson-version>2.17.1</jackson-version>
 
         <!-- Use this temporary file with Repository ID fix until CMGR-36102 is closed -->
         <cm.api>${project.basedir}/src/main/resources/swagger/api.yaml</cm.api>
         <cm.events>https://raw.githubusercontent.com/AdobeDocs/cloudmanager-api-docs/main/swagger-specs/events.yaml</cm.events>
 
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
-        <mockito.version>5.6.0</mockito.version>
+        <mockito.version>5.12.0</mockito.version>
         <mockserver.version>5.15.0</mockserver.version>
 
         <swagger.codegen.version>3.0.50</swagger.codegen.version>
 
         <!-- START Generated Properties -->
-        <swagger-core-version>2.2.17</swagger-core-version>
+        <swagger-core-version>2.2.22</swagger-core-version>
         <!-- END Generated Properties -->
     </properties>
 
@@ -570,7 +570,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.10.0</version>
+                <version>${junit.jupiter.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -632,34 +632,16 @@
             <groupId>com.adobe.aio</groupId>
             <artifactId>aio-lib-java-core</artifactId>
             <version>${aio.lib.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.adobe.aio</groupId>
             <artifactId>aio-lib-java-ims</artifactId>
             <version>${aio.lib.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.adobe.aio</groupId>
             <artifactId>aio-lib-java-events-webhook</artifactId>
             <version>${aio.lib.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
 
@@ -672,23 +654,23 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>1.18.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.13.0</version>
+            <version>3.14.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.14.0</version>
+            <version>2.16.1</version>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <version>2.8.0</version>
+            <version>2.9.0</version>
         </dependency>
 
         <dependency>
@@ -731,7 +713,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.9</version>
+            <version>2.0.13</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
