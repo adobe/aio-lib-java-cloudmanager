@@ -10,6 +10,7 @@
 
 ### 📦 Uncategorized
 
+- ci: Use GITHUB_OUTPUT envvar instead of set-output command [#95](https://github.com/adobe/aio-lib-java-cloudmanager/pull/95) (arunsathiya)
 - Bump codecov/codecov-action from 3 to 4 [#97](https://github.com/adobe/aio-lib-java-cloudmanager/pull/97) (dependabot[bot])
 - Bump org.apache.maven.plugins:maven-surefire-plugin from 3.1.2 to 3.2.5 [#94](https://github.com/adobe/aio-lib-java-cloudmanager/pull/94) (dependabot[bot])
 - Bump actions/setup-java from 3 to 4 [#90](https://github.com/adobe/aio-lib-java-cloudmanager/pull/90) (dependabot[bot])
