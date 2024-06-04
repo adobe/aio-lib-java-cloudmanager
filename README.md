@@ -67,3 +67,29 @@ Activated after every successful [Tag & Release](#tag--release) run. This will r
 ### Licensing
 
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
+
+
+### Developing
+
+#### Updating API
+
+If there's an update to the Cloud Manager swagger main API or Event API, then new models need to be generated. 
+
+The Event API is fetched directly from Github. However, the rest of the API has been modified slightly from the GitHub source. To update, replace the API's yaml file with the GitHub source, but ensure to keep these changes:
+
+* Repository Definition
+  * Add the ID property
+* EnvironmentLog Definition
+  * Program Id property is string type (not integer)
+  * Environment Id property is string type (not integer)
+
+
+When ready to generate the new classes, run:
+
+```shell
+
+> mvn clean generate-sources -Pgenerate-api-model
+
+```
+
+Review the changes and commit them. There may be some trivial in the imports, as Swagger will make changes to the generated classes files. But a thorough review should still be done to ensure nothing unexpected has changed. 
