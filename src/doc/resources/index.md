@@ -41,6 +41,8 @@ To make API calls into Cloud Manager, an Access Token is required.
 For OAuth Access Tokens, the API will manage creating and updating as needed. However, you need to provide a valid Workspace, found in [AIO Java client library](https://opensource.adobe.com/aio-lib-java).
 
 ```java
+...
+
 OAuthContext authContext = OAuthContext.builder()
     .clientSecret("<CLIENT_SECRET>")
     .addScope("<SCOPE>") // Add all necessary scopes.
@@ -51,7 +53,9 @@ Workspace workspace = Workspace.builder()
     .apiKey("<API KEY>")
     .build();
 
-CloudManagerApi api = CloudManagerApi.builder().workspace(workspace).build();
+ProgramApi api = new ApiBuilder(ProgramApi.class).workspace(workspace).build();
+
+...
 ```
 
 See the [JavaDocs](https://opensource.adobe.com/aio-lib-java-cloudmanager/apidocs/) for the API.
