@@ -10,6 +10,7 @@
 
 ### 📦 Uncategorized
 
+- Update Docs [#99](https://github.com/adobe/aio-lib-java-cloudmanager/pull/99) (bstopp)
 - Bump io.swagger.codegen.v3:swagger-codegen-maven-plugin from 3.0.46 to 3.0.50 [#83](https://github.com/adobe/aio-lib-java-cloudmanager/pull/83) (dependabot[bot])
 - Bump actions/checkout from 3 to 4 [#71](https://github.com/adobe/aio-lib-java-cloudmanager/pull/71) (dependabot[bot])
 - Bump org.jacoco:jacoco-maven-plugin from 0.8.10 to 0.8.11 [#81](https://github.com/adobe/aio-lib-java-cloudmanager/pull/81) (dependabot[bot])
