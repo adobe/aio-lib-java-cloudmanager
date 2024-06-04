@@ -40,9 +40,11 @@ import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
 
-import static com.adobe.aio.util.feign.FeignUtil.*;
 
 public class FeignUtil {
+
+  private static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
+  private static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
 
   private FeignUtil() {
 
