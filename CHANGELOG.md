@@ -1,38 +1,6 @@
 # 📑 Changelog
 
-## [Unreleased](https://github.com/adobe/aio-lib-java-cloudmanager/tree/main)
-
-[Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-1.0.1...HEAD)
-
-### 🚀 Enhancements
-
-- Change implementation to Feign to align with AIO Lilb [#76](https://github.com/adobe/aio-lib-java-cloudmanager/pull/76) (bstopp)
-
-### 📦 Uncategorized
-
-- Bump softprops/action-gh-release from 1 to 2 [#101](https://github.com/adobe/aio-lib-java-cloudmanager/pull/101) (dependabot[bot])
-- ci: Use GITHUB_OUTPUT envvar instead of set-output command [#95](https://github.com/adobe/aio-lib-java-cloudmanager/pull/95) (arunsathiya)
-- Bump codecov/codecov-action from 3 to 4 [#97](https://github.com/adobe/aio-lib-java-cloudmanager/pull/97) (dependabot[bot])
-- Bump org.apache.maven.plugins:maven-surefire-plugin from 3.1.2 to 3.2.5 [#94](https://github.com/adobe/aio-lib-java-cloudmanager/pull/94) (dependabot[bot])
-- Bump actions/setup-java from 3 to 4 [#90](https://github.com/adobe/aio-lib-java-cloudmanager/pull/90) (dependabot[bot])
-- Chore: Update deps [#100](https://github.com/adobe/aio-lib-java-cloudmanager/pull/100) (bstopp)
-- Update Docs [#99](https://github.com/adobe/aio-lib-java-cloudmanager/pull/99) (bstopp)
-- Bump io.swagger.codegen.v3:swagger-codegen-maven-plugin from 3.0.46 to 3.0.50 [#83](https://github.com/adobe/aio-lib-java-cloudmanager/pull/83) (dependabot[bot])
-- Bump actions/checkout from 3 to 4 [#71](https://github.com/adobe/aio-lib-java-cloudmanager/pull/71) (dependabot[bot])
-- Bump org.jacoco:jacoco-maven-plugin from 0.8.10 to 0.8.11 [#81](https://github.com/adobe/aio-lib-java-cloudmanager/pull/81) (dependabot[bot])
-- Bump aio.lib.version from 1.1.4 to 1.1.8 [#78](https://github.com/adobe/aio-lib-java-cloudmanager/pull/78) (dependabot[bot])
-- Bump org.apache.maven.plugins:maven-clean-plugin from 3.3.1 to 3.3.2 [#82](https://github.com/adobe/aio-lib-java-cloudmanager/pull/82) (dependabot[bot])
-- Align Package and Group ID with upstream AIO Library [#77](https://github.com/adobe/aio-lib-java-cloudmanager/pull/77) (bstopp)
-- Change Issue templates. [#66](https://github.com/adobe/aio-lib-java-cloudmanager/pull/66) (bstopp)
-- Update Dependencies and clean up workflows. [#65](https://github.com/adobe/aio-lib-java-cloudmanager/pull/65) (bstopp)
-- Changelog history is getting lost. [#64](https://github.com/adobe/aio-lib-java-cloudmanager/pull/64) (bstopp)
-- Update Actions [#63](https://github.com/adobe/aio-lib-java-cloudmanager/pull/63) (bstopp)
-- Update workflows for changelog generation. [#62](https://github.com/adobe/aio-lib-java-cloudmanager/pull/62) (bstopp)
-- Bump heinrichreimer/github-changelog-generator-action from 2.2 to 2.3 [#53](https://github.com/adobe/aio-lib-java-cloudmanager/pull/53) (dependabot[bot])
-- Update even more deps. [#54](https://github.com/adobe/aio-lib-java-cloudmanager/pull/54) (bstopp)
-- Update action versions. [#50](https://github.com/adobe/aio-lib-java-cloudmanager/pull/50) (bstopp)
-
-
+- no changes
 ## [aio-lib-cloudmanager-1.0.1](https://github.com/adobe/aio-lib-java-cloudmanager/tree/aio-lib-cloudmanager-1.0.1) (2023-05-01)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java-cloudmanager/compare/aio-lib-cloudmanager-1.0.0...aio-lib-cloudmanager-1.0.1)
