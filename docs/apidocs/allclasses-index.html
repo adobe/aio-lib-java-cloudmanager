@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":2,"i1":1,"i2":8,"i3":4,"i4":2,"i5":4,"i6":1,"i7":1,"i8":1,"i9":8,"i10":1,"i11":1,"i12":4,"i13":4,"i14":2,"i15":1,"i16":2,"i17":2,"i18":4,"i19":2,"i20":1,"i21":4,"i22":2,"i23":2,"i24":2,"i25":2,"i26":2,"i27":2,"i28":2,"i29":2,"i30":1,"i31":4,"i32":2,"i33":2,"i34":1,"i35":4,"i36":2,"i37":2};
+var data = {"i0":2,"i1":1,"i2":8,"i3":1,"i4":1,"i5":2,"i6":4,"i7":1,"i8":2,"i9":1,"i10":8,"i11":1,"i12":2,"i13":4,"i14":4,"i15":1,"i16":1,"i17":1,"i18":2,"i19":1,"i20":4,"i21":4,"i22":1,"i23":2,"i24":2,"i25":4,"i26":1,"i27":1,"i28":4,"i29":1,"i30":1,"i31":1,"i32":1,"i33":1,"i34":1,"i35":1,"i36":4,"i37":1,"i38":8,"i39":2,"i40":1,"i41":1,"i42":4,"i43":1,"i44":4,"i45":1,"i46":1,"i47":4,"i48":1,"i49":1,"i50":1,"i51":2,"i52":4};
 var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"],4:["t3","Enum Summary"],8:["t4","Exception Summary"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -112,203 +112,317 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/AdobeClientCredentials.html" title="class in io.adobe.cloudmanager">AdobeClientCredentials</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ApiBuilder.html" title="class in com.adobe.aio.cloudmanager">ApiBuilder</a>&lt;<a href="com/adobe/aio/cloudmanager/ApiBuilder.html" title="type parameter in ApiBuilder">A</a>&gt;</td>
+<th class="colLast" scope="row">
+<div class="block">Builder for creating instances of the Cloud Manager APIs</div>
+</th>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/CloudManagerApi.html" title="interface in io.adobe.cloudmanager">CloudManagerApi</a></td>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Artifact.html" title="interface in com.adobe.aio.cloudmanager">Artifact</a></td>
 <th class="colLast" scope="row">
-<div class="block">API for interacting with Cloud Manager AdobeIO endpoints.</div>
+<div class="block">An Artifact for a build step.</div>
 </th>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/CloudManagerApiException.html" title="class in io.adobe.cloudmanager">CloudManagerApiException</a></td>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/CloudManagerApiException.html" title="class in com.adobe.aio.cloudmanager">CloudManagerApiException</a></td>
 <th class="colLast" scope="row">
 <div class="block">Represents exception states that may occur during interactions with the AdobeIO API.</div>
 </th>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/CloudManagerApiException.ErrorType.html" title="enum in io.adobe.cloudmanager">CloudManagerApiException.ErrorType</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Constants.html" title="interface in com.adobe.aio.cloudmanager">Constants</a></td>
+<th class="colLast" scope="row">
+<div class="block">Constants field values used across the various APIs.</div>
+</th>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/CloudManagerEvent.html" title="class in io.adobe.cloudmanager.event">CloudManagerEvent</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ContentFlow.html" title="interface in com.adobe.aio.cloudmanager">ContentFlow</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Content Flow operation.</div>
+</th>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/CloudManagerEvent.EventType.html" title="enum in io.adobe.cloudmanager.event">CloudManagerEvent.EventType</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ContentFlow.Results.html" title="class in com.adobe.aio.cloudmanager">ContentFlow.Results</a></td>
+<th class="colLast" scope="row">
+<div class="block">Representation of Export/Import results.</div>
+</th>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Environment.html" title="interface in io.adobe.cloudmanager">Environment</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ContentFlow.Status.html" title="enum in com.adobe.aio.cloudmanager">ContentFlow.Status</a></td>
+<th class="colLast" scope="row">
+<div class="block">Potential states for Content Flow process.</div>
+</th>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/EnvironmentLog.html" title="interface in io.adobe.cloudmanager">EnvironmentLog</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ContentSet.html" title="interface in com.adobe.aio.cloudmanager">ContentSet</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Content Set definition</div>
+</th>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/IdentityManagementApi.html" title="interface in io.adobe.cloudmanager">IdentityManagementApi</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ContentSet.PathDefinition.html" title="class in com.adobe.aio.cloudmanager">ContentSet.PathDefinition</a></td>
+<th class="colLast" scope="row">
+<div class="block">A path definition for a content set, containing a root path definition, and excluded sub paths.</div>
+</th>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/IdentityManagementApiException.html" title="class in io.adobe.cloudmanager">IdentityManagementApiException</a></td>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ContentSetApi.html" title="interface in com.adobe.aio.cloudmanager">ContentSetApi</a></td>
 <th class="colLast" scope="row">
-<div class="block">Represents exception state that may occur when authenticating to Adobe IMS.</div>
+<div class="block">Content Set API.</div>
 </th>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/LogOption.html" title="interface in io.adobe.cloudmanager">LogOption</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/exception/DeleteInProgressException.html" title="class in com.adobe.aio.cloudmanager.exception">DeleteInProgressException</a></td>
+<th class="colLast" scope="row">
+<div class="block">Specific exception type to represent the attempt to initiate a delete operation, which is already running.</div>
+</th>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Metric.html" title="interface in io.adobe.cloudmanager">Metric</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Environment.html" title="interface in com.adobe.aio.cloudmanager">Environment</a></td>
+<th class="colLast" scope="row">
+<div class="block">An Environment definition.</div>
+</th>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Metric.Comparator.html" title="enum in io.adobe.cloudmanager">Metric.Comparator</a></td>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Environment.NamePredicate.html" title="class in com.adobe.aio.cloudmanager">Environment.NamePredicate</a></td>
+<th class="colLast" scope="row">
+<div class="block">Predicate to use for retrieving an environment based on its name.</div>
+</th>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Environment.Tier.html" title="enum in com.adobe.aio.cloudmanager">Environment.Tier</a></td>
+<th class="colLast" scope="row">
+<div class="block">Tiers within an Environment</div>
+</th>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Environment.Type.html" title="enum in com.adobe.aio.cloudmanager">Environment.Type</a></td>
+<th class="colLast" scope="row">
+<div class="block">Representation of the different environment types.</div>
+</th>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/EnvironmentApi.html" title="interface in com.adobe.aio.cloudmanager">EnvironmentApi</a></td>
+<th class="colLast" scope="row">
+<div class="block">Environment API</div>
+</th>
+</tr>
+<tr id="i16" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/EnvironmentLog.html" title="interface in com.adobe.aio.cloudmanager">EnvironmentLog</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Log file within an Environment.</div>
+</th>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/LogOption.html" title="interface in com.adobe.aio.cloudmanager">LogOption</a></td>
+<th class="colLast" scope="row">
+<div class="block">Log Option used to identify log files for retrieval.</div>
+</th>
+</tr>
+<tr id="i18" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/LogOption.Builder.html" title="class in com.adobe.aio.cloudmanager">LogOption.Builder</a></td>
+<th class="colLast" scope="row">
+<div class="block">Builds new instances of LogOptions.</div>
+</th>
+</tr>
+<tr id="i19" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Metric.html" title="interface in com.adobe.aio.cloudmanager">Metric</a></td>
+<th class="colLast" scope="row">
+<div class="block">Code Quality Metric</div>
+</th>
+</tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Metric.Comparator.html" title="enum in com.adobe.aio.cloudmanager">Metric.Comparator</a></td>
 <th class="colLast" scope="row">
 <div class="block">The comparator to use for the metric.</div>
 </th>
 </tr>
-<tr id="i13" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Metric.Severity.html" title="enum in io.adobe.cloudmanager">Metric.Severity</a></td>
+<tr id="i21" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Metric.Severity.html" title="enum in com.adobe.aio.cloudmanager">Metric.Severity</a></td>
 <th class="colLast" scope="row">
 <div class="block">Represents the severity of the metric.</div>
 </th>
 </tr>
-<tr id="i14" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/Organization.html" title="class in io.adobe.cloudmanager.event">Organization</a></td>
+<tr id="i22" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Pipeline.html" title="interface in com.adobe.aio.cloudmanager">Pipeline</a></td>
 <th class="colLast" scope="row">
-<div class="block">Organization</div>
+<div class="block">A Pipeline definition.</div>
 </th>
 </tr>
-<tr id="i15" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Pipeline.html" title="interface in io.adobe.cloudmanager">Pipeline</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
-</tr>
-<tr id="i16" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Pipeline.IdPredicate.html" title="class in io.adobe.cloudmanager">Pipeline.IdPredicate</a></td>
+<tr id="i23" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Pipeline.IdPredicate.html" title="class in com.adobe.aio.cloudmanager">Pipeline.IdPredicate</a></td>
 <th class="colLast" scope="row">
 <div class="block">Predicate to use for retrieving a pipeline based on its id.</div>
 </th>
 </tr>
-<tr id="i17" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Pipeline.NamePredicate.html" title="class in io.adobe.cloudmanager">Pipeline.NamePredicate</a></td>
+<tr id="i24" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Pipeline.NamePredicate.html" title="class in com.adobe.aio.cloudmanager">Pipeline.NamePredicate</a></td>
 <th class="colLast" scope="row">
 <div class="block">Predicate to use for retrieving a pipeline based on its name.</div>
 </th>
 </tr>
-<tr id="i18" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Pipeline.Status.html" title="enum in io.adobe.cloudmanager">Pipeline.Status</a></td>
+<tr id="i25" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Pipeline.Status.html" title="enum in com.adobe.aio.cloudmanager">Pipeline.Status</a></td>
 <th class="colLast" scope="row">
 <div class="block">Pipeline status values</div>
 </th>
 </tr>
-<tr id="i19" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecution.html" title="class in io.adobe.cloudmanager.event">PipelineExecution</a></td>
+<tr id="i26" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineApi.html" title="interface in com.adobe.aio.cloudmanager">PipelineApi</a></td>
 <th class="colLast" scope="row">
-<div class="block">PipelineExecution</div>
+<div class="block">Pipeline API.</div>
 </th>
 </tr>
-<tr id="i20" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/PipelineExecution.html" title="interface in io.adobe.cloudmanager">PipelineExecution</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<tr id="i27" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecution.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecution</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Pipeline Execution representation - an instance of a Pipeline run.</div>
+</th>
 </tr>
-<tr id="i21" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/PipelineExecution.Status.html" title="enum in io.adobe.cloudmanager">PipelineExecution.Status</a></td>
+<tr id="i28" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecution.Status.html" title="enum in com.adobe.aio.cloudmanager">PipelineExecution.Status</a></td>
 <th class="colLast" scope="row">
 <div class="block">Pipeline Execution status values</div>
 </th>
 </tr>
-<tr id="i22" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionEndEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionEndEvent</a></td>
-<th class="colLast" scope="row">
-<div class="block">PipelineExecutionEndEvent</div>
-</th>
-</tr>
-<tr id="i23" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionEndEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionEndEventEvent</a></td>
-<th class="colLast" scope="row">
-<div class="block">PipelineExecutionEndEventEvent</div>
-</th>
-</tr>
-<tr id="i24" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionStartEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStartEvent</a></td>
-<th class="colLast" scope="row">
-<div class="block">PipelineExecutionStartEvent</div>
-</th>
-</tr>
-<tr id="i25" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionStartEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStartEventEvent</a></td>
-<th class="colLast" scope="row">
-<div class="block">PipelineExecutionStartEventEvent</div>
-</th>
-</tr>
-<tr id="i26" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionStepEndEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepEndEvent</a></td>
-<th class="colLast" scope="row">
-<div class="block">PipelineExecutionStepEndEvent</div>
-</th>
-</tr>
-<tr id="i27" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionStepStartEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepStartEvent</a></td>
-<th class="colLast" scope="row">
-<div class="block">PipelineExecutionStepStartEvent</div>
-</th>
-</tr>
-<tr id="i28" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionStepStartEventEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepStartEventEvent</a></td>
-<th class="colLast" scope="row">
-<div class="block">PipelineExecutionStepStartEventEvent</div>
-</th>
-</tr>
 <tr id="i29" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionStepState.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepState</a></td>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionApi.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionApi</a></td>
 <th class="colLast" scope="row">
-<div class="block">PipelineExecutionStepState</div>
+<div class="block">Pipeline Execution API</div>
 </th>
 </tr>
 <tr id="i30" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/PipelineExecutionStepState.html" title="interface in io.adobe.cloudmanager">PipelineExecutionStepState</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionEndEvent.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionEndEvent</a></td>
+<th class="colLast" scope="row">
+<div class="block">Event representing that a Pipeline Execution has ended.</div>
+</th>
 </tr>
 <tr id="i31" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/PipelineExecutionStepState.Status.html" title="enum in io.adobe.cloudmanager">PipelineExecutionStepState.Status</a></td>
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionEvent.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionEvent</a></td>
+<th class="colLast" scope="row">
+<div class="block">Root interface that represents all Pipeline Execution events that may be published.</div>
+</th>
+</tr>
+<tr id="i32" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionStartEvent.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionStartEvent</a></td>
+<th class="colLast" scope="row">
+<div class="block">Event representing that a Pipeline Execution has started.</div>
+</th>
+</tr>
+<tr id="i33" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionStepEndEvent.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionStepEndEvent</a></td>
+<th class="colLast" scope="row">
+<div class="block">Event representing that a Pipeline Execution Step has ended.</div>
+</th>
+</tr>
+<tr id="i34" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionStepStartEvent.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionStepStartEvent</a></td>
+<th class="colLast" scope="row">
+<div class="block">Event representing that a Pipeline Execution Step has started.</div>
+</th>
+</tr>
+<tr id="i35" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionStepState.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionStepState</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Pipeline Execution Step representation - an instance of an action/step within a Pipeline Execution.</div>
+</th>
+</tr>
+<tr id="i36" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionStepState.Status.html" title="enum in com.adobe.aio.cloudmanager">PipelineExecutionStepState.Status</a></td>
 <th class="colLast" scope="row">
 <div class="block">Pipeline Execution Step status values</div>
 </th>
 </tr>
-<tr id="i32" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/PipelineExecutionStepWaitingEvent.html" title="class in io.adobe.cloudmanager.event">PipelineExecutionStepWaitingEvent</a></td>
+<tr id="i37" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineExecutionStepWaitingEvent.html" title="interface in com.adobe.aio.cloudmanager">PipelineExecutionStepWaitingEvent</a></td>
 <th class="colLast" scope="row">
-<div class="block">PipelineExecutionStepWaitingEvent</div>
+<div class="block">Event representing that a Pipeline Execution Step has entered a waiting state.</div>
 </th>
 </tr>
-<tr id="i33" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/PipelineUpdate.html" title="class in io.adobe.cloudmanager">PipelineUpdate</a></td>
+<tr id="i38" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/exception/PipelineRunningException.html" title="class in com.adobe.aio.cloudmanager.exception">PipelineRunningException</a></td>
+<th class="colLast" scope="row">
+<div class="block">Specific exception type to represent the attempt to start a Pipeline, which is already running.</div>
+</th>
+</tr>
+<tr id="i39" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/PipelineUpdate.html" title="class in com.adobe.aio.cloudmanager">PipelineUpdate</a></td>
 <th class="colLast" scope="row">
 <div class="block">Used to make updates to a Pipeline definition.</div>
 </th>
 </tr>
-<tr id="i34" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Program.html" title="interface in io.adobe.cloudmanager">Program</a></td>
+<tr id="i40" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Program.html" title="interface in com.adobe.aio.cloudmanager">Program</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Program definition.</div>
+</th>
+</tr>
+<tr id="i41" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/ProgramApi.html" title="interface in com.adobe.aio.cloudmanager">ProgramApi</a></td>
+<th class="colLast" scope="row">
+<div class="block">Program API</div>
+</th>
+</tr>
+<tr id="i42" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Region.html" title="enum in com.adobe.aio.cloudmanager">Region</a></td>
+<th class="colLast" scope="row">
+<div class="block">Represents possible regions for deployments, network, and other configurations.</div>
+</th>
+</tr>
+<tr id="i43" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/RegionDeployment.html" title="interface in com.adobe.aio.cloudmanager">RegionDeployment</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Region Deployment representation.</div>
+</th>
+</tr>
+<tr id="i44" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/RegionDeployment.Type.html" title="enum in com.adobe.aio.cloudmanager">RegionDeployment.Type</a></td>
+<th class="colLast" scope="row">
+<div class="block">Possible region deployment types.</div>
+</th>
+</tr>
+<tr id="i45" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Repository.html" title="interface in com.adobe.aio.cloudmanager">Repository</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Repository definition.</div>
+</th>
+</tr>
+<tr id="i46" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/RepositoryApi.html" title="interface in com.adobe.aio.cloudmanager">RepositoryApi</a></td>
+<th class="colLast" scope="row">
+<div class="block">Repository API</div>
+</th>
+</tr>
+<tr id="i47" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/StepAction.html" title="enum in com.adobe.aio.cloudmanager">StepAction</a></td>
+<th class="colLast" scope="row">
+<div class="block">Possible values of the Step State's Action property.</div>
+</th>
+</tr>
+<tr id="i48" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Tenant.html" title="interface in com.adobe.aio.cloudmanager">Tenant</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Tenant representation.</div>
+</th>
+</tr>
+<tr id="i49" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/TenantApi.html" title="interface in com.adobe.aio.cloudmanager">TenantApi</a></td>
+<th class="colLast" scope="row">
+<div class="block">Tenant API</div>
+</th>
+</tr>
+<tr id="i50" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Variable.html" title="interface in com.adobe.aio.cloudmanager">Variable</a></td>
+<th class="colLast" scope="row">
+<div class="block">A Variable definition.</div>
+</th>
+</tr>
+<tr id="i51" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Variable.Builder.html" title="class in com.adobe.aio.cloudmanager">Variable.Builder</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i35" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/StepAction.html" title="enum in io.adobe.cloudmanager">StepAction</a></td>
-<th class="colLast" scope="row">
-<div class="block">Possible values of the Step State's Action proprerty.</div>
-</th>
-</tr>
-<tr id="i36" class="altColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/event/User.html" title="class in io.adobe.cloudmanager.event">User</a></td>
-<th class="colLast" scope="row">
-<div class="block">User</div>
-</th>
-</tr>
-<tr id="i37" class="rowColor">
-<td class="colFirst"><a href="io/adobe/cloudmanager/Variable.html" title="class in io.adobe.cloudmanager">Variable</a></td>
+<tr id="i52" class="altColor">
+<td class="colFirst"><a href="com/adobe/aio/cloudmanager/Variable.Type.html" title="enum in com.adobe.aio.cloudmanager">Variable.Type</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
 </table>
@@ -361,7 +475,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2023 Adobe Inc.. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2024 Adobe Inc.. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

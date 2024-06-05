@@ -1,2 +1,2 @@
-io.adobe.cloudmanager
-io.adobe.cloudmanager.event
+com.adobe.aio.cloudmanager
+com.adobe.aio.cloudmanager.exception

@@ -14,9 +14,9 @@ Include via Maven:
 Example:
 ```
 <dependency>
-    <groupId>io.adobe.cloudmanager</groupId>
+    <groupId>com.adobe.aio.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -25,9 +25,9 @@ Example:
 The default library is Java11, to use the Java8 library, use the classifier.
 ```
 <dependency>
-    <groupId>io.adobe.cloudmanager</groupId>
+    <groupId>com.adobe.aio.cloudmanager</groupId>
     <artifactId>aio-lib-cloudmanager</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
     <classifier>java8</classifier>
 </dependency>
 ```
@@ -41,36 +41,21 @@ To make API calls into Cloud Manager, an Access Token is required.
 For OAuth Access Tokens, the API will manage creating and updating as needed. However, you need to provide a valid Workspace, found in [AIO Java client library](https://opensource.adobe.com/aio-lib-java).
 
 ```java
+//...
+
 OAuthContext authContext = OAuthContext.builder()
     .clientSecret("<CLIENT_SECRET>")
     .addScope("<SCOPE>") // Add all necessary scopes.
     .build();
 Workspace workspace = Workspace.builder()
-    .authContext(authContext
+    .authContext(authContext)
     .orgId("<IMS ORG ID>")
     .apiKey("<API KEY>")
     .build();
 
-CloudManagerApi api = CloudManagerApi.builder().workspace(workspace).build();
-```
+ProgramApi api = new ApiBuilder(ProgramApi.class).workspace(workspace).build();
 
-
-#### JWT Access Token (Deprecated)
-
-JWT Access Tokens have been deprecated by AIO. They will continue to work until Jan 1, 2025. If you need to, you can create one using the now deprecated `IdentityManagementApi`. For example:
-
-```java
-PrivateKey privateKey;
-
-// Load the private key...
-
-// Values are from the API Integration configuration.
-AdobeClientCredentials org = new AdobeClientCredentials("Org Id", "Technical Account Id", "API Key", "Client Secret", privateKey);
-IdentityManagementApi imApi = IdentityManagementApi.create();
-String token = imApi.authenticate(org);
-
-CloudManagerApi api = CloudManagerApi.create("Org Id", "API Key", token);
-List<EmbeddedProgram> programs = api.listPrograms();
+//...
 ```
 
 See the [JavaDocs](https://opensource.adobe.com/aio-lib-java-cloudmanager/apidocs/) for the API.

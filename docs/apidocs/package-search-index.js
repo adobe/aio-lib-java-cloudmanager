@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"io.adobe.cloudmanager"},{"l":"io.adobe.cloudmanager.event"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.adobe.aio.cloudmanager"},{"l":"com.adobe.aio.cloudmanager.exception"}]
